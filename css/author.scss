@@ -1,0 +1,283 @@
+﻿@import 'colors';
+
+//////////////////
+//List indicators
+//////////////////
+
+.lastVisit {
+    text-align: center;
+    color: $primary-text-color;
+    font-size: large;
+    font-weight:bold;
+    margin: 5px;
+    padding: 10px;
+    background: $card-highlighted-background;
+    margin-left:-20px;
+    margin-right:-20px;
+}
+
+//////////////
+//Posts
+//////////////
+
+.posts {
+    margin-left: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.postContainer {
+    font-size: small;
+    display: flex;
+    flex-direction: row;
+}
+
+.post a:link  {
+    color: $normal-text-color;
+}
+.post a:visited  {
+    color: $background-text-color;
+}
+
+.post
+{
+    font-weight: bold;
+}
+.post a:link
+{
+    color: $normal-text-color;
+}
+.post a:visited  {
+    color: $background-text-color;
+}
+
+.topPost {
+    padding-bottom: 5px;
+    font-size: medium;
+}
+
+
+.topPost a:link,
+.topPost a:visited,
+.topPost a:hover
+{
+    color: $highlighted-text-color;
+    font-weight: bold;
+    font-size: medium;
+}
+
+.postedDate {
+    color: $background-text-color;
+    font-weight: normal;
+    margin-left: 5px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.scoreContainer {
+    text-align: center;
+    color: $background-text-color;
+    font-weight: normal;
+    margin-left: 5px;
+    margin-right: 5px;
+    width:40px;
+    flex-shrink: 0;
+}
+
+.topScoreContainer
+{
+    @extend .scoreContainer;
+    //color: #965500;
+    font-weight: bold;
+}
+
+.postReadContainer
+{
+    width:40px;
+    flex-shrink: 0;
+}
+
+.voteIndicator {
+    height: 20px;
+    width: 20px;
+    fill: transparent;
+    stroke: transparent;
+    stroke-width:10;
+}
+
+.upvote
+{
+    @extend .voteIndicator;
+    stroke:transparent;
+    fill: $upvote-color;
+}
+
+.downvote
+{
+    @extend .voteIndicator;
+    stroke:transparent;
+    fill: $downvote-color;
+}
+
+
+
+
+
+//////////////
+//Author
+//////////////
+
+.container
+{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+}
+
+.author {
+    font-size: large;
+    margin: 5px;
+    padding: 10px;
+    background: $card-background;
+    
+}
+
+.subscribedAuthor
+{
+    @extend .author;
+    background: $card-highlighted-background;
+}
+
+
+.authorHeader {
+    display: flex;
+    margin-bottom:10px;
+}
+
+.authorHeader a:link,
+.authorHeader a:visited,
+.authorHeader a:hover
+{
+    color:$primary-text-color;
+}
+
+.nameContainer {
+    height:40px;
+    max-width: 200px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.subscriptionButton {
+    height: 40px;
+    width: 40px;
+    //pointer-events: none;   //Otherwise click does not propagate to parent
+    cursor: pointer;
+}
+
+.subscribeButton
+{
+    @extend .subscriptionButton;
+    stroke: $background-text-color;
+    fill: transparent;
+    stroke-width: 11;
+    
+}
+
+.unsubscribeButton
+{
+    @extend .subscriptionButton;
+    fill: $subscribed-highlight-color;
+}
+
+/////////////////////////
+//More posts
+////////////////////////
+
+.morePostsContainer
+{
+    font-weight: bold;
+    padding-left: 10px;
+    margin-top:10px;
+    color:$interactive-text-color;
+    cursor: pointer;
+
+    display: flex;
+}
+
+//Because centering stuff has to be such a pain
+.morePostsInnerContainer
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.morePostsButton
+{
+    
+    height:20px;
+    width:20px;
+    margin-right:10px;
+    fill: $interactive-text-color;
+}
+
+///////////////////////////
+//Subscription subreddits
+///////////////////////////
+
+.subredditsContainer
+{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    margin-bottom:15px;
+    margin-left:25px;
+}
+
+.subscriptionSubreddit
+{
+    
+    color: $hidden-text-color;
+    text-align: center;
+
+    border-radius: 10px;
+    padding:5px;
+    padding-left:10px;
+    padding-right:10px;
+    margin-left:5px;
+    margin-right:5px;
+
+    cursor: pointer;
+
+    border: 2px solid $hidden-text-color;
+
+}
+
+.subscribedSubreddit
+{
+    @extend .subscriptionSubreddit;
+    color: $normal-text-color;
+    border: 2px solid $subscribed-highlight-color;
+}
+
+//Because centering stuff has to be such a pain
+.displaySubredditsButtonContainer
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.displaySubredditsButton
+{
+    height:20px;
+    width:20px;
+    fill: $subscribed-highlight-color;
+    cursor: pointer;
+}
+    

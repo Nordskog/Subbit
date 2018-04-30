@@ -1,0 +1,1 @@
+export { default as manager } from './container'

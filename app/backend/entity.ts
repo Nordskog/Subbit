@@ -1,0 +1,11 @@
+﻿//Workaround for wetland wierdness
+
+export { default as User } from '~/backend/entity/User';
+export { default as Author } from '~/backend/entity/Author';
+export { default as Post } from '~/backend/entity/Post';
+export { default as Subscription } from '~/backend/entity/Subscription';
+export { default as Auth } from '~/backend/entity/Auth';
+export { default as Subreddit } from '~/backend/entity/Subreddit';
+export { default as SubredditAuthor } from '~/backend/entity/SubredditAuthor';
+export { default as ScrapeJob } from '~/backend/entity/ScrapeJob';
+export { default as Setting } from '~/backend/entity/Setting';

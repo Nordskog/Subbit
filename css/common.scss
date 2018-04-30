@@ -1,0 +1,36 @@
+%button
+{
+    padding-left:10px;
+    padding-right:10px;
+    height: 50px;
+    color: $highlighted-text-color;
+
+    display:Flex;
+    flex-direction: column;
+
+    font-weight: bold;
+
+    background: $card-background;
+    
+    cursor: pointer;
+
+    justify-content: center;
+
+    font-size: normal;
+    text-align: center;
+}
+
+%outlinedButton
+{
+    @extend %button;
+    background: $hidden-text-color;
+    margin:5px;
+}
+
+%popup
+{
+    padding:10px;
+    border: 2px solid $highlighted-text-color;
+    background: $card-background;
+    width:100%;
+}

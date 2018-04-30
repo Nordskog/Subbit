@@ -1,0 +1,14 @@
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+buildServer/
+buildClient/
+*.js
+*.js.map
+/node_modules/*
+.data/
+.bin/
+obj/
+css/*scss.d.ts

@@ -1,0 +1,197 @@
+@import 'colors';
+@import 'common';
+
+.outerContainer
+{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+}
+
+.container
+{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+}
+
+.subreddit
+{
+    background: $card-background;
+
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+
+    margin: 5px;
+    padding: 10px;
+
+}
+
+.nameContainer
+{
+    display:flex;
+    flex-direction: row;
+    justify-content: center left;
+
+    color: $primary-text-color;
+    font-size: large;
+    font-weight: bold;
+    padding: 5px;
+}
+
+.columnContainer
+{
+    width: 100%;
+}
+
+
+.infoColumnContainer
+{
+    float:left;
+    width: fit-content;
+
+}
+
+.infoColumn
+{
+    table-layout: fixed;
+    border-spacing: 0px;
+}
+
+.infoContainer
+{
+    justify-content: left;
+    align-content: left;
+
+    font-size: normal;
+}
+
+.infoNameCol
+{
+    border-bottom: 2px solid $raised-element-color;
+    border-top: 2px solid $card-background;
+    padding:5px;
+    font-weight: bold;
+    text-align: start;
+}
+
+.infoContentCol
+{
+    background: $raised-element-color;
+    border-top: 2px solid $card-background;
+    border-bottom: 2px solid $raised-element-color;
+    padding:5px;
+    text-align: start;
+}
+
+.infoButtonCol
+{
+    background: $card-background;
+}
+
+
+
+.buttonColumn
+{
+    float:right;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+
+    min-width:150px;
+}
+
+.infoButton
+{
+    @extend %outlinedButton;
+    height: 35px;
+    margin:0px;
+
+}
+
+.manageButton
+{
+    @extend %outlinedButton;
+}
+
+.manageButtonDisabled
+{
+    @extend .manageButton;
+    background: $hidden-element-color;
+    color: $hidden-text-color;
+}
+
+td 
+{
+   white-space: nowrap;
+   //border: 2px solid #000000;
+}
+
+///////////////////////
+// job type popup
+//////////////////////
+.jobTypeContainer
+{
+    @extend %popup;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.jobTypeItem
+{
+    @extend %outlinedButton;
+
+}
+
+///////////
+//Expand
+//////////
+
+.expandButtonContainer
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center left;
+    width:100%;
+}
+
+.expandButton
+{
+    padding-left: 5px;
+    height:20px;
+    width:20px;
+    fill: $interactive-text-color;
+    cursor: pointer;
+}
+
+////////////////////
+// Global settings
+/////////////////////
+
+.settingsContainer
+{
+
+
+    background: $card-background;
+    display: flex;
+    flex-direction: column;
+    justify-content: center left;
+
+    margin: 5px;
+    padding: 10px;
+}
+
+.actionsContainer
+{
+    display: flex;
+    flex-direction: row;
+    justify-content: center left;
+}
+

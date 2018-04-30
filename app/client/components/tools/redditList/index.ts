@@ -1,0 +1,1 @@
+export { default as RedditList } from './container'

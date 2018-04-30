@@ -1,0 +1,117 @@
+@import 'colors';
+@import 'dimens';
+
+.container
+{
+    height:$header-height;
+    display: block;
+    padding-left: 10px;
+    padding-right:10px;
+
+    overflow:visible;
+
+    width:fit-content;
+
+    z-index: 1;
+}
+
+.selectedContainer
+{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    height:100%;
+    background: $card-background;
+    cursor: pointer;
+}
+
+.selected
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    padding-left:10px;
+    padding-right:5px;
+    text-align: left,center;
+    font-weight: bold;
+    font-size: larger;
+}
+
+
+
+.listOuter
+{
+    display: inline-block;
+    overflow:visible;
+    width:1px;
+}
+
+.listContainer
+{
+    display: flex;
+    flex-direction: column;
+    overflow:visible;
+    display: inline-block;
+    border: 2px solid $body-background;
+
+    background: $card-background;
+    
+    padding-top:10px;
+    padding-bottom:10px;
+}
+
+.listItem
+{
+    
+    min-width:100px;
+
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+
+    height:40px;
+
+    width: fit-content;
+    padding-left:10px;
+    padding-right:10px;
+    overflow:visible;
+
+    font-weight: bold;
+    font-size: larger;
+    cursor: pointer;
+}
+
+.expandButtonContainer
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.expandButton
+{
+    height:20px;
+    width:20px;
+    fill: $interactive-text-color;
+}
+
+
+
+.listItem:link,
+.listItem:visited,
+.listItem:hover
+{
+
+
+    color: $highlighted-text-color;
+    text-decoration: none;
+   // line-height:40px;
+}
+
+.listItem:hover
+{
+    background: $menu-highlight-color;
+}
+
+

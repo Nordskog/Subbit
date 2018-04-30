@@ -1,0 +1,157 @@
+﻿@import 'colors';
+@import 'dimens';
+@import 'common';
+
+body {
+    color: #eeeeee;
+    background: $body-background;
+
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.42857143;
+}
+
+
+a:link
+{
+    color: #eeeeee;
+    text-decoration: none;
+}
+
+a:visited
+{
+    color: #eeeeee;
+    text-decoration: none;
+}
+
+a:hover
+{
+    color: #eeeeee;
+    text-decoration: underline;
+}
+
+.headerButton {
+    background: $card-background;
+}
+
+.contentOuterContainer {
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.contentContainer {
+
+    width:100%;
+    max-width:1200px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.loginContainer {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+
+    
+}
+
+////////////////
+//Header
+///////////////
+
+.header {
+    display: block;
+    background: $card-background;
+    height: auto;
+    min-height: $header-height;
+    
+
+}
+
+
+.headerBrand
+{
+    width: fit-content;
+    padding:10px;
+    overflow:visible;
+    color: $normal-text-color;
+
+    font-weight: lighter;
+    font-size: large;
+}
+
+/*
+a.headerBrand:link,:visited,:hover
+{
+    color: $normal-text-color;
+    text-decoration: none;
+}
+*/
+
+.headerItem
+{
+    width: fit-content;
+    padding:10px;
+
+    font-weight: bold;
+    font-size: normal;
+}
+
+.headerLeft
+{
+    float:left;
+    width:fit-content;
+    display: flex;
+    flex-direction: row;
+}
+
+.headerRight
+{
+    float:right;
+    display: flex;
+    flex-direction: row;
+    padding-right:20px;
+}
+
+.headerClear
+{
+    clear: both;
+}
+
+.button
+{  
+    @extend %button;
+}
+
+.outlinedButton
+{
+    @extend %button;
+    background: $hidden-text-color;
+}
+
+.activeButton
+{
+    background: $body-background;
+}
+
+.loadingStatus
+{
+    padding:10px;
+    font-size: x-large;
+    font-weight: bold;
+    text-align: center;
+}
+
+input[type=text] {
+    width: 100%;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    padding: 12px 20px 12px 12px;
+}
+
