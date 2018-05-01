@@ -17,7 +17,7 @@ interface Props
 {
     subreddits : models.data.Subreddit[];
     subreddit : string;
-    filter : string;
+    filter : models.AuthorFilter;
 }
 
 interface State

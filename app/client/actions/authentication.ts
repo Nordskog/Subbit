@@ -1,4 +1,4 @@
-﻿import * as api from '~/client/api'
+﻿import * as api from '~/common/api'
 import * as actions from '~/client/actions'
 import * as tools from '~/common/tools'
 
@@ -9,7 +9,7 @@ export function logoutUserAction()
 {
     return async dispatch =>
     {
-        if ( await api.authentication.logout() )
+        if ( await api.rfy.authentication.logout() )
         {
             console.log("Logged out");
 

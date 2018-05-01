@@ -13,16 +13,20 @@ export namespace authors
         append: boolean;
         page : number;
         end : boolean;
+        after : string;
     }
 
-    export type POST_DETAILS_UPDATED = Set<number>
+    export type POST_DETAILS_UPDATED = Set<string>
 
     export type SUBREDDIT_CHANGED = string;
 
     export interface POSTS_ADDED
     {
-        authorId: number;
-        posts: models.data.Post[]
+        author: string;
+        posts: models.reddit.Post[];
+        after?: string;
+        end: boolean;
+
     }
 
 

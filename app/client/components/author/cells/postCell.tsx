@@ -11,7 +11,7 @@ import vote from 'assets/images/vote.svg'
 
 interface Props
 {
-    post: models.data.Post;
+    post: models.reddit.Post;
     isTopPost: boolean;
 }
 
@@ -22,12 +22,12 @@ export default class PostCell extends React.Component<Props, null>
         return <div className={this.props.isTopPost ? "author-postContainer author-topPost" : "author-postContainer"}>
                 
             <div className="author-postReadContainer" >
-                {this.getUpvoted(this.props.post.liked)}
+                {this.getUpvoted(this.props.post.likes)}
             </div>
             <div className={this.props.isTopPost ?  "author-topScoreContainer" :  "author-scoreContainer"}>
                 {this.getScoreCol()}
             </div>
-            <div className="author-post"> <a href={urls.getPostUrl(this.props.post.subreddit, this.props.post.post_id)}> {this.props.post.title} </a>  </div> 
+            <div className="author-post"> <a href={urls.getPostUrl(this.props.post.subreddit, this.props.post.id)}> {this.props.post.title} </a>  </div> 
                    <div className="author-postedDate">
                        {this.getDateCol()}
                    </div>

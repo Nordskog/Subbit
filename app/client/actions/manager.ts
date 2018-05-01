@@ -1,7 +1,7 @@
 import { State } from '~/client/store';
 
-import * as viewFilters from '~/common/viewFilters';
-import * as api from '~/client/api'
+import { AuthorFilter } from '~/common/models';
+import * as api from '~/common/api'
 import * as actions from '~/client/actions'
 import * as models from '~/common/models'
 import * as tools from '~/common/tools'
@@ -19,7 +19,7 @@ export function getManagedSubreddits()
         let state: State = getState();
         let token: string = tools.store.getAccessToken(state);
 
-        let subreddits : models.data.Subreddit[] = await api.subreddits.fetchManagedSubreddits(token)
+        let subreddits : models.data.Subreddit[] = await api.rfy.subreddits.fetchManagedSubreddits(token)
         
         dispatch({
             type: actions.types.manager.FETCH_SUBREDDITS_COMPLETED,
@@ -35,7 +35,7 @@ export function requestScrape( payload : serverActions.scrape.REQUEST_SCRAPE)
         let state: State = getState();
         let token: string = tools.store.getAccessToken(state);
 
-        let job : models.data.ScrapeJob = await api.scrape.requestScrapeJob(payload,token)
+        let job : models.data.ScrapeJob = await api.rfy.scrape.requestScrapeJob(payload,token)
         
         dispatch({
             type: actions.types.manager.SCRAPE_JOBS_UPDATED,
@@ -51,7 +51,7 @@ export function getUpdatedJobs( after : number)
         let state: State = getState();
         let token: string = tools.store.getAccessToken(state);
 
-        let jobs : models.data.ScrapeJob[] = await api.scrape.requestScrapeJobUpdate(after,token)
+        let jobs : models.data.ScrapeJob[] = await api.rfy.scrape.requestScrapeJobUpdate(after,token)
         
         if (jobs.length > 0)
         {
@@ -70,7 +70,7 @@ export function cancelScrape( job_id : number)
         let state: State = getState();
         let token: string = tools.store.getAccessToken(state);
 
-        let job : models.data.ScrapeJob = await api.scrape.cancelScrapeJob(job_id,token)
+        let job : models.data.ScrapeJob = await api.rfy.scrape.cancelScrapeJob(job_id,token)
 
         dispatch({
             type: actions.types.manager.SCRAPE_JOBS_UPDATED,
@@ -86,7 +86,7 @@ export function toggleScrapeBot( enabled : boolean)
         let state: State = getState();
         let token: string = tools.store.getAccessToken(state);
 
-        let bot : models.data.ScrapeBot = await api.scrape.toggleScrapeBot(enabled,token)
+        let bot : models.data.ScrapeBot = await api.rfy.scrape.toggleScrapeBot(enabled,token)
 
         dispatch({
             type: actions.types.manager.SCRAPE_BOT_UPDATED,
@@ -102,7 +102,7 @@ export function setScrapeBotInterval( interval : number)
         let state: State = getState();
         let token: string = tools.store.getAccessToken(state);
 
-        let bot : models.data.ScrapeBot = await api.scrape.setScrapeBotInterval(interval,token)
+        let bot : models.data.ScrapeBot = await api.rfy.scrape.setScrapeBotInterval(interval,token)
 
         dispatch({
             type: actions.types.manager.SCRAPE_BOT_UPDATED,
@@ -118,34 +118,12 @@ export function setScrapeBotConcurrentRequests( concurrent_requests : number)
         let state: State = getState();
         let token: string = tools.store.getAccessToken(state);
 
-        let bot : models.data.ScrapeBot = await api.scrape.setScrapeBotConcurrentRequests(concurrent_requests,token)
+        let bot : models.data.ScrapeBot = await api.rfy.scrape.setScrapeBotConcurrentRequests(concurrent_requests,token)
 
         dispatch({
             type: actions.types.manager.SCRAPE_BOT_UPDATED,
             payload: bot as actions.types.manager.SCRAPE_BOT_UPDATED
         });
-    }
-}
-
-export function updatePostHotScore( subreddit_id? : number, until? : number)
-{
-    return async function (dispatch, getState)
-    {
-        let state: State = getState();
-        let token: string = tools.store.getAccessToken(state);
-
-        await api.posts.updatePostsHotScore(subreddit_id, until, token)
-    }
-}
-
-export function updateAuthorHotScoreFromPosts( subreddit_id? : number, until? : number )
-{
-    return async function (dispatch, getState)
-    {
-        let state: State = getState();
-        let token: string = tools.store.getAccessToken(state);
-
-        await api.authors.updateAuthorHotScore(subreddit_id, until, token)
     }
 }
 
@@ -171,7 +149,7 @@ export function pruneAuthorsWithNoPosts(subreddit_id? : number)
         let state: State = getState();
         let token: string = tools.store.getAccessToken(state);
 
-        await api.authors.pruneAuthorsWithNoPosts(subreddit_id,token);
+        await api.rfy.authors.pruneAuthorsWithNoPosts(subreddit_id,token);
     }
 }
 
@@ -182,7 +160,7 @@ export function scrapeBotScrapeNow()
         let state: State = getState();
         let token: string = tools.store.getAccessToken(state);
 
-        await api.scrape.scrapeBotScrapeNow(token);
+        await api.rfy.scrape.scrapeBotScrapeNow(token);
     }
 }
 

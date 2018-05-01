@@ -3,6 +3,8 @@ export import time = require('./time');
 export import url = require('./url');
 export import number = require('./number');
 export import query = require('./query');
+export import reddit = require('./reddit');
+export {default as FetchQueue} from './FetchQueue'
 
 export function removeNullChars(str : string)
 {

@@ -1,5 +1,5 @@
 import * as tools from '~/common/tools'
-import * as api from '~/client/api'
+import * as api from '~/common/api'
 import * as models from '~/common/models'
 import * as actions from '~/client/actions'
 
@@ -14,7 +14,7 @@ export async function retrieveAndUpdateRedditAuth(dispatch, state)
     if ( (redditAuth.expiry - 30) < (Date.now() / 1000 ) )
     {
         console.log("Reddit token expired, refreshing");
-        redditAuth = await api.authentication.refreshRedditAccessToken(user,token);
+        redditAuth = await api.rfy.authentication.refreshRedditAccessToken(user,token);
 
         dispatch({
             type: actions.types.authentication.REDDIT_TOKEN_UPDATED,

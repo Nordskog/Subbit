@@ -24,11 +24,6 @@ function mapDispatchToProps(dispatch, ownProps) : object
             updateJob: ( modifiedJob: models.data.ScrapeJob ) => { dispatch(actions.manager.modifyScrapeJobLocally(modifiedJob)) },
             cancelJob: ( job: number  ) => { dispatch(actions.manager.cancelScrape(job)) },
             removeSubreddit: ( subreddit: models.data.Subreddit  ) => { dispatch(actions.subreddits.removeSubreddit(subreddit) ) },
-
-            pruneAuthorsWithNoPosts: ( subreddit_id : number ) => { dispatch(actions.manager.pruneAuthorsWithNoPosts(subreddit_id) ) },
-            updatePostHotScore: ( subreddit_id : number  ) => { dispatch(actions.manager.updatePostHotScore(subreddit_id) ) },
-            updateAuthorHotScoreFromPosts: ( subreddit_id : number  ) => { dispatch(actions.manager.updateAuthorHotScoreFromPosts(subreddit_id) ) },
-            setSubredditAutoscrape: ( subreddit_id : number, enabled : boolean  ) => { dispatch(actions.subreddits.setSubredditAutoscrape(subreddit_id, enabled) ) }
           };
     }
 }

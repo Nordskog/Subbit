@@ -3,9 +3,8 @@
 import { Wetland, QueryBuilder, EntityRepository, EntityManager, Scope, ArrayCollection } from 'wetland';
 import * as models from '~/common/models'
 import * as entities from '~/backend/entity'
-import * as queue from '~/client/api/redditQueue/queue';
 import * as scrape from '~/backend/scrape'
-import * as api from '~/client/api'
+import * as api from '~/common/api'
 import * as authentication from '~/backend/authentication'
 import * as queries from '~/backend/resource/queries'
 
@@ -117,7 +116,7 @@ async function processJob(wetland: Wetland, manager : Scope, activeJob : scrape.
                 url = url + "&after=" + after;
             }
     
-            let response = await queue.enqueue( () => fetch(url, config) );
+            let response = await fetch(url, config);
             {
                 if (response.ok)
                 {

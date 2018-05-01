@@ -60,7 +60,6 @@ app.use(require('~/backend/resource/subscription'));
 app.use(require('~/backend/resource/user'));
 app.use(require('~/backend/resource/subreddit'));
 app.use(require('~/backend/resource/scrape'));
-app.use(require('~/backend/resource/post'));
 app.use(require('~/backend/resource/settings'));
 
 

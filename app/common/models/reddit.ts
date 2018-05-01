@@ -1,4 +1,19 @@
-export default interface RedditPost
+export interface Thing<T>
+{
+    kind: string;
+    data: T;
+}
+
+export interface Listing<T>
+{
+    modhash : string;
+    dist: number;
+    after: string;
+    before : string;
+    children : Thing<T>[]
+}
+
+export interface Post
 {
     author : string,
     author_flair_css_class : string,
@@ -24,5 +39,12 @@ export default interface RedditPost
     subreddit_id : string,
     thumbnail : string,
     title : string,
-    url : string
+    url : string,
+    likes : boolean,
+    visited : boolean
+}
+
+export type ListingResponse = Thing< Listing< Post > >
+{
+    
 }

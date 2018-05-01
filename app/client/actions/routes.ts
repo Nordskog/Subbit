@@ -1,4 +1,4 @@
-import * as api from '~/client/api'
+import * as api from '~/common/api'
 import * as actions from '~/client/actions'
 import * as tools from '~/common/tools'
 import * as models from '~/common/models'
@@ -10,7 +10,7 @@ export function authorsRoutes()
 {
     return async (dispatch, getState ) =>
     {
-        await actions.authors.fetchAuthorsAction()(dispatch, getState);
+        await actions.authors.fetchAuthorsAction(null, false)(dispatch, getState);
     }
 }
 

@@ -1,15 +1,15 @@
 import * as models from '~/common/models'
 
-const postAuthority : Map<string,models.data.Post> = new Map<string,models.data.Post>();
+const postAuthority : Map<string,models.reddit.Post> = new Map<string,models.reddit.Post>();
 
-export function updateAuthority(post : models.data.Post)
+export function updateAuthority(post : models.reddit.Post)
 {
-    postAuthority.set(post.post_id, post);
+    postAuthority.set(post.id, post);
 }
 
 export function updateAuthorityFromAuthor(author : models.data.Author)
 {
-    author.posts.forEach ( (post : models.data.Post) =>
+    author.posts.forEach ( (post : models.reddit.Post) =>
      {
         updateAuthority(post);
     } )
@@ -30,9 +30,9 @@ export function getPostById(post_id : string)
 }
 
 //Sets auth if null
-export function getPost(post : models.data.Post)
+export function getPost(post : models.reddit.Post)
 {
-    let authPost = postAuthority.get(post.post_id);
+    let authPost = postAuthority.get(post.id);
     if (authPost == null)
     {
         updateAuthority(post);

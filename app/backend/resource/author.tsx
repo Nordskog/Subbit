@@ -18,7 +18,7 @@ import * as tools from '~/common/tools'
 
 import * as serverActions from '~/backend/actions'
 
-import * as viewFilters from '~/common/viewFilters';
+import { AuthorFilter } from '~/common/models';
 import { getAuthorsInSubreddit } from '~/backend/resource/queries/author';
 
 const express = require('express');
@@ -38,7 +38,7 @@ router.get('/api/authors', async (req: WetlandRequest, res: Response) =>
 
     let token = req.headers.access_token;
 
-    let filter = req.query.filter;
+    let filter : AuthorFilter = req.query.filter;
     let page : number = (req.query.page) ? req.query.page : 0;
     let subreddit : string = req.query.subreddit;
     let subscription : number = req.query.subscription;
@@ -69,7 +69,7 @@ router.get('/api/authors', async (req: WetlandRequest, res: Response) =>
             //Default filter is usually all, but for a subscription it makes more sense to only display subscribed posts by default
             query = () => queries.author.getSubscription(   rawKnex, 
                                                             subscription, 
-                                                            ( filter==viewFilters.authorFilter.NEW || filter==viewFilters.authorFilter.HOT  ), 
+                                                            ( filter==AuthorFilter.NEW || filter==AuthorFilter.HOT  ), 
                                                             false);
         }
         else if (author != null)   //Author
@@ -80,7 +80,7 @@ router.get('/api/authors', async (req: WetlandRequest, res: Response) =>
     else    //Multiple results
     {
         let subscribedToByUser = 0;
-        if (filter === viewFilters.authorFilter.SUBSCRIPTIONS)
+        if (filter === AuthorFilter.SUBSCRIPTIONS)
         {
             subscribedToByUser = loggedInUser ? loggedInUser.id : 0;
         }
@@ -92,7 +92,7 @@ router.get('/api/authors', async (req: WetlandRequest, res: Response) =>
                                                                 subscribedToByUser,
                                                                 subscriptionForUserId,
                                                                 false, 
-                                                                filter == viewFilters.authorFilter.HOT,
+                                                                filter == AuthorFilter.HOT,
                                                                 config.authorDisplayCount,
                                                                 page);
         }
@@ -102,7 +102,7 @@ router.get('/api/authors', async (req: WetlandRequest, res: Response) =>
                 query = () => queries.author.getAuthors(    rawKnex, 
                                                             subscriptionForUserId, 
                                                             false, 
-                                                            filter == viewFilters.authorFilter.HOT,
+                                                            filter == AuthorFilter.HOT,
                                                             config.authorDisplayCount, 
                                                             page);
             else                        //Get subscribed authors

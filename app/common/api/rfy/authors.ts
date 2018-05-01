@@ -1,4 +1,4 @@
-﻿import * as viewFilters from '~/common/viewFilters';
+﻿import { AuthorFilter } from '~/common/models';
 import * as models from '~/common/models'
 import * as api from '~/common/api'
 import * as urls from '~/common/urls'
@@ -31,33 +31,6 @@ export function fetchSubscription(subscription : number, filter: string, subredd
         "subreddit": subreddit
     },
     access_token    );
-}
-
-export function getAuthorPosts(authorId : number, count : number, offset : number, subreddit : string, access_token? : string) : Promise<models.data.Post[]>
-{
-        return api.rfy.getRequest(
-            '/posts', 
-            {
-                "author": authorId,
-                "subreddit": subreddit,
-                "count": count,
-                "offset": offset
-            }  );
-}
-
-export function updateAuthorHotScore(subreddit_id : number, until : number, access_token? : string) : Promise<boolean>
-{
-    return api.rfy.postRequest(
-        '/authors', 
-        {
-            type :    serverActions.author.UPDATE_AUTHOR_HOT_SCORE_FROM_POSTS,
-            payload : < serverActions.author.UPDATE_AUTHOR_HOT_SCORE_FROM_POSTS >
-            {
-                subreddit_id : subreddit_id,
-                until : until
-            }
-        },
-        access_token );
 }
 
 export function pruneAuthorsWithNoPosts(subreddit_id? : number,  access_token? : string) : Promise<boolean>

@@ -1,5 +1,5 @@
 ﻿
-import * as api from '~/client/api'
+import * as api from '~/common/api'
 import * as actions from '~/client/actions'
 import * as models from '~/common/models'
 import * as tools from '~/common/tools'
@@ -17,7 +17,7 @@ export function subscribeToAuthorAction(author : string)
         let user: string = tools.store.getUsername(state);
         let token: string = tools.store.getAccessToken(state);
 
-        let subscription = await api.subscription.subscribe(user, author, token);
+        let subscription = await api.rfy.subscription.subscribe(user, author, token);
 
         dispatch({
             type: actions.types.subscription.SUBSCRIPTION_ADDED,
@@ -33,7 +33,7 @@ export function unsubscribeFromAuthor(subscription: models.data.Subscription)
         let state: State = getState();
         let token: string = tools.store.getAccessToken(state);
 
-        let success = await api.subscription.unsubscribe(subscription.id, token);
+        let success = await api.rfy.subscription.unsubscribe(subscription.id, token);
 
         dispatch({
             type: actions.types.subscription.SUBSCRIPTION_REMOVED,
@@ -52,7 +52,7 @@ export function addSubredditToSubscriptionAction(subscriptionId : number, subred
         let user: string = tools.store.getUsername(state);
         let token: string = tools.store.getAccessToken(state);
 
-        let subscription = await api.subscription.addSubreddit(subscriptionId, subredditId, token);
+        let subscription = await api.rfy.subscription.addSubreddit(subscriptionId, subredditId, token);
 
 
         
@@ -73,7 +73,7 @@ export function removeSubredditFromSubscriptionAction(subscriptionId : number, s
         let user: string = tools.store.getUsername(state);
         let token: string = tools.store.getAccessToken(state);
 
-        let subscription = await api.subscription.removeSubreddit(subscriptionId, subredditId, token);
+        let subscription = await api.rfy.subscription.removeSubreddit(subscriptionId, subredditId, token);
   
         dispatch({
             type: actions.types.subscription.SUBSCRIPTION_CHANGED,

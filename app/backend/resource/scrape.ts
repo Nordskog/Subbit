@@ -20,7 +20,7 @@ import * as config from '~/config'
 
 import * as tools from '~/common/tools'
 
-import * as viewFilters from '~/common/viewFilters';
+import { AuthorFilter } from '~/common/models';
 
 const express = require('express');
 const router = express.Router();

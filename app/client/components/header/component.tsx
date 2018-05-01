@@ -7,14 +7,13 @@ import * as models from '~/common/models'
 
 import * as components from '~/client/components'
 
-import * as viewFilters from '~/common//viewFilters'
-
+import { AuthorFilter } from '~/common/models';
 
 
 interface Props
 {
     authState: models.auth.AuthState;
-    filter : string;
+    filter : models.AuthorFilter;
     subreddit : string;
     logout(): void;
 }
@@ -36,18 +35,18 @@ export default class HeaderComponent extends React.Component<Props, null>
                     <div className="site-headerLeft">
                         <a className="site-headerBrand" href="#">RFY</a>
                         <components.tools.RedditList/>
-                        <NavLink    className={ this.getButtonStyleIfFilterMatch(viewFilters.authorFilter.HOT )}
-                                    to={ this.getFilterLink(viewFilters.authorFilter.HOT) }>
+                        <NavLink    className={ this.getButtonStyleIfFilterMatch(AuthorFilter.HOT )}
+                                    to={ this.getFilterLink(AuthorFilter.HOT) }>
                                 hot
                         </NavLink>
 
-                        <NavLink    className={ this.getButtonStyleIfFilterMatch(viewFilters.authorFilter.NEW )}
-                                    to={ this.getFilterLink(viewFilters.authorFilter.NEW) }>
+                        <NavLink    className={ this.getButtonStyleIfFilterMatch(AuthorFilter.NEW )}
+                                    to={ this.getFilterLink(AuthorFilter.NEW) }>
                                 new
                         </NavLink>
 
-                        <NavLink    className={ this.getButtonStyleIfFilterMatch(viewFilters.authorFilter.SUBSCRIPTIONS )}
-                                    to={ this.getFilterLink(viewFilters.authorFilter.SUBSCRIPTIONS) }>
+                        <NavLink    className={ this.getButtonStyleIfFilterMatch(AuthorFilter.SUBSCRIPTIONS )}
+                                    to={ this.getFilterLink(AuthorFilter.SUBSCRIPTIONS) }>
                                 subscribed
                         </NavLink>
                         <NavLink    className="site-button"

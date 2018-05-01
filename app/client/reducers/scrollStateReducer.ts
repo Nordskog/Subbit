@@ -2,14 +2,6 @@
 import * as actions from '~/client/actions'
 import * as models from '~/common/models'
 
-interface fetchAuthorsPayload
-{
-    authors: models.data.AuthorEntry[];
-    page: number;
-    end: boolean;
-    append: boolean;
-}
-
 export function scrollStateReducer(state = getDefaultScrollState(), action)
 {
     switch (action.type)
@@ -23,7 +15,7 @@ export function scrollStateReducer(state = getDefaultScrollState(), action)
                 ...state,
                 currentPage: action.payload.page,
                 endReached:  action.payload.end,
-                nextPageLoading: false 
+                nextPageLoading: false,
             }
         }
     }
@@ -36,6 +28,7 @@ export function getDefaultScrollState()
     return {
         nextPageLoading : false,
         currentPage: 0,
-        endReached: false
-    };
+        endReached: false,
+        after : null
+    } as models.state.ScrollState;
 }

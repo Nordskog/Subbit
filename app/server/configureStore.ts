@@ -3,7 +3,7 @@ import { NOT_FOUND } from 'redux-first-router'
 import configureStore from '~/client/configureStore'
 import * as clientStore from '~/client/store'
 
-import * as api from '~/client/api'
+import * as api from '~/common/api'
 import * as models from '~/common/models'
 import * as authentication from './authentication'
 
@@ -21,12 +21,12 @@ export default async (req, res) =>
     if (req.cookies && req.cookies.userinfo)
     {
         //Get first call going first
-        let subredditListPromise = api.subreddits.fetchSubreddits();
+        let subredditListPromise = api.rfy.subreddits.fetchSubreddits();
 
         userInfo = authentication.decodUserInfoCookieToClient(req.cookies.userinfo); 
         if (userInfo)
         {
-            userInfo.last_visit = await api.authentication.getAndUpdateLastVisit(userInfo.access_token);
+            userInfo.last_visit = await api.rfy.authentication.getAndUpdateLastVisit(userInfo.access_token);
         }
 
         subRedditList = await subredditListPromise;

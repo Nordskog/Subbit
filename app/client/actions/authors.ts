@@ -1,7 +1,7 @@
 ﻿import { State } from '~/client/store';
 
-import * as viewFilters from '~/common/viewFilters';
-import * as api from '~/client/api'
+import { AuthorFilter } from '~/common/models';
+import * as api from '~/common/api'
 import * as actions from '~/client/actions'
 import * as models from '~/common/models'
 import * as tools from '~/common/tools'
@@ -15,6 +15,7 @@ export function changeSubreddit( subreddit : string)
 {
     return async function (dispatch, getState)
     {
+
         dispatch({
             type: actions.types.authors.SUBREDDIT_CHANGED,
             payload: subreddit as actions.types.authors.SUBREDDIT_CHANGED
@@ -25,11 +26,57 @@ export function changeSubreddit( subreddit : string)
     }
 }
 
+
 export function fetchAuthorsAction ( page : number = 0, appendResults: boolean = false)
 {
     return async function (dispatch, getState)
     {
+        if (!appendResults)
+            authority.author.clearAuthority();
 
+        //TODO deal with subscription authors
+
+        let state: State = getState();
+
+        let { authors, after }  = await api.reddit.getAuthors( state.authorState.subreddit, state.authorState.filter, state.authorState.after );
+
+        let returnedAuthorCount = authors.length;
+
+        console.log("Initial count: ",authors.length);
+
+        //Remove and any existing authors, then update authority with new
+        authors = authors.filter( (author : models.data.Author) => { return !authority.author.authorityContains(author) } )
+
+        console.log("Filtered count: ",authors.length);
+
+        authors.forEach( ( author : models.data.Author ) => { authority.author.updateAuthority(author) } );
+
+        let authorEntries : models.data.AuthorEntry[] = authors.map( ( author : models.data.Author ) => 
+        {
+            return {
+                author: author,
+                subscription: null,
+                after: null,
+                end: true
+            }
+        } ); 
+        
+        dispatch({
+            type: actions.types.authors.FETCH_AUTHORS_COMPLETED,
+            payload: { authors: authorEntries,
+                       page: page,
+                       end: after == null,
+                       append: appendResults,
+                       after: after
+            }  as actions.types.authors.FETCH_AUTHORS_COMPLETED
+        });
+
+
+        //Fetch display-count worth of posts
+        dispatch( fetchMorePosts
+            (authorEntries, config.postDisplayCount) );
+
+        /*
         let state: State = getState();
 
         let filter: string = state.authorState.filter;
@@ -38,7 +85,7 @@ export function fetchAuthorsAction ( page : number = 0, appendResults: boolean =
         let subreddit : string =  state.authorState.subreddit;
         let author : string = state.authorState.author;
 
-        let authors : models.data.AuthorEntry[]  = await api.authors.fetchAuthors(filter, subreddit, author, page, token);
+        let authors : models.data.AuthorEntry[]  = await api.rfy.authors.fetchAuthors(filter, subreddit, author, page, token);
 
         //Update post authority
         authors.forEach(author => 
@@ -63,6 +110,8 @@ export function fetchAuthorsAction ( page : number = 0, appendResults: boolean =
                        append: appendResults
             }  as actions.types.authors.FETCH_AUTHORS_COMPLETED
         });
+
+        */
     }
 }
 
@@ -94,43 +143,33 @@ export function populateAuthority()
 
 }
 
-
-export function getMorePosts( author : models.data.AuthorEntry, count : number, offset : number)
+export function fetchMorePosts( authors : models.data.AuthorEntry[], count : number )
 {
-
     return async function (dispatch, getState)
     {
         let state: State = getState();
+        authors.forEach( ( author : models.data.AuthorEntry ) => 
+        {
+            //TODO deal with subscriptions
+            let subreddits : string[] = [];
+            if (state.authorState.subreddit != null)
+                subreddits = [state.authorState.subreddit];
 
-        let posts : models.data.Post[];
-        if (state.authorState.subreddit != null)
-        {
-            posts = await api.authors.getAuthorPosts(author.author.id,count,offset,state.authorState.subreddit);
-        }
-        else if (state.authorState.filter == viewFilters.authorFilter.SUBSCRIPTIONS)
-        {
-            posts = await api.authors.getAuthorPosts(author.author.id,count,offset,null, state.authState.user.access_token);
-        }
-        else
-        {
-            posts = await api.authors.getAuthorPosts(author.author.id,count,offset,null, null);
-        }
-
-        dispatch({
-            type: actions.types.authors.POSTS_ADDED,
-            payload: { authorId: author.author.id,
-                       posts: posts 
-            } as actions.types.authors.POSTS_ADDED
+            api.reddit.getPosts(author.author.name, author.after, null, count, ...subreddits).then( ( {posts, after } ) => 
+            {
+                dispatch({
+                    type: actions.types.authors.POSTS_ADDED,
+                    payload: { 
+                        author: author.author.name,
+                        posts: posts,
+                        after: after,
+                        end: after == null
+                    }  as actions.types.authors.POSTS_ADDED
+                });
+            });
         });
 
-        //Dispatch using a dummy author
-        dispatch( getPostInfoAction(
-            [{ ...author,
-                author:{
-                    ...author.author,
-                    posts:posts
-                }
-            }], config.postDisplayCount) );
+
     }
 }
 
@@ -149,7 +188,7 @@ export function getPostInfoAction( authors : models.data.AuthorEntry[], perAutho
         {
             let redditAuth : models.auth.RedditAuth = await actions.directActions.authentication.retrieveAndUpdateRedditAuth(dispatch,state);
 
-            let chunks : { authors: Set<models.data.Author>, posts: models.data.Post[] }[] = [];
+            let chunks : { authors: Set<models.data.Author>, posts: models.reddit.Post[] }[] = [];
 
             let cacheCounter = 0;
             let newCounter = 0;
@@ -175,10 +214,10 @@ export function getPostInfoAction( authors : models.data.AuthorEntry[], perAutho
                     }
 
                     //Check cache data
-                    let cachedPost : models.data.Post = cache.post.getCached(post.post_id);
+                    let cachedPost : models.reddit.Post = cache.post.getCached(post.id);
                     if (cachedPost)
                     {
-                        post.liked = cachedPost.liked;
+                        post.likes = cachedPost.likes;
                         post.visited = cachedPost.visited;
                         cacheCounter++;
                     }
@@ -187,8 +226,8 @@ export function getPostInfoAction( authors : models.data.AuthorEntry[], perAutho
                         newCounter++;
 
                         //Add to cache immediately so we won't attempt to fetch it in other threads
-                        let cachePost : models.data.Post = models.data.getBlankPost();
-                        cache.post.putCached(post.post_id, cachePost);
+                        let cachePost : models.reddit.Post = <models.reddit.Post>{};
+                        cache.post.putCached(post.id, cachePost);
 
                         currentChunk.posts.push(post);
                     }
@@ -211,7 +250,7 @@ export function getPostInfoAction( authors : models.data.AuthorEntry[], perAutho
 
                 let postIds = chunk.posts.map( post => 
                 {
-                        return post.post_id;
+                        return post.id;
                 });
 
                 let postDetails : { likes, visited }[] = await api.reddit.getPostInfo(redditAuth, postIds);
@@ -224,13 +263,13 @@ export function getPostInfoAction( authors : models.data.AuthorEntry[], perAutho
                         //Post authority may have changed.
                         post = authority.post.getPost(post);
                         
-                        post.liked = postDetail.likes;
+                        post.likes = postDetail.likes;
 
                         //Update cache
-                        let cachePost : models.data.Post = models.data.getBlankPost();
-                        cachePost.liked = post.liked;
+                        let cachePost : models.reddit.Post = <models.reddit.Post>{};
+                        cachePost.likes = post.likes;
                         cachePost.visited = post.visited;
-                        cache.post.putCached(post.post_id, cachePost);
+                        cache.post.putCached(post.id, cachePost);
                     });
                 }
                 else
@@ -239,15 +278,15 @@ export function getPostInfoAction( authors : models.data.AuthorEntry[], perAutho
                 }
                              
                 //because list may be re-populated during fetch
-                let authorIdSet = new Set<number>();
+                let authorNameSet = new Set<string>();
                 chunk.authors.forEach(author => 
                     {
-                        authorIdSet.add(author.id);
+                        authorNameSet.add(author.name);
                     })
 
                 dispatch({
                     type: actions.types.authors.POST_DETAILS_UPDATED,
-                    payload: authorIdSet as actions.types.authors.POST_DETAILS_UPDATED
+                    payload: authorNameSet as actions.types.authors.POST_DETAILS_UPDATED
                 });
             }
 

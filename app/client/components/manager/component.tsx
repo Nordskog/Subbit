@@ -2,7 +2,7 @@
 import { Link } from 'react-router-dom';
 import * as component from '~/client/components/'
 import * as models from '~/common/models';
-import * as api from '~/client/api'
+import * as api from '~/common/api'
 import * as websocket from '~/client/websocket'
 
 

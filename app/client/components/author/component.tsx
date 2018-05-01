@@ -21,7 +21,7 @@ interface Props
     getPostDetails(authors : models.data.AuthorEntry[]): void;
     addSubscriptionSubreddit(subscriptionId : number, subredditId : number ): void;
     removeSubscriptionSubreddit(subscriptionId : number, subredditId : number): void;
-    getMorePosts(author : models.data.AuthorEntry, count : number, offset : number): void;
+    fetchMorePosts(author : models.data.AuthorEntry, count : number): void;
 }
 interface State
 {
@@ -59,18 +59,22 @@ export default class AuthorCell extends React.Component<Props, State>
         return true;
     }
 
-    getUndisplayedPostCount() : number
+    canExpand() : boolean
     {
         if (!this.state.postsExpanded)
         {
-            //total count - default display count
-            return this.props.author.author.post_count - config.postDisplayCount;
+            if (this.props.author.author.posts.length > config.postDisplayCount)
+                return true;
         }
         else
         {
-            //total count - loaded count
-            return this.props.author.author.post_count - this.props.author.author.posts.length;
+            return false;
         }
+    }
+
+    canLoadMore() : boolean
+    {
+        return !this.props.author.end;
     }
 
     renderPosts()
@@ -88,16 +92,16 @@ export default class AuthorCell extends React.Component<Props, State>
             else
             {
                 renderedPosts.push( <cells.postCell
-                    key={post.post_id}
+                    key={post.id}
                     post={post}
                     isTopPost={index==0}
                 /> );
             }
         };
 
-        if (this.getUndisplayedPostCount() > 0)
+        if (this.canExpand() || this.canLoadMore())
         {
-            renderedPosts.push(this.getExpandButton(this.getUndisplayedPostCount()));
+            renderedPosts.push (this.getExpandButton() );
         }
 
         if ( this.state.postsExpanded)
@@ -186,7 +190,7 @@ export default class AuthorCell extends React.Component<Props, State>
                 </div>
     }
 
-    getExpandButton(remainingPosts : number)
+    getExpandButton()
     {
         return <div className="author-morePostsContainer" key={"_expandButton"} onClick={this.expandPosts} > 
                 <div className="author-morePostsInnerContainer">
@@ -195,7 +199,7 @@ export default class AuthorCell extends React.Component<Props, State>
                     </svg>
                 </div>
 
-                <span> {remainingPosts} more {remainingPosts > 1 ? 'posts' : 'post' }</span>
+                <span>More posts</span>
         </div>
     }
 
@@ -246,18 +250,27 @@ export default class AuthorCell extends React.Component<Props, State>
     {
         if (this.state.postsExpanded)
         {
-            //Already expanding, need to load more posts
             let offset : number = this.props.author.author.posts.length;
-            let count : number = config.postDisplayCount;
-            this.props.getMorePosts(this.props.author, count, offset);
+            let count : number = config.postFetchCount;
+            this.props.fetchMorePosts(this.props.author, count);
         }
         else
         {
-            //Just expanding
+            //Just expanding, grab more if necessary
+            if (this.props.author.author.posts.length <= config.postDisplayCount)
+            {
+                this.grabMorePosts();
+            }
             this.props.getPostDetails( [this.props.author] );
             this.setState( { postsExpanded: true } );
         }
+    }
 
+    grabMorePosts()
+    {
+        let offset : number = this.props.author.author.posts.length;
+        let count : number = config.postFetchCount;
+        this.props.fetchMorePosts(this.props.author, count);
     }
 
     collapsePosts()

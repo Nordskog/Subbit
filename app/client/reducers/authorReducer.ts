@@ -1,7 +1,7 @@
 ﻿
 import * as routes from '~/client/routes';
 
-import * as viewFilters from '~/common/viewFilters';
+import { AuthorFilter } from '~/common/models';
 import * as models from '~/common/models';
 import * as actions from '~/client/actions';
 
@@ -18,14 +18,17 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
             {
                 return {
                     ...state,
-                    authors: state.authors.concat(action.payload.authors)
+                    authors: state.authors.concat(action.payload.authors),
+                    after: action.payload.after
+
                 }
             }
             else
             {
                 return {
                     ...state,
-                    authors: action.payload.authors
+                    authors: action.payload.authors,
+                    after: action.payload.after
                 }
             }
         }
@@ -38,14 +41,16 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
                 ...state,
                 authors: state.authors.map( author => 
                     {
-                        if (author.author.id == action.payload.authorId )
+                        if (author.author.name == action.payload.author )
                         {
                             return {
                                 ...author,
                                 author: {
                                     ...author.author,
                                     posts: author.author.posts.concat(action.payload.posts)
-                                }
+                                },
+                                after: action.payload.after,
+                                end: action.payload.end
                             }
                         }
                         else
@@ -61,7 +66,7 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
                 ...state,
                 authors: state.authors.map( author => 
                     {
-                        if (action.payload.has(author.author.id))
+                        if (action.payload.has(author.author.name))
                         {
 
                             console.log("Redrawing ",author.author.name);
@@ -125,7 +130,8 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
 
             return {
                 ...state,
-                subreddit: action.payload
+                subreddit: action.payload,
+                after: null
                 }
             
         }
@@ -140,9 +146,10 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
                 
                 return {
                     ...state,
-                    filter: viewFilters.authorFilter.NEW,
+                    filter: AuthorFilter.NEW,
                     subreddit: null,
-                    author: null
+                    author: null,
+                    after: null
                 }
             }
 
@@ -151,9 +158,10 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
             
             return {
                 ...state,
-                filter: viewFilters.authorFilter.HOT,
+                filter: AuthorFilter.HOT,
                 subreddit: null,
-                author: null
+                author: null,
+                after: null
             }
         }
 
@@ -162,9 +170,10 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
             {
                 return {
                     ...state,
-                    filter: viewFilters.authorFilter.SUBSCRIPTIONS,
+                    filter: AuthorFilter.SUBSCRIPTIONS,
                     subreddit: null,
-                    author: null
+                    author: null,
+                    after: null
                 }
             }
 
@@ -172,9 +181,10 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
             {                
                 return {
                     ...state,
-                    filter: action.payload.filter != null ? action.payload.filter : viewFilters.authorFilter.HOT,
+                    filter: action.payload.filter != null ? action.payload.filter : AuthorFilter.HOT,
                     subreddit: action.payload.subreddit,
-                    author: null
+                    author: null,
+                    after: null
                 }
             }
 
@@ -182,9 +192,10 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
             {
                 return {
                     ...state,
-                    filter: viewFilters.authorFilter.NEW,
+                    filter: AuthorFilter.NEW,
                     subreddit: null,
-                    author: action.payload.author
+                    author: action.payload.author,
+                    after: null
                 }
             }
     }
@@ -196,8 +207,9 @@ export function getDefaultAuthorState()
 {
     return {
         authors: [],
-        filter: viewFilters.authorFilter.NEW,
+        filter: AuthorFilter.NEW,
         author: null,
-        subreddit: null
-    };
+        subreddit: null,
+        after : null
+    } as models.state.AuthorsState ;
 }

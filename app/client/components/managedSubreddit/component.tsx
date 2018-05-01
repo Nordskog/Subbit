@@ -19,11 +19,6 @@ interface Props
     updateJob(modifiedJob: models.data.ScrapeJob ) : void;
     cancelJob( job: number) : void;
     removeSubreddit ( subreddit: models.data.Subreddit  ) : void;
-
-    pruneAuthorsWithNoPosts( subreddit_id : number ) : void;
-    updatePostHotScore( subreddit_id : number  ) : void;
-    updateAuthorHotScoreFromPosts( subreddit_id : number  ) : void;
-    setSubredditAutoscrape( subreddit_id : number, enabled : boolean) : void;
 }
 
 interface State
@@ -100,35 +95,6 @@ export default class managedSubreddit extends React.Component<Props, State >
                     positiveButton='Delete'
                     negativeButton='Cancel'
                     onSave={ (ok) => { if (ok) this.props.removeSubreddit( this.props.subreddit ); } } />
-
-                <component.tools.confirmationPopup   
-                    trigger={<div className={ styles.manageButton }> Update post hot scores </div>}
-                    title='Update post hot scores'
-                    message='This might take a while'
-                    positiveButton='Ok'
-                    negativeButton='Cancel'
-                    onSave={ (ok) => { if (ok) this.props.updatePostHotScore( this.props.subreddit.id ); } } />
-
-                <component.tools.confirmationPopup   
-                    trigger={<div className={ styles.manageButton }> Update author hot scores </div>}
-                    title='Update author hot scores'
-                    message='This might take a while'
-                    positiveButton='Ok'
-                    negativeButton='Cancel'
-                    onSave={ (ok) => { if (ok) this.props.updateAuthorHotScoreFromPosts( this.props.subreddit.id ); } } />
-
-                <div 
-                    onClick={ () => !this.props.subreddit.autoscrape ? this.props.setSubredditAutoscrape(this.props.subreddit.id,true) : {} } 
-                    className={ !this.props.subreddit.autoscrape  ? styles.manageButton : styles.manageButtonDisabled }
-                    >Enable Autoscrape  
-                </div>
-
-                <div 
-                    onClick={ () => this.props.subreddit.autoscrape ? this.props.setSubredditAutoscrape(this.props.subreddit.id,false) : {} } 
-                    className={ this.props.subreddit.autoscrape  ? styles.manageButton : styles.manageButtonDisabled }
-                    >Disable Autoscrape  
-                </div>
-
             
             </div>
 

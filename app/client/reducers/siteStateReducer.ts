@@ -56,7 +56,12 @@ export function siteStateReducer(state = getDefaultSiteState(), action)
 export function getDefaultSiteState(mode? : models.state.SiteMode, subreddits? : models.data.Subreddit[])
 {
     return {
-        subreddits: subreddits ? subreddits : [],
+        subreddits: subreddits ? subreddits : [
+            {
+                id: 0,
+                name: 'hfy'
+            }
+        ],
         mode : models.state.SiteMode.AUTHORS
 
     };

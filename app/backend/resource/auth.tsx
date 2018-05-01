@@ -11,7 +11,7 @@ import * as actions from '~/client/actions';
 import * as authentication from '~/backend/authentication';
 import * as urls from '~/common/urls'
 import * as tools from '~/common/tools'
-import * as api from '~/client/api'
+import * as api from '~/common/api'
 
 import * as redditAuth from '~/backend/authentication/redditAuth'
 const express = require('express');

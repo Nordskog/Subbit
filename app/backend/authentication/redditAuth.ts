@@ -4,7 +4,7 @@ import * as base64 from 'base-64'
 import * as Wetland from 'wetland';
 import * as Entities from '~/backend/entity';
 
-import * as api from '~/client/api'
+import * as api from '~/common/api'
 import * as tools from '~/common/tools'
 import * as urls from '~/common/urls'
 import * as authentication from '~/backend/authentication'

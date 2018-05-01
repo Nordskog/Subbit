@@ -20,8 +20,6 @@ function mapDispatchToProps(dispatch, ownProps) : object
         return {
             addSubreddit: ( subreddit: string  ) => { dispatch(actions.subreddits.addSubreddit(subreddit) ) },
             pruneAuthorsWithNoPosts: ( ) => { dispatch(actions.manager.pruneAuthorsWithNoPosts() ) },
-            updatePostHotScore: ( ) => { dispatch(actions.manager.updatePostHotScore() ) },
-            updateAuthorHotScoreFromPosts: ( ) => { dispatch(actions.manager.updateAuthorHotScoreFromPosts() ) }
           };
     }
 }

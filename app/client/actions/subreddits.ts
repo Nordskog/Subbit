@@ -1,5 +1,5 @@
 import { State } from '~/client/store';
-import * as api from '~/client/api'
+import * as api from '~/common/api'
 import * as actions from '~/client/actions'
 import * as models from '~/common/models'
 import * as tools from '~/common/tools'
@@ -13,7 +13,7 @@ export function removeSubreddit(subreddit : models.data.Subreddit)
         let filter: string = state.authorState.filter;
         let token: string = tools.store.getAccessToken(state);
 
-        let deleted = await api.subreddits.removeSubreddit(subreddit.id, token);
+        let deleted = await api.rfy.subreddits.removeSubreddit(subreddit.id, token);
   
         if (deleted)
         {
@@ -35,7 +35,7 @@ export function addSubreddit(subreddit_name : string)
         let filter: string = state.authorState.filter;
         let token: string = tools.store.getAccessToken(state);
 
-        let subreddit : models.data.Subreddit = await api.subreddits.addSubreddit(subreddit_name, token);
+        let subreddit : models.data.Subreddit = await api.rfy.subreddits.addSubreddit(subreddit_name, token);
   
         dispatch({
             type: actions.types.manager.SUBREDDIT_ADDED,
@@ -54,7 +54,7 @@ export function setSubredditAutoscrape(subreddit_id : number, enabled : boolean)
         let filter: string = state.authorState.filter;
         let token: string = tools.store.getAccessToken(state);
 
-        await api.subreddits.setSubredditAutoScrape(subreddit_id, enabled, token);
+        await api.rfy.subreddits.setSubredditAutoScrape(subreddit_id, enabled, token);
   
         dispatch({
             type: actions.types.manager.SUBREDDIT_MODIFIED,

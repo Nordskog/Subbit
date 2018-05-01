@@ -26,3 +26,12 @@ export enum SocketAction
     REDUCER_ACTION = 'REDUCER_ACTION',
     TOAST = 'TOAST',
 };
+
+export enum AuthorFilter
+    {
+        BEST = 'best',
+        NEW = 'new',
+        HOT =  'hot',
+        TOP = 'top',
+        SUBSCRIPTIONS =  'subs',
+    };
