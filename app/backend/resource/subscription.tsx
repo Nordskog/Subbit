@@ -2,7 +2,7 @@
 import { WetlandRequest } from '~/backend/rfy';
 
 import * as RFY from '~/backend/rfy';
-import * as Entities from '~/backend/entity';
+import * as entities from '~/backend/entity';
 
 import * as serverActions from '~/backend/actions'
 import * as models from '~/common/models'
@@ -16,6 +16,36 @@ import * as queries from './queries'
 const express = require('express');
 const router = express.Router();
 
+router.get('/api/subscription', async (req: WetlandRequest, res: Response) =>
+{
+
+    let manager = RFY.wetland.getManager();
+    let token = req.headers.access_token;
+
+    try
+    {
+        let user = await authentication.verification.getUserIfAuthorized(manager, token, authentication.generation.scopes.SUBSCRIPTIONS);
+
+    
+        if (user != null)
+        {
+            
+
+            let subs : entities.Subscription[] = await RFY.wetland.getManager().getRepository(entities.Subscription).find( { 'user_id' : user.id }, { populate : ['subreddits', 'user', 'author'] } ) || [];
+
+            console.log("sub0",subs[0]);
+
+            res.json( subs.map( sub => { 
+            return entities.Subscription.formatModel(sub);
+            } ));
+        }
+    }
+    catch (err)
+    {
+        console.log("Failed to get subscriptions: ",err);
+        res.status(500).json("Something went wrong");
+    }
+});
 
 router.post('/api/subscription', async (req: WetlandRequest, res: Response) =>
 {   
@@ -23,7 +53,7 @@ router.post('/api/subscription', async (req: WetlandRequest, res: Response) =>
     let token = req.headers.access_token;
     let rawReq : models.Action<any> = req.body;
 
-    let user: Entities.User = null;
+    let user: entities.User = null;
     try
     {
         user = await authentication.verification.getUserIfAuthorized(manager, token, authentication.generation.scopes.SUBSCRIPTIONS);
@@ -47,10 +77,10 @@ router.post('/api/subscription', async (req: WetlandRequest, res: Response) =>
         
             let rawReq : models.Action< serverActions.subscription.ADD_SUBSCRIPTION_SUBREDDIT > = req.body;
 
-            let sub: Entities.Subscription = null;
+            let sub: entities.Subscription = null;
             try 
             {
-                sub = await manager.getRepository(Entities.Subscription).findOne({ id: rawReq.payload.id }, { populate: ['user', 'subreddits', 'author'] })
+                sub = await manager.getRepository(entities.Subscription).findOne({ id: rawReq.payload.id }, { populate: ['user', 'subreddits', 'author'] })
             }
             catch(err)
             {
@@ -62,7 +92,7 @@ router.post('/api/subscription', async (req: WetlandRequest, res: Response) =>
             let subreddit;
             try 
             {
-                subreddit = await manager.getRepository(Entities.Subreddit).findOne({ id: rawReq.payload.subreddits[0].id }, {})
+                subreddit = await manager.getRepository(entities.Subreddit).findOne({ id: rawReq.payload.subreddits[0].id }, {})
             }
             catch(err)
             {
@@ -79,12 +109,12 @@ router.post('/api/subscription', async (req: WetlandRequest, res: Response) =>
             {
                 if (rawReq.type === serverActions.subscription.ADD_SUBSCRIPTION_SUBREDDIT)
                 {
-                    let subbedReddits : Wetland.ArrayCollection<Entities.Subreddit> = sub.subreddits;
+                    let subbedReddits : Wetland.ArrayCollection<entities.Subreddit> = sub.subreddits;
                     subbedReddits.add(subreddit);
                 }
                 else if (rawReq.type === serverActions.subscription.REMOVE_SUBSCRIPTION_SUBREDDIT)
                 {
-                    let subbedReddits : Wetland.ArrayCollection<Entities.Subreddit> = sub.subreddits;
+                    let subbedReddits : Wetland.ArrayCollection<entities.Subreddit> = sub.subreddits;
                     subbedReddits.remove(subreddit);
                 }
 
@@ -128,9 +158,9 @@ router.post('/api/subscription', async (req: WetlandRequest, res: Response) =>
                 break;
             }
 
-            let author: Entities.Author = await manager.getRepository(Entities.Author).findOne({ name: rawReq.payload.author });
+            let author: entities.Author = await manager.getRepository(entities.Author).findOne({ name: rawReq.payload.author });
     
-            let newSub: Entities.Subscription = new Entities.Subscription;   
+            let newSub: entities.Subscription = new entities.Subscription;   
             manager.persist(newSub);
     
             newSub.user_id = user.id;
@@ -138,8 +168,8 @@ router.post('/api/subscription', async (req: WetlandRequest, res: Response) =>
             newSub.subreddits = new Wetland.ArrayCollection();
     
             //Get all subreddits
-            let subreddits : Entities.Subreddit[] = await manager.getRepository(Entities.Subreddit).find();
-            subreddits.forEach( (subreddit : Entities.Subreddit ) => 
+            let subreddits : entities.Subreddit[] = await manager.getRepository(entities.Subreddit).find();
+            subreddits.forEach( (subreddit : entities.Subreddit ) => 
             {
                 newSub.subreddits.add(  subreddit );
             })
@@ -167,10 +197,10 @@ router.post('/api/subscription', async (req: WetlandRequest, res: Response) =>
         {
             let rawReq : models.Action< serverActions.subscription.REMOVE_SUBSCRIPTION > = req.body;
 
-            let sub: Entities.Subscription = null;
+            let sub: entities.Subscription = null;
             try 
             {
-                sub = await manager.getRepository(Entities.Subscription).findOne({ id: rawReq.payload.id }, { populate: 'user' })
+                sub = await manager.getRepository(entities.Subscription).findOne({ id: rawReq.payload.id }, { populate: 'user' })
             }
             catch(err)
             {

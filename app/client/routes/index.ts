@@ -13,4 +13,6 @@ export const routesMap = {
     //Manage
     MANAGER: { path: '/manager', thunk: actions.routes.managerRoutes() },   
 
+    //Auth
+    AUTHENTICATE: { path: '/authenticate', thunk: actions.routes.authorizeRoute() },
 };

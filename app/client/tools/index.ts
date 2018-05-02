@@ -1,0 +1,1 @@
+export import PostInfoQueue = require('./PostInfoQueue');

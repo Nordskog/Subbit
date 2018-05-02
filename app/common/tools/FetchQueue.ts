@@ -130,11 +130,6 @@ export default class RequestQueue
                 }
     
             }
-                
-            if ( !this.monitor.slotsAvailable())
-            {
-                console.log("All slots occupied. Ongoing: "+this.monitor.activeRequests);
-            }
             
         }
     }
@@ -157,8 +152,6 @@ export default class RequestQueue
     
     async processItem( item : QueueItem)
     {
-        console.log("Processing queue item");
-
         this.monitor.informOfRequest();
 
         let response;

@@ -107,7 +107,7 @@ export function generateRedditLoginUrl()
             client_id: authentication.redditAuth.getAppId(),
             response_type: "code",
             state: authentication.redditAuth.getAuthState(),
-            redirect_uri: "http://127.0.0.1:8080/api/authorize_local",
+            redirect_uri: urls.getLocalAuthUrl(),
             duration: "permanent",
             scope: "identity read"
         }

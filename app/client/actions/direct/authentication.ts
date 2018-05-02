@@ -2,6 +2,7 @@ import * as tools from '~/common/tools'
 import * as api from '~/common/api'
 import * as models from '~/common/models'
 import * as actions from '~/client/actions'
+import { State } from '~/client/store';
 
 
 export async function retrieveAndUpdateRedditAuth(dispatch, state)
@@ -23,4 +24,34 @@ export async function retrieveAndUpdateRedditAuth(dispatch, state)
     }
 
    return redditAuth;
+}
+
+
+export function saveAuthentication( userInfo : models.auth.UserInfo)
+{
+        localStorage.setItem('id_token', userInfo.id_token);
+        localStorage.setItem('access_token', userInfo.access_token);
+        localStorage.setItem('reddit_auth', JSON.stringify(userInfo.redditAuth ) );
+}
+
+export function loadAuthentication(dispatch, getState)
+{
+    let state : State = getState();
+    if (!state.authState.isAuthenticated)
+    {
+        let id_token = localStorage.getItem('id_token');
+        let access_token = localStorage.getItem('access_token');
+        let reddit_auth_json = localStorage.getItem('reddit_auth');
+
+        if (id_token != null && access_token != null && reddit_auth_json != null)
+        {
+            let userInfo : models.auth.UserInfo = tools.jwt.decodeTokensToUserInfo(id_token, access_token, JSON.parse(reddit_auth_json) );
+            dispatch({
+                type: actions.types.authentication.LOGIN_SUCCESS,
+                payload: userInfo as actions.types.authentication.LOGIN_SUCCESS
+            });
+        }
+    }
+
+
 }

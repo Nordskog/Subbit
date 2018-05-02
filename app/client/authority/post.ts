@@ -13,7 +13,6 @@ export function updateAuthorityFromAuthor(author : models.data.Author)
      {
         updateAuthority(post);
     } )
-
 }
 
 export function updateAuthorityFromAuthors(authors : models.data.AuthorEntry[])

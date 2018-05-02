@@ -81,6 +81,17 @@ export namespace author
     }
 }
 
+export namespace auth
+{
+    export const AUTHENTICATE_WITH_REDDIT_CODE: string = 'AUTHENTICATE_WITH_REDDIT_CODE'
+
+    export interface AUTHENTICATE_WITH_REDDIT_CODE
+    {
+        code: string;
+        state: string;
+    }
+}
+
 export namespace scrape
 {
         export const REQUEST_SCRAPE                     : string = 'REQUEST_SCRAPE';

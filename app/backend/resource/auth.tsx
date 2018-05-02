@@ -13,6 +13,8 @@ import * as urls from '~/common/urls'
 import * as tools from '~/common/tools'
 import * as api from '~/common/api'
 
+import * as serverActions from '~/backend/actions'
+
 import * as redditAuth from '~/backend/authentication/redditAuth'
 const express = require('express');
 const router = express.Router();
@@ -84,12 +86,86 @@ router.get('/api/authorize_refresh', async (req: WetlandRequest, res: Express.Re
         }
         catch (err)
         {
-            console.log("reddit refresh error: ",err);
+            console.log("Error: ",err);
         } 
     }
 
     res.status(401).json( { "message" : "fuckup" });
 });
+
+
+router.post('/api/authorize_local', async (req: WetlandRequest, res: Express.Response) =>
+{
+    let token = req.headers.access_token;
+    let action : models.Action<any> = req.body;
+    let manager : Wetland.Scope = RFY.wetland.getManager();
+
+    try
+    {
+        switch(action.type)
+        {
+            case serverActions.auth.AUTHENTICATE_WITH_REDDIT_CODE:
+            {
+                let payload : serverActions.auth.AUTHENTICATE_WITH_REDDIT_CODE = action.payload;
+
+                {        
+                    let result = null;
+                    if ( authentication.redditAuth.confirmAuthState(payload.state) ) 
+                    {
+                        result = await api.reddit.authenticateWithCode(payload.code, urls.getLocalAuthUrl(), authentication.redditAuth.getHttpBasicAuthHeader() );
+                    }
+                    else
+                    {
+                        result = null;
+                        console.log("Invalid state returned from reddit auth attempt");
+                    }
+        
+                    console.log("result: ",result);
+        
+                    if (result && result.access_token)
+                    {
+        
+                        let manager : Wetland.Scope = RFY.wetland.getManager()
+                        let user : Entities.User = await redditAuth.createOrUpdateUserFromRedditToken(manager,result);
+        
+                        console.log("user: ",user);
+        
+                        if (user)
+                        {
+                            let userInfo : models.auth.UserInfo = authentication.generation.generateUserInfo(user);
+                            console.log("Logging in: ", user.username);
+        
+                            res.json( userInfo );
+                            return;
+                        }
+                        else
+                        {
+                            res.status(403).json({Message:"Failed to get user"});
+                            return;
+                        }
+            
+                    }
+                    else
+                    {
+                        res.status(403).json({Message:"Login failed"});
+                        return;
+                    }
+                }
+
+      
+            }
+        }
+    }
+    catch (err)
+    {
+        console.log("Problem in subreddit api: ",err);
+        res.status(500).json( err.message );
+    }
+
+
+});
+
+
 
 router.get('/api/authorize_local', async (req: WetlandRequest, res: Express.Response) =>
 {

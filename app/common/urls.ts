@@ -26,6 +26,11 @@ export function getLoginUrl()
     return API_URL+"/authorize_remote";
 }
 
+export function getLocalAuthUrl()
+{
+    return RFY_URL+'/authenticate'
+}
+
 export function getLastVisitUrl()
 {
     return API_URL+"/user/last_visit";

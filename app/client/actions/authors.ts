@@ -5,8 +5,8 @@ import * as api from '~/common/api'
 import * as actions from '~/client/actions'
 import * as models from '~/common/models'
 import * as tools from '~/common/tools'
+import * as clientTools from '~/client/tools'
 import * as cache from '~/client/cache'
-
 import * as config from '~/config'
 
 import * as authority from '~/client/authority'
@@ -15,7 +15,6 @@ export function changeSubreddit( subreddit : string)
 {
     return async function (dispatch, getState)
     {
-
         dispatch({
             type: actions.types.authors.SUBREDDIT_CHANGED,
             payload: subreddit as actions.types.authors.SUBREDDIT_CHANGED
@@ -25,7 +24,6 @@ export function changeSubreddit( subreddit : string)
             (0, false) );
     }
 }
-
 
 export function fetchAuthorsAction ( page : number = 0, appendResults: boolean = false)
 {
@@ -38,7 +36,7 @@ export function fetchAuthorsAction ( page : number = 0, appendResults: boolean =
 
         let state: State = getState();
 
-        let { authors, after }  = await api.reddit.getAuthors( state.authorState.subreddit, state.authorState.filter, state.authorState.after );
+        let { authors, after }  = await api.reddit.getAuthors( state.authorState.subreddit, state.authorState.filter, state.authorState.after, config.authorDisplayCount );
 
         let returnedAuthorCount = authors.length;
 
@@ -60,6 +58,9 @@ export function fetchAuthorsAction ( page : number = 0, appendResults: boolean =
                 end: true
             }
         } ); 
+
+        await actions.directActions.authors.poulateInitialPosts(authorEntries, config.postDisplayCount, dispatch, getState);
+        await actions.directActions.authors.populateAuthorSubscriptions(authorEntries, getState);
         
         dispatch({
             type: actions.types.authors.FETCH_AUTHORS_COMPLETED,
@@ -71,47 +72,11 @@ export function fetchAuthorsAction ( page : number = 0, appendResults: boolean =
             }  as actions.types.authors.FETCH_AUTHORS_COMPLETED
         });
 
-
+        /*
         //Fetch display-count worth of posts
         dispatch( fetchMorePosts
             (authorEntries, config.postDisplayCount) );
-
-        /*
-        let state: State = getState();
-
-        let filter: string = state.authorState.filter;
-        let token: string = tools.store.getAccessToken(state);
-
-        let subreddit : string =  state.authorState.subreddit;
-        let author : string = state.authorState.author;
-
-        let authors : models.data.AuthorEntry[]  = await api.rfy.authors.fetchAuthors(filter, subreddit, author, page, token);
-
-        //Update post authority
-        authors.forEach(author => 
-        {
-            authority.post.updateAuthorityFromAuthor(author.author);
-        });
-
-        if ( process.env.IS_CLIENT )
-        { 
-            for (let author of authors)
-                cache.post.populatePostsFromCache(author.author.posts);   
-            dispatch( getPostInfoAction
-            (authors, config.postDisplayCount) );
-            
-        }
-
-        dispatch({
-            type: actions.types.authors.FETCH_AUTHORS_COMPLETED,
-            payload: { authors: authors,
-                       page: page,
-                       end: authors.length < config.authorDisplayCount,
-                       append: appendResults
-            }  as actions.types.authors.FETCH_AUTHORS_COMPLETED
-        });
-
-        */
+            */
     }
 }
 
@@ -140,7 +105,6 @@ export function populateAuthority()
         let state: State = getState();
         authority.post.updateAuthorityFromAuthors(state.authorState.authors);
     }
-
 }
 
 export function fetchMorePosts( authors : models.data.AuthorEntry[], count : number )
@@ -148,6 +112,7 @@ export function fetchMorePosts( authors : models.data.AuthorEntry[], count : num
     return async function (dispatch, getState)
     {
         let state: State = getState();
+        let proms : Promise<void>[] = [];
         authors.forEach( ( author : models.data.AuthorEntry ) => 
         {
             //TODO deal with subscriptions
@@ -155,21 +120,39 @@ export function fetchMorePosts( authors : models.data.AuthorEntry[], count : num
             if (state.authorState.subreddit != null)
                 subreddits = [state.authorState.subreddit];
 
-            api.reddit.getPosts(author.author.name, author.after, null, count, ...subreddits).then( ( {posts, after } ) => 
+            let prom = new Promise<void>( (resolve, reject) => 
             {
-                dispatch({
-                    type: actions.types.authors.POSTS_ADDED,
-                    payload: { 
-                        author: author.author.name,
-                        posts: posts,
-                        after: after,
-                        end: after == null
-                    }  as actions.types.authors.POSTS_ADDED
+                api.reddit.getPosts(author.author.name, author.after, null, count, ...subreddits).then( ( {posts, after } ) => 
+                {
+                    posts.forEach( ( post : models.reddit.Post ) => 
+                    {
+                        authority.post.updateAuthority(post);
+                    } );
+
+                    cache.post.populatePostsFromCache(posts);
+                    clientTools.PostInfoQueue.addAuthorToQueue(author.author.name, posts, dispatch);
+    
+                    dispatch({
+                        type: actions.types.authors.POSTS_ADDED,
+                        payload: { 
+                            author: author.author.name,
+                            posts: posts,
+                            after: after,
+                            end: after == null
+                        }  as actions.types.authors.POSTS_ADDED
+                    });
+
+                    resolve();
                 });
             });
+
+            proms.push(prom);
+
         });
 
-
+        //Process any remaining
+        await Promise.all(proms);
+        clientTools.PostInfoQueue.processNow(dispatch);
     }
 }
 
@@ -177,12 +160,11 @@ export function getPostInfoAction( authors : models.data.AuthorEntry[], perAutho
 {
     return async function (dispatch, getState)
     {
-
         let state: State = getState();
 
         //Never run on server
-        if ( !state.options.isClient )
-        return;
+       // if ( !state.options.isClient )
+       //     return;
 
         if (state.authState.isAuthenticated)
         {

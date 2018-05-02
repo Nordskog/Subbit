@@ -1,9 +1,26 @@
 ﻿import * as api from '~/common/api'
 import * as actions from '~/client/actions'
+
 import * as tools from '~/common/tools'
+import * as models from '~/common/models'
 
 import { State } from '~/client/store';
 
+export function authenticatedWithRedditCode(code : string, state : string)
+{
+    return async dispatch =>
+    {
+        let userInfo : models.auth.UserInfo = await api.rfy.authentication.authenticate(code,state);
+
+        actions.directActions.authentication.saveAuthentication(userInfo);
+
+        dispatch({
+            type: actions.types.authentication.LOGIN_SUCCESS,
+            payload: userInfo as actions.types.authentication.LOGIN_SUCCESS
+        });
+    }
+    
+}
 
 export function logoutUserAction()
 {
@@ -29,3 +46,4 @@ export function logoutUserAction()
         }
     }
 }
+

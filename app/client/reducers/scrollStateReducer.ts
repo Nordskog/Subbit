@@ -2,7 +2,7 @@
 import * as actions from '~/client/actions'
 import * as models from '~/common/models'
 
-export function scrollStateReducer(state = getDefaultScrollState(), action)
+export function scrollStateReducer(state = getDefaultScrollState(), action :  models.Action<any>)
 {
     switch (action.type)
     {

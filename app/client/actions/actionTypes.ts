@@ -28,15 +28,18 @@ export namespace authors
         end: boolean;
 
     }
-
-
-    
 };
 
 export namespace authentication
 {
+    export const LOGIN_SUCCESS         : string = 'LOGIN_SUCCESS';
     export const LOGOUT_SUCCESS         : string = 'LOGOUT_SUCCESS';
     export const REDDIT_TOKEN_UPDATED   : string =  'REDDIT_TOKEN_UPDATED';
+
+    export interface LOGIN_SUCCESS extends models.auth.UserInfo
+    {
+
+    }
 
     export interface LOGOUT_SUCCESS
     {
@@ -47,15 +50,16 @@ export namespace authentication
     {
 
     }
-
-
 };
 
 export namespace subscription
 {
+    export const SUBSCRIPTIONS_FETCHED     : string = 'SUBSCRIPTIONS_FETCHED';
     export const SUBSCRIPTION_ADDED     : string = 'SUBSCRIPTION_ADDED';
     export const SUBSCRIPTION_REMOVED   : string = 'SUBSCRIPTION_REMOVED';
     export const SUBSCRIPTION_CHANGED   : string = 'SUBSCRIPTION_CHANGED';
+
+    export type SUBSCRIPTIONS_FETCHED = models.data.Subscription[];
 
     export interface SUBSCRIPTION_ADDED extends Partial<models.data.Subscription>
     {   

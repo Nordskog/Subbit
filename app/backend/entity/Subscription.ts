@@ -2,6 +2,7 @@
 import Author from './Author'
 import User from './User'
 import Subreddit from './Subreddit'
+import * as models from '~/common/models'
 
 
 export default class Subscription extends Wetland.Entity
@@ -36,5 +37,27 @@ export default class Subscription extends Wetland.Entity
     beforeUpdate(updatedValues, EntityManager : Wetland.EntityManager)
     {
         this.updatedAt = new Date();
+    }
+
+    static formatModel(sub : Subscription) : models.data.Subscription
+    {
+        if (sub == null)
+        {
+            return null;
+        }
+
+        return {
+            id: sub.id,
+            user : sub.user.username,
+            author: sub.author.name,
+            subreddits : sub.subreddits.map( ( subred : Subreddit ) => 
+            {
+                return {
+                    id: subred.id, 
+                    name: subred.name,
+                    subscribed: true
+                }
+            } )
+        } as models.data.Subscription
     }
 }

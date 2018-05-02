@@ -4,9 +4,11 @@ import { connectRoutes } from 'redux-first-router'
 
 import ReduxThunk from 'redux-thunk'
 
+import * as QueryString from 'query-string'
+
 import { routesMap } from '~/client/routes'
 //import options from './options'
-const options = { };
+
 import * as reducers from '~/client/reducers'
 import * as state from '~/client/store'
 //import * as actionCreators from './actions'
@@ -15,14 +17,16 @@ export default (history, preLoadedState) => {
     const { reducer, middleware, enhancer, thunk } = connectRoutes(
         history,
         routesMap,
-        options
+        {
+          querySerializer: QueryString
+        }
     );
 
     const rootReducer = combineReducers<state.State>({
         authorState: reducers.authorReducer,
         authState: reducers.authStateReducer,
         location: reducer,
-        options: reducers.optionsReducer,
+        userState: reducers.userReducer,
         scrollState: reducers.scrollStateReducer,
         siteState: reducers.siteStateReducer,
         managerState: reducers.managerReducer

@@ -29,13 +29,25 @@ export function authStateReducer(state = getDefaultAuthState(), action : models.
                 ...state,
                 ...getDefaultAuthState()
             }
+        }
 
+        case actions.types.authentication.LOGIN_SUCCESS:
+        {
+            action = action as models.Action< actions.types.authentication.LOGIN_SUCCESS >
+            return {
+                isAuthenticated: true,
+                user: action.payload,
+            }
         }
 
         default:
             return {
                 ...state
             }
+
+            ///////////////////
+            // ROUTES
+            ///////////////////
     }
 }
 
@@ -61,7 +73,7 @@ export function getDefaultAuthState(userInfo?: models.auth.UserInfo)
                 last_visit: 0
             },
             
-            errorMessage: ''
+            errorMessage: '',
         };
     }
 }

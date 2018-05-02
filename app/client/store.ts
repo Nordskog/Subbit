@@ -1,7 +1,7 @@
 ﻿
 import { getDefaultAuthorState } from '~/client/reducers/authorReducer'
 import { getDefaultAuthState } from '~/client/reducers/authStateReducer'
-import { getDefaultOptionsState } from '~/client/reducers/optionsReducer'
+import { getDefaultUserState } from '~/client/reducers/userReducer'
 import { getDefaultScrollState } from '~/client/reducers/scrollStateReducer'
 import { getDefaultSiteState } from '~/client/reducers/siteStateReducer'
 import { getDefaultManagerState } from '~/client/reducers/managerReducer'
@@ -13,7 +13,7 @@ export interface State
     authorState: models.state.AuthorsState;
     authState: models.auth.AuthState;
     location;
-    options: models.state.Options;
+    userState: models.state.User;
     scrollState: models.state.ScrollState;
     siteState: models.state.SiteState;
     managerState: models.state.ManagerState;
@@ -25,7 +25,7 @@ export function getDefaultState(userInfo?: models.auth.UserInfo, subredditList? 
         authorState: getDefaultAuthorState(),
         authState: getDefaultAuthState(userInfo),
         location: undefined,
-        options: getDefaultOptionsState(),
+        userState: getDefaultUserState(),
         scrollState: getDefaultScrollState(),
         siteState: getDefaultSiteState(models.state.SiteMode.AUTHORS, subredditList),
         managerState: getDefaultManagerState()

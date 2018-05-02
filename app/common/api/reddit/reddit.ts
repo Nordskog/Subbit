@@ -11,8 +11,8 @@ export const REDDIT_URL = "https://www.reddit.com";
 export const REDDIT_OAUTH_API_URL = "https://oauth.reddit.com";
 export const POST_FULLNAME_PREFIX = "t3_";
 
-const apiQueue = new tools.FetchQueue(5);   // Will receive ratelimit header
-const cdnQueue = new tools.FetchQueue(5);   // Will not receive ratelimit header
+const apiQueue = new tools.FetchQueue(3);   // Will receive ratelimit header
+const cdnQueue = new tools.FetchQueue(11);   // Will not receive ratelimit header
 
 
 export async function getUsername( auth : models.auth.RedditAuth )
@@ -81,7 +81,7 @@ export async function getPosts(author: string, after : string, auth : models.aut
     }
 }
 
-export async function getAuthors(subreddit? : string, filter? : models.AuthorFilter, after? : string, auth? : models.auth.RedditAuth, ) : Promise< { authors : models.data.Author[], after : string } >
+export async function getAuthors(subreddit? : string, filter? : models.AuthorFilter, after? : string, count? : number, auth? : models.auth.RedditAuth, ) : Promise< { authors : models.data.Author[], after : string } >
 {
  
     let url = REDDIT_URL;
@@ -89,7 +89,7 @@ export async function getAuthors(subreddit? : string, filter? : models.AuthorFil
 
     url = url+'.json';  //CDN requires json extension, ignores header
 
-    url = tools.url.appendUrlParameters(url, { after: after });
+    url = tools.url.appendUrlParameters(url, { after: after, limit : count });
 
     console.log("Fetching url:",url);
 

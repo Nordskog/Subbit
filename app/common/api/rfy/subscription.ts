@@ -6,6 +6,16 @@ import * as api from '~/common/api'
 
 require('isomorphic-fetch');
 
+export function fetchSubscriptions( access_token: string): Promise<models.data.Subscription[]>
+{
+    return api.rfy.getRequest(
+        '/subscription', 
+        {
+            
+        },
+        access_token);
+}
+
 export function subscribe(user: string, author: string, access_token: string): Promise<models.data.Subscription>
 {
     return api.rfy.postRequest(

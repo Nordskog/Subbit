@@ -47,9 +47,11 @@ export default class ScrollEndDetectorComponent extends React.Component<Props,St
     const docHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight,  html.scrollHeight, html.offsetHeight);
     const windowBottom = windowHeight + window.pageYOffset;
 
-    //Load if within 10 pixels of bottom seems reasonable.
+
     //Turns out it will never euqal docHeight, always being off by 0.3 or so
-    if ( (windowBottom) >= (docHeight - 100) )  
+    //Triggering load once we're within  half screen height to end seems reasonable
+    let triggerDistance = (windowHeight);
+    if ( (windowBottom) >= (docHeight - triggerDistance) )  
     {
       this.props.getNextPage(this.state.currentPage + 1);
       this.setState({

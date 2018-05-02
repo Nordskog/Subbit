@@ -140,6 +140,17 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
         //   ROUTE  //
         //////////////
 
+        case 'AUTHORIZE':
+        {
+            //subs for now, auth reducer does the heavy lifting
+            return {
+                ...state,
+                filter: AuthorFilter.SUBSCRIPTIONS,
+                subreddit: null,
+                author: null,
+                after: null
+            }
+        }
         
         case 'NEW':
             {
@@ -152,7 +163,6 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
                     after: null
                 }
             }
-
         case 'HOT':
         {
             
@@ -167,37 +177,37 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
 
         case 'HOME':
         case 'SUBS':
-            {
-                return {
-                    ...state,
-                    filter: AuthorFilter.SUBSCRIPTIONS,
-                    subreddit: null,
-                    author: null,
-                    after: null
-                }
+        {
+            return {
+                ...state,
+                filter: AuthorFilter.SUBSCRIPTIONS,
+                subreddit: null,
+                author: null,
+                after: null
             }
+        }
 
-            case 'SUBREDDIT':
-            {                
-                return {
-                    ...state,
-                    filter: action.payload.filter != null ? action.payload.filter : AuthorFilter.HOT,
-                    subreddit: action.payload.subreddit,
-                    author: null,
-                    after: null
-                }
+        case 'SUBREDDIT':
+        {                
+            return {
+                ...state,
+                filter: action.payload.filter != null ? action.payload.filter : AuthorFilter.HOT,
+                subreddit: action.payload.subreddit,
+                author: null,
+                after: null
             }
+        }
 
-            case 'AUTHOR':
-            {
-                return {
-                    ...state,
-                    filter: AuthorFilter.NEW,
-                    subreddit: null,
-                    author: action.payload.author,
-                    after: null
-                }
+        case 'AUTHOR':
+        {
+            return {
+                ...state,
+                filter: AuthorFilter.NEW,
+                subreddit: null,
+                author: action.payload.author,
+                after: null
             }
+        }
     }
 
     return state;

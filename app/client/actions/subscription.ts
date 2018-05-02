@@ -6,6 +6,27 @@ import * as tools from '~/common/tools'
 
 import { State } from '~/client/store';
 
+export function fetchSubscriptions()
+{
+    return async function (dispatch, getState)
+    {
+        let state: State = getState();
+
+        let filter: string = state.authorState.filter;
+        let token: string = tools.store.getAccessToken(state);
+
+        //No user, no subscriptions
+        if (token == null)
+            return;
+
+        let subscriptions = await api.rfy.subscription.fetchSubscriptions( token);
+
+        dispatch({
+            type: actions.types.subscription.SUBSCRIPTIONS_FETCHED,
+            payload: subscriptions as actions.types.subscription.SUBSCRIPTIONS_FETCHED
+        });
+    }
+}
 
 export function subscribeToAuthorAction(author : string)
 {
