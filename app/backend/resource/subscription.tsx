@@ -13,6 +13,11 @@ import * as Wetland from 'wetland';
 
 import * as queries from './queries'
 
+import * as Knex from 'knex';
+import { subreddit } from 'css/manager.scss';
+
+import * as entityActions from '~/backend/entityActions'
+
 const express = require('express');
 const router = express.Router();
 
@@ -22,18 +27,31 @@ router.get('/api/subscription', async (req: WetlandRequest, res: Response) =>
     let manager = RFY.wetland.getManager();
     let token = req.headers.access_token;
 
+    let count : number = req.query.count;
+    let page : number = req.query.page;
+    if (page == null)
+    page = 0;
+
     try
     {
-        let user = await authentication.verification.getUserIfAuthorized(manager, token, authentication.generation.scopes.SUBSCRIPTIONS);
+        let user = await authentication.verification.getUserIfAuthorized(manager, token, {}, authentication.generation.scopes.SUBSCRIPTIONS);
 
-    
         if (user != null)
         {
-            
+            //Just grabbing the user and populating everything we need generates terrible, complicated with a binding for each 
+            //sub. Short of doing a raw query this is generally the best approach.
+            let qb : Wetland.QueryBuilder<entities.Subscription> = RFY.wetland.getManager()
+            .getRepository(entities.Subscription)
+            .getQueryBuilder('sub')
+            .select( ['sub',  'subreddits', 'author'] )
+            .leftJoin('sub.author', 'author')
+            .leftJoin('sub.subreddits', 'subreddits')
+            .where( {'user_id' : user.id} )
 
-            let subs : entities.Subscription[] = await RFY.wetland.getManager().getRepository(entities.Subscription).find( { 'user_id' : user.id }, { populate : ['subreddits', 'user', 'author'] } ) || [];
+            let subs : entities.Subscription[] = await qb.getQuery().getResult() || [];
 
-            console.log("sub0",subs[0]);
+            //Rather than looking up the user for each subscription
+            subs.forEach( ( sub : entities.Subscription ) => sub.user = user );
 
             res.json( subs.map( sub => { 
             return entities.Subscription.formatModel(sub);
@@ -57,184 +75,63 @@ router.post('/api/subscription', async (req: WetlandRequest, res: Response) =>
     try
     {
         user = await authentication.verification.getUserIfAuthorized(manager, token, authentication.generation.scopes.SUBSCRIPTIONS);
+    
+        switch(rawReq.type)
+        {
+            case serverActions.subscription.ADD_SUBSCRIPTION:
+            {
+                let payload : serverActions.subscription.ADD_SUBSCRIPTION = rawReq.payload;
+
+                let sub : entities.Subscription = await entityActions.subscriptions.getNewSubscription( manager, user, payload.author, payload.subreddit );
+
+                await manager.flush();
+                res.json( entities.Subscription.formatModel(sub) );
+                
+                break;
+            }
+            case serverActions.subscription.ADD_SUBSCRIPTION_SUBREDDIT:
+            {
+                let payload : serverActions.subscription.ADD_SUBSCRIPTION_SUBREDDIT = rawReq.payload;
+
+                let sub : entities.Subscription = await entityActions.subscriptions.getSubscription(manager, payload.id, user);
+                await entityActions.subscriptions.addSubredditToSubscription(manager, sub, payload.subreddit);
+            
+                await manager.flush();
+                res.json( entities.Subscription.formatModel(sub) );
+
+                break;
+            }
+            case serverActions.subscription.REMOVE_SUBSCRIPTION_SUBREDDIT:
+            {
+                let payload : serverActions.subscription.REMOVE_SUBSCRIPTION_SUBREDDIT = rawReq.payload;
+                let sub : entities.Subscription = await entityActions.subscriptions.getSubscription(manager, payload.id, user);
+
+                await entityActions.subscriptions.removeSubredditFromSubscription(manager, sub, payload.subreddit);
+                await manager.flush();
+                res.json( entities.Subscription.formatModel(sub) );
+
+                break;
+            }
+
+            case serverActions.subscription.REMOVE_SUBSCRIPTION:
+            {
+                let payload : serverActions.subscription.REMOVE_SUBSCRIPTION = rawReq.payload;
+                let sub : entities.Subscription = await entityActions.subscriptions.getSubscription(manager, payload.id, user);
+
+                manager.remove(sub);
+                await manager.flush();
+
+                res.status(200).json(true);
+
+                break;
+            }
+        }
     }
     catch (err)
     {
-        console.log("Failed to get user: ",err);
+        console.log("Failed to edit subscription: ",err);
+        res.status(500).json("Something went wrong");
     }
-
-    if (user == null)
-    {
-        res.status(401).json({ message: "Unauthorized" });
-        return;
-    }
-
-    switch(rawReq.type)
-    {
-        case serverActions.subscription.ADD_SUBSCRIPTION_SUBREDDIT:
-        case serverActions.subscription.REMOVE_SUBSCRIPTION_SUBREDDIT:
-        {
-        
-            let rawReq : models.Action< serverActions.subscription.ADD_SUBSCRIPTION_SUBREDDIT > = req.body;
-
-            let sub: entities.Subscription = null;
-            try 
-            {
-                sub = await manager.getRepository(entities.Subscription).findOne({ id: rawReq.payload.id }, { populate: ['user', 'subreddits', 'author'] })
-            }
-            catch(err)
-            {
-                console.log("Error getting sub add: ", err);
-                res.status(500).json({ message: "Error finding sub" });
-                break;
-            }
-
-            let subreddit;
-            try 
-            {
-                subreddit = await manager.getRepository(entities.Subreddit).findOne({ id: rawReq.payload.subreddits[0].id }, {})
-            }
-            catch(err)
-            {
-                console.log("Error getting sub add: ", err);
-                res.status(500).json({ message: "Error finding sub" });
-                break;
-            }
-
-            if (subreddit == null)
-            {
-                console.log("Attempted to add/remove subreddit that doesn't exist from subscription: ",rawReq.payload.subreddits[0].id);
-            }
-            else
-            {
-                if (rawReq.type === serverActions.subscription.ADD_SUBSCRIPTION_SUBREDDIT)
-                {
-                    let subbedReddits : Wetland.ArrayCollection<entities.Subreddit> = sub.subreddits;
-                    subbedReddits.add(subreddit);
-                }
-                else if (rawReq.type === serverActions.subscription.REMOVE_SUBSCRIPTION_SUBREDDIT)
-                {
-                    let subbedReddits : Wetland.ArrayCollection<entities.Subreddit> = sub.subreddits;
-                    subbedReddits.remove(subreddit);
-                }
-
-
-                try
-                {
-                    await manager.flush();
-                }
-                catch (err)
-                {
-                    console.log("Something went wrong: " + err);
-                    res.status(500).json({ message: "Error saving subscription" });
-                    return; 
-                }
-            }
-
-            try
-            {
-                let rawKnex = RFY.rawQuery();
-                let result = await queries.subscription.getSubscription(rawKnex, sub.id);
-                res.status(200).json( RFY.postgresJsonResult( result ) );
-            }
-            catch (err)
-            {
-                console.log("error ", err);
-                res.status(500).json({ message: "db failure" });
-                break;
-            }
-
-
-            break;
-        }
-        case serverActions.subscription.ADD_SUBSCRIPTION:
-        {
-            let rawReq : models.Action< serverActions.subscription.ADD_SUBSCRIPTION > = req.body;
-
-            if (!authentication.verification.checkuser(rawReq.payload.user, user))
-            {
-                console.log("Attempted to modify sub other user");
-                res.status(401).json({ message: "Unauthorized" });
-                break;
-            }
-
-            let author: entities.Author = await manager.getRepository(entities.Author).findOne({ name: rawReq.payload.author });
-    
-            let newSub: entities.Subscription = new entities.Subscription;   
-            manager.persist(newSub);
-    
-            newSub.user_id = user.id;
-            newSub.author_id = author.id;
-            newSub.subreddits = new Wetland.ArrayCollection();
-    
-            //Get all subreddits
-            let subreddits : entities.Subreddit[] = await manager.getRepository(entities.Subreddit).find();
-            subreddits.forEach( (subreddit : entities.Subreddit ) => 
-            {
-                newSub.subreddits.add(  subreddit );
-            })
-    
-            manager.persist(newSub);
-            try
-            {
-                await manager.flush();
-            }
-            catch (err)
-            {
-                console.log("Something went wrong: " + err);
-                res.status(500).json({ message: "Error saving subscription" });
-                return; 
-            }
-    
-            let rawKnex = RFY.rawQuery();
-            let result = await queries.subscription.getSubscription(rawKnex,newSub.id);
-            res.json( RFY.postgresJsonResult( result ) );
-
-            break;
-        }
-
-        case serverActions.subscription.REMOVE_SUBSCRIPTION:
-        {
-            let rawReq : models.Action< serverActions.subscription.REMOVE_SUBSCRIPTION > = req.body;
-
-            let sub: entities.Subscription = null;
-            try 
-            {
-                sub = await manager.getRepository(entities.Subscription).findOne({ id: rawReq.payload.id }, { populate: 'user' })
-            }
-            catch(err)
-            {
-                console.log("Error getting sub: ", err);
-                res.status(500).json({ message: "Error finding sub" });
-                break;
-            }
-
-            if (sub == null)
-            {
-                console.log("couldn't find sub");
-                res.status(401).json({ message: "Unauthorized" });
-                break;
-            }
-
-            manager.remove(sub);
-            try
-            {
-                await manager.flush();
-            }
-            catch(err)
-            {
-                console.log("Something went wrong: " + err);
-                res.status(500).json({ message: "Failed to save" });
-                break;
-            }
-
-            res.status(200).json({ message: "Success" });
-
-            break;
-        }
-
-    }
-
 });
 
 module.exports = router;

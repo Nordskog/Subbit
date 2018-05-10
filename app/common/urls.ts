@@ -8,6 +8,9 @@ export const API_URL = RFY_URL +'/api';
 export const REDDIT_URL = 'https://www.reddit.com'
 export const REDDIT_AUTH_URL = 'https://www.reddit.com/api/v1/authorize';
 
+
+export const REDDIT_OAUTH_API_URL = "https://oauth.reddit.com";
+
 import * as config from '~/config';
 
 

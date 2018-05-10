@@ -36,7 +36,20 @@ export function fetchAuthorsAction ( page : number = 0, appendResults: boolean =
 
         let state: State = getState();
 
-        let { authors, after }  = await api.reddit.getAuthors( state.authorState.subreddit, state.authorState.filter, state.authorState.after, config.authorDisplayCount );
+        let authors : models.data.Author[];
+        let after : string;
+
+        if (state.authorState.filter == models.AuthorFilter.SUBSCRIPTIONS)
+        {
+            authors = await api.rfy.authors.fetchSubscribedAuthors( state.authState.user.access_token, null, page );
+            after = null;
+        }
+        else
+        {
+            let res = await api.reddit.getAuthors( state.authorState.subreddit, state.authorState.filter, state.authorState.after, config.authorDisplayCount );
+            authors = res.authors;
+            after = res.after;
+        }
 
         let returnedAuthorCount = authors.length;
 
@@ -59,8 +72,23 @@ export function fetchAuthorsAction ( page : number = 0, appendResults: boolean =
             }
         } ); 
 
+        await actions.directActions.authors.populateAuthorSubscriptions(authorEntries, getState);   //Important to do this before getting posts
         await actions.directActions.authors.poulateInitialPosts(authorEntries, config.postDisplayCount, dispatch, getState);
-        await actions.directActions.authors.populateAuthorSubscriptions(authorEntries, getState);
+
+        if (state.authorState.filter == models.AuthorFilter.SUBSCRIPTIONS)
+        {
+            authorEntries.sort( (a : models.data.AuthorEntry, b: models.data.AuthorEntry) => 
+            {
+                let aCreated = a.author.posts.length > 0 ? a.author.posts[0].created_utc : 0;
+                let bCreated = b.author.posts.length > 0 ? b.author.posts[0].created_utc : 0;
+
+                if (aCreated > bCreated)
+                    return -1;
+                if (aCreated < bCreated)
+                    return 1;
+                return 0;
+            });
+        }
         
         dispatch({
             type: actions.types.authors.FETCH_AUTHORS_COMPLETED,
@@ -115,10 +143,24 @@ export function fetchMorePosts( authors : models.data.AuthorEntry[], count : num
         let proms : Promise<void>[] = [];
         authors.forEach( ( author : models.data.AuthorEntry ) => 
         {
-            //TODO deal with subscriptions
+
             let subreddits : string[] = [];
-            if (state.authorState.subreddit != null)
+            if (state.authorState.filter == models.AuthorFilter.SUBSCRIPTIONS)
+            {
+                //Well that shouldn't happen
+                if (author.subscription == null)
+                    return;
+
+                subreddits = author.subscription.subreddits.map( (subreddit : models.data.SubscriptionSubreddit) => 
+                {
+                    return subreddit.name;
+                } )
+            }
+            else
+            {
+                if (state.authorState.subreddit != null)
                 subreddits = [state.authorState.subreddit];
+            }
 
             let prom = new Promise<void>( (resolve, reject) => 
             {
@@ -130,7 +172,7 @@ export function fetchMorePosts( authors : models.data.AuthorEntry[], count : num
                     } );
 
                     cache.post.populatePostsFromCache(posts);
-                    clientTools.PostInfoQueue.addAuthorToQueue(author.author.name, posts, dispatch);
+                    //clientTools.PostInfoQueue.addAuthorToQueue(author.author.name, posts, dispatch);
     
                     dispatch({
                         type: actions.types.authors.POSTS_ADDED,

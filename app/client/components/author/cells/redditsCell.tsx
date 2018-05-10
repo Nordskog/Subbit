@@ -9,8 +9,8 @@ import * as tools from '~/common/tools'
 interface Props
 {
     subreddits: models.data.SubscriptionSubreddit[];
-    addSubscriptionSubreddit( subredditId : number ): void;
-    removeSubscriptionSubreddit( subredditId : number): void;
+    addSubscriptionSubreddit( subreddit : string ): void;
+    removeSubscriptionSubreddit( subreddit : string): void;
 }
 
 export default class RedditsCell extends React.Component<Props, null>
@@ -30,15 +30,15 @@ export default class RedditsCell extends React.Component<Props, null>
 
         return this.props.subreddits.map( subreddit => 
             {
-                return this.getSubreddit(subreddit.id, subreddit.name, subreddit.subscribed);
+                return this.getSubreddit( subreddit.name, subreddit.subscribed);
             } )
     }
 
-    getSubreddit(subredditId: number, subredditName : string, subscribed : boolean)
+    getSubreddit(subredditName : string, subscribed : boolean)
     {
-        return <div key={subredditId}
-                        onClick={ subscribed ?  () => this.props.removeSubscriptionSubreddit(subredditId) : 
-                                                () => this.props.addSubscriptionSubreddit(subredditId) }
+        return <div key={subredditName}
+                        onClick={ subscribed ?  () => this.props.removeSubscriptionSubreddit(subredditName) : 
+                                                () => this.props.addSubscriptionSubreddit(subredditName) }
                      className={ subscribed ? "author-subscribedSubreddit" : "author-subscriptionSubreddit" }>
                     r/{subredditName}
                     </div>

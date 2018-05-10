@@ -16,11 +16,12 @@ import { Query } from 'wetland/dist/src/Query';
 interface Props
 {
     author: models.data.AuthorEntry;
-    subscribe(author: string): void;
+    subreddit: string;
+    subscribe(author: string, subreddit? : string): void;
     unsubscribe(sub: models.data.Subscription): void;
     getPostDetails(authors : models.data.AuthorEntry[]): void;
-    addSubscriptionSubreddit(subscriptionId : number, subredditId : number ): void;
-    removeSubscriptionSubreddit(subscriptionId : number, subredditId : number): void;
+    addSubscriptionSubreddit(subscription : number, subreddit : string ): void;
+    removeSubscriptionSubreddit(subscription : number, subreddit : string): void;
     fetchMorePosts(author : models.data.AuthorEntry, count : number): void;
 }
 interface State
@@ -216,7 +217,7 @@ export default class AuthorCell extends React.Component<Props, State>
 
     handleSubscribeClick()
     {
-        this.props.subscribe(this.props.author.author.name);
+        this.props.subscribe(this.props.author.author.name, this.props.subreddit);
     }
 
     handleUnsubscribeClick()
@@ -224,14 +225,14 @@ export default class AuthorCell extends React.Component<Props, State>
         this.props.unsubscribe(this.props.author.subscription);
     }
 
-    handleAddSubredditClick(subredditId : number)
+    handleAddSubredditClick(subreddit : string)
     {
-        this.props.addSubscriptionSubreddit(this.props.author.subscription.id, subredditId);
+        this.props.addSubscriptionSubreddit(this.props.author.subscription.id, subreddit);
     }
 
-    handleRemoveSubredditClick(subredditId : number)
+    handleRemoveSubredditClick(subreddit : string)
     {
-        this.props.removeSubscriptionSubreddit(this.props.author.subscription.id, subredditId);
+        this.props.removeSubscriptionSubreddit(this.props.author.subscription.id, subreddit);
     }
 
     expandSubreddits()

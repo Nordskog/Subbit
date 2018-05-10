@@ -25,10 +25,23 @@ export async function poulateInitialPosts(authors : models.data.AuthorEntry[], c
         let proms : Promise<void>[] = [];
         authors.forEach( ( author : models.data.AuthorEntry ) => 
         {
-            //TODO deal with subscriptions
             let subreddits : string[] = [];
-            if (state.authorState.subreddit != null)
+            if (state.authorState.filter == models.AuthorFilter.SUBSCRIPTIONS)
+            {
+                //Well that shouldn't happen
+                if (author.subscription == null)
+                    return;
+
+                subreddits = author.subscription.subreddits.map( (subreddit : models.data.SubscriptionSubreddit) => 
+                {
+                    return subreddit.name;
+                } )
+            }
+            else
+            {
+                if (state.authorState.subreddit != null)
                 subreddits = [state.authorState.subreddit];
+            }
 
             let prom = new Promise<void>( (resolve, reject) => 
             {
@@ -40,7 +53,7 @@ export async function poulateInitialPosts(authors : models.data.AuthorEntry[], c
                     });
 
                     cache.post.populatePostsFromCache(posts);
-                    clientTools.PostInfoQueue.addAuthorToQueue(author.author.name, posts, dispatch);
+                    //clientTools.PostInfoQueue.addAuthorToQueue(author.author.name, posts, dispatch);
     
                     author.after = after;;
                     author.end = after == null;
@@ -56,4 +69,6 @@ export async function poulateInitialPosts(authors : models.data.AuthorEntry[], c
 
         //Process any remaining
         await Promise.all(proms);
+
+
 }

@@ -8,12 +8,6 @@ import * as api from '~/common/api'
 import * as authentication from '~/backend/authentication'
 import * as queries from '~/backend/resource/queries'
 
-function getNewUrl( subreddit : string)
-{
-    //With raw_json=1 you get unescaped characters.
-    return api.reddit.REDDIT_OAUTH_API_URL+"/r/"+subreddit+"/new.json?limit=100&raw_json=1";
-}
-
 export async function scrapeReddit(wetland: Wetland, scrape_to_time : Date = new Date(0) )
 {
     let manager : Scope = wetland.getManager();
@@ -74,6 +68,7 @@ async function processJob(wetland: Wetland, manager : Scope, activeJob : scrape.
     //let manager : Scope = wetland.getManager();
 
     let postsProcessed = 0;
+    /*
 
     if (activeJob.job.status != models.ScrapeStatus.PENDING)
     {
@@ -190,4 +185,6 @@ async function processJob(wetland: Wetland, manager : Scope, activeJob : scrape.
 
         throw new Error(err.message)
     }
+
+    */
 }

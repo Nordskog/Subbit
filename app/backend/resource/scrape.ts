@@ -89,6 +89,7 @@ router.post('/api/scrape', async (req: WetlandRequest, res: Response) =>
                     throw new Error("Subreddit not specified");
                 }
 
+                /*
                 switch(rawReq.payload.scrape_type)
                 {
                     case models.ScrapeType.PUSHSHIFT:
@@ -113,7 +114,7 @@ router.post('/api/scrape', async (req: WetlandRequest, res: Response) =>
                     }
                     case models.ScrapeType.REDDIT:
                     {
-
+                        
                         let job : scrape.ActiveJob = await scrape.scrapeSubreddit( RFY.wetland, 
                                                     rawReq.payload.subreddit,
                                                     models.ScrapeType.REDDIT,
@@ -124,6 +125,7 @@ router.post('/api/scrape', async (req: WetlandRequest, res: Response) =>
                         break;
                     }
                 }
+                */
                 break;
             }
 

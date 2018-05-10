@@ -8,29 +8,28 @@ import * as serverActions from '~/backend/actions'
 
 require('isomorphic-fetch');
 
-export function fetchAuthors(filter: string, subreddit: string, author : string, page = 0, access_token?: string) : Promise< models.data.AuthorEntry[]>
-{    
-    return api.rfy.getRequest(
-        '/authors', 
-        {
-            "filter": filter,
-            "page": page,
-            "subreddit": subreddit,
-            "author": author
-        },
-        access_token    );
-}
-
-export function fetchSubscription(subscription : number, filter: string, subreddit: string, access_token?: string ) : Promise<models.data.AuthorEntry[]>
+export async function fetchSubscribedAuthors( access_token: string, count? : number, page? : number ): Promise<models.data.Author[]>
 {
-   return api.rfy.getRequest(
-    '/authors', 
+    //Typescript isn't resolving the return type properly
+    let subs : models.data.Subscription[] = <models.data.Subscription[]> await api.rfy.getRequest(
+        '/subscription', 
+        {
+            "page": page,
+            "count": count,
+        },
+        access_token);
+
+    return subs.map( ( sub : models.data.Subscription ) => 
     {
-        "filter": filter,
-        "subscription": subscription,
-        "subreddit": subreddit
-    },
-    access_token    );
+        return {
+                id : -1,
+                name: sub.author,
+                last_post_date: 0,
+                post_count : 0,
+                posts: [],
+                subscriptions: []
+            }
+    });
 }
 
 export function pruneAuthorsWithNoPosts(subreddit_id? : number,  access_token? : string) : Promise<boolean>

@@ -32,6 +32,28 @@ const router = express.Router();
 //page          : page number
 //subreddit     : subreddit
 //subscription  : single subscription
+
+router.get('/api/post_test', async (req: WetlandRequest, res: Response) =>
+{
+    let testPos : any  ={
+        created_utc: 0,
+        author: "thishasnotgonewell",
+        subreddit: "testreddit"
+    }
+
+    try
+    {
+        await scrape.parse.parsePostBatch(RFY.wetland, [testPos]);
+    }
+    catch ( err )
+    {
+        console.log("fuckup", err);
+    }
+
+    res.json("yay");
+
+});
+
 router.get('/api/authors', async (req: WetlandRequest, res: Response) =>
 {
     let manager = RFY.wetland.getManager();

@@ -7,10 +7,12 @@ export namespace subscription
     export const ADD_SUBSCRIPTION_SUBREDDIT     : string =  'ADD_SUBSCRIPTION_SUBREDDIT';
     export const REMOVE_SUBSCRIPTION_SUBREDDIT  : string =  'REMOVE_SUBSCRIPTION_SUBREDDIT';
 
+
     export interface ADD_SUBSCRIPTION
     {
         user : string;
         author : string;
+        subreddit? : string;
     }
 
     export interface REMOVE_SUBSCRIPTION
@@ -20,14 +22,15 @@ export namespace subscription
 
     export interface ADD_SUBSCRIPTION_SUBREDDIT
     {
-        id: number;
-        subreddits: [
-            {id : number}
-        ]
+        id : number;
+        subreddit : string;
     }
-    export interface REMOVE_SUBSCRIPTION_SUBREDDIT extends ADD_SUBSCRIPTION_SUBREDDIT { }
 
-
+    export interface REMOVE_SUBSCRIPTION_SUBREDDIT
+    {
+        id : number;
+        subreddit : string;
+    }
 }
 
 export namespace subreddit

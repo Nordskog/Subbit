@@ -6,17 +6,17 @@ import * as api from '~/common/api'
 
 require('isomorphic-fetch');
 
-export function fetchSubscriptions( access_token: string): Promise<models.data.Subscription[]>
+export function fetchSubscriptions( access_token: string ): Promise<models.data.Subscription[]>
 {
     return api.rfy.getRequest(
         '/subscription', 
         {
-            
+
         },
         access_token);
 }
 
-export function subscribe(user: string, author: string, access_token: string): Promise<models.data.Subscription>
+export function subscribe(user: string, author: string, access_token: string, subreddit? : string): Promise<models.data.Subscription>
 {
     return api.rfy.postRequest(
         '/subscription', 
@@ -25,7 +25,8 @@ export function subscribe(user: string, author: string, access_token: string): P
             payload : < serverActions.subscription.ADD_SUBSCRIPTION >
             {
                 author: author,
-                user: user
+                user: user,
+                subreddit: subreddit
             }
         },
         access_token );
@@ -45,26 +46,22 @@ export function unsubscribe(subscriptionId: number, access_token: string) : Prom
         access_token );
 }
 
-export function addSubreddit(subscriptionId: number, subredditId: number, access_token: string) : Promise<models.data.Subscription>
+export function addSubreddit(subscription: number, subreddit: string, access_token: string) : Promise<models.data.Subscription>
 {
     return api.rfy.postRequest(
         '/subscription', 
         {
             type :    serverActions.subscription.ADD_SUBSCRIPTION_SUBREDDIT,
-            payload : < serverActions.subscription.ADD_SUBSCRIPTION_SUBREDDIT >
+            payload : <  serverActions.subscription.ADD_SUBSCRIPTION_SUBREDDIT >
             {
-                id: subscriptionId,
-                subreddits: [
-                    {
-                        id: subredditId,
-                    }
-                ],
+                id: subscription,
+                subreddit: subreddit,
             }
         },
         access_token );
 }
 
-export function removeSubreddit(subscriptionId: number, subredditId: number, access_token: string) : Promise<models.data.Subscription>
+export function removeSubreddit(subscription: number, subreddit: string, access_token: string) : Promise<models.data.Subscription>
 {
     return api.rfy.postRequest(
         '/subscription', 
@@ -72,12 +69,8 @@ export function removeSubreddit(subscriptionId: number, subredditId: number, acc
             type :    serverActions.subscription.REMOVE_SUBSCRIPTION_SUBREDDIT,
             payload : < serverActions.subscription.REMOVE_SUBSCRIPTION_SUBREDDIT >
             {
-                id: subscriptionId,
-                subreddits: [
-                    {
-                        id: subredditId,
-                    }
-                ],
+                id: subscription,
+                subreddit: subreddit  
             }
         },
         access_token );

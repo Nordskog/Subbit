@@ -8,9 +8,8 @@ import * as models from '~/common/models'
 function mapStateToProps(state: State )
 {
 
-    return { authors: state.authorState.authors, 
-        filter: state.authorState.filter,
-        lastVisit: state.authState.isAuthenticated ? state.authState.user.last_visit : 0
+    return { 
+        subreddit: state.authorState.subreddit, 
     }
 }
 
@@ -18,12 +17,12 @@ function mapDispatchToProps(dispatch, ownProps) : object
 {
     return function (dispatch)
     {
-        return { subscribe: (author: string) => { dispatch(actions.subscription.subscribeToAuthorAction(author)) }, 
+        return { subscribe: (author: string, subreddit? : string) => { dispatch(actions.subscription.subscribeToAuthorAction(author, subreddit)) }, 
                  unsubscribe: (sub: models.data.Subscription) => { dispatch(actions.subscription.unsubscribeFromAuthor(sub)) },
                  getPostDetails: (authors: models.data.AuthorEntry[]) => { dispatch(actions.authors.getPostInfoAction(authors, 0)) },
                  fetchMorePosts: (author : models.data.AuthorEntry, count : number) => { dispatch(actions.authors.fetchMorePosts( [author], count)) },
-                 addSubscriptionSubreddit: (subscriptionId : number, subredditId : number) => { dispatch(actions.subscription.addSubredditToSubscriptionAction(subscriptionId, subredditId)) },
-                 removeSubscriptionSubreddit: (subscriptionId : number, subredditId : number) => { dispatch(actions.subscription.removeSubredditFromSubscriptionAction(subscriptionId, subredditId)) }
+                 addSubscriptionSubreddit: (subscription : number, subreddit : string) => { dispatch(actions.subscription.addSubredditToSubscriptionAction(subscription, subreddit)) },
+                 removeSubscriptionSubreddit: (subscription : number, subreddit : string) => { dispatch(actions.subscription.removeSubredditFromSubscriptionAction(subscription, subreddit)) }
         };
     }
 }

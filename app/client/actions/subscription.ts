@@ -19,7 +19,7 @@ export function fetchSubscriptions()
         if (token == null)
             return;
 
-        let subscriptions = await api.rfy.subscription.fetchSubscriptions( token);
+        let subscriptions : models.data.Subscription[] = await api.rfy.subscription.fetchSubscriptions( token);
 
         dispatch({
             type: actions.types.subscription.SUBSCRIPTIONS_FETCHED,
@@ -28,7 +28,7 @@ export function fetchSubscriptions()
     }
 }
 
-export function subscribeToAuthorAction(author : string)
+export function subscribeToAuthorAction(author : string, subreddit? : string)
 {
     return async function (dispatch, getState)
     {
@@ -38,7 +38,7 @@ export function subscribeToAuthorAction(author : string)
         let user: string = tools.store.getUsername(state);
         let token: string = tools.store.getAccessToken(state);
 
-        let subscription = await api.rfy.subscription.subscribe(user, author, token);
+        let subscription : models.data.Subscription = await api.rfy.subscription.subscribe(user, author, token, subreddit);
 
         dispatch({
             type: actions.types.subscription.SUBSCRIPTION_ADDED,
@@ -54,7 +54,7 @@ export function unsubscribeFromAuthor(subscription: models.data.Subscription)
         let state: State = getState();
         let token: string = tools.store.getAccessToken(state);
 
-        let success = await api.rfy.subscription.unsubscribe(subscription.id, token);
+        let success : boolean = await api.rfy.subscription.unsubscribe(subscription.id, token);
 
         dispatch({
             type: actions.types.subscription.SUBSCRIPTION_REMOVED,
@@ -63,7 +63,7 @@ export function unsubscribeFromAuthor(subscription: models.data.Subscription)
     }
 }
 
-export function addSubredditToSubscriptionAction(subscriptionId : number, subredditId : number)
+export function addSubredditToSubscriptionAction(subscription_id : number, subreddit_name : string)
 {
     return async function (dispatch, getState)
     {
@@ -73,10 +73,8 @@ export function addSubredditToSubscriptionAction(subscriptionId : number, subred
         let user: string = tools.store.getUsername(state);
         let token: string = tools.store.getAccessToken(state);
 
-        let subscription = await api.rfy.subscription.addSubreddit(subscriptionId, subredditId, token);
+        let subscription : models.data.Subscription = await api.rfy.subscription.addSubreddit(subscription_id, subreddit_name, token);
 
-
-        
         dispatch({
             type: actions.types.subscription.SUBSCRIPTION_CHANGED,
             payload: subscription as actions.types.subscription.SUBSCRIPTION_CHANGED
@@ -84,7 +82,7 @@ export function addSubredditToSubscriptionAction(subscriptionId : number, subred
     }
 }
 
-export function removeSubredditFromSubscriptionAction(subscriptionId : number, subredditId : number)
+export function removeSubredditFromSubscriptionAction(subscription_id : number, subreddit_name : string)
 {
     return async function (dispatch, getState)
     {
@@ -94,7 +92,7 @@ export function removeSubredditFromSubscriptionAction(subscriptionId : number, s
         let user: string = tools.store.getUsername(state);
         let token: string = tools.store.getAccessToken(state);
 
-        let subscription = await api.rfy.subscription.removeSubreddit(subscriptionId, subredditId, token);
+        let subscription : models.data.Subscription = await api.rfy.subscription.removeSubreddit(subscription_id, subreddit_name, token);
   
         dispatch({
             type: actions.types.subscription.SUBSCRIPTION_CHANGED,

@@ -1,7 +1,6 @@
 ﻿import * as Wetland from 'wetland';
 
-import SubredditAuthor from './SubredditAuthor'
-import Post from './Post'
+import Subreddit from './Subreddit'
 import Subscription from './Subscription'
 
 export default class Author extends Wetland.Entity
@@ -9,12 +8,12 @@ export default class Author extends Wetland.Entity
     public name : string;
     public name_lower : string;
 
+    public last_post_date : Date;
+
     public id : number;
     public createdAt : Date;
     public updatedAt : Date;
 
-    public in_subreddit : Wetland.ArrayCollection<SubredditAuthor>;
-    public posts : Wetland.ArrayCollection<Post>;
     public subscriptions : Wetland.ArrayCollection<Subscription>;
 
     static setMapping(mapping : Wetland.Mapping<Author>)
@@ -26,6 +25,13 @@ export default class Author extends Wetland.Entity
         mapping.entity(options);
 
         mapping.autoFields();
+
+        mapping.field('last_post_date',
+        {
+            type: 'timestamp',
+            nullable: false,
+            defaultTo: mapping.now()
+        });
 
         mapping.field('name',
             {
@@ -41,8 +47,6 @@ export default class Author extends Wetland.Entity
             defaultTo:'null'
         });
 
-        mapping.oneToMany('in_subreddit', { targetEntity: 'SubredditAuthor', mappedBy: 'author' });
-        mapping.oneToMany('posts', { targetEntity: 'Post', mappedBy: 'author' });
         mapping.oneToMany('subscriptions', { targetEntity: 'Subscription', mappedBy: 'author' });
     }
 

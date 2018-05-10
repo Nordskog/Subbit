@@ -4,7 +4,7 @@ import * as Knex from 'knex';
 
 import * as Entities from '~/backend/entity';
 
-export let wetland;
+export let wetland : Wetland;
 
 export async function initDatabase()
 {

@@ -3,41 +3,97 @@ import * as models from '~/common/models'
 import * as entities from '~/backend/entity'
 import * as tools from '~/common/tools'
 import * as Scrape from '~/backend/scrape'
+import { subreddit } from 'css/manager.scss';
 
-export async function parsePostBatch(wetland : Wetland, subreddit: entities.Subreddit, postsJson, skipNewAuthors : boolean = true) : Promise< { last_created_utc:number, processed_count :number, error : boolean} >
+export async function parsePostBatch(wetland : Wetland, posts : models.reddit.Post[])
 {
     let manager : Scope = wetland.getManager();
+    let authorRepo = manager.getRepository(entities.Author);
 
-    let authors = manager.getRepository(entities.Author);
-    let posts = manager.getRepository(entities.Post);
+    //Check if we are tracking any of these auhors
+    let postAuthorNames : string[] = posts.map( ( post : models.reddit.Post ) => { return post.author.toLowerCase() } );
 
-    //If the list is empty this remains at 0, and the parent will break.
-    let batchLastPostTime : number = 0;
-    let batchError : boolean = false;
+    console.log("authors to look for: ",postAuthorNames);
 
-    for (var i = 0; i < postsJson.length; i++)
+    let authors : entities.Author[] = await authorRepo.find( { name_lower : postAuthorNames }, { populate: ['in_subreddit', 'in_subreddit.subreddit'] } ) || [];
+
+    console.log("authors: ",authors.length);
+
+    //We are! maybe
+    if (authors.length > 0)
     {
-        let {lastPostTime, error } = await parseSinglePost(manager, subreddit, postsJson[i], skipNewAuthors);
-        batchLastPostTime = lastPostTime;
-        batchError = error;
+        //Get a list of subreddits we are already tracking
+        let subredditMap : Map<String, entities.Subreddit> = new  Map<String, entities.Subreddit>();
+        {
+            let postSubredditNames : string[] = posts.map( ( post : models.reddit.Post ) => { return post.subreddit.toLowerCase() } );
+            let subreddits : entities.Subreddit[] = await manager.getRepository(entities.Subreddit).find( { name_lower : [postSubredditNames] }, { } ) || [];
+            subreddits.forEach( ( subreddit : entities.Subreddit ) => 
+            {
+                subredditMap.set( subreddit.name_lower, subreddit );
+            });
+        }
 
-        if (error)
-            break;
+        //Create a map so we can easily lookup posts for each author
+        let postMap : Map<String, models.reddit.Post[]> = new Map<String, models.reddit.Post[]>();
+        posts.forEach( ( post : models.reddit.Post ) => 
+        {
+            let authorPostMap = postMap.get(post.author.toLowerCase());
+            if (authorPostMap == null)
+            {
+                authorPostMap = [];
+                postMap.set(post.author.toLowerCase(), authorPostMap);
+            }
+            authorPostMap.push(post);
+        });
+
+        //Update last post dates
+        authors.forEach( ( author : entities.Author ) => 
+        {
+            let authorPostMap = postMap.get(author.name_lower);
+            authorPostMap.forEach( ( post : models.reddit.Post ) => 
+            {
+                let date : Date = new Date(post.created_utc * 1000);
+
+                //Update last post date for author
+                if (author.last_post_date < date)
+                    author.last_post_date = date;
+
+                //And then subreddit
+                let in_subreddit = null;
+
+
+
+                //First post by this author in this subreddit. Create!
+                if (in_subreddit == null)
+                {
+                    //in_subreddit = new entities.SubredditAuthor();
+                    manager.persist(in_subreddit);
+                    in_subreddit.last_post_date = date;
+                    in_subreddit.author = author;
+                    
+                    in_subreddit.subreddit = subredditMap.get(post.subreddit.toLowerCase());
+                    if (in_subreddit.subreddit == null)
+                    {
+                        //Entirely new subreddit!
+                        in_subreddit.subreddit = new entities.Subreddit();
+                        manager.persist(in_subreddit.subreddit);
+                        in_subreddit.subreddit.name = post.subreddit;
+                        in_subreddit.subreddit.name = post.subreddit.toLowerCase();
+
+                        subredditMap.set(in_subreddit.subreddit.name_lower, in_subreddit.subreddit);
+                    }
+
+                }
+                else
+                {
+                    if (in_subreddit.last_post_date < date)
+                    in_subreddit.last_post_date = date;
+                }
+            });
+        });
+
+        await manager.flush();
     }
-
-    if (!batchError)
-    {
-    //Flush batch to database
-    await manager.flush().catch((err: Error) =>
-    {
-        console.log("Problem flushing post batch: " + err);
-        throw new Error(err.message);
-    });
-    }
-    manager.clear();
-
-
-    return {last_created_utc : batchLastPostTime, processed_count: postsJson.length, error : batchError };
 }
 
 //Takes a reddit or pushshift post item
@@ -57,7 +113,7 @@ async function parseSinglePost( manager: Scope, subreddit: entities.Subreddit, p
         {
             
             author = new entities.Author;
-            author.in_subreddit = new ArrayCollection;
+  
             author.name = postData.author;
     
             if (!skipNewAuthors)
@@ -70,24 +126,24 @@ async function parseSinglePost( manager: Scope, subreddit: entities.Subreddit, p
 
         if (author != null)
         {
-            let authorInSubreddit = await manager.getRepository(entities.SubredditAuthor).findOne({ 'author_id': author.id, 'subreddit_id':subreddit.id });
+            //let authorInSubreddit = await manager.getRepository(entities.SubredditAuthor).findOne({ 'author_id': author.id, 'subreddit_id':subreddit.id });
             let postedDate : Date = new Date(postData.created_utc * 1000);
     
-            if (authorInSubreddit == null)
+            //if (authorInSubreddit == null)
             {
-                authorInSubreddit = new entities.SubredditAuthor;
-                authorInSubreddit.author_id = author.id;
-                authorInSubreddit.subreddit_id = subreddit.id;
-                authorInSubreddit.last_post_date = postedDate;
+                //authorInSubreddit = new entities.SubredditAuthor;
+                //authorInSubreddit.author_id = author.id;
+               // authorInSubreddit.subreddit_id = subreddit.id;
+               // authorInSubreddit.last_post_date = postedDate;
         
-                manager.persist(authorInSubreddit);
-                authorInSubreddit = manager.attach(authorInSubreddit,true);
+                //manager.persist(authorInSubreddit);
+               // authorInSubreddit = manager.attach(authorInSubreddit,true);
                 await manager.flush();
             }
-            else
+            //else
             {
-                if (authorInSubreddit.last_post_date < postedDate)
-                    authorInSubreddit.last_post_date = postedDate;
+                //if (authorInSubreddit.last_post_date < postedDate)
+                 //   authorInSubreddit.last_post_date = postedDate;
             }
         }
     }

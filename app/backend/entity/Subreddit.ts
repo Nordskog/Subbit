@@ -3,7 +3,6 @@
 import ScrapeJob from './ScrapeJob'
 import Author from './Author'
 import Subscription from './Subscription'
-import Post from './Post'
 import * as models from '~/common/models'
 
 export default class Subreddit extends Wetland.Entity
@@ -13,9 +12,7 @@ export default class Subreddit extends Wetland.Entity
     public autoscrape : boolean;
     public scrape_job : ScrapeJob;
 
-    public posts : Wetland.ArrayCollection<Post>;
     public authors : Wetland.ArrayCollection<Author>;
-    public subscriptions : Wetland.ArrayCollection<Subscription>;
 
     public id : number;
     public createdAt : Date;
@@ -52,9 +49,7 @@ export default class Subreddit extends Wetland.Entity
 
         mapping.uniqueConstraint('name');
     
-        mapping.oneToMany('posts', { targetEntity: 'Post', mappedBy: 'subreddit' });
         mapping.manyToMany('subscriptions', { targetEntity: 'Subscription', mappedBy: 'subreddits' });
-        mapping.oneToMany('authors', { targetEntity: 'SubredditAuthor', mappedBy: 'subreddit' });
         mapping.oneToOne('scrape_job', { targetEntity: 'ScrapeJob', mappedBy: 'subreddit' });
     }
 

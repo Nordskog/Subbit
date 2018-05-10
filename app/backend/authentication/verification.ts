@@ -32,7 +32,7 @@ export async function authorizeUser(access_token_raw, user? : Entities.User, sco
 }
 
 
-export async function getUserIfAuthorized (manager : Wetland.Scope, access_token_raw, scope?: string)
+export async function getUserIfAuthorized (manager : Wetland.Scope, access_token_raw, options? : any, scope?: string, )
 {
     if (access_token_raw == null)
     {
@@ -44,7 +44,7 @@ export async function getUserIfAuthorized (manager : Wetland.Scope, access_token
     if (decodedToken == null)
         return null;
 
-    let user : Entities.User = await getUserFromToken(manager, decodedToken);
+    let user : Entities.User = await getUserFromToken(manager, decodedToken, options);
     if (user != null)
     {
         if (scope != null)
@@ -56,7 +56,7 @@ export async function getUserIfAuthorized (manager : Wetland.Scope, access_token
     return user;
 }
 
-async function decodeToken(access_token_raw)
+export async function decodeToken(access_token_raw)
 {
     let decodedToken = null;
     try
@@ -71,13 +71,30 @@ async function decodeToken(access_token_raw)
     return decodedToken;
 }
 
-async function getUserFromToken(manager : Wetland.Scope, decodedToken) 
+async function getUser(manager : Wetland.Scope, username : string, options? : any )
+{
+    let user : Entities.User = null;
+    options = options != null ? options : {};
+    try
+    {
+        user = await manager.getRepository(Entities.User).findOne({ username: username }, { populate: "auth", ...options});
+    }
+    catch (err)
+    {
+        console.log("Auth error: ",err);
+    }
+
+    return user;
+}
+
+async function getUserFromToken(manager : Wetland.Scope, decodedToken, options : any) 
 {
     let username = decodedToken.sub;
     let user : Entities.User = null;
+    options = options != null ? options : {};
     try
     {
-        user = await manager.getRepository(Entities.User).findOne({ username: username }, { populate: "auth"});
+        user = await manager.getRepository(Entities.User).findOne({ username: username }, { populate: "auth", ...options});
     }
     catch (err)
     {

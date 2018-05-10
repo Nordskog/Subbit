@@ -64,11 +64,13 @@ app.use(require('~/backend/resource/settings'));
 
 
 //Init configurable user settings
+
 settings.loadSettings().then( () => 
 {
     //Init scrape bot
     Scrape.scrapeBot.initScrapeBot();
 })
+
 
 
 

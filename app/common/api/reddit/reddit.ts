@@ -3,21 +3,22 @@
 import * as models from '~/common/models'
 import { reddit } from '~/common/models'
 import * as tools from '~/common/tools'
+import * as apiTools from './apiTools'
+
+import * as urls from '~/common/urls'
 
 
 import * as fetch from 'isomorphic-fetch';
 
-export const REDDIT_URL = "https://www.reddit.com";
-export const REDDIT_OAUTH_API_URL = "https://oauth.reddit.com";
-export const POST_FULLNAME_PREFIX = "t3_";
 
 const apiQueue = new tools.FetchQueue(3);   // Will receive ratelimit header
 const cdnQueue = new tools.FetchQueue(11);   // Will not receive ratelimit header
 
+export const POST_FULLNAME_PREFIX = "t3_";
 
 export async function getUsername( auth : models.auth.RedditAuth )
 {
-    let url = REDDIT_OAUTH_API_URL + "/api/v1/me";
+    let url = urls.REDDIT_OAUTH_API_URL + "/api/v1/me";
 
     let config = {
         method: "GET",
@@ -41,7 +42,7 @@ export async function getUsername( auth : models.auth.RedditAuth )
 export async function getPosts(author: string, after : string, auth : models.auth.RedditAuth, count : number,  ...subreddits : string[], ) : Promise< { posts : models.reddit.Post[], after : string } >
 {
 
-    let url = REDDIT_URL;
+    let url = urls.REDDIT_URL;
     url = getPostsUrl(author, after, count, ...subreddits);
 
     console.log("Fetching url:",url);
@@ -84,8 +85,8 @@ export async function getPosts(author: string, after : string, auth : models.aut
 export async function getAuthors(subreddit? : string, filter? : models.AuthorFilter, after? : string, count? : number, auth? : models.auth.RedditAuth, ) : Promise< { authors : models.data.Author[], after : string } >
 {
  
-    let url = REDDIT_URL;
-    url = getFilterUrl(subreddit, filter);
+    let url = urls.REDDIT_URL;
+    url = apiTools.getFilterUrl(subreddit, filter);
 
     url = url+'.json';  //CDN requires json extension, ignores header
 
@@ -156,7 +157,7 @@ export async function getAuthors(subreddit? : string, filter? : models.AuthorFil
 export async function getPostInfo(auth : models.auth.RedditAuth,  postIds : string[])
 {
     postIds = postIds.map( entry => POST_FULLNAME_PREFIX+entry );  
-    let url = REDDIT_OAUTH_API_URL + "/by_id/" + postIds.join();
+    let url = urls.REDDIT_OAUTH_API_URL + "/by_id/" + postIds.join();
 
     let config = {
         method: "GET",
@@ -258,7 +259,7 @@ export async function authenticatedWithRefreshToken(token : string, appBasicAuth
 
 function getPostsUrl(author : string, after : string, limit : number,  ...subreddits : string[]) : string
 {
-    let url = REDDIT_URL;
+    let url = urls.REDDIT_URL;
     if (subreddits == null || subreddits.length < 1)
     {
         url = url + '/user/'+author+'/submitted.json'
@@ -285,57 +286,6 @@ function getPostsUrl(author : string, after : string, limit : number,  ...subred
                 limit: limit
             }
         );
-    }
-
-    return url;
-}
-
-function getFilterUrl(subreddit : string, filter : models.AuthorFilter) : string
-{
-    let url = REDDIT_URL;
-    if (subreddit != null)
-    {
-        url = url + `/r/${subreddit}`;
-
-        switch(filter)
-        {
-            case models.AuthorFilter.TOP:
-            case models.AuthorFilter.NEW:
-            {
-                //TODO range selection for top
-                url = url + `/${filter}`;
-                break;
-            }
-
-            //Default is nothing, which corresponds to hot
-            //BEST is not valid here
-            case models.AuthorFilter.HOT:
-            default:
-            {
-
-            } 
-        }
-    }
-    else
-    {
-        switch(filter)
-        {
-            case models.AuthorFilter.TOP:
-            case models.AuthorFilter.NEW:
-            case models.AuthorFilter.HOT:
-            {
-                //TODO range selection
-                url = url + `/${filter}`;
-                break;
-            }
-
-            //Default is nothing, which corresponds to best
-            case models.AuthorFilter.BEST:
-            default:
-            {
-
-            } 
-        }
     }
 
     return url;
