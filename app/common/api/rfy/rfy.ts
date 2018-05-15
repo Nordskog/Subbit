@@ -7,7 +7,7 @@ export async function getRequest<T>(url : string, parameters? : any, access_toke
 {
     url = urls.API_URL + url;
     url = tools.url.appendUrlParameters(url,parameters);
-    let options = urls.getBackendFetchOptions('GET', access_token);
+    let options = getBackendFetchOptions('GET', access_token);
 
     let response = await fetch(url, options);
     if (response.ok)
@@ -23,7 +23,7 @@ export async function getRequest<T>(url : string, parameters? : any, access_toke
 export async function postRequest<T, A>(url : string, request : models.Action<A>, access_token?: string) : Promise<T>
 {
     url = urls.API_URL + url;
-    let options = urls.getBackendFetchOptions('POST', access_token);
+    let options = getBackendFetchOptions('POST', access_token);
     options = {
         ...options,
         body: JSON.stringify(request)
@@ -38,7 +38,28 @@ export async function postRequest<T, A>(url : string, request : models.Action<A>
     {
         return Promise.reject<T>(response);
     }
-    
+}
+
+export function getBackendFetchOptions(method: string, access_token: string)
+{
+    let config;
+    if (access_token)
+    {
+        config = {
+            method: method,
+            headers: {  'Content-Type': 'application/json', 'access_token': access_token }
+
+        }
+    }
+    else
+    {
+        config = {
+            method: method,
+            headers: { 'Content-Type': 'application/json' },
+        }
+    }
+
+    return config;
 }
 
 export function wrapReducerAction<T>( action : string, payload : T ) : string

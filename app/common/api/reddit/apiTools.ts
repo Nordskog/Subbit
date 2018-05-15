@@ -1,34 +1,10 @@
 import * as models from '~/common/models'
 import * as urls from '~/common/urls'
+import * as config from '~/config'
 
-export function getNewestPostsByAuthorsInSubredditUrl(subreddit : string, authors : string[])
+export function getFilterUrl(subreddit : string, filter : models.AuthorFilter, oauth : boolean) : string
 {
-    //Target format:
-    // https://www.reddit.com/r/HFY/search.json?q=author:Athishasnotgonewell+OR+author:Athishasnotgonewell11&restrict_sr=on&include_over_18=on&sort=new&t=all
-
-    let url = `${urls.REDDIT_URL}/r/${subreddit}/search.json?q=`;
-    if (authors.length < 1)
-        return url; //Reddit will just return an empty listing
-
-    let query = '';
-    let separator = '';
-    for (let author of authors)
-    {
-        if (author == null)
-            continue;
-            query = query + separator + 'author:' + author;
-        separator = '+OR+';
-    }
-
-    url = url+query;
-    url = url + '&restrict_sr=on&include_over_18=on&sort=new&t=all&limit=100'
-
-    return url;
-}
-
-export function getFilterUrl(subreddit : string, filter : models.AuthorFilter) : string
-{
-    let url = urls.REDDIT_URL;
+    let url = `${oauth ?  urls.REDDIT_OAUTH_API_URL : urls.REDDIT_URL}`
     if (subreddit != null)
     {
         url = url + `/r/${subreddit}`;
@@ -74,5 +50,42 @@ export function getFilterUrl(subreddit : string, filter : models.AuthorFilter) :
         }
     }
 
+    url = `${url}${ oauth ? '' : '.json' }`
+
     return url;
+}
+
+export function getPostsUrl(author : string, after : string, limit : number, oauth : boolean,  ...subreddits : string[]) : { baseUrl, params }
+{
+    let url = oauth ?  urls.REDDIT_OAUTH_API_URL : urls.REDDIT_URL;
+    let params;
+    if (subreddits == null || subreddits.length < 1)
+    {
+        url = url + `/user/${author}/submitted${ oauth ? '' : '.json' }`
+
+        params =
+            {
+                sort: 'new',
+                after: after,
+                limit: limit
+            };
+        
+    }
+    else
+    {
+        url = url + `/r/${subreddits.join('+')}/search${ oauth ? '' : '.json' }`
+
+        params =
+            {
+                restrict_sr: 'on',
+                include_over_18: 'on',
+                q: 'author:'+author,
+                sort: 'new',
+                after: after,
+                limit: limit
+            };
+        
+    }
+
+    return { baseUrl: url, params: params };
 }

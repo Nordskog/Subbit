@@ -136,6 +136,20 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
             
         }
 
+        ////////////////
+        // Page
+        ////////////////
+
+        case actions.types.page.NEW_PAGE:
+        {
+            let payload : actions.types.page.NEW_PAGE = action.payload;
+
+            return {
+                ...state,
+                authors: []
+            }
+        }
+
         ///////////////
         //   ROUTE  //
         //////////////

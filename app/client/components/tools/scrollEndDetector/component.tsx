@@ -70,12 +70,12 @@ export default class ScrollEndDetectorComponent extends React.Component<Props,St
 
   getDiv()
   {
-    if (this.state.endReached)
-      return <div className="site-loadingStatus">No more posts</div>
-    else if (this.state.nextPageLoading)
+    if (this.state.nextPageLoading)
     {
       return <div className="site-loadingStatus">Loading...</div>
     }
+    else if (this.state.endReached)
+      return <div className="site-loadingStatus">No more posts</div>
     else
     {
       return <div className="site-loadingStatus">There's nothing here...</div>

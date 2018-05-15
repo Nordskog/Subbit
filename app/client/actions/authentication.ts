@@ -26,6 +26,10 @@ export function logoutUserAction()
 {
     return async dispatch =>
     {
+
+        actions.directActions.authentication.removeAuthentication(dispatch);
+
+        /*
         if ( await api.rfy.authentication.logout() )
         {
             console.log("Logged out");
@@ -44,6 +48,7 @@ export function logoutUserAction()
         {
             console.log("Failed to logout for some reason");
         }
+        */
     }
 }
 

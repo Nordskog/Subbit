@@ -17,7 +17,7 @@ function mapDispatchToProps(): object
     return function (dispatch)
     {
         return {
-            changeSubreddit: ( subreddit : string ) => { dispatch(actions.authors.changeSubreddit(subreddit)) }
+            changeSubreddit: ( subreddit : string ) => { dispatch(actions.authors.changeSubreddit(subreddit)) },
         }
     }
 }

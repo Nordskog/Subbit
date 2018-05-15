@@ -22,6 +22,12 @@ export function populateAuthorSubscriptions( authors : models.data.AuthorEntry[]
 export async function poulateInitialPosts(authors : models.data.AuthorEntry[], count : number, dispatch, getState)
 {
         let state: State = getState();
+
+        let redditAuth = null;
+        if (state.authState.isAuthenticated)
+            redditAuth = state.authState.user.redditAuth;
+
+
         let proms : Promise<void>[] = [];
         authors.forEach( ( author : models.data.AuthorEntry ) => 
         {
@@ -45,7 +51,7 @@ export async function poulateInitialPosts(authors : models.data.AuthorEntry[], c
 
             let prom = new Promise<void>( (resolve, reject) => 
             {
-                api.reddit.getPosts(author.author.name, author.after, null, count, ...subreddits).then( ( {posts, after } ) => 
+                api.reddit.posts.getPosts(author.author.name, author.after, redditAuth, count, ...subreddits).then( ( {posts, after } ) => 
                 {
                     posts.forEach( ( post : models.reddit.Post ) => 
                     {

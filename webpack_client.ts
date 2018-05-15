@@ -33,6 +33,7 @@ const config = {
             './css/site.scss',
             './css/author.scss',
             './css/redditlist.scss',
+            './css/subredditList.scss',
             './css/manager.scss',
             './css/timewidget.scss',
             './css/subredditInputPopup.scss',

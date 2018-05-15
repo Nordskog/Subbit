@@ -52,7 +52,7 @@ router.get('/api/authorize_refresh', async (req: WetlandRequest, res: Express.Re
 
             if (user)
             {
-                let result = await api.reddit.authenticatedWithRefreshToken( user.auth.refresh_token, redditAuth.getHttpBasicAuthHeader() );
+                let result = await api.reddit.auth.authenticatedWithRefreshToken( user.auth.refresh_token, redditAuth.getHttpBasicAuthHeader() );
 
                 if (result && result.access_token)
                 {
@@ -112,7 +112,7 @@ router.post('/api/authorize_local', async (req: WetlandRequest, res: Express.Res
                     let result = null;
                     if ( authentication.redditAuth.confirmAuthState(payload.state) ) 
                     {
-                        result = await api.reddit.authenticateWithCode(payload.code, urls.getLocalAuthUrl(), authentication.redditAuth.getHttpBasicAuthHeader() );
+                        result = await api.reddit.auth.authenticateWithCode(payload.code, urls.getLocalAuthUrl(), authentication.redditAuth.getHttpBasicAuthHeader() );
                     }
                     else
                     {
@@ -189,7 +189,7 @@ router.get('/api/authorize_local', async (req: WetlandRequest, res: Express.Resp
             if ( authentication.redditAuth.confirmAuthState(state) ) 
             {
                 let code = req.query.code;
-                result = await api.reddit.authenticateWithCode(code, "http://127.0.0.1:8080/api/authorize_local", authentication.redditAuth.getHttpBasicAuthHeader() );
+                result = await api.reddit.auth.authenticateWithCode(code, "http://127.0.0.1:8080/api/authorize_local", authentication.redditAuth.getHttpBasicAuthHeader() );
 
             }
             else

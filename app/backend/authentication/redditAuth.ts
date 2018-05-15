@@ -32,7 +32,7 @@ export async function getAppClientAccessToken()
     else
     {
         //Request new
-        let result = await api.reddit.authenticateAsClient( getHttpBasicAuthHeader() );
+        let result = await api.reddit.auth.authenticateAsClient( getHttpBasicAuthHeader() );
         if (result != null)
         {
             clientAuthentication = {
@@ -109,7 +109,7 @@ export function generateRedditLoginUrl()
             state: authentication.redditAuth.getAuthState(),
             redirect_uri: urls.getLocalAuthUrl(),
             duration: "permanent",
-            scope: "identity read"
+            scope: "identity read history"
         }
     )
 }
@@ -139,7 +139,8 @@ export async function createOrUpdateUserFromRedditToken( manager : Wetland.Scope
             access_token: auth.access_token,
             expiry: tools.time.dateToUnix(auth.expiry)
         }
-        username = await api.reddit.getUsername(redditAuth);
+        username = await api.reddit.auth.getUsername(redditAuth);
+
 
         //Fetch existing user if present
         user = await manager.getRepository(Entities.User).findOne({ username: username }, { populate: "auth"});

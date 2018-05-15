@@ -18,6 +18,16 @@ export function scrollStateReducer(state = getDefaultScrollState(), action :  mo
                 nextPageLoading: false,
             }
         }
+
+        case actions.types.page.NEW_PAGE:
+        {
+            let payload : actions.types.page.NEW_PAGE = action.payload;
+
+            return {
+                ...state,
+                nextPageLoading: payload.loading,
+            }
+        }
     }
 
     return state;
@@ -26,7 +36,7 @@ export function scrollStateReducer(state = getDefaultScrollState(), action :  mo
 export function getDefaultScrollState()
 {
     return {
-        nextPageLoading : false,
+        nextPageLoading : true,
         currentPage: 0,
         endReached: false,
         after : null

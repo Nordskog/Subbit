@@ -44,27 +44,7 @@ export function getRedditTokenRefreshUrl()
     return API_URL+"/authorize_refresh";
 }
 
-export function getBackendFetchOptions(method: string, access_token: string)
-{
-    let config;
-    if (access_token)
-    {
-        config = {
-            method: method,
-            headers: {  'Content-Type': 'application/json', 'access_token': access_token }
 
-        }
-    }
-    else
-    {
-        config = {
-            method: method,
-            headers: { 'Content-Type': 'application/json' },
-        }
-    }
-
-    return config;
-}
 
     
 

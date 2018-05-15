@@ -15,6 +15,7 @@ export function changeSubreddit( subreddit : string)
 {
     return async function (dispatch, getState)
     {
+        /*
         dispatch({
             type: actions.types.authors.SUBREDDIT_CHANGED,
             payload: subreddit as actions.types.authors.SUBREDDIT_CHANGED
@@ -22,6 +23,12 @@ export function changeSubreddit( subreddit : string)
 
         dispatch( fetchAuthorsAction
             (0, false) );
+        */
+       let state: State = getState();
+    
+        dispatch(
+        { type: 'SUBREDDIT', payload: { subreddit: subreddit, filter: state.authorState.filter  } } 
+        );
     }
 }
 
@@ -29,36 +36,40 @@ export function fetchAuthorsAction ( page : number = 0, appendResults: boolean =
 {
     return async function (dispatch, getState)
     {
-        if (!appendResults)
-            authority.author.clearAuthority();
-
-        //TODO deal with subscription authors
-
         let state: State = getState();
+
+        let redditAuth = await actions.directActions.authentication.retrieveAndUpdateRedditAuth( dispatch, state);
 
         let authors : models.data.Author[];
         let after : string;
 
         if (state.authorState.filter == models.AuthorFilter.SUBSCRIPTIONS)
         {
-            authors = await api.rfy.authors.fetchSubscribedAuthors( state.authState.user.access_token, null, page );
+            //authors = await api.rfy.authors.fetchSubscribedAuthors( state.authState.user.access_token, null, page );
+            authors = state.userState.subscriptions.map( ( sub : models.data.Subscription ) => 
+            {
+                return {
+                        id : -1,
+                        name: sub.author,
+                        last_post_date: 0,
+                        post_count : 0,
+                        posts: [],
+                        subscriptions: []
+                    }
+            });
             after = null;
         }
         else
         {
-            let res = await api.reddit.getAuthors( state.authorState.subreddit, state.authorState.filter, state.authorState.after, config.authorDisplayCount );
+            let res = await api.reddit.posts.getAuthors( state.authorState.subreddit, state.authorState.filter, state.authorState.after, config.authorDisplayCount, redditAuth );
             authors = res.authors;
             after = res.after;
         }
 
         let returnedAuthorCount = authors.length;
 
-        console.log("Initial count: ",authors.length);
-
         //Remove and any existing authors, then update authority with new
         authors = authors.filter( (author : models.data.Author) => { return !authority.author.authorityContains(author) } )
-
-        console.log("Filtered count: ",authors.length);
 
         authors.forEach( ( author : models.data.Author ) => { authority.author.updateAuthority(author) } );
 
@@ -140,6 +151,9 @@ export function fetchMorePosts( authors : models.data.AuthorEntry[], count : num
     return async function (dispatch, getState)
     {
         let state: State = getState();
+
+        let redditAuth = await actions.directActions.authentication.retrieveAndUpdateRedditAuth( dispatch, state);
+
         let proms : Promise<void>[] = [];
         authors.forEach( ( author : models.data.AuthorEntry ) => 
         {
@@ -164,7 +178,7 @@ export function fetchMorePosts( authors : models.data.AuthorEntry[], count : num
 
             let prom = new Promise<void>( (resolve, reject) => 
             {
-                api.reddit.getPosts(author.author.name, author.after, null, count, ...subreddits).then( ( {posts, after } ) => 
+                api.reddit.posts.getPosts(author.author.name, author.after, redditAuth, count, ...subreddits).then( ( {posts, after } ) => 
                 {
                     posts.forEach( ( post : models.reddit.Post ) => 
                     {
@@ -201,7 +215,7 @@ export function fetchMorePosts( authors : models.data.AuthorEntry[], count : num
 export function getPostInfoAction( authors : models.data.AuthorEntry[], perAuthorLimit : number = 5 )
 {
     return async function (dispatch, getState)
-    {
+    { /*
         let state: State = getState();
 
         //Never run on server
@@ -315,6 +329,7 @@ export function getPostInfoAction( authors : models.data.AuthorEntry[], perAutho
             }
 
         }
+        */
     }
 }
 

@@ -71,8 +71,9 @@ export default class HeaderComponent extends React.Component<Props, null>
         {
             return "site-button";
         }
-        
     }
+
+
 
     getFilterLink(filter : string)
     {

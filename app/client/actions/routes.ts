@@ -13,6 +13,7 @@ export function authorsRoutes()
 {
     return async (dispatch, getState ) =>
     {
+        actions.directActions.page.clearPage(true, dispatch);
         actions.directActions.authentication.loadAuthentication(dispatch, getState);
         await firstLoadDuties(dispatch, getState);
         await actions.authors.fetchAuthorsAction(null, false)(dispatch, getState);

@@ -7,6 +7,12 @@ import subscribeButton from 'assets/images/subscribe_button.svg'
 
 import * as models from '~/common/models';
 
+import * as styles from 'css/author.scss'
+
+import * as components from '~/client/components'
+
+import * as transitions from 'ReactTransitionGroup';
+
 import 'css/author'
 import * as config from '~/config'
 import expand_caret from 'assets/images/expand_caret.svg'
@@ -28,6 +34,7 @@ interface State
 {
     postsExpanded: boolean;
     subredditsExpanded: boolean;
+    loading : boolean;
 }
 
 export default class AuthorCell extends React.Component<Props, State>
@@ -35,7 +42,7 @@ export default class AuthorCell extends React.Component<Props, State>
     constructor(props)
     {
         super(props);
-        this.state = { postsExpanded : false, subredditsExpanded: false };
+        this.state = { postsExpanded : false, subredditsExpanded: false, loading : false };
 
         this.handleSubscribeClick = this.handleSubscribeClick.bind(this);
         this.handleUnsubscribeClick = this.handleUnsubscribeClick.bind(this);
@@ -52,12 +59,25 @@ export default class AuthorCell extends React.Component<Props, State>
     {
         if (nextProps.author === this.props.author && 
             this.state.postsExpanded == newState.postsExpanded &&
-            this.state.subredditsExpanded == newState.subredditsExpanded
+            this.state.subredditsExpanded == newState.subredditsExpanded &&
+            this.state.loading == newState.loading
         )
         {
             return false;
         }
+
         return true;
+    }
+
+    componentWillReceiveProps(nextProps : Readonly<Props>) 
+    {
+        if (this.state.loading)
+        {
+            this.setState( {
+                ...this.state,
+                loading: false 
+            });
+        }
     }
 
     canExpand() : boolean
@@ -80,6 +100,9 @@ export default class AuthorCell extends React.Component<Props, State>
 
     renderPosts()
     {
+        if (this.state.subredditsExpanded)
+            return '';
+
         let renderedPosts = [];
         let limit = config.postDisplayCount;
         let remaining = this.props.author.author.posts.length - limit;
@@ -110,8 +133,13 @@ export default class AuthorCell extends React.Component<Props, State>
             renderedPosts.push(this.getCollapseButton());
         }
 
-        return renderedPosts;
 
+
+       return <div className="author-posts">
+        {
+            renderedPosts
+        }
+         </div>
     }
 
     render()
@@ -123,29 +151,55 @@ export default class AuthorCell extends React.Component<Props, State>
                 <div className="author-nameContainer">
                     <div> <a href={'author/'+this.props.author.author.name}> {this.props.author.author.name} </a>   </div>
                 </div>
+                
                
             </div>
-            {this.getSubscribedSubreddits()}
-            
-            
-            <div className="author-posts">
-            {
-                this.renderPosts()
-            }
-                </div>
+           
+
+
+           { this.getSubscribedSubreddits() }
+           { this.renderPosts() }
+
         </div> ;
     }
 
+    
     getSubscribedSubreddits()
     {
         if (this.props.author.subscription != null && this.state.subredditsExpanded)
-            return <cells.redditsCell subreddits={this.props.author.subscription.subreddits} 
-                                 addSubscriptionSubreddit={this.handleAddSubredditClick}
-                                 removeSubscriptionSubreddit={this.handleRemoveSubredditClick}
-            />
-        else
-            return <div/>
+        {
+            return <div className={styles.subscriptionsContainer}>
+                <components.tools.subredditList.component
+                            subreddits={this.props.author.subscription.subreddits.map
+                                (
+                                    ( subreddit : models.data.SubscriptionSubreddit) => 
+                                    {
+                                        return {
+                                            name: subreddit.name,
+                                            highlighted: subreddit.subscribed
+                                        }
+                                    }
+                                )} 
+                            onClick={ (subreddit : components.tools.subredditList.displayedSubreddit, close : () => void ) => 
+                                { 
+                                    if (subreddit.highlighted)
+                                    {
+                                        this.props.removeSubscriptionSubreddit(this.props.author.subscription.id, subreddit.name);
+                                    }
+                                    else
+                                    {
+                                        this.props.addSubscriptionSubreddit(this.props.author.subscription.id, subreddit.name);
+                                    }
+                                }}
+                                toggleHighlight={true}
+                                addToDisplayList={true}
+                                />
+            </div>
+
+        }
     }
+
+    
 
     getButton()
     {
@@ -169,17 +223,12 @@ export default class AuthorCell extends React.Component<Props, State>
     {
         if (this.props.author.subscription != null)
         {
-            return <div className="author-displaySubredditsButtonContainer" onClick={ this.state.subredditsExpanded ? this.collapseSubreddits : this.expandSubreddits}>
-            <svg className="author-displaySubredditsButton" >
-                <use xlinkHref={ this.state.subredditsExpanded ? collapse_caret : expand_caret}></use>
-            </svg>
-        </div>
+            return <div className="author-displaySubredditsButtonContainer" onClick={ () => {  this.state.subredditsExpanded ? this.collapseSubreddits() : this.expandSubreddits() } } >
+                        <svg className="author-displaySubredditsButton" >
+                            <use xlinkHref={ this.state.subredditsExpanded ? collapse_caret : expand_caret}></use>
+                        </svg>
+                    </div>
         }
-        else
-        {
-            return;
-        }
-
     }
 
     getUnsubscribeButton()
@@ -200,7 +249,7 @@ export default class AuthorCell extends React.Component<Props, State>
                     </svg>
                 </div>
 
-                <span>More posts</span>
+                <span>{this.state.loading ? 'Loading...' : 'More posts'}</span>
         </div>
     }
 
@@ -249,11 +298,14 @@ export default class AuthorCell extends React.Component<Props, State>
 
     expandPosts()
     {
+        if (this.state.loading)
+            return;
+
         if (this.state.postsExpanded)
         {
             let offset : number = this.props.author.author.posts.length;
             let count : number = config.postFetchCount;
-            this.props.fetchMorePosts(this.props.author, count);
+            this.grabMorePosts();
         }
         else
         {
@@ -269,7 +321,7 @@ export default class AuthorCell extends React.Component<Props, State>
 
     grabMorePosts()
     {
-        let offset : number = this.props.author.author.posts.length;
+        this.setState( { ...this.state, loading: true } );
         let count : number = config.postFetchCount;
         this.props.fetchMorePosts(this.props.author, count);
     }

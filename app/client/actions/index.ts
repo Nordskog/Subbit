@@ -6,5 +6,6 @@ export import manager = require('./manager');
 export import subreddits = require('./subreddits');
 
 export import directActions = require('./direct');
+export import statelessActions = require('./stateless');
 
 export import types = require('./actionTypes');

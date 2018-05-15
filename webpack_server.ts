@@ -37,6 +37,7 @@ const config = {
             './css/timewidget.scss',
             './css/subredditInputPopup.scss',
             './css/confirmationPopup.scss',
+            './css/subredditList.scss',
             'react-toastify/dist/ReactToastify.css'
     ],
     vendor: [

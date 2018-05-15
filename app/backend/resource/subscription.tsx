@@ -27,11 +27,6 @@ router.get('/api/subscription', async (req: WetlandRequest, res: Response) =>
     let manager = RFY.wetland.getManager();
     let token = req.headers.access_token;
 
-    let count : number = req.query.count;
-    let page : number = req.query.page;
-    if (page == null)
-    page = 0;
-
     try
     {
         let user = await authentication.verification.getUserIfAuthorized(manager, token, {}, authentication.generation.scopes.SUBSCRIPTIONS);

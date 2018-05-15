@@ -8,7 +8,7 @@ export function getAccessToken(state: store.State)
     }
     else
     {
-        return undefined;
+        return null;
     }
 }
 
@@ -20,7 +20,7 @@ export function getUsername(state: store.State)
     }
     else
     {
-        return undefined;
+        return null;
     }
 }
 

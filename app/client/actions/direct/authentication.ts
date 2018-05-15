@@ -10,6 +10,11 @@ export async function retrieveAndUpdateRedditAuth(dispatch, state)
     let user: string = tools.store.getUsername(state);
     let token: string = tools.store.getAccessToken(state);
 
+    if (token == null || user == null)
+    {
+        return null;
+    }
+
     let redditAuth : models.auth.RedditAuth  = tools.store.getRedditAuth(state);
     //Refresh if expiry in less than 30 seconds
     if ( (redditAuth.expiry - 30) < (Date.now() / 1000 ) )
@@ -26,6 +31,17 @@ export async function retrieveAndUpdateRedditAuth(dispatch, state)
    return redditAuth;
 }
 
+export function removeAuthentication(dispatch)
+{
+    localStorage.removeItem('id_token');
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('reddit_auth');
+
+    dispatch({
+        type: actions.types.authentication.LOGOUT_SUCCESS,
+        payload: {} as actions.types.authentication.LOGOUT_SUCCESS
+    });
+}
 
 export function saveAuthentication( userInfo : models.auth.UserInfo)
 {

@@ -81,9 +81,14 @@ export namespace subscription
     
 };
 
-export namespace site
+export namespace page
 {
+    export const NEW_PAGE   : string = 'NEW_PAGE';
 
+    export interface NEW_PAGE
+    {   
+        loading: boolean;
+    }
 
 };
 
