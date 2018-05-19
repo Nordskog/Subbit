@@ -11,6 +11,8 @@ import * as models from '~/common/models';
 import expand_caret from 'assets/images/expand_caret.svg'
 import collapse_caret from 'assets/images/collapse_caret.svg'
 
+import * as transitions from 'react-transition-group'
+
 interface Props 
 {
     trigger : JSX.Element;
@@ -52,17 +54,21 @@ export default class popup extends React.Component<Props, State >
                         {
                             close => 
                             {
-                                 return <div className={styles.popupContainer}>
-                                            <components.tools.subredditList.component
-                                                    subreddits={this.props.subreddits} 
-                                                    onClick={ (subreddit : components.tools.subredditList.displayedSubreddit ) => 
-                                                    { 
-                                                        this.props.onClick(subreddit, close);
-                                                    }}
-                                                    toggleHighlight={this.props.toggleHighlight}
-                                                    addToDisplayList={this.props.addToDisplayList} />
-                                            </div>
-
+                                 return <transitions.TransitionGroup >
+                                            <components.transitions.FadeResize key={'subreddit_popup'} appear={true}>
+                                                <div className={styles.popupContainer}>
+                                                    <components.tools.subredditList.component
+                                                        subreddits={this.props.subreddits} 
+                                                        onClick={ (subreddit : components.tools.subredditList.displayedSubreddit ) => 
+                                                        { 
+                                                            this.props.onClick(subreddit, close);
+                                                        }}
+                                                        toggleHighlight={this.props.toggleHighlight}
+                                                        addToDisplayList={this.props.addToDisplayList} />
+                                                </div>
+                                            </components.transitions.FadeResize>
+                                         </transitions.TransitionGroup>
+                                 
                             }
                         }
                     </Popup>

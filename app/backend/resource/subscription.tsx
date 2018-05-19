@@ -77,7 +77,7 @@ router.post('/api/subscription', async (req: WetlandRequest, res: Response) =>
             {
                 let payload : serverActions.subscription.ADD_SUBSCRIPTION = rawReq.payload;
 
-                let sub : entities.Subscription = await entityActions.subscriptions.getNewSubscription( manager, user, payload.author, payload.subreddit );
+                let sub : entities.Subscription = await entityActions.subscriptions.getNewSubscription( manager, user, payload.author, ...payload.subreddits );
 
                 await manager.flush();
                 res.json( entities.Subscription.formatModel(sub) );

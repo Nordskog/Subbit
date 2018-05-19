@@ -10,3 +10,5 @@ export import settings = require('./settings');
 export import scrapeBot = require('./scrapeBot');
 export import managedSubreddit = require('./managedSubreddit');
 export import tools = require('./tools');
+export import transitions = require('./transitions');
+export import animations = require('./animations');

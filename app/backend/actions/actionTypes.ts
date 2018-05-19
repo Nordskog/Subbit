@@ -12,7 +12,7 @@ export namespace subscription
     {
         user : string;
         author : string;
-        subreddit? : string;
+        subreddits : string[];
     }
 
     export interface REMOVE_SUBSCRIPTION

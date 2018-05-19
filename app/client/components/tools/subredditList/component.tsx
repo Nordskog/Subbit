@@ -7,6 +7,7 @@ import * as tools from '~/common/tools'
 
 import * as siteStyles from 'css/site.scss'
 import * as styles from 'css/subredditList.scss'
+import * as components from '~/client/components'
 
 import expand_caret from 'assets/images/expand_caret.svg'
 import collapse_caret from 'assets/images/collapse_caret.svg'
@@ -39,6 +40,7 @@ export default class RedditsCell extends React.Component<Props, State>
 {
     inputTimeout = null;
     highlightedMap : Set<string> = new Set<string>();
+    container : HTMLDivElement;
 
     constructor(props)
     {
@@ -60,32 +62,32 @@ export default class RedditsCell extends React.Component<Props, State>
         this.props.subreddits.forEach( ( subreddit : displayedSubreddit ) => {  if (subreddit.highlighted){ this.highlightedMap.add(subreddit.name.toLowerCase()) } } )
     }
 
-    /*
-    componentWillReceiveProps(props : Props, state : State)
+    shouldComponentUpdate(nextProps : Props, nextState : State)
     {
-        this.handleProps(props);
+        //We handle everything ourselves, so ignore updates from parent,
+        //otherwise we end up with animation-confusing duplicate renders
+        if (nextState != this.state)
+        {
+            return true;
+        }
 
-        let newState =         {
-            ...this.state,
-             displayedSubreddits: [].concat(props.subreddits) 
-        };
-
-        console.log("new state: ",newState);
-
-        this.setState( newState );
+        return false;
     }
-    */
 
     render()
     {
-        return <div className={styles.subredditsContainer}>
-                <input  onChange={ evt => this.handleInput( evt.target.value ) } 
-                        type="text" 
-                        placeholder="Search..."
-                        className={ siteStyles.inputContainer }/>
-                <div className={ styles.searchBarSpacer }/>
-                {this.getSubreddits()}
-                {this.getNoResultsIndicator()}
+        return <div className={styles.subredditsContainer} >
+                    <input  onChange={ evt => this.handleInput( evt.target.value ) } 
+                            type="text" 
+                            placeholder="Search..."
+                            className={ siteStyles.inputContainer }/>
+                    <div className={ styles.searchBarSpacer }/>
+                    <components.animations.AutoHeight>
+                        <div style={  { height: 'auto', overflow: 'hidden' } } >
+                            {this.getSubreddits()}
+                            {this.getNoResultsIndicator()}
+                        </div>
+                    </components.animations.AutoHeight>
                 </div>
     }
 
@@ -196,9 +198,9 @@ export default class RedditsCell extends React.Component<Props, State>
 
     handleClick( subreddit :displayedSubreddit )
     {
+
+        //This causes a prop update, which we ignore
         this.props.onClick( { ...subreddit });
-
-
 
         //un-highlight in display list
         if (subreddit.highlighted)
@@ -225,6 +227,7 @@ export default class RedditsCell extends React.Component<Props, State>
             }
         }
 
+        //This cause a state update, which we do not ignore
         this.setState( { ...this.state, searching: false } );
 
     }

@@ -11,6 +11,8 @@ import * as models from '~/common/models';
 
 import 'css/author.scss'
 
+import * as transitions from 'react-transition-group'
+
 interface Props 
 {
     authors: models.data.AuthorEntry[];
@@ -32,7 +34,7 @@ export default class AuthorsComponent extends React.Component<Props, {} >
             lastVisitAdded = true;
         }
 
-        this.props.authors.forEach( (author) =>
+        this.props.authors.forEach( (author, index) =>
         {
             if (!lastVisitAdded)
             {
@@ -47,10 +49,14 @@ export default class AuthorsComponent extends React.Component<Props, {} >
                 }
             }
 
-            renders.push( <component.author.component
-                key={author.author.name}
-                author={author}
-            /> )
+            renders.push( 
+            
+            <component.transitions.Fade key={author.author.name} >
+                <component.author.component author={author} />
+            </component.transitions.Fade>
+                
+         
+             );
         } )
 
         return renders;
@@ -59,13 +65,9 @@ export default class AuthorsComponent extends React.Component<Props, {} >
     public render()
     {
         
-        return <div className="author-container">
-                        {
-                            this.renderAuthors()
-                        }
-
-
-        </div>;
+        return <transitions.TransitionGroup component={'div'} className="author-container">
+                { this.renderAuthors()}
+                </transitions.TransitionGroup>;
         
     }
 

@@ -9,6 +9,6 @@
         "**/*.scss.d.ts": true,
         "**/node_modules/": true, //<-- To hide node modules files
         "**/*.spec.ts": true //<-- To hide cli generated files
-    }
-    
+    },
+    "git.ignoreLimitWarning": true
 }

@@ -16,7 +16,7 @@ export function fetchSubscriptions( access_token: string ): Promise<models.data.
         access_token);
 }
 
-export function subscribe(user: string, author: string, access_token: string, subreddit? : string): Promise<models.data.Subscription>
+export function subscribe(user: string, author: string, access_token: string, subreddits : string[]): Promise<models.data.Subscription>
 {
     return api.rfy.postRequest(
         '/subscription', 
@@ -26,7 +26,7 @@ export function subscribe(user: string, author: string, access_token: string, su
             {
                 author: author,
                 user: user,
-                subreddit: subreddit
+                subreddits: subreddits
             }
         },
         access_token );

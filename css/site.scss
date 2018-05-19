@@ -166,3 +166,17 @@ input[type=text] {
     font-weight: bold;
     padding: 5px;
 }
+
+.overlappingContainer
+{
+    //position: absolute;
+   // height:300px;
+   // left: 0;
+   // top: 0;
+}
+
+.overlappingOuterContainer
+{
+    position: relative;
+    height:auto;
+}

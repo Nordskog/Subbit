@@ -104,8 +104,10 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
             }
         case actions.types.subscription.SUBSCRIPTION_REMOVED:
         {
+            let payload : actions.types.subscription.SUBSCRIPTION_REMOVED = action.payload;
 
-            action = action as models.Action< actions.types.subscription.SUBSCRIPTION_REMOVED >;
+            //When a subscription is removed we removed it from everywhere else, but only mark it as
+            //unsubscribed in the authorEntry. This way the user can re-subscribe without losing the subreddits.
 
             return {
                 ...state,
@@ -115,7 +117,11 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
                     {
                         return {
                                     ...author,
-                                    subscription: null
+                                    subscription: {
+                                        ...author.subscription,
+                                        subscribed : false
+                                    
+                                    }
                         }
                     }
                     else

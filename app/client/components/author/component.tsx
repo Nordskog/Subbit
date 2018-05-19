@@ -8,10 +8,11 @@ import subscribeButton from 'assets/images/subscribe_button.svg'
 import * as models from '~/common/models';
 
 import * as styles from 'css/author.scss'
+import * as siteStyles from 'css/site.scss'
 
 import * as components from '~/client/components'
 
-import * as transitions from 'ReactTransitionGroup';
+import * as animations from 'css/animations.scss'
 
 import 'css/author'
 import * as config from '~/config'
@@ -19,11 +20,13 @@ import expand_caret from 'assets/images/expand_caret.svg'
 import collapse_caret from 'assets/images/collapse_caret.svg'
 import { Query } from 'wetland/dist/src/Query';
 
+import * as transitions from 'react-transition-group'
+
 interface Props
 {
     author: models.data.AuthorEntry;
     subreddit: string;
-    subscribe(author: string, subreddit? : string): void;
+    subscribe(author: string, subreddits : string[] ): void;
     unsubscribe(sub: models.data.Subscription): void;
     getPostDetails(authors : models.data.AuthorEntry[]): void;
     addSubscriptionSubreddit(subscription : number, subreddit : string ): void;
@@ -34,7 +37,6 @@ interface State
 {
     postsExpanded: boolean;
     subredditsExpanded: boolean;
-    loading : boolean;
 }
 
 export default class AuthorCell extends React.Component<Props, State>
@@ -42,25 +44,21 @@ export default class AuthorCell extends React.Component<Props, State>
     constructor(props)
     {
         super(props);
-        this.state = { postsExpanded : false, subredditsExpanded: false, loading : false };
+        this.state = { postsExpanded : false, subredditsExpanded: false};
 
         this.handleSubscribeClick = this.handleSubscribeClick.bind(this);
         this.handleUnsubscribeClick = this.handleUnsubscribeClick.bind(this);
-        this.collapsePosts = this.collapsePosts.bind(this);
-        this.expandPosts = this.expandPosts.bind(this);
         this.expandSubreddits = this.expandSubreddits.bind(this);
         this.collapseSubreddits = this.collapseSubreddits.bind(this);
 
         this.handleAddSubredditClick = this.handleAddSubredditClick.bind(this);
         this.handleRemoveSubredditClick = this.handleRemoveSubredditClick.bind(this);
     }
-
     shouldComponentUpdate(nextProps : Readonly<Props>, newState : State, nextContext) : boolean
     {
         if (nextProps.author === this.props.author && 
             this.state.postsExpanded == newState.postsExpanded &&
-            this.state.subredditsExpanded == newState.subredditsExpanded &&
-            this.state.loading == newState.loading
+            this.state.subredditsExpanded == newState.subredditsExpanded
         )
         {
             return false;
@@ -69,106 +67,69 @@ export default class AuthorCell extends React.Component<Props, State>
         return true;
     }
 
-    componentWillReceiveProps(nextProps : Readonly<Props>) 
+    static getDerivedStateFromProps( nextProps : Props, prevState : State) : State
     {
-        if (this.state.loading)
+        if ( nextProps.author.subscription == null || ( nextProps.author.subscription.subscribed != null && !nextProps.author.subscription.subscribed ) )
         {
-            this.setState( {
-                ...this.state,
-                loading: false 
-            });
+            return {  ...prevState, subredditsExpanded: false };
         }
-    }
 
-    canExpand() : boolean
-    {
-        if (!this.state.postsExpanded)
-        {
-            if (this.props.author.author.posts.length > config.postDisplayCount)
-                return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    canLoadMore() : boolean
-    {
-        return !this.props.author.end;
+        return null;
     }
 
     renderPosts()
     {
         if (this.state.subredditsExpanded)
-            return '';
+            return null;
 
-        let renderedPosts = [];
-        let limit = config.postDisplayCount;
-        let remaining = this.props.author.author.posts.length - limit;
+       return <components.transitions.FadeResize key={'posts_container'}>
+            <components.author.cells.Posts
+                posts={this.props.author.author.posts}
+                canLoadMore={!this.props.author.end}
+                grabMorePosts={( () => this.props.fetchMorePosts(this.props.author, config.postFetchCount))}
+            />
+         </components.transitions.FadeResize>
+    }
 
-        for (let [index, post] of this.props.author.author.posts.entries())
-        {
-            if (!this.state.postsExpanded && (index >= limit) )
-            {
-                break;
-            }
-            else
-            {
-                renderedPosts.push( <cells.postCell
-                    key={post.id}
-                    post={post}
-                    isTopPost={index==0}
-                /> );
-            }
-        };
-
-        if (this.canExpand() || this.canLoadMore())
-        {
-            renderedPosts.push (this.getExpandButton() );
-        }
-
-        if ( this.state.postsExpanded)
-        {
-            renderedPosts.push(this.getCollapseButton());
-        }
-
-
-
-       return <div className="author-posts">
-        {
-            renderedPosts
-        }
-         </div>
+    isSubscribed() : boolean
+    {
+       return (this.props.author.subscription != null && ( this.props.author.subscription.subscribed == null || this.props.author.subscription.subscribed )   )
     }
 
     render()
     {
-        return <div className={this.props.author.subscription ? "author-subscribedAuthor" : "author-author"} key = { this.props.author.author.name } >
-            <div className="author-authorHeader">
+        return <div className={ this.isSubscribed() ? "author-subscribedAuthor" : "author-author"} key = { this.props.author.author.name } >
+            <transitions.TransitionGroup component={'div'} className="author-authorHeader">
                 {this.getButton()}
                 {this.getShowSubredditsButton()}
+
                 <div className="author-nameContainer">
                     <div> <a href={'author/'+this.props.author.author.name}> {this.props.author.author.name} </a>   </div>
                 </div>
+            
+            </transitions.TransitionGroup>
+
+            <div>
+
+            <transitions.TransitionGroup component={'div'}>
+                {this.getSubscribedSubreddits()}
+                <div/>
+                {this.renderPosts()}
                 
-               
+            
+            </transitions.TransitionGroup>
+
             </div>
-           
 
-
-           { this.getSubscribedSubreddits() }
-           { this.renderPosts() }
-
-        </div> ;
+        </div>
     }
-
-    
     getSubscribedSubreddits()
     {
-        if (this.props.author.subscription != null && this.state.subredditsExpanded)
+        if ( this.isSubscribed() && this.state.subredditsExpanded)
         {
-            return <div className={styles.subscriptionsContainer}>
+
+            return  <components.transitions.FadeResize key={'subs_container'}>
+             <div className={styles.subscriptionsContainer}>
                 <components.tools.subredditList.component
                             subreddits={this.props.author.subscription.subreddits.map
                                 (
@@ -196,14 +157,20 @@ export default class AuthorCell extends React.Component<Props, State>
                                 />
             </div>
 
+            </components.transitions.FadeResize>
+
         }
+
+        return null;
+
+
     }
 
     
 
     getButton()
     {
-        if (this.props.author.subscription)
+        if (this.isSubscribed())
             return this.getUnsubscribeButton();
         else
             return this.getSubscribeButton();
@@ -221,13 +188,15 @@ export default class AuthorCell extends React.Component<Props, State>
 
     getShowSubredditsButton()
     {
-        if (this.props.author.subscription != null)
+        if ( this.isSubscribed() )
         {
-            return <div className="author-displaySubredditsButtonContainer" onClick={ () => {  this.state.subredditsExpanded ? this.collapseSubreddits() : this.expandSubreddits() } } >
-                        <svg className="author-displaySubredditsButton" >
-                            <use xlinkHref={ this.state.subredditsExpanded ? collapse_caret : expand_caret}></use>
-                        </svg>
-                    </div>
+            return <components.transitions.FadeHorizontalResize key={'show_subreddits_button'}>
+                        <div className="author-displaySubredditsButtonContainer" onClick={ () => {  this.state.subredditsExpanded ? this.collapseSubreddits() : this.expandSubreddits() } } >
+                            <svg className="author-displaySubredditsButton" >
+                                <use xlinkHref={ this.state.subredditsExpanded ? collapse_caret : expand_caret}></use>
+                            </svg>
+                        </div>
+                    </components.transitions.FadeHorizontalResize>
         }
     }
 
@@ -240,33 +209,29 @@ export default class AuthorCell extends React.Component<Props, State>
                 </div>
     }
 
-    getExpandButton()
-    {
-        return <div className="author-morePostsContainer" key={"_expandButton"} onClick={this.expandPosts} > 
-                <div className="author-morePostsInnerContainer">
-                    <svg className="author-morePostsButton" >
-                        <use xlinkHref={expand_caret}></use>
-                    </svg>
-                </div>
-
-                <span>{this.state.loading ? 'Loading...' : 'More posts'}</span>
-        </div>
-    }
-
-    getCollapseButton()
-    {
-        return <div className="author-morePostsContainer" key={"_collapsebutton"} onClick={this.collapsePosts} >
-            <div className="author-morePostsInnerContainer"> 
-                <svg className="author-morePostsButton" >
-                    <use xlinkHref={collapse_caret}></use>
-                </svg>
-            </div>
-        </div>
-    }
-
     handleSubscribeClick()
     {
-        this.props.subscribe(this.props.author.author.name, this.props.subreddit);
+        let subreddits : string[] = [];
+        
+        //Not subscribed, but subscription populated
+        if ( this.props.author.subscription != null)
+        {
+            console.log("sub: ", this.props.author.subscription);
+
+            //User is resubscribing without closing page, repopulate subscribed subreddits
+            subreddits = this.props.author.subscription.subreddits.map( ( subreddit : models.data.SubscriptionSubreddit ) => subreddit.name );
+        }
+
+        console.log("Resulting subs:",subreddits);
+
+        if (this.props.subreddit != null)
+        {
+            //Add current subreddit if we are in one. 
+            //TODO support multi subreddits
+            subreddits.push(this.props.subreddit);
+        }
+
+        this.props.subscribe(this.props.author.author.name, subreddits); 
     }
 
     handleUnsubscribeClick()
@@ -293,41 +258,5 @@ export default class AuthorCell extends React.Component<Props, State>
     collapseSubreddits()
     {
         this.setState( { subredditsExpanded: false } );
-    }
-
-
-    expandPosts()
-    {
-        if (this.state.loading)
-            return;
-
-        if (this.state.postsExpanded)
-        {
-            let offset : number = this.props.author.author.posts.length;
-            let count : number = config.postFetchCount;
-            this.grabMorePosts();
-        }
-        else
-        {
-            //Just expanding, grab more if necessary
-            if (this.props.author.author.posts.length <= config.postDisplayCount)
-            {
-                this.grabMorePosts();
-            }
-            this.props.getPostDetails( [this.props.author] );
-            this.setState( { postsExpanded: true } );
-        }
-    }
-
-    grabMorePosts()
-    {
-        this.setState( { ...this.state, loading: true } );
-        let count : number = config.postFetchCount;
-        this.props.fetchMorePosts(this.props.author, count);
-    }
-
-    collapsePosts()
-    {
-        this.setState( { postsExpanded: false } );
     }
 }

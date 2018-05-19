@@ -28,7 +28,7 @@ export function fetchSubscriptions()
     }
 }
 
-export function subscribeToAuthorAction(author : string, subreddit? : string)
+export function subscribeToAuthorAction(author : string, subreddits : string[])
 {
     return async function (dispatch, getState)
     {
@@ -38,7 +38,7 @@ export function subscribeToAuthorAction(author : string, subreddit? : string)
         let user: string = tools.store.getUsername(state);
         let token: string = tools.store.getAccessToken(state);
 
-        let subscription : models.data.Subscription = await api.rfy.subscription.subscribe(user, author, token, subreddit);
+        let subscription : models.data.Subscription = await api.rfy.subscription.subscribe(user, author, token, subreddits);
 
         dispatch({
             type: actions.types.subscription.SUBSCRIPTION_ADDED,

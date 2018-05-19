@@ -19,8 +19,6 @@ export function userReducer(state = getDefaultUserState(), action :  models.Acti
         {
             let payload : actionTypes.subscription.SUBSCRIPTION_CHANGED = action.payload;
 
-            console.log("subs: ",state.subscriptions);
-
             return {
                 ...state,
                 subscriptions: state.subscriptions.map( sub =>

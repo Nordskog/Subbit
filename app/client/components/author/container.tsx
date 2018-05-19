@@ -17,7 +17,7 @@ function mapDispatchToProps(dispatch, ownProps) : object
 {
     return function (dispatch)
     {
-        return { subscribe: (author: string, subreddit? : string) => { dispatch(actions.subscription.subscribeToAuthorAction(author, subreddit)) }, 
+        return { subscribe: (author: string, subreddits : string[]) => { dispatch(actions.subscription.subscribeToAuthorAction(author, subreddits)) }, 
                  unsubscribe: (sub: models.data.Subscription) => { dispatch(actions.subscription.unsubscribeFromAuthor(sub)) },
                  getPostDetails: (authors: models.data.AuthorEntry[]) => { dispatch(actions.authors.getPostInfoAction(authors, 0)) },
                  fetchMorePosts: (author : models.data.AuthorEntry, count : number) => { dispatch(actions.authors.fetchMorePosts( [author], count)) },
