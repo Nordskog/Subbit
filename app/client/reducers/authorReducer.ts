@@ -171,42 +171,29 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
                 after: null
             }
         }
-        
-        case 'NEW':
-            {
-                
-                return {
-                    ...state,
-                    filter: AuthorFilter.NEW,
-                    subreddit: null,
-                    author: null,
-                    after: null
-                }
-            }
-        case 'HOT':
-        {
-            
-            return {
-                ...state,
-                filter: AuthorFilter.HOT,
-                subreddit: null,
-                author: null,
-                after: null
-            }
-        }
 
         case 'HOME':
-        case 'SUBS':
         {
             return {
                 ...state,
-                filter: AuthorFilter.SUBSCRIPTIONS,
+                filter: AuthorFilter.BEST,
                 subreddit: null,
                 author: null,
                 after: null
             }
         }
 
+        case 'FILTER':
+        {
+            return {
+                ...state,
+                filter: action.payload.filter,
+                subreddit: null,
+                author: null,
+                after: null
+            }
+        }
+        
         case 'SUBREDDIT':
         {                
             return {
@@ -223,7 +210,7 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
             return {
                 ...state,
                 filter: AuthorFilter.NEW,
-                subreddit: null,
+                subreddit: action.payload.subreddit,
                 author: action.payload.author,
                 after: null
             }

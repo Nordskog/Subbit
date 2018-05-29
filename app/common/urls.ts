@@ -44,6 +44,10 @@ export function getRedditTokenRefreshUrl()
     return API_URL+"/authorize_refresh";
 }
 
+export function getSubredditUrl(subreddit : string)
+{
+    return REDDIT_URL + "/r/" + subreddit;
+}
 
 
     

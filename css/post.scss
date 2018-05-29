@@ -1,0 +1,149 @@
+@import 'colors';
+
+//////////////
+//Posts
+//////////////
+
+.posts {
+    margin-left: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.postContainer {
+    font-size: small;
+    display: flex;
+    flex-direction: row;
+}
+
+.post a:link  {
+    color: $normal-text-color;
+}
+.post a:visited  {
+    color: $background-text-color;
+}
+
+.post
+{
+    font-weight: bold;
+}
+.post a:link
+{
+    color: $normal-text-color;
+}
+.post a:visited  {
+    color: $background-text-color;
+}
+
+.topPost {
+    padding-bottom: 5px;
+    font-size: medium;
+}
+
+
+.topPost a:link,
+.topPost a:visited,
+.topPost a:hover
+{
+    color: $highlighted-text-color;
+    font-weight: bold;
+    font-size: medium;
+}
+
+.postedDate {
+    color: $background-text-color;
+    font-weight: normal;
+    margin-left: 5px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.subreddit
+{
+    color: $background-text-color;
+    font-weight: normal;
+    margin-left: 5px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.subreddit a:link,
+.subreddit a:visited,
+.subreddit a:hover
+{
+    color: $background-text-color;
+}
+
+.scoreContainer {
+    text-align: center;
+    color: $background-text-color;
+    font-weight: normal;
+    margin-left: 5px;
+    margin-right: 5px;
+    width:40px;
+    flex-shrink: 0;
+}
+
+.topScoreContainer
+{
+    @extend .scoreContainer;
+    //color: #965500;
+    font-weight: bold;
+}
+
+.postReadContainer
+{
+    width:40px;
+    flex-shrink: 0;
+}
+
+.voteIndicator {
+    height: 20px;
+    width: 20px;
+    fill: transparent;
+    stroke: transparent;
+    stroke-width:10;
+}
+
+.upvote
+{
+    @extend .voteIndicator;
+    stroke:transparent;
+    fill: $upvote-color;
+}
+
+.downvote
+{
+    @extend .voteIndicator;
+    stroke:transparent;
+    fill: $downvote-color;
+}
+
+.flair
+{
+    font-weight: bolder;
+    padding-left: 6px;
+    padding-right: 6px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    margin-left: 0px;
+    margin-right: 4px;
+    font-size: small;   //So the boxes line up
+
+    height: 20px;
+    color: $background-text-color;
+    background: $raised-element-color;
+}
+
+.nsfw_flair
+{
+    @extend .flair;
+    color: $danger;
+}
+
+.spoiler
+{
+    @extend .flair;
+    color: $sketchy;
+}
+

@@ -30,6 +30,8 @@ const config = {
   entry: {
     main: './app/server/render',
     appStyles: [
+            './css/post.scss',
+            './css/header.scss',
             './css/site.scss',
             './css/author.scss',
             './css/redditlist.scss',

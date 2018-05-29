@@ -9,7 +9,8 @@ function mapStateToProps(state: State)
     return { 
         authState: state.authState ,
         filter: state.authorState.filter,
-        subreddit: state.authorState.subreddit
+        subreddit: state.authorState.subreddit,
+        author: state.authorState.author
     };
 }
 

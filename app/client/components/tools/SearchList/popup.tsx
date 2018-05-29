@@ -16,8 +16,8 @@ import * as transitions from 'react-transition-group'
 interface Props 
 {
     trigger : JSX.Element;
-    subreddits: components.tools.subredditList.displayedSubreddit[];
-    onClick( subreddit : components.tools.subredditList.displayedSubreddit, close : () => void ) : void;
+    items: components.tools.SearchList.SearchItem[] | components.tools.SearchList.SearchItem;
+    displayHighlight: boolean;
     toggleHighlight: boolean;
     addToDisplayList: boolean;
 }
@@ -55,20 +55,19 @@ export default class popup extends React.Component<Props, State >
                             close => 
                             {
                                  return <transitions.TransitionGroup >
-                                            <components.transitions.FadeResize key={'subreddit_popup'} appear={true}>
+                                            <components.transitions.Fade key={'subreddit_popup'} appear={true}>
                                                 <div className={styles.popupContainer}>
-                                                    <components.tools.subredditList.component
-                                                        subreddits={this.props.subreddits} 
-                                                        onClick={ (subreddit : components.tools.subredditList.displayedSubreddit ) => 
-                                                        { 
-                                                            this.props.onClick(subreddit, close);
-                                                        }}
+                                                    <components.tools.SearchList.component
+                                                        items={this.props.items} 
+                                                        displayHighlight={this.props.displayHighlight}
                                                         toggleHighlight={this.props.toggleHighlight}
-                                                        addToDisplayList={this.props.addToDisplayList} />
+                                                        addToDisplayList={this.props.addToDisplayList}
+                                                        onClick={ ( item) => close() }
+                                                        onAltClick={ ( item) => close() }
+                                                    />
                                                 </div>
-                                            </components.transitions.FadeResize>
+                                            </components.transitions.Fade>
                                          </transitions.TransitionGroup>
-                                 
                             }
                         }
                     </Popup>

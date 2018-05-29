@@ -25,10 +25,10 @@ interface State
     duration: number;
 }
 
- export default class AutoHeight extends React.Component<Props, State>
+ export default class AutoWidth extends React.Component<Props, State>
 {
     container : HTMLDivElement;
-    prevHeight : number;
+    prevWidth : number;
     timeline : gsap.TimelineMax;
     
     constructor( props : Props)
@@ -39,27 +39,27 @@ interface State
 
     componentDidMount()
     {
-        this.prevHeight = this.container.clientHeight;
+        this.prevWidth = this.container.clientWidth;
     }
 
     componentDidUpdate()
     {
-        let height : number = this.container.clientHeight;
+        let width : number = this.container.clientWidth;
 
-        if ( this.prevHeight != height)
+        if ( this.prevWidth != width)
         {
         
-            if ( this.prevHeight != null)
+            if ( this.prevWidth != null)
             {
                 /*
                 gsap.TweenMax.fromTo(this.container, this.state.duration, 
                     {
-                         height: this.prevHeight,
+                         width: this.prevWidth,
                          opacity: 1
                     },
                     {
-                        height: height,
-                        clearProps:"height"
+                        width: width,
+                        clearProps:"width"
                     });
                     */
 
@@ -74,12 +74,12 @@ interface State
                         this.timeline = new gsap.TimelineMax();
                         this.timeline.fromTo(this.container, this.state.duration, 
                             { 
-                                height: this.prevHeight
+                                width: this.prevWidth
                 
                             }, 
                             {
-                                 height: height,
-                                 clearProps:  'height'
+                                 width: width,
+                                 clearProps:  'width'
                             });
                 
                             this.timeline.eventCallback( 'onComplete', () => { this.timeline = null }) ;
@@ -88,7 +88,7 @@ interface State
             }
         }
         
-        this.prevHeight = height;
+        this.prevWidth = width;
     }
 
     render()

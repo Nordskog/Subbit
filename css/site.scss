@@ -6,7 +6,7 @@ body {
     color: #eeeeee;
     background: $body-background;
 
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
     font-size: 14px;
     line-height: 1.42857143;
 }
@@ -59,68 +59,7 @@ a:hover
     
 }
 
-////////////////
-//Header
-///////////////
 
-.header {
-    display: block;
-    background: $card-background;
-    height: auto;
-    min-height: $header-height;
-    
-
-}
-
-
-.headerBrand
-{
-    width: fit-content;
-    padding:10px;
-    overflow:visible;
-    color: $normal-text-color;
-
-    font-weight: lighter;
-    font-size: large;
-}
-
-/*
-a.headerBrand:link,:visited,:hover
-{
-    color: $normal-text-color;
-    text-decoration: none;
-}
-*/
-
-.headerItem
-{
-    width: fit-content;
-    padding:10px;
-
-    font-weight: bold;
-    font-size: normal;
-}
-
-.headerLeft
-{
-    float:left;
-    width:fit-content;
-    display: flex;
-    flex-direction: row;
-}
-
-.headerRight
-{
-    float:right;
-    display: flex;
-    flex-direction: row;
-    padding-right:20px;
-}
-
-.headerClear
-{
-    clear: both;
-}
 
 .button
 {  
@@ -153,6 +92,14 @@ input[type=text] {
     border-radius: 4px;
     font-size: 16px;
     padding: 12px 20px 12px 12px;
+    color: $input-text-color;
+    background: $input-background-color;
+}
+
+::placeholder 
+{
+    color: $input-placeholder-color;
+    opacity:1;
 }
 
 .inputContainer
@@ -161,19 +108,11 @@ input[type=text] {
     flex-direction: row;
     justify-content: center left;
 
-    color: $primary-text-color;
     font-size: large;
     font-weight: bold;
     padding: 5px;
 }
 
-.overlappingContainer
-{
-    //position: absolute;
-   // height:300px;
-   // left: 0;
-   // top: 0;
-}
 
 .overlappingOuterContainer
 {

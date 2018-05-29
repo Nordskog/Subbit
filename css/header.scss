@@ -1,0 +1,76 @@
+@import 'colors';
+@import 'dimens';
+@import 'common';
+////////////////
+//Header
+///////////////
+
+.header {
+    display: block;
+    background: $card-background;
+    height: auto;
+    min-height: $header-height;
+    
+
+}
+
+.spacer
+{
+    height:auto;
+    width:5px;
+    background: $body-background;
+}
+
+.headerBrand
+{
+    width: fit-content;
+    padding:10px;
+    overflow:visible;
+    color: $normal-text-color;
+
+    font-weight: bolder;
+    font-size: large;
+}
+
+.sortButton
+{  
+    @extend %button;
+    font-size: large;
+}
+
+.sortButtonActive
+{  
+    @extend .sortButton;
+    background: $body-background;
+}
+
+
+.headerItem
+{
+    width: fit-content;
+    padding:10px;
+
+    font-weight: bold;
+    font-size: normal;
+}
+
+.headerLeft
+{
+    float:left;
+    width:fit-content;
+    display: flex;
+    flex-direction: row;
+}
+
+.headerRight
+{
+    float:right;
+    display: flex;
+    flex-direction: row;
+    padding-right:20px;
+}
+
+.headerClear
+{
+    clear: both;
+}

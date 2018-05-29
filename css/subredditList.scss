@@ -16,7 +16,51 @@
     width: auto;
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
+    cursor: pointer;
 }
+
+.subscriptionSubredditContainer:hover
+{
+    background: $menu-highlight-color;
+}
+
+
+.subscriptionSubredditInnerContainer
+{
+    width: auto;
+    display: flex;
+    flex-direction: row;
+}
+
+.searchContainer
+{
+    width: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.altBox
+{
+    width:auto;
+    color: $background-text-color;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-right: 10px;
+    padding-left:10px;
+    font-weight: bold;
+    color: $interactive-text-color;
+    cursor: pointer;
+    white-space: nowrap;
+
+}
+
+.altBox:hover
+{
+    background: $nested-highlight-color;
+}
+
 
 .searchBarSpacer
 {
@@ -26,8 +70,13 @@
 
 .subscriptionSubreddit
 {
+
     
-    width: 200px;
+   // width: 200px;
+
+   display: flex;
+   flex-direction: row;
+
     color: $highlighted-text-color;
     text-align: left;
 

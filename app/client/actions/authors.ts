@@ -14,20 +14,47 @@ import * as authority from '~/client/authority'
 export function changeSubreddit( subreddit : string)
 {
     return async function (dispatch, getState)
-    {
-        /*
-        dispatch({
-            type: actions.types.authors.SUBREDDIT_CHANGED,
-            payload: subreddit as actions.types.authors.SUBREDDIT_CHANGED
-        });
+    {    
+        if (subreddit == null)
+        {
+            //No sub means home (frontpage)
+            dispatch(
+                { type: 'HOME', payload: { } } 
+                );
+        }
+        else
+        {
+            let state: State = getState();
 
-        dispatch( fetchAuthorsAction
-            (0, false) );
-        */
+            let filter = state.authorState.filter;
+            if (filter == models.AuthorFilter.SUBSCRIPTIONS)
+            {
+                filter = null;
+            }
+            else if ( filter == AuthorFilter.BEST)
+            {
+                //subreddits only have hot or new
+                filter = AuthorFilter.HOT;
+            }
+    
+            dispatch(
+            { type: 'SUBREDDIT', payload: { subreddit: subreddit, filter: filter  } } 
+            );
+        }
+
+
+
+    }
+}
+
+export function viewAuthor( author: string, subreddit? : string)
+{
+    return async function (dispatch, getState)
+    {
        let state: State = getState();
     
         dispatch(
-        { type: 'SUBREDDIT', payload: { subreddit: subreddit, filter: state.authorState.filter  } } 
+        { type: 'AUTHOR', payload: { author: author, subreddit: subreddit  } } 
         );
     }
 }
@@ -43,9 +70,21 @@ export function fetchAuthorsAction ( page : number = 0, appendResults: boolean =
         let authors : models.data.Author[];
         let after : string;
 
-        if (state.authorState.filter == models.AuthorFilter.SUBSCRIPTIONS)
+        if (state.authorState.author != null)
         {
-            //authors = await api.rfy.authors.fetchSubscribedAuthors( state.authState.user.access_token, null, page );
+            //Single author
+            authors = [{
+                id : -1,
+                name: state.authorState.author, //Need to correct lookup name maybe
+                last_post_date: 0,
+                post_count : 0,
+                posts: [],
+                subscriptions: []
+            }]
+        }    
+        else if (state.authorState.filter == models.AuthorFilter.SUBSCRIPTIONS)
+        {
+            //Subscriptions
             authors = state.userState.subscriptions.map( ( sub : models.data.Subscription ) => 
             {
                 return {
@@ -61,6 +100,7 @@ export function fetchAuthorsAction ( page : number = 0, appendResults: boolean =
         }
         else
         {
+            //Subreddit
             let res = await api.reddit.posts.getAuthors( state.authorState.subreddit, state.authorState.filter, state.authorState.after, config.authorDisplayCount, redditAuth );
             authors = res.authors;
             after = res.after;

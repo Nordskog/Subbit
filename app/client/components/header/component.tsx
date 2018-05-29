@@ -9,12 +9,17 @@ import * as components from '~/client/components'
 
 import { AuthorFilter } from '~/common/models';
 
+import * as siteStyles from 'css/site.scss';
+import * as styles from 'css/header.scss'
+
+import * as transitions from 'react-transition-group'
 
 interface Props
 {
     authState: models.auth.AuthState;
     filter : models.AuthorFilter;
     subreddit : string;
+    author : string;
     logout(): void;
 }
 
@@ -25,61 +30,88 @@ export default class HeaderComponent extends React.Component<Props, null>
     constructor(props)
     {
         super(props);
-
-        this.handleLogoutClick = this.handleLogoutClick.bind(this);
     }
 
     render()
     {
-        return <div className="site-header">
-                    <div className="site-headerLeft">
-                        <a className="site-headerBrand" href="#">RFY</a>
-                        <components.tools.RedditList/>
-                        <NavLink    className={ this.getButtonStyleIfFilterMatch(AuthorFilter.HOT )}
-                                    to={ this.getFilterLink(AuthorFilter.HOT) }>
-                                hot
-                        </NavLink>
-
-                        <NavLink    className={ this.getButtonStyleIfFilterMatch(AuthorFilter.NEW )}
-                                    to={ this.getFilterLink(AuthorFilter.NEW) }>
-                                new
-                        </NavLink>
-
-                        <NavLink    className={ this.getButtonStyleIfFilterMatch(AuthorFilter.SUBSCRIPTIONS )}
-                                    to={ this.getFilterLink(AuthorFilter.SUBSCRIPTIONS) }>
-                                subscribed
-                        </NavLink>
-                        <NavLink    className="site-button"
-                                    to={ { type: 'MANAGER' } }>
-                                manager
-                        </NavLink>
-                    </div>
-                    <div className="site-headerRight">
+        return <div className={styles.header}>
+                       <transitions.TransitionGroup component="div" className={styles.headerLeft}>
+                            <a className={styles.headerBrand} href="#"></a>
+                            <components.animations.AutoWidth>
+                                <components.tools.SubredditDropdown/>
+                            </components.animations.AutoWidth>
+                            { this.getLink( AuthorFilter.BEST, "best") }
+                            { this.getLink( AuthorFilter.HOT, "hot") }
+                            { this.getLink( AuthorFilter.NEW, "new") }
+                            { this.getLink( AuthorFilter.TOP, "top") }
+                            { this.getLink( AuthorFilter.RISING, "rising") }
+                            { this.getLink( AuthorFilter.CONTROVERSIAL, "controversial") }
+                            <div className={styles.spacer} />
+                            { this.getLink( AuthorFilter.SUBSCRIPTIONS, "subscribed") }
+                             { /*this.getManagerLink()*/ }
+                        </transitions.TransitionGroup>
+                    <div className={styles.headerRight}>
                      {this.getPanel()}
                     </div>
-                    <div className="site-headerClear"/>
-                </div>;
+                    <div className={styles.headerClear}/>
+                </div>
+    }
+
+    getLink( filter : AuthorFilter, display : string)
+    {
+
+        if (this.props.subreddit != null && filter == AuthorFilter.BEST)
+            return null;
+
+        return <components.transitions.FadeHorizontalResize key={"filterlink_"+display}>
+                    <NavLink    className={ this.getButtonStyleIfFilterMatch(filter )}
+                        to={ this.getFilterLink(filter) }>
+                        {display}
+                    </NavLink>
+                </components.transitions.FadeHorizontalResize>   
+    }
+
+    getManagerLink()
+    {
+        return <NavLink    className={styles.sortButton}
+                    to={ { type: 'MANAGER' } }>
+                    manager
+                </NavLink>
     }
 
     getButtonStyleIfFilterMatch(filter : string)
     {
         if (filter == this.props.filter)
         {
-            return "site-button site-activeButton";
+            return  `${siteStyles.button} ${styles.sortButtonActive}`;
         }
         else
         {
-            return "site-button";
+            return styles.sortButton;
         }
     }
 
+    /*
+    getActiveFilter() : AuthorFilter
+    {
+        if (this.props.filter == null)
+        {
+            if (this.props.subreddit == null && this.props.author == null)
+            {
+                return AuthorFilter.BEST;
+            }
+        }
+        return this.props.filter;
+    }
+    */
 
 
-    getFilterLink(filter : string)
+
+    getFilterLink(filter : models.AuthorFilter)
     {
         if (this.props.subreddit == null)
         {
-            return {type: filter.toUpperCase()}
+            return { type: 'FILTER', payload: { filter: filter } };
         }
         else
         {
@@ -97,17 +129,17 @@ export default class HeaderComponent extends React.Component<Props, null>
 
     getLoginPanel()
     {
-        return <div className="site-loginContainer">
-                <a href={urls.getLoginUrl()} className="site-button">Login</a>
+        return <div className={siteStyles.loginContainer}>
+                <a href={urls.getLoginUrl()} className={styles.sortButton}>Login</a>
                 </div>;
     }
 
     getloggedInPanel()
     {
-        return <div className="site-loginContainer">
+        return <div className={siteStyles.loginContainer}>
             <div
-                className="site-button"
-                onClick={this.handleLogoutClick}>logout</div>
+                className={styles.sortButton}
+                onClick={() => this.handleLogoutClick() }>logout</div>
              </div>;
     }
 

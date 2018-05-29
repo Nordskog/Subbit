@@ -65,6 +65,7 @@ export function userReducer(state = getDefaultUserState(), action :  models.Acti
 export function getDefaultUserState() : models.state.User
 {
     return {
-        subscriptions: []
+        subscriptions: [],
+        postDisplay: models.PostDisplay.NORMAL
     } as models.state.User;
 }

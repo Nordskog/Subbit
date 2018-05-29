@@ -28,10 +28,18 @@ export enum SocketAction
 };
 
 export enum AuthorFilter
-    {
-        BEST = 'best',
-        NEW = 'new',
-        HOT =  'hot',
-        TOP = 'top',
-        SUBSCRIPTIONS =  'subs',
-    };
+{
+    BEST = 'best',
+    NEW = 'new',
+    HOT =  'hot',
+    TOP = 'top',
+    SUBSCRIPTIONS =  'subs',
+    RISING = "rising",
+    CONTROVERSIAL = "controversial",
+};
+
+export enum PostDisplay
+{
+    COMPACT = 'compact',
+    NORMAL = 'normal'
+}

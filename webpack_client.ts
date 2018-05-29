@@ -30,6 +30,8 @@ const config = {
             'react-hot-loader/patch'],
         appStyles: [
 
+            './css/post.scss',
+            './css/header.scss',
             './css/site.scss',
             './css/author.scss',
             './css/redditlist.scss',

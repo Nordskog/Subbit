@@ -29,6 +29,7 @@ interface State
 {
     container : HTMLDivElement;
     prevHeight : number;
+    prevWidth : number;
     timeline : gsap.TimelineMax;
     
     constructor( props : Props)
@@ -40,29 +41,19 @@ interface State
     componentDidMount()
     {
         this.prevHeight = this.container.clientHeight;
+        this.prevWidth = this.container.clientWidth;
     }
 
     componentDidUpdate()
     {
         let height : number = this.container.clientHeight;
+        let width : number = this.container.clientWidth;
 
-        if ( this.prevHeight != height)
+        if ( this.prevHeight != height || this.prevWidth != width)
         {
         
-            if ( this.prevHeight != null)
+            if ( this.prevHeight != null && this.prevWidth != null)
             {
-                /*
-                gsap.TweenMax.fromTo(this.container, this.state.duration, 
-                    {
-                         height: this.prevHeight,
-                         opacity: 1
-                    },
-                    {
-                        height: height,
-                        clearProps:"height"
-                    });
-                    */
-
                     if (this.timeline != null)
                     {
                         //Wait for it to finish I guess.
@@ -74,11 +65,13 @@ interface State
                         this.timeline = new gsap.TimelineMax();
                         this.timeline.fromTo(this.container, this.state.duration, 
                             { 
-                                height: this.prevHeight
+                                height: this.prevHeight,
+                                width: this.prevWidth
                 
                             }, 
                             {
                                  height: height,
+                                 width: width,
                                  clearProps:  'height'
                             });
                 
@@ -89,6 +82,7 @@ interface State
         }
         
         this.prevHeight = height;
+        this.prevWidth = width;
     }
 
     render()

@@ -20,12 +20,16 @@ import collapse_caret from 'assets/images/collapse_caret.svg'
 import * as components from '~/client/components'
 
 import * as transitions from 'react-transition-group'
+import { numberTo4CharDisplayString } from '~/common/tools/number';
 
 interface Props
 {
     posts: models.reddit.Post[];
+    postDisplay : models.PostDisplay;
     canLoadMore: boolean;
-    grabMorePosts() : (void);
+    grabMorePosts() : void;
+    scrollToAuthorTop() : void;
+    displaySubreddit: boolean;
 }
 
 interface State
@@ -74,23 +78,13 @@ export default class Posts extends React.Component<Props, State>
             {
                 renderedPosts.push( <cells.postCell
                     key={post.id}
+                    postDisplay={this.props.postDisplay}
                     post={post}
                     isTopPost={index==0}
+                    displaySubreddit={ this.props.displaySubreddit }
                 /> );
             }
         };
-
-        /*
-        if (this.canExpand() || this.props.canLoadMore)
-        {
-            renderedPosts.push (this.getExpandButton() );
-        }
-
-        if ( this.state.postsExpanded)
-        {
-            renderedPosts.push(this.getCollapseButton());
-        }
-        */
 
         return  <div style={ { height: 'auto', overflow: 'hidden' } } className="author-posts">
             
@@ -98,9 +92,10 @@ export default class Posts extends React.Component<Props, State>
                     {renderedPosts}
                 </components.animations.AutoHeight>
 
-                {this.getExpandButton()}
+                
 
                 <transitions.TransitionGroup>
+                        {this.getExpandButton()}
                         {this.getCollapseButton()}
                 </transitions.TransitionGroup>
 
@@ -127,7 +122,7 @@ export default class Posts extends React.Component<Props, State>
             let newCount : number = this.state.expandedPostCount + config.postExpandCount;
 
             //Just expanding, grab more if necessary
-            if (this.props.posts.length <= newCount)
+            if (this.props.posts.length <= newCount && this.props.canLoadMore)
             {
                 this.grabMorePosts();
                 this.setState( { ...this.state, loading: true, postsExpanded: true, expandedPostCount: newCount   } );
@@ -141,6 +136,7 @@ export default class Posts extends React.Component<Props, State>
 
     collapsePosts()
     {
+        this.props.scrollToAuthorTop();
         this.setState( { postsExpanded: false,  expandedPostCount: 0 } );
     }
 
@@ -160,15 +156,17 @@ export default class Posts extends React.Component<Props, State>
         if (!this.canExpand() )
             return null;
 
-        return <div className="author-morePostsContainer" key={"_expandButton"} onClick={ () => this.expandPosts() } > 
-                <div className="author-morePostsInnerContainer">
-                    <svg className="author-morePostsButton" >
-                        <use xlinkHref={expand_caret}></use>
-                    </svg>
-                </div>
+        return <components.transitions.FadeResize key={'_expandButton'}>
+                <div className="author-morePostsContainer"  onClick={ () => this.expandPosts() } > 
+                        <div className="author-morePostsInnerContainer">
+                            <svg className="author-morePostsButton" >
+                                <use xlinkHref={expand_caret}></use>
+                            </svg>
+                        </div>
 
-                <span>{this.state.loading ? 'Loading...' : 'More posts'}</span>
-        </div>
+                        <span>{this.state.loading ? 'Loading...' : 'More posts'}</span>
+                </div>
+            </components.transitions.FadeResize >
     }
 
     getCollapseButton()

@@ -22,16 +22,20 @@ import { Query } from 'wetland/dist/src/Query';
 
 import * as transitions from 'react-transition-group'
 
+import { NavLink} from 'redux-first-router-link'
+
 interface Props
 {
     author: models.data.AuthorEntry;
     subreddit: string;
+    postdisplay: models.PostDisplay;
     subscribe(author: string, subreddits : string[] ): void;
     unsubscribe(sub: models.data.Subscription): void;
     getPostDetails(authors : models.data.AuthorEntry[]): void;
     addSubscriptionSubreddit(subscription : number, subreddit : string ): void;
     removeSubscriptionSubreddit(subscription : number, subreddit : string): void;
     fetchMorePosts(author : models.data.AuthorEntry, count : number): void;
+    searchSubreddits( name : string) : Promise< string[] >;
 }
 interface State
 {
@@ -41,6 +45,9 @@ interface State
 
 export default class AuthorCell extends React.Component<Props, State>
 {
+
+    container : HTMLDivElement;
+
     constructor(props)
     {
         super(props);
@@ -85,8 +92,11 @@ export default class AuthorCell extends React.Component<Props, State>
        return <components.transitions.FadeResize key={'posts_container'}>
             <components.author.cells.Posts
                 posts={this.props.author.author.posts}
+                postDisplay={this.props.postdisplay}
                 canLoadMore={!this.props.author.end}
                 grabMorePosts={( () => this.props.fetchMorePosts(this.props.author, config.postFetchCount))}
+                scrollToAuthorTop={() => this.scrollToAuthorTop()}
+                displaySubreddit={this.props.subreddit == null}
             />
          </components.transitions.FadeResize>
     }
@@ -96,16 +106,33 @@ export default class AuthorCell extends React.Component<Props, State>
        return (this.props.author.subscription != null && ( this.props.author.subscription.subscribed == null || this.props.author.subscription.subscribed )   )
     }
 
+    scrollToAuthorTop()
+    {
+
+        //Scroll to top of component if top of window is below it
+        if (this.container.getBoundingClientRect().top < 0)
+        {
+            let options = {
+                behavior: "smooth" as ScrollBehavior,   //Casts necessary for some silly reason
+                block: "start" as ScrollLogicalPosition, 
+                inline: "nearest" as ScrollLogicalPosition
+            };
+    
+            this.container.scrollIntoView(options);
+        }
+    }
+
     render()
     {
-        return <div className={ this.isSubscribed() ? "author-subscribedAuthor" : "author-author"} key = { this.props.author.author.name } >
+        return <div className={ this.isSubscribed() ? "author-subscribedAuthor" : "author-author"} key = { this.props.author.author.name } ref={ (c) => {this.container = c}} >
             <transitions.TransitionGroup component={'div'} className="author-authorHeader">
                 {this.getButton()}
                 {this.getShowSubredditsButton()}
 
-                <div className="author-nameContainer">
-                    <div> <a href={'author/'+this.props.author.author.name}> {this.props.author.author.name} </a>   </div>
-                </div>
+                <NavLink className="author-nameContainer"
+                    to={ { type: 'AUTHOR', payload: { author:this.props.author.author.name } }  }>
+                    {this.props.author.author.name}
+                </NavLink>
             
             </transitions.TransitionGroup>
 
@@ -115,8 +142,6 @@ export default class AuthorCell extends React.Component<Props, State>
                 {this.getSubscribedSubreddits()}
                 <div/>
                 {this.renderPosts()}
-                
-            
             </transitions.TransitionGroup>
 
             </div>
@@ -127,34 +152,41 @@ export default class AuthorCell extends React.Component<Props, State>
     {
         if ( this.isSubscribed() && this.state.subredditsExpanded)
         {
+            let subSearch : components.tools.SearchList.SearchItem = {
+                items: this.props.author.subscription.subreddits.map(
+                    ( subreddit : models.data.SubscriptionSubreddit) => 
+                    {
+                        return {
+                            name: subreddit.name,
+                            highlighted: true
+                        }
+                    }
+                ),
+                search: async ( name : string ) => { return ( await this.props.searchSubreddits(name) ).map( name => { return { name: name } }  ) },
+                prefix: "r/",
+                searchPlaceholder: "Subreddit",
+                emptyMessage: 'Subscribed in all subreddits',
+                onClick:  (item : components.tools.SearchList.ListItem) => 
+                    { 
+                        if (item.highlighted)
+                        {
+                            this.props.removeSubscriptionSubreddit(this.props.author.subscription.id, item.name);
+                        }
+                        else
+                        {
+                            this.props.addSubscriptionSubreddit(this.props.author.subscription.id, item.name);
+                        }
+                    }
+            }
 
             return  <components.transitions.FadeResize key={'subs_container'}>
              <div className={styles.subscriptionsContainer}>
-                <components.tools.subredditList.component
-                            subreddits={this.props.author.subscription.subreddits.map
-                                (
-                                    ( subreddit : models.data.SubscriptionSubreddit) => 
-                                    {
-                                        return {
-                                            name: subreddit.name,
-                                            highlighted: subreddit.subscribed
-                                        }
-                                    }
-                                )} 
-                            onClick={ (subreddit : components.tools.subredditList.displayedSubreddit, close : () => void ) => 
-                                { 
-                                    if (subreddit.highlighted)
-                                    {
-                                        this.props.removeSubscriptionSubreddit(this.props.author.subscription.id, subreddit.name);
-                                    }
-                                    else
-                                    {
-                                        this.props.addSubscriptionSubreddit(this.props.author.subscription.id, subreddit.name);
-                                    }
-                                }}
-                                toggleHighlight={true}
-                                addToDisplayList={true}
-                                />
+                <components.tools.SearchList.component
+                            items={subSearch} 
+                            displayHighlight={true}
+                            toggleHighlight={true}
+                            addToDisplayList={true}
+                            />
             </div>
 
             </components.transitions.FadeResize>

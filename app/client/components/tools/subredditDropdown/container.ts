@@ -7,6 +7,7 @@ import * as actions from '~/client/actions'
 function mapStateToProps(state: State )
 {
     return { subreddits: state.siteState.subreddits,
+        subscriptions: state.userState.subscriptions,
         subreddit: state.authorState.subreddit,
         filter: state.authorState.filter
     }
@@ -17,7 +18,10 @@ function mapDispatchToProps(): object
     return function (dispatch)
     {
         return {
+            searchSubreddit: ( name : string ) => { return actions.statelessActions.subreddits.searchSubreddits(name, dispatch) },
+            searchAuthor: ( name : string ) => { return actions.statelessActions.subreddits.searchSubreddits(name, dispatch) },
             changeSubreddit: ( subreddit : string ) => { dispatch(actions.authors.changeSubreddit(subreddit)) },
+            viewAuthor: ( author: string, subreddit? : string ) => { dispatch(actions.authors.viewAuthor( author, subreddit)) },
         }
     }
 }
