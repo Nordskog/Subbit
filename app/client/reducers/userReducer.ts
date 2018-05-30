@@ -57,6 +57,16 @@ export function userReducer(state = getDefaultUserState(), action :  models.Acti
                 })
             }
         }
+
+        case actionTypes.user.POST_DISPLAY_MODE_CHANGED:
+        {
+            let payload : actionTypes.user.POST_DISPLAY_MODE_CHANGED = action.payload;
+
+            return {
+                ...state,
+                postDisplay: payload
+            }
+        }
     }
 
     return state;

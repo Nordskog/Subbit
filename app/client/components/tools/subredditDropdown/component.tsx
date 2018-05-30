@@ -33,6 +33,7 @@ interface State
 
 export default class SubredditDropdown extends React.Component<Props, State>
 {
+    state = { subreddits: []};
     
     static getDerivedStateFromProps( nextProps : Props, prevState : State) : State
     {

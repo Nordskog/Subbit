@@ -10,7 +10,7 @@ function mapStateToProps(state: State )
 {
 
     return { 
-
+        postDisplay: state.userState.postDisplay
     }
 }
 
@@ -19,18 +19,17 @@ function mapDispatchToProps(dispatch, ownProps) : object
     return function (dispatch)
     {
         return {
-            addSubreddit: ( subreddit: string  ) => { dispatch(actions.subreddits.addSubreddit(subreddit) ) },
-            pruneAuthorsWithNoPosts: ( ) => { dispatch(actions.manager.pruneAuthorsWithNoPosts() ) },
+            changePostDisplay: ( mode: models.PostDisplay  ) => { dispatch(actions.posts.changePostDisplay(mode) ) },
           };
     }
 }
 
 
-const managedSettingsComponent =
+const userSettingsComponent =
     connect(
                 mapStateToProps,
                 mapDispatchToProps,
     )
         (component);
 
-export default managedSettingsComponent;
+export default userSettingsComponent;

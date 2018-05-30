@@ -51,6 +51,7 @@ export default class HeaderComponent extends React.Component<Props, null>
                              { /*this.getManagerLink()*/ }
                         </transitions.TransitionGroup>
                     <div className={styles.headerRight}>
+                    {this.getSettingsPanel()}
                      {this.getPanel()}
                     </div>
                     <div className={styles.headerClear}/>
@@ -91,22 +92,6 @@ export default class HeaderComponent extends React.Component<Props, null>
         }
     }
 
-    /*
-    getActiveFilter() : AuthorFilter
-    {
-        if (this.props.filter == null)
-        {
-            if (this.props.subreddit == null && this.props.author == null)
-            {
-                return AuthorFilter.BEST;
-            }
-        }
-        return this.props.filter;
-    }
-    */
-
-
-
     getFilterLink(filter : models.AuthorFilter)
     {
         if (this.props.subreddit == null)
@@ -141,6 +126,11 @@ export default class HeaderComponent extends React.Component<Props, null>
                 className={styles.sortButton}
                 onClick={() => this.handleLogoutClick() }>logout</div>
              </div>;
+    }
+
+    getSettingsPanel()
+    {
+        return <components.userSettings.Popup />
     }
 
    handleLogoutClick()

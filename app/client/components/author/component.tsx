@@ -28,7 +28,7 @@ interface Props
 {
     author: models.data.AuthorEntry;
     subreddit: string;
-    postdisplay: models.PostDisplay;
+    postDisplay: models.PostDisplay;
     subscribe(author: string, subreddits : string[] ): void;
     unsubscribe(sub: models.data.Subscription): void;
     getPostDetails(authors : models.data.AuthorEntry[]): void;
@@ -65,7 +65,8 @@ export default class AuthorCell extends React.Component<Props, State>
     {
         if (nextProps.author === this.props.author && 
             this.state.postsExpanded == newState.postsExpanded &&
-            this.state.subredditsExpanded == newState.subredditsExpanded
+            this.state.subredditsExpanded == newState.subredditsExpanded &&
+            this.props.postDisplay == nextProps.postDisplay
         )
         {
             return false;
@@ -92,7 +93,7 @@ export default class AuthorCell extends React.Component<Props, State>
        return <components.transitions.FadeResize key={'posts_container'}>
             <components.author.cells.Posts
                 posts={this.props.author.author.posts}
-                postDisplay={this.props.postdisplay}
+                postDisplay={this.props.postDisplay}
                 canLoadMore={!this.props.author.end}
                 grabMorePosts={( () => this.props.fetchMorePosts(this.props.author, config.postFetchCount))}
                 scrollToAuthorTop={() => this.scrollToAuthorTop()}

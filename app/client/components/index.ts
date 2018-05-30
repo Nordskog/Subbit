@@ -12,3 +12,4 @@ export import managedSubreddit = require('./managedSubreddit');
 export import tools = require('./tools');
 export import transitions = require('./transitions');
 export import animations = require('./animations');
+export import userSettings = require('./userSettings');

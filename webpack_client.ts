@@ -30,6 +30,8 @@ const config = {
             'react-hot-loader/patch'],
         appStyles: [
 
+            './css/userSettings.scss',
+            './css/toggle.scss',
             './css/post.scss',
             './css/header.scss',
             './css/site.scss',

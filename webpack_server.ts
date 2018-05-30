@@ -30,6 +30,8 @@ const config = {
   entry: {
     main: './app/server/render',
     appStyles: [
+            './css/userSettings.scss',
+            './css/toggle.scss',
             './css/post.scss',
             './css/header.scss',
             './css/site.scss',

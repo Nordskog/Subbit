@@ -1,0 +1,33 @@
+@import 'colors';
+
+.container
+{
+    display:flex;
+    flex-direction: column;
+    
+}
+
+.row
+{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.description
+{
+    color: $highlighted-text-color;
+    text-align: center;
+    font-weight: bold;
+    margin: 10px;
+    padding:10px;
+
+    font-size: large;
+}
+
+.popupContainer
+{
+    background: $card-background;
+    min-width: 400px;
+    border: 2px solid $hidden-text-color;
+}

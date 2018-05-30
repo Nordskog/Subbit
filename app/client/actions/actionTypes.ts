@@ -1,4 +1,5 @@
 ﻿import * as models from '~/common/models'
+import { userInfo } from 'os';
 
 export namespace authors
 {
@@ -92,6 +93,12 @@ export namespace page
 
 };
 
+export namespace user
+{
+    export const POST_DISPLAY_MODE_CHANGED: string =  'POST_DISPLAY_MODE_CHANGED';
+    export type POST_DISPLAY_MODE_CHANGED = models.PostDisplay;
+}
+
 export namespace manager
 {
     export const FETCH_SUBREDDITS_COMPLETED : string = 'FETCH_SUBREDDITS_COMPLETED';
@@ -124,4 +131,6 @@ export namespace manager
     {
       
     }
+
+
 };

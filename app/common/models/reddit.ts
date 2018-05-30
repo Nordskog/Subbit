@@ -41,7 +41,8 @@ export interface Post
     title : string,
     url : string,
     likes : boolean,
-    visited : boolean
+    visited : boolean,
+    thumbnail_height: number;
 }
 
 export type ListingResponse = Thing< Listing< Post > >
