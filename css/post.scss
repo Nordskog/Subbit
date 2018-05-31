@@ -82,10 +82,22 @@
     margin-left: 5px;
     text-align: center;
     flex-shrink: 0;
+}
 
-   
-    
+.comments
+{
+    color: $hidden-text-color;
+    font-weight: normal;
+    margin-left: 5px;
+    text-align: center;
+    flex-shrink: 0;
+}
 
+.comments a:link,
+.comments a:visited,
+.comments a:hover
+{
+    color: $hidden-text-color;
 }
 
 .subreddit a:link,
@@ -163,7 +175,7 @@
 
 .flair
 {
-    font-weight: bolder;
+    font-weight: 800;
     padding-left: 6px;
     padding-right: 6px;
     padding-top: 0px;

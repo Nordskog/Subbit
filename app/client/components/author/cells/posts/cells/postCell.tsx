@@ -22,7 +22,7 @@ const defaultThumbnails : Map<string, string> = new Map<string, string>();
 defaultThumbnails.set("self","https://www.reddit.com/static/self_default2.png");
 defaultThumbnails.set("default","https://www.reddit.com/static/noimage.png");
 defaultThumbnails.set("nsfw","https://www.reddit.com/static/nsfw2.png");
-defaultThumbnails.set("spoiler","https://www.reddit.com/static/nsfw2.png");
+defaultThumbnails.set("spoiler","https://www.reddit.com/static/self_default2.png");
 const defaultThumbnail = "https://www.reddit.com/static/self_default2.png"
 
 interface Props
@@ -52,15 +52,18 @@ export default class PostCell extends React.Component<Props, null>
         return <div className={this.props.isTopPost ? `${styles.postContainer} ${styles.topPost}` : styles.postContainer}>
             {this.getUpvoted(this.props.post.likes)}
             {this.getScoreCol()}
-            {this.getFlair()}
-            {this.getSpoiler()}
-            <div className={styles.post}> <a href={urls.getPostUrl(this.props.post.subreddit, this.props.post.id)}> {this.props.post.title} </a>  </div> 
+            {this.getLink()}
             <div className={styles.postedDate}>
                 {this.getDateCol()}
             </div>
             {this.getSubreddit()}
+            {this.getComments()}
             </div>
+    }
 
+    getLink( includeFlairs : boolean = true)
+    {
+        return <div className={styles.post}>{includeFlairs ? this.getFlairsAndStuff() : null }<a href={this.props.post.url}>{this.props.post.title} </a>  </div> 
     }
 
     getNormalPost()
@@ -75,9 +78,8 @@ export default class PostCell extends React.Component<Props, null>
                     {this.getImage()}
                     <div className={styles.postColumn} >
                         <div className={styles.postLinkContainer}>
-                            <div className={styles.post}> <a href={urls.getPostUrl(this.props.post.subreddit, this.props.post.id)}> {this.props.post.title} </a>  </div> 
-                            {this.getFlair()}
-                            {this.getSpoiler()}
+                            {this.getLink()}
+                            {this.getComments()}
                         </div>
                         <div className={styles.postInfoContainer}>  
                             <div className={styles.postedDate}>
@@ -91,11 +93,16 @@ export default class PostCell extends React.Component<Props, null>
 
     }
 
+    getFlairsAndStuff()
+    {
+        return [this.getFlair(), this.getSpoiler(), this.getNsfwFlair() ]
+    }
+
     getFlair()
     {
-        if (this.props.post.link_flair_text != null)
+        if (this.props.post.link_flair_text != null && this.props.post.link_flair_text.length > 0)
         {
-            return <div className={ this.getFlairClass(this.props.post.link_flair_text) }>{this.props.post.link_flair_text}</div>
+            return <span key={"flair_flair"} className={ this.getFlairClass(this.props.post.link_flair_text) }>{this.props.post.link_flair_text}</span>
         }
     }
 
@@ -103,9 +110,17 @@ export default class PostCell extends React.Component<Props, null>
     {
         if (this.props.post.spoiler)
         {
-            return <div className={ styles.spoiler }>Spoiler</div>
+            return <span key={"spoiler_flair"} className={ styles.spoiler }>Spoiler</span>
         }
     }  
+
+    getNsfwFlair()
+    {
+        if (this.props.post.over_18)
+        {
+            return <span key={"nsfw_flair"} className={ styles.nsfw_flair }>NSFW</span>
+        }
+    }
 
     getFlairClass( flair : string)
     {
@@ -131,20 +146,19 @@ export default class PostCell extends React.Component<Props, null>
             url = defaultThumbnails.get(this.props.post.thumbnail) || url;
         }
 
-        return  <img className={styles.imageContainer} src={url}/>
+
+        return  <a href={this.props.post.url}>
+                    <img className={styles.imageContainer} src={url}/>
+                </a>  
     }
 
     getComments()
     {
-        return <div className={styles.flair}>{this.props.post.link_flair_text}</div>
+        return <div className={styles.comments}><a href={urls.getPostUrl(this.props.post.subreddit, this.props.post.id)}>{this.props.post.num_comments} comments</a></div>
     }
 
     getSubreddit()
     {
-        /*
-        if (this.props.displaySubreddit)
-            return <div className={styles.subreddit}><a href={urls.getPostUrl(this.props.post.subreddit, this.props.post.id)}>to r/<b>{this.props.post.subreddit}</b></a></div>
-            */
            if (this.props.displaySubreddit)
              return <div className={styles.subreddit}>to <a href={urls.getSubredditUrl(this.props.post.subreddit)}>r/<b>{this.props.post.subreddit}</b></a></div>
     }
