@@ -94,7 +94,7 @@ export default class HeaderComponent extends React.Component<Props, null>
 
     getFilterLink(filter : models.AuthorFilter)
     {
-        if (this.props.subreddit == null)
+        if (this.props.subreddit == null || filter == AuthorFilter.SUBSCRIPTIONS)
         {
             return { type: 'FILTER', payload: { filter: filter } };
         }
