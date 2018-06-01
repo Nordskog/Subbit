@@ -7,7 +7,6 @@ export function decodeTokensToUserInfo(id_token : string, access_token : string,
         id_token: jwt.decode(id_token),
         access_token: access_token,
         redditAuth: redditAuth,
-        last_visit: 0
     };
 
     return userinfo;

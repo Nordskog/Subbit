@@ -10,7 +10,7 @@ function mapStateToProps(state: State )
 {
 
     return { 
-        postDisplay: state.userState.postDisplay
+        postDisplay: state.userState.settings.post_display_mode
     }
 }
 

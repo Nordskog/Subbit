@@ -24,10 +24,6 @@ export default async (req, res) =>
         let subredditListPromise = api.rfy.subreddits.fetchSubreddits();
 
         userInfo = authentication.decodUserInfoCookieToClient(req.cookies.userinfo); 
-        if (userInfo)
-        {
-            userInfo.last_visit = await api.rfy.authentication.getAndUpdateLastVisit(userInfo.access_token);
-        }
 
         subRedditList = await subredditListPromise;
     }

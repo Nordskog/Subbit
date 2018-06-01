@@ -57,7 +57,6 @@ export function generateUserInfo( user : Entities.User)
     let userInfo: models.auth.UserInfo = {
         id_token: id_token,
         access_token: access_token,
-        last_visit: (<Date>user.last_visit).getTime() / 1000,
         redditAuth : {
             access_token : user.auth.access_token,
             expiry : tools.time.dateToUnix(user.auth.expiry)

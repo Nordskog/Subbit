@@ -4,6 +4,92 @@ import { State } from '~/client/store';
 import * as authority from '~/client/authority'
 import * as clientTools from '~/client/tools'
 import * as cache from '~/client/cache'
+import * as actions from '~/client/actions'
+import * as config from '~/config'
+
+
+export async function getAuthors( dispatch, getState )
+{
+    let state: State = getState();
+
+    let redditAuth = await actions.directActions.authentication.retrieveAndUpdateRedditAuth( dispatch, state);
+
+    let authors : models.data.Author[];
+    let after : string;
+
+    if (state.authorState.author != null)
+    {
+        //Single author
+        authors = [{
+            id : -1,
+            name: state.authorState.author, //Need to correct lookup name maybe
+            last_post_date: 0,
+            post_count : 0,
+            posts: [],
+            subscriptions: []
+        }]
+    }    
+    else if (state.authorState.filter == models.AuthorFilter.SUBSCRIPTIONS)
+    {
+        //Subscriptions
+        authors = state.userState.subscriptions.map( ( sub : models.data.Subscription ) => 
+        {
+            return {
+                    id : -1,
+                    name: sub.author,
+                    last_post_date: 0,
+                    post_count : 0,
+                    posts: [],
+                    subscriptions: []
+                }
+        });
+        after = null;
+    }
+    else
+    {
+        //Subreddit
+        let res = await api.reddit.posts.getAuthors( state.authorState.subreddit, state.authorState.filter, state.authorState.after, config.authorDisplayCount, redditAuth );
+        authors = res.authors;
+        after = res.after;
+    }
+
+    let returnedAuthorCount = authors.length;
+
+    //Remove and any existing authors, then update authority with new
+    authors = authors.filter( (author : models.data.Author) => { return !authority.author.authorityContains(author) } )
+
+    authors.forEach( ( author : models.data.Author ) => { authority.author.updateAuthority(author) } );
+
+    let authorEntries : models.data.AuthorEntry[] = authors.map( ( author : models.data.Author ) => 
+    {
+        return {
+            author: author,
+            subscription: null,
+            after: null,
+            end: true
+        }
+    } ); 
+
+    await actions.directActions.authors.populateAuthorSubscriptions(authorEntries, getState);   //Important to do this before getting posts
+    await actions.directActions.authors.poulateInitialPosts(authorEntries, config.postDisplayCount, dispatch, getState);
+
+    if (state.authorState.filter == models.AuthorFilter.SUBSCRIPTIONS)
+    {
+        authorEntries.sort( (a : models.data.AuthorEntry, b: models.data.AuthorEntry) => 
+        {
+            let aCreated = a.author.posts.length > 0 ? a.author.posts[0].created_utc : 0;
+            let bCreated = b.author.posts.length > 0 ? b.author.posts[0].created_utc : 0;
+
+            if (aCreated > bCreated)
+                return -1;
+            if (aCreated < bCreated)
+                return 1;
+            return 0;
+        });
+    }
+
+    return { authorEntries : authorEntries, after : after  };
+}
 
 export function populateAuthorSubscriptions( authors : models.data.AuthorEntry[], getState )
 {
@@ -19,6 +105,19 @@ export function populateAuthorSubscriptions( authors : models.data.AuthorEntry[]
     });
 }
 
+export function updateLoadingProgress (count : number, progress : number, dispatch)
+{
+    dispatch
+    ({ 
+            type: actions.types.authors.LOADING_PROGRESS,
+            payload: 
+            { 
+                loadingProgress: progress, 
+                loadingCount: count 
+            } as actions.types.authors.LOADING_PROGRESS
+    });
+}
+
 export async function poulateInitialPosts(authors : models.data.AuthorEntry[], count : number, dispatch, getState)
 {
         let state: State = getState();
@@ -27,6 +126,8 @@ export async function poulateInitialPosts(authors : models.data.AuthorEntry[], c
         if (state.authState.isAuthenticated)
             redditAuth = state.authState.user.redditAuth;
 
+        let authorCount : number = authors.length;
+        let authorCompletedCount : number = 0;
 
         let proms : Promise<void>[] = [];
         authors.forEach( ( author : models.data.AuthorEntry ) => 
@@ -64,6 +165,9 @@ export async function poulateInitialPosts(authors : models.data.AuthorEntry[], c
                     author.after = after;;
                     author.end = after == null;
                     author.author.posts = posts;
+
+                    authorCompletedCount++;
+                    updateLoadingProgress(authorCount, authorCompletedCount, dispatch);
 
                     resolve();
                 });

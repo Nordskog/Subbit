@@ -14,7 +14,7 @@ export interface State
     authState: models.auth.AuthState;
     location;
     userState: models.state.User;
-    scrollState: models.state.ScrollState;
+    scrollState: models.state.PageState;
     siteState: models.state.SiteState;
     managerState: models.state.ManagerState;
 };

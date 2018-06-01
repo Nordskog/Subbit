@@ -2,6 +2,7 @@
 
 import Subscription from './Subscription'
 import Auth from './Auth'
+import UserSettings from '~/backend/entity/UserSettings';
 
 export default class User extends Wetland.Entity
 {
@@ -10,6 +11,8 @@ export default class User extends Wetland.Entity
     
     public auth : Auth;
     public subscriptions : Wetland.ArrayCollection<Subscription>;
+    public settings : UserSettings;
+
 
     public id : number;
     public createdAt : Date;
@@ -39,6 +42,7 @@ export default class User extends Wetland.Entity
 
         mapping.oneToMany('subscriptions', { targetEntity: 'Subscription', mappedBy: 'user' });
         mapping.oneToOne('auth', { targetEntity: 'Auth', mappedBy: 'user' });
+        mapping.oneToOne('settings', { targetEntity: 'UserSettings', mappedBy: 'user' });
 
         mapping.uniqueConstraint('username');
     }

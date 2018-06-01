@@ -3,6 +3,9 @@ import { AuthorFilter } from '~/common/models';
 
 export const routesMap = {
 
+    //Auth //If last route in map, the HOME route is triggered instead. Something is very broken with RFR
+    AUTHENTICATE: { path: '/authenticate', thunk: actions.routes.authorizeRoute() },
+
     //Author
     HOME: { path: '/', thunk: actions.routes.authorsRoutes() }, 
     FILTER: { path: '/:filter', thunk: actions.routes.authorsRoutes() },   
@@ -10,10 +13,10 @@ export const routesMap = {
     AUTHOR: { path: '/author/:author/:subreddit?', thunk: actions.routes.authorsRoutes() },
 
     //Manage
-    MANAGER: { path: '/manager', thunk: actions.routes.managerRoutes() },   
+    MANAGER: { path: '/manager', thunk: actions.routes.managerRoutes() }, 
+    
 
-    //Auth
-    AUTHENTICATE: { path: '/authenticate', thunk: actions.routes.authorizeRoute() },
+
 };
 
 export enum Route

@@ -1,12 +1,12 @@
 import * as React from 'react';
 import * as models from '~/common/models'
 
-interface Props extends models.state.ScrollState
+interface Props extends models.state.PageState
 {
-  getNextPage(page: number ) : void; 
+    getNextPage(page: number ) : void; 
 }
 
-interface State extends models.state.ScrollState
+interface State extends models.state.PageState
 {
 
 }
@@ -72,13 +72,21 @@ export default class ScrollEndDetectorComponent extends React.Component<Props,St
   {
     if (this.state.nextPageLoading)
     {
-      return <div className="site-loadingStatus">Loading...</div>
+      return <div className="site-loadingStatus">Loading...<br/>{this.getProgress()}</div>
     }
     else if (this.state.endReached)
       return <div className="site-loadingStatus">No more posts</div>
     else
     {
       return <div className="site-loadingStatus">There's nothing here...</div>
+    }
+  }
+
+  getProgress()
+  {
+    if (this.props.loadingCount != null && this.props.loadingProgress != null)
+    {
+      return this.props.loadingProgress + " / " + this.props.loadingCount;
     }
   }
 }

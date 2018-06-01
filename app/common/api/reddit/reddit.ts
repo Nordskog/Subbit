@@ -14,6 +14,12 @@ import * as config from '~/config';
 const apiQueue = new tools.FetchQueue(11);   // Will receive ratelimit header
 const cdnQueue = new tools.FetchQueue(11);   // Will not receive ratelimit header
 
+export function clearQueue()
+{
+    apiQueue.clearQueue();
+    cdnQueue.clearQueue();
+}
+
 export async function getRequest<T>(url : string, parameters? : any, auth?: models.auth.RedditAuth) : Promise<T>
 {
     url = url;

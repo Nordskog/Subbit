@@ -50,7 +50,7 @@ export function getFilterUrl(subreddit : string, filter : models.AuthorFilter, o
         }
     }
 
-    url = `${url}${ oauth ? '' : '.json' }`
+    url = `${url}${ oauth ? '' : '/.json' }`
 
     return url;
 }

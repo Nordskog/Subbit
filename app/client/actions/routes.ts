@@ -25,12 +25,9 @@ export function managerRoutes()
 {
     return async (dispatch, getState ) =>
     {
-
-        console.log("manager route");
         actions.directActions.authentication.loadAuthentication(dispatch, getState);
         await firstLoadDuties(dispatch, getState);
         await actions.manager.getManagedSubreddits()(dispatch, getState);
-        firstLoad = false;
     }
 }
 
@@ -38,6 +35,8 @@ export function authorizeRoute()
 {
     return async (dispatch, getState ) =>
     {
+        console.log("auth route");
+
         let { error, code,  state} = getState().location.query;
         if (error)
         {
@@ -46,8 +45,12 @@ export function authorizeRoute()
         }
         else
         {
-            dispatch( actions.authentication.authenticatedWithRedditCode(code,state) );
-        }
+            await actions.authentication.authenticatedWithRedditCode(code,state)(dispatch);
+            dispatch(
+                { 
+                    type: 'HOME', payload: { } } 
+                );
+            }
 
     }
 }
@@ -57,7 +60,11 @@ async function firstLoadDuties(dispatch, getState)
 {
     if (firstLoad)
     {
-         await actions.subscription.fetchSubscriptions()(dispatch, getState);
+        firstLoad = false;
+         await Promise.all( [
+                                actions.subscription.fetchSubscriptions()(dispatch, getState),
+                                actions.user.getAndUpdateLastVisit()(dispatch, getState),
+                                actions.user.getSettings()(dispatch, getState)
+                            ]);
     }
-
 }

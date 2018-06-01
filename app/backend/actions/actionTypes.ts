@@ -95,6 +95,16 @@ export namespace auth
     }
 }
 
+export namespace user
+{
+    export const SET_SETTING_POST_DISPLAY_MODE: string = 'SET_SETTING_POST_DISPLAY_MODE'
+
+    export interface SET_SETTING_POST_DISPLAY_MODE
+    {
+        mode: models.PostDisplay;
+    }
+}
+
 export namespace scrape
 {
         export const REQUEST_SCRAPE                     : string = 'REQUEST_SCRAPE';

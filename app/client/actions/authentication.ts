@@ -10,6 +10,8 @@ export function authenticatedWithRedditCode(code : string, state : string)
 {
     return async dispatch =>
     {
+        console.log("requesting");
+
         let userInfo : models.auth.UserInfo = await api.rfy.authentication.authenticate(code,state);
 
         actions.directActions.authentication.saveAuthentication(userInfo);
@@ -28,27 +30,11 @@ export function logoutUserAction()
     {
 
         actions.directActions.authentication.removeAuthentication(dispatch);
-
-        /*
-        if ( await api.rfy.authentication.logout() )
-        {
-            console.log("Logged out");
-
-            dispatch({
-                type: actions.types.authentication.LOGOUT_SUCCESS,
-                payload:
-                {
-                    isAuthenticated: false
-                } as actions.types.authentication.LOGOUT_SUCCESS
-            });
-
-            dispatch(actions.authors.fetchAuthorsAction())
-        }
-        else
-        {
-            console.log("Failed to logout for some reason");
-        }
-        */
+        //No sub means home (frontpage)
+        dispatch(
+            { 
+                type: 'HOME', payload: { } } 
+            );
     }
 }
 

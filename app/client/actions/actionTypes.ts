@@ -7,6 +7,7 @@ export namespace authors
     export const POST_DETAILS_UPDATED       : string = 'POST_DETAILS_UPDATED';
     export const SUBREDDIT_CHANGED          : string = 'SUBREDDIT_CHANGED';
     export const POSTS_ADDED                : string = 'POSTS_ADDED';
+    export const LOADING_PROGRESS                : string = 'LOADING_PROGRESS';
 
     export interface FETCH_AUTHORS_COMPLETED
     {
@@ -28,6 +29,12 @@ export namespace authors
         after?: string;
         end: boolean;
 
+    }
+
+    export interface LOADING_PROGRESS
+    {
+        loadingProgress: number;
+        loadingCount: number;
     }
 };
 
@@ -96,7 +103,12 @@ export namespace page
 export namespace user
 {
     export const POST_DISPLAY_MODE_CHANGED: string =  'POST_DISPLAY_MODE_CHANGED';
+    export const LAST_VISIT_UPDATED: string = "LAST_VISIT_UPDATED";
+    export const USER_SETTINGS_FETCHED: string = "USER_SETTINGS_UPDATED";
+
     export type POST_DISPLAY_MODE_CHANGED = models.PostDisplay;
+    export type LAST_VISIT_UPDATED = number;
+    export type USER_SETTINGS_FETCHED = models.data.UserSettings;
 }
 
 export namespace manager

@@ -11,7 +11,7 @@ function mapStateToProps(state: State )
 
     return { authors: state.authorState.authors, 
         filter: state.authorState.filter,
-        lastVisit: state.authState.isAuthenticated ? state.authState.user.last_visit : 0
+        lastVisit: state.userState.lastVisit
     }
 }
 

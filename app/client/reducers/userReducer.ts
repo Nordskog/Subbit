@@ -64,7 +64,30 @@ export function userReducer(state = getDefaultUserState(), action :  models.Acti
 
             return {
                 ...state,
-                postDisplay: payload
+                settings: { 
+                            ...state.settings,
+                            post_display_mode: payload 
+                        }
+            }
+        }
+
+        case actionTypes.user.LAST_VISIT_UPDATED:
+        {
+            let payload : actionTypes.user.LAST_VISIT_UPDATED = action.payload;
+
+            return {
+                ...state,
+                lastVisit: payload
+            }
+        }
+
+        case actionTypes.user.USER_SETTINGS_FETCHED:
+        {
+            let payload : actionTypes.user.USER_SETTINGS_FETCHED = action.payload;
+
+            return {
+                ...state,
+                settings: payload
             }
         }
     }
@@ -76,6 +99,10 @@ export function getDefaultUserState() : models.state.User
 {
     return {
         subscriptions: [],
-        postDisplay: models.PostDisplay.NORMAL
+        lastVisit: 0,
+        settings: 
+        {
+            post_display_mode: models.PostDisplay.COMPACT,
+        }
     } as models.state.User;
 }

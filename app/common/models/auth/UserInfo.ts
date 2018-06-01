@@ -6,5 +6,4 @@ export default interface UserInfo
     id_token: IdToken | any;
     access_token : string;
     redditAuth : RedditAuth;
-    last_visit : number;
 }

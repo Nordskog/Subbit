@@ -10,6 +10,8 @@ import * as cache from '~/client/cache'
 import * as config from '~/config'
 
 import * as authority from '~/client/authority'
+import { CancellationError } from 'bluebird';
+import { CancelledException } from '~/common/exceptions';
 
 export function changeSubreddit( subreddit : string)
 {
@@ -63,99 +65,31 @@ export function fetchAuthorsAction ( page : number = 0, appendResults: boolean =
 {
     return async function (dispatch, getState)
     {
-        let state: State = getState();
-
-        let redditAuth = await actions.directActions.authentication.retrieveAndUpdateRedditAuth( dispatch, state);
-
-        let authors : models.data.Author[];
-        let after : string;
-
-        if (state.authorState.author != null)
+        try
         {
-            //Single author
-            authors = [{
-                id : -1,
-                name: state.authorState.author, //Need to correct lookup name maybe
-                last_post_date: 0,
-                post_count : 0,
-                posts: [],
-                subscriptions: []
-            }]
-        }    
-        else if (state.authorState.filter == models.AuthorFilter.SUBSCRIPTIONS)
-        {
-            //Subscriptions
-            authors = state.userState.subscriptions.map( ( sub : models.data.Subscription ) => 
-            {
-                return {
-                        id : -1,
-                        name: sub.author,
-                        last_post_date: 0,
-                        post_count : 0,
-                        posts: [],
-                        subscriptions: []
-                    }
+            let { authorEntries, after} = await actions.directActions.authors.getAuthors(dispatch, getState);
+
+            dispatch({
+                type: actions.types.authors.FETCH_AUTHORS_COMPLETED,
+                payload: { authors: authorEntries,
+                           page: page,
+                           end: after == null,
+                           append: appendResults,
+                           after: after
+                }  as actions.types.authors.FETCH_AUTHORS_COMPLETED
             });
-            after = null;
         }
-        else
+        catch ( error )
         {
-            //Subreddit
-            let res = await api.reddit.posts.getAuthors( state.authorState.subreddit, state.authorState.filter, state.authorState.after, config.authorDisplayCount, redditAuth );
-            authors = res.authors;
-            after = res.after;
-        }
-
-        let returnedAuthorCount = authors.length;
-
-        //Remove and any existing authors, then update authority with new
-        authors = authors.filter( (author : models.data.Author) => { return !authority.author.authorityContains(author) } )
-
-        authors.forEach( ( author : models.data.Author ) => { authority.author.updateAuthority(author) } );
-
-        let authorEntries : models.data.AuthorEntry[] = authors.map( ( author : models.data.Author ) => 
-        {
-            return {
-                author: author,
-                subscription: null,
-                after: null,
-                end: true
+            if ( error instanceof CancelledException)
+            {
+                //Expected
             }
-        } ); 
-
-        await actions.directActions.authors.populateAuthorSubscriptions(authorEntries, getState);   //Important to do this before getting posts
-        await actions.directActions.authors.poulateInitialPosts(authorEntries, config.postDisplayCount, dispatch, getState);
-
-        if (state.authorState.filter == models.AuthorFilter.SUBSCRIPTIONS)
-        {
-            authorEntries.sort( (a : models.data.AuthorEntry, b: models.data.AuthorEntry) => 
+            else
             {
-                let aCreated = a.author.posts.length > 0 ? a.author.posts[0].created_utc : 0;
-                let bCreated = b.author.posts.length > 0 ? b.author.posts[0].created_utc : 0;
-
-                if (aCreated > bCreated)
-                    return -1;
-                if (aCreated < bCreated)
-                    return 1;
-                return 0;
-            });
+                console.log(error);
+            }
         }
-        
-        dispatch({
-            type: actions.types.authors.FETCH_AUTHORS_COMPLETED,
-            payload: { authors: authorEntries,
-                       page: page,
-                       end: after == null,
-                       append: appendResults,
-                       after: after
-            }  as actions.types.authors.FETCH_AUTHORS_COMPLETED
-        });
-
-        /*
-        //Fetch display-count worth of posts
-        dispatch( fetchMorePosts
-            (authorEntries, config.postDisplayCount) );
-            */
     }
 }
 

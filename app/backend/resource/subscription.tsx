@@ -120,6 +120,11 @@ router.post('/api/subscription', async (req: WetlandRequest, res: Response) =>
 
                 break;
             }
+
+            default:
+            {
+                throw new Error(`Unknown action requested: ${rawReq.type}`);
+            }
         }
     }
     catch (err)

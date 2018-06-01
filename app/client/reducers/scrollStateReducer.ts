@@ -16,6 +16,8 @@ export function scrollStateReducer(state = getDefaultScrollState(), action :  mo
                 currentPage: action.payload.page,
                 endReached:  action.payload.end,
                 nextPageLoading: false,
+                loadingCount: null,
+                loadingProgress: null
             }
         }
 
@@ -26,6 +28,18 @@ export function scrollStateReducer(state = getDefaultScrollState(), action :  mo
             return {
                 ...state,
                 nextPageLoading: payload.loading,
+                loadingCount: null,
+                loadingProgress: null
+            }
+        }
+
+        case actions.types.authors.LOADING_PROGRESS:
+        {
+            let payload : actions.types.authors.LOADING_PROGRESS = action.payload;
+
+            return {
+                ...state,
+                ...payload
             }
         }
     }
@@ -39,6 +53,8 @@ export function getDefaultScrollState()
         nextPageLoading : true,
         currentPage: 0,
         endReached: false,
-        after : null
-    } as models.state.ScrollState;
+        after : null,
+        loadingCount: null,
+        loadingProgress: null
+    } as models.state.PageState;
 }

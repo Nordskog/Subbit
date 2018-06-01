@@ -6,3 +6,5 @@ export {default as SubscriptionSubreddit} from './SubscriptionSubreddit';
 export {default as ScrapeJob} from './ScrapeJob';
 export {default as Settings} from './Settings';
 export {default as ScrapeBot} from './ScrapeBot';
+export {default as UserSettings} from './UserSettings';
+

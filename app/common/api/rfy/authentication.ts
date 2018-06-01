@@ -44,14 +44,3 @@ export function refreshRedditAccessToken(user: string, access_token : string) : 
         },
         access_token    );
 }
-
-
-export function getAndUpdateLastVisit(access_token : string) : Promise<number>
-{
-    return api.rfy.getRequest(
-        '/user/last_visit', 
-        {
-
-        },
-        access_token );
-}

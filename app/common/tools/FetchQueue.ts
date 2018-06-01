@@ -1,4 +1,5 @@
 import * as tools from '~/common/tools'
+import { CancelledException } from '~/common/exceptions';
 
 interface RateLimitInfo
 {
@@ -25,6 +26,16 @@ class RateMonitor
             this.activeMax = 1;
         if (this.rateLimit.remaining < this.activeMax)
             this.rateLimit.remaining = this.activeMax;
+    }
+
+    clearQueue()
+    {
+        for (let item of this.queue)
+        {
+            item.reject( new CancelledException("Clearing queue") );
+        }
+
+        this.queue.length = 0;
     }
 
     timeUntilRequestAllowed() : number
@@ -77,6 +88,7 @@ class QueueItem
     execute: () => Promise<Response>;
     resolve:(result) => void;
     reject: (reason) =>  void;
+    rejected: boolean = false;
 
     constructor(execute, resolve, reject )
     {
@@ -89,6 +101,7 @@ class QueueItem
 export default class RequestQueue
 {
     monitor : RateMonitor;
+    inProgress: Set<QueueItem> = new Set<QueueItem>();
 
     constructor( maxConcurrent = 5 )
     {
@@ -121,6 +134,7 @@ export default class RequestQueue
                 if (timeUntilAllowed <= 0)
                 {
                     let queueItem = this.monitor.queue.shift();
+                    this.inProgress.add(queueItem);
                     this.processItem(queueItem);
                 }
                 else
@@ -180,15 +194,25 @@ export default class RequestQueue
         }
 
         this.processQueue();
+
+        if (item.rejected)
+            return;
+
         item.resolve(response);
     }
     
     clearQueue()
     {
-        for (let item of this.monitor.queue)
+        this.monitor.clearQueue();
+
+        this.inProgress.forEach( ( item : QueueItem) => 
         {
-            item.reject("Clearing queue");
-        }
-        this.monitor.queue = [];
+            item.rejected = true;
+            item.reject( new CancelledException("Clearing queue") );
+        });
+        
+        this.inProgress.clear();
+
+
     }
 }
