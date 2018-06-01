@@ -153,14 +153,28 @@ export async function createOrUpdateUserFromRedditToken( manager : Wetland.Scope
     console.log("Got username: "+ username);
 
     //TODO this is going to fail is username is "false" isn't it, fucking javascript.
-    if (!username)
+    if ( username == null)
     {
         console.log("Auth error: Failed to get username");
         return null;
     }
     
     let populator = RFY.wetland.getPopulator( manager );
-    user = populator.assign(Entities.User, { username: username, auth: auth}, user, true)
+
+    if (user == null)
+    {
+        //Init settings
+        let userSettings = new Entities.UserSettings;
+    
+        user = populator.assign(Entities.User, { username: username, auth: auth, settings: userSettings}, user, true)
+    }
+    else
+    {
+        //Exists, just update auth and stuff
+        user = populator.assign(Entities.User, { username: username, auth: auth}, user, true)
+    }
+
+  
     
     try
     {

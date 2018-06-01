@@ -36,7 +36,7 @@ router.get('/api/user/last_visit', async (req: WetlandRequest, res: Response) =>
                 res.json( prevDate );
 
                 //Only update if more than 5min ago
-                if ( (currentDate - prevDate) > 500 )
+                if ( (currentDate - prevDate) > 60 * 5 )
                 {
                     user.last_visit = new Date();
                     await manager.flush().catch((err: Error) =>
@@ -111,6 +111,7 @@ router.post('/api/user', async (req: WetlandRequest, res: Response) =>
                 entityActions.user.setPostDisplayMode(manager, user, payload.mode);
                 await manager.flush();
                 res.json( true );
+                break;
             }
 
             default:
