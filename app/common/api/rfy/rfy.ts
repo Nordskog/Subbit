@@ -6,7 +6,7 @@ import { NetworkException } from '~/common/exceptions';
 
 export async function getRequest<T>(url : string, parameters? : any, access_token?: string) : Promise<T>
 {
-    url = urls.API_URL + url;
+    url = urls.RFY_API_URL + url;
     url = tools.url.appendUrlParameters(url,parameters);
     let options = getBackendFetchOptions('GET', access_token);
 
@@ -24,7 +24,7 @@ export async function getRequest<T>(url : string, parameters? : any, access_toke
 
 export async function postRequest<T, A>(url : string, request : models.Action<A>, access_token?: string) : Promise<T>
 {
-    url = urls.API_URL + url;
+    url = urls.RFY_API_URL + url;
     let options = getBackendFetchOptions('POST', access_token);
     options = {
         ...options,

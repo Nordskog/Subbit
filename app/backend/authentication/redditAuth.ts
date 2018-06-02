@@ -11,6 +11,7 @@ import * as authentication from '~/backend/authentication'
 import * as models from '~/common/models'
 
 import * as RFY from '~/backend/rfy'
+import { AuthorizationException } from '~/common/exceptions';
 
 const activeAuthStates: Map<string, AuthRequestState> = new Map<string, AuthRequestState>();
 let clientAuthentication : models.auth.RedditAuth = {access_token : "", expiry: 0};
@@ -107,7 +108,7 @@ export function generateRedditLoginUrl()
             client_id: authentication.redditAuth.getAppId(),
             response_type: "code",
             state: authentication.redditAuth.getAuthState(),
-            redirect_uri: urls.getLocalAuthUrl(),
+            redirect_uri: urls.RFY_AUTHORIZE_REDIRECT,
             duration: "permanent",
             scope: "identity read history"
         }
@@ -152,11 +153,10 @@ export async function createOrUpdateUserFromRedditToken( manager : Wetland.Scope
 
     console.log("Got username: "+ username);
 
-    //TODO this is going to fail is username is "false" isn't it, fucking javascript.
+
     if ( username == null)
     {
-        console.log("Auth error: Failed to get username");
-        return null;
+        throw new AuthorizationException("Could not retrieve username from reddit");
     }
     
     let populator = RFY.wetland.getPopulator( manager );
@@ -174,17 +174,6 @@ export async function createOrUpdateUserFromRedditToken( manager : Wetland.Scope
         user = populator.assign(Entities.User, { username: username, auth: auth}, user, true)
     }
 
-  
-    
-    try
-    {
-        await manager.flush();
-        return user;
-    }
-    catch (err)
-    {
-        let fetchError = "Auth error: Failed saving user info";
-        console.log(fetchError, err);
-        return null;
-    }
+    await manager.flush();
+    return user;
 }

@@ -7,52 +7,29 @@ import * as Wetland from 'wetland';
 import * as RFY from '~/backend/rfy';
 import * as Entities from '~/backend/entity';
 import * as models from '~/common/models';
+import { AuthorizationException } from '~/common/exceptions';
+import { scopes } from '~/backend/authentication/generation';
 
 
-
-export async function authorizeUser(access_token_raw, user? : Entities.User, scope?: string) : Promise<boolean>
-{
-    let decodedToken = await decodeToken(access_token_raw);
-    if (decodedToken == null)
-        return false;
-
-    if (user != null)
-    {
-        if ( !checkuser(decodedToken.sub, user) )
-        return false;
-    }
-
-    if (scope != null)
-    {
-        if ( !checkScope(scope, decodedToken.scopes) )
-            return false;
-    }
-
-    return true;
-}
-
-
-export async function getUserIfAuthorized (manager : Wetland.Scope, access_token_raw, options? : any, scope?: string, )
+export async function getAuthorizedUser (manager : Wetland.Scope, access_token_raw, options? : any, scope?: scopes, )
 {
     if (access_token_raw == null)
     {
-        console.log("No access token provided");
-        return null;
+        throw new AuthorizationException("No user token provided");
     }
 
     let decodedToken = await decodeToken(access_token_raw);
-    if (decodedToken == null)
-        return null;
 
     let user : Entities.User = await getUserFromToken(manager, decodedToken, options);
-    if (user != null)
+
+    if (scope != null)
     {
-        if (scope != null)
+        if (!checkScope(decodedToken.scopes,scope) )
         {
-            if (!checkScope(decodedToken.scopes,scope) )
-                return null;
+            throw new AuthorizationException("Token does not provide access to scope: "+scope);
         }
     }
+    
     return user;
 }
 
@@ -65,46 +42,32 @@ export async function decodeToken(access_token_raw)
     }
     catch(err)
     {
-        console.log("Error: Access token invalid: ",err);
+        console.log(err);
+        throw new AuthorizationException("Token could not be verified");
     }
 
     return decodedToken;
 }
 
-async function getUser(manager : Wetland.Scope, username : string, options? : any )
-{
-    let user : Entities.User = null;
-    options = options != null ? options : {};
-    try
-    {
-        user = await manager.getRepository(Entities.User).findOne({ username: username }, { populate: "auth", ...options});
-    }
-    catch (err)
-    {
-        console.log("Auth error: ",err);
-    }
-
-    return user;
-}
 
 async function getUserFromToken(manager : Wetland.Scope, decodedToken, options : any) 
 {
     let username = decodedToken.sub;
     let user : Entities.User = null;
     options = options != null ? options : {};
-    try
-    {
-        user = await manager.getRepository(Entities.User).findOne({ username: username }, { populate: "auth", ...options});
-    }
-    catch (err)
-    {
-        console.log("Auth error: ",err);
-    }
 
+    
+    user = await manager.getRepository(Entities.User).findOne({ username: username }, { populate: "auth", ...options});
+
+    if (user == null)
+    {
+        throw new AuthorizationException("Could not find user associated with token");
+    }
+    
     return user;
 }
 
-function checkScope(scope: string, scopes: string) {
+function checkScope(scope: scopes, scopes: string) {
     if (scope)  //If no scope specified then ignore
     {
         let scopesArray: string[] = scopes.split(' ');
@@ -112,10 +75,7 @@ function checkScope(scope: string, scopes: string) {
             if (singleScope === scope) {
                 return true;
             }
-    
         };
-
-        console.log("Failed to find scope ",scope);
 
         return false;
     }

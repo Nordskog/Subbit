@@ -115,7 +115,7 @@ export default class HeaderComponent extends React.Component<Props, null>
     getLoginPanel()
     {
         return <div className={siteStyles.loginContainer}>
-                <a href={urls.getLoginUrl()} className={styles.sortButton}>Login</a>
+                <a href={urls.RFY_AUTHORIZE_REMOTE} className={styles.sortButton}>Login</a>
                 </div>;
     }
 

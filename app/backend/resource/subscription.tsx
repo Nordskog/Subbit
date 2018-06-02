@@ -16,6 +16,9 @@ import { subreddit } from 'css/manager.scss';
 
 import * as entityActions from '~/backend/entityActions'
 
+import * as endpointCommons from './endpointCommons'
+import { EndpointException } from '~/common/exceptions';
+
 const express = require('express');
 const router = express.Router();
 
@@ -27,13 +30,11 @@ router.get('/api/subscription', async (req: WetlandRequest, res: Response) =>
 
     try
     {
-        let user = await authentication.verification.getUserIfAuthorized(manager, token, {}, authentication.generation.scopes.SUBSCRIPTIONS);
-
-        if (user != null)
-        {
-            //Just grabbing the user and populating everything we need generates terrible, complicated with a binding for each 
-            //sub. Short of doing a raw query this is generally the best approach.
-            let qb : Wetland.QueryBuilder<entities.Subscription> = RFY.wetland.getManager()
+        let user = await authentication.verification.getAuthorizedUser(manager, token, {}, authentication.generation.scopes.SUBSCRIPTIONS);
+        
+        //Just grabbing the user and populating everything we need generates terrible, complicated with a binding for each 
+        //sub. Short of doing a raw query this is generally the best approach.
+        let qb : Wetland.QueryBuilder<entities.Subscription> = RFY.wetland.getManager()
             .getRepository(entities.Subscription)
             .getQueryBuilder('sub')
             .select( ['sub',  'subreddits', 'author'] )
@@ -41,20 +42,20 @@ router.get('/api/subscription', async (req: WetlandRequest, res: Response) =>
             .leftJoin('sub.subreddits', 'subreddits')
             .where( {'user_id' : user.id} )
 
-            let subs : entities.Subscription[] = await qb.getQuery().getResult() || [];
+        let subs : entities.Subscription[] = await qb.getQuery().getResult() || [];
 
-            //Rather than looking up the user for each subscription
-            subs.forEach( ( sub : entities.Subscription ) => sub.user = user );
+        //Rather than looking up the user for each subscription
+        subs.forEach( ( sub : entities.Subscription ) => sub.user = user );
 
-            res.json( subs.map( sub => { 
+        res.json( subs.map( sub => 
+        { 
             return entities.Subscription.formatModel(sub);
-            } ));
-        }
+        }));
+        
     }
     catch (err)
     {
-        console.log("Failed to get subscriptions: ",err);
-        res.status(500).json("Something went wrong");
+        endpointCommons.handleException(err, res);
     }
 });
 
@@ -67,7 +68,7 @@ router.post('/api/subscription', async (req: WetlandRequest, res: Response) =>
     let user: entities.User = null;
     try
     {
-        user = await authentication.verification.getUserIfAuthorized(manager, token, authentication.generation.scopes.SUBSCRIPTIONS);
+        user = await authentication.verification.getAuthorizedUser(manager, token, authentication.generation.scopes.SUBSCRIPTIONS);
     
         switch(rawReq.type)
         {
@@ -85,8 +86,12 @@ router.post('/api/subscription', async (req: WetlandRequest, res: Response) =>
             case serverActions.subscription.ADD_SUBSCRIPTION_SUBREDDIT:
             {
                 let payload : serverActions.subscription.ADD_SUBSCRIPTION_SUBREDDIT = rawReq.payload;
-
                 let sub : entities.Subscription = await entityActions.subscriptions.getSubscription(manager, payload.id, user);
+                if (sub == null)
+                {
+                    throw new EndpointException(400, "Subscription with id "+payload.id+" does not exist");
+                }
+
                 await entityActions.subscriptions.addSubredditToSubscription(manager, sub, payload.subreddit);
             
                 await manager.flush();
@@ -98,6 +103,10 @@ router.post('/api/subscription', async (req: WetlandRequest, res: Response) =>
             {
                 let payload : serverActions.subscription.REMOVE_SUBSCRIPTION_SUBREDDIT = rawReq.payload;
                 let sub : entities.Subscription = await entityActions.subscriptions.getSubscription(manager, payload.id, user);
+                if (sub == null)
+                {
+                    throw new EndpointException(400, "Subscription with id "+payload.id+" does not exist");
+                }
 
                 await entityActions.subscriptions.removeSubredditFromSubscription(manager, sub, payload.subreddit);
                 await manager.flush();
@@ -110,6 +119,10 @@ router.post('/api/subscription', async (req: WetlandRequest, res: Response) =>
             {
                 let payload : serverActions.subscription.REMOVE_SUBSCRIPTION = rawReq.payload;
                 let sub : entities.Subscription = await entityActions.subscriptions.getSubscription(manager, payload.id, user);
+                if (sub == null)
+                {
+                    throw new EndpointException(400, "Subscription with id "+payload.id+" does not exist");
+                }
 
                 manager.remove(sub);
                 await manager.flush();
@@ -121,14 +134,13 @@ router.post('/api/subscription', async (req: WetlandRequest, res: Response) =>
 
             default:
             {
-                throw new Error(`Unknown action requested: ${rawReq.type}`);
+                throw new EndpointException(400, `Unknown action requested: ${rawReq.type}`);
             }
         }
     }
     catch (err)
     {
-        console.log("Failed to edit subscription: ",err);
-        res.status(500).json("Something went wrong");
+        endpointCommons.handleException(err, res);
     }
 });
 

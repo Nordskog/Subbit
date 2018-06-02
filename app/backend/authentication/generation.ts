@@ -7,10 +7,11 @@ import * as tools from '~/common/tools'
 import * as RFY from '~/backend/rfy';
 import * as Entities from '~/backend/entity';
 
-export const scopes = 
-    {
-        SUBSCRIPTIONS: 'SUBSCRIPTIONS'
-    };
+export enum scopes
+{
+    SUBSCRIPTIONS = 'SUBSCRIPTIONS',
+    SETTINGS = 'SETTINGS'
+};
 
 export const secret = config.secret;
 
@@ -25,7 +26,7 @@ export function createAccessToken(user)
         iss: config.issuer,
         aud: config.audience,
         exp: Math.floor(Date.now() / 1000) + (60 * 99999),
-        scope: scopes.SUBSCRIPTIONS,
+        scope: [scopes.SUBSCRIPTIONS, scopes.SETTINGS].join(" "),
         sub: user.username,
         jti: genJti(), // unique identifier for the token
         alg: 'HS256'
