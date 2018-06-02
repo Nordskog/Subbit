@@ -21,16 +21,6 @@ export function authorsRoutes()
     }
 }
 
-export function managerRoutes()
-{
-    return async (dispatch, getState ) =>
-    {
-        actions.directActions.authentication.loadAuthentication(dispatch, getState);
-        await firstLoadDuties(dispatch, getState);
-        await actions.manager.getManagedSubreddits()(dispatch, getState);
-    }
-}
-
 export function authorizeRoute()
 {
     return async (dispatch, getState ) =>

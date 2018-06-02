@@ -11,8 +11,6 @@ import * as authentication from '~/backend/authentication';
 
 import * as Wetland from 'wetland';
 
-import * as queries from './queries'
-
 import * as Knex from 'knex';
 import { subreddit } from 'css/manager.scss';
 

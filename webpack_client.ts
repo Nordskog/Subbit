@@ -38,9 +38,6 @@ const config = {
             './css/author.scss',
             './css/redditlist.scss',
             './css/subredditList.scss',
-            './css/manager.scss',
-            './css/timewidget.scss',
-            './css/subredditInputPopup.scss',
             './css/confirmationPopup.scss',
             'react-toastify/dist/ReactToastify.css'
         ],

@@ -30,9 +30,7 @@ const webpackHotServerMiddleware =  require('webpack-hot-server-middleware')
 import * as Express from 'express';
 import * as cookieParser from 'cookie-parser'
 
-import * as settings from '~/backend/settings';
 import { render } from 'react-dom';
-import * as Scrape from '~/backend/scrape';
 
 const bodyParser = require('body-parser');
 const expressWetland = require('express-wetland');
@@ -54,26 +52,9 @@ app.use(expressWetland(RFY.wetland));
 app.use(cookieParser());
 
 // Resources for api
-app.use(require('~/backend/resource/author'));
 app.use(require('~/backend/resource/auth'));
 app.use(require('~/backend/resource/subscription'));
 app.use(require('~/backend/resource/user'));
-app.use(require('~/backend/resource/subreddit'));
-app.use(require('~/backend/resource/scrape'));
-app.use(require('~/backend/resource/settings'));
-
-
-//Init configurable user settings
-
-settings.loadSettings().then( () => 
-{
-    //Init scrape bot
-    Scrape.scrapeBot.initScrapeBot();
-})
-
-
-
-
 
 const DEV = process.env.NODE_ENV === 'development'
 
@@ -124,39 +105,6 @@ import * as Net from 'net';
 
 const httpServer : Http.Server = Http.createServer();
 httpServer.on('request', app);
-
-///////////////////////////////
-// WebSocket
-///////////////////////////////
-
-import * as sockets from '~/backend/sockets'
-import * as WebSocket from 'ws'
-
-let managerSocket : WebSocket.Server = sockets.manager.getServer(httpServer);
-
-//Handle separate websockets for manager / client
-httpServer.on('upgrade', (request : Http.IncomingMessage, socket : Net.Socket, head : Buffer) => {
-
-    //const pathname = url.parse(request.url).pathname;
-  
-    console.log(request.url);
-
-    if (request.url === '/api/socket/manager') 
-    {
-        managerSocket.handleUpgrade(request, socket, head, function done(ws) 
-        {
-            managerSocket.emit('connection', ws);
-        });
-    } 
-    //else
-    {
-      //socket.destroy();
-    }
-  });
-
-
-
-
 
 /////////////////////////////////////////////////////////
 // Fire up server

@@ -11,8 +11,9 @@ import 'react-toastify/dist/ReactToastify.css';
 
 interface Props
 {
-    mode : models.state.SiteMode
+    
 }
+   
 
 export default class app extends React.Component<Props,any>
 {
@@ -31,22 +32,10 @@ export default class app extends React.Component<Props,any>
 
     renderMain()
     {
-        switch(this.props.mode)
-        {
-            case models.state.SiteMode.AUTHORS:
-            {
-               return   <div className="site-contentContainer">
-                            <components.authors />
-                            <components.tools.scrollEndDetector />
-                        </div>
-            }
-            case models.state.SiteMode.MANAGER:
-            {
-               return   <div className="site-contentContainer">
-                           <components.manager/>
-                        </div>
-            }
-        }
+        return   <div className="site-contentContainer">
+                    <components.authors />
+                    <components.tools.scrollEndDetector />
+                </div>
     }
 
 }

@@ -5,6 +5,4 @@ export { default as Author } from '~/backend/entity/Author';
 export { default as Subscription } from '~/backend/entity/Subscription';
 export { default as Auth } from '~/backend/entity/Auth';
 export { default as Subreddit } from '~/backend/entity/Subreddit';
-export { default as ScrapeJob } from '~/backend/entity/ScrapeJob';
-export { default as Setting } from '~/backend/entity/Setting';
 export { default as UserSettings } from '~/backend/entity/UserSettings';

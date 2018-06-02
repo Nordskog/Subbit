@@ -1,1 +1,0 @@
-export import manager = require('./manager');

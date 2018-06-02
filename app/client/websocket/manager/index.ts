@@ -1,1 +1,0 @@
-export import socket = require('./socket');

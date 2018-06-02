@@ -10,6 +10,7 @@ import * as models from '~/common/models';
 import * as urls from '~/common/urls'
 
 import * as config from '~/config';
+import { NetworkException } from '~/common/exceptions';
 
 const apiQueue = new tools.FetchQueue(11);   // Will receive ratelimit header
 const cdnQueue = new tools.FetchQueue(11);   // Will not receive ratelimit header
@@ -26,7 +27,7 @@ export async function getRequest<T>(url : string, parameters? : any, auth?: mode
     url = tools.url.appendUrlParameters(url,parameters);
     let options = getRedditFetchOptions('GET', auth);
 
-    let response;
+    let response : Response;
     if (auth != null)
         response = await apiQueue.enqueue( () => fetch(url, options) );
     else
@@ -38,7 +39,7 @@ export async function getRequest<T>(url : string, parameters? : any, auth?: mode
     }
     else
     {
-        return Promise.reject<T>(response);
+        return Promise.reject<T>( NetworkException.fromResponse(response) );
     }
 }
 
@@ -63,7 +64,7 @@ export async function postRequest<T, A>(url : string, request : models.Action<A>
     }
     else
     {
-        return Promise.reject<T>(response);
+        return Promise.reject<T>( NetworkException.fromResponse(response) );
     }
 }
 

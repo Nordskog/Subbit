@@ -1,6 +1,7 @@
 import * as models from '~/common/models'
 import * as urls from '~/common/urls'
 import * as tools from '~/common/tools'
+import { NetworkException } from '~/common/exceptions';
 
 
 export async function getRequest<T>(url : string, parameters? : any, access_token?: string) : Promise<T>
@@ -10,13 +11,14 @@ export async function getRequest<T>(url : string, parameters? : any, access_toke
     let options = getBackendFetchOptions('GET', access_token);
 
     let response = await fetch(url, options);
+    
     if (response.ok)
     {
         return await response.json();
     }
     else
     {
-        return Promise.reject<T>(response);
+        return Promise.reject<T>( NetworkException.fromResponse(response) );
     }
 }
 
@@ -30,13 +32,14 @@ export async function postRequest<T, A>(url : string, request : models.Action<A>
     }
 
     let response = await fetch(url, options);
+    
     if (response.ok)
     {
         return await response.json();
     }
     else
     {
-        return Promise.reject<T>(response);
+        return Promise.reject<T>( NetworkException.fromResponse(response) );
     }
 }
 

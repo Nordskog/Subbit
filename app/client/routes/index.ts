@@ -11,12 +11,6 @@ export const routesMap = {
     FILTER: { path: '/:filter', thunk: actions.routes.authorsRoutes() },   
     SUBREDDIT: { path: '/r/:subreddit/:filter?', thunk: actions.routes.authorsRoutes() },
     AUTHOR: { path: '/author/:author/:subreddit?', thunk: actions.routes.authorsRoutes() },
-
-    //Manage
-    MANAGER: { path: '/manager', thunk: actions.routes.managerRoutes() }, 
-    
-
-
 };
 
 export enum Route
@@ -24,6 +18,5 @@ export enum Route
     HOME = "HOME",
     SUBREDDIT = "SUBREDDIT",
     AUTHOR = "AUTHOR",
-    MANAGER = "MANAGER",
     AUTHENTICATE = "AUTHENTICATE",
 }

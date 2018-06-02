@@ -16,7 +16,6 @@ import 'css/redditlist.scss'
 
 interface Props
 {
-    subreddits : models.data.Subreddit[];
     subscriptions : models.data.Subscription[];
     subreddit : string;
     changeSubreddit( subreddit : string ) : void; 
@@ -37,16 +36,7 @@ export default class SubredditDropdown extends React.Component<Props, State>
     
     static getDerivedStateFromProps( nextProps : Props, prevState : State) : State
     {
-        let subreddits: components.tools.SearchList.ListItem[]  = nextProps.subreddits.map(
-            ( subreddit : models.data.Subreddit) => 
-            {
-                return {
-                    name: subreddit.name,
-                    highlighted: false,
-                    object: subreddit.name
-                }
-            }
-        );
+        let subreddits: components.tools.SearchList.ListItem[]  = [];
 
         //Also add all subreddits from subscriptions
         {

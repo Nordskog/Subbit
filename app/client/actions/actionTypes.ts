@@ -110,39 +110,3 @@ export namespace user
     export type LAST_VISIT_UPDATED = number;
     export type USER_SETTINGS_FETCHED = models.data.UserSettings;
 }
-
-export namespace manager
-{
-    export const FETCH_SUBREDDITS_COMPLETED : string = 'FETCH_SUBREDDITS_COMPLETED';
-    export const SCRAPE_JOBS_UPDATED: string =  'SCRAPE_JOBS_UPDATED';
-    export const SCRAPE_BOT_UPDATED: string =  'SCRAPE_BOT_UPDATED';
-    export const SUBREDDIT_ADDED: string =  'SUBREDDIT_ADDED';
-    export const SUBREDDIT_REMOVED: string =  'SUBREDDIT_REMOVED';
-    export const SETTINGS_CHANGED: string =  'SETTINGS_CHANGED';
-    export const SUBREDDIT_MODIFIED: string =  'SUBREDDIT_MODIFIED';
-
-    export type FETCH_SUBREDDITS_COMPLETED = models.data.Subreddit[];
-    export type SCRAPE_JOBS_UPDATED = models.data.ScrapeJob[]
-    export interface SETTINGS_CHANGED extends Partial<models.data.Settings>
-    {
-
-    }
-    export interface SUBREDDIT_MODIFIED extends Partial<models.data.Subreddit>
-    {
-        id : number
-    }
-    export interface SUBREDDIT_ADDED extends models.data.Subreddit
-    {
-   
-    }
-    export interface SUBREDDIT_REMOVED
-    {
-        id: number;
-    }
-    export interface SCRAPE_BOT_UPDATED extends Partial<models.data.ScrapeBot>
-    {
-      
-    }
-
-
-};

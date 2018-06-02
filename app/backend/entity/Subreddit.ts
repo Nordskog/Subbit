@@ -1,6 +1,5 @@
 ﻿import * as Wetland from 'wetland';
 
-import ScrapeJob from './ScrapeJob'
 import Author from './Author'
 import Subscription from './Subscription'
 import * as models from '~/common/models'
@@ -10,7 +9,6 @@ export default class Subreddit extends Wetland.Entity
     public name : string;
     public name_lower : string;
     public autoscrape : boolean;
-    public scrape_job : ScrapeJob;
 
     public authors : Wetland.ArrayCollection<Author>;
 
@@ -40,17 +38,9 @@ export default class Subreddit extends Wetland.Entity
             defaultTo:'null'
         });
 
-        mapping.field('autoscrape',
-        {
-            type: 'boolean',
-            nullable: false,
-            defaultTo: true
-        });
-
         mapping.uniqueConstraint('name');
     
         mapping.manyToMany('subscriptions', { targetEntity: 'Subscription', mappedBy: 'subreddits' });
-        mapping.oneToOne('scrape_job', { targetEntity: 'ScrapeJob', mappedBy: 'subreddit' });
     }
 
     beforeCreate()
@@ -75,9 +65,7 @@ export default class Subreddit extends Wetland.Entity
 
         return {
             id: subreddit.id,
-            name : subreddit.name,
-            autoscrape : subreddit.autoscrape,
-            scrape_job : ScrapeJob.formatModel(subreddit.scrape_job)
+            name : subreddit.name
         } as models.data.Subreddit
     }
 }

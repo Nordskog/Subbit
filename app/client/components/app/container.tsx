@@ -7,7 +7,7 @@ import * as actions from '~/client/actions'
 function mapStateToProps(state: State)
 {
     return { 
-        mode: state.siteState.mode
+ 
     };
 }
 

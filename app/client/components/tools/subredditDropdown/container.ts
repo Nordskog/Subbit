@@ -6,7 +6,7 @@ import * as actions from '~/client/actions'
 
 function mapStateToProps(state: State )
 {
-    return { subreddits: state.siteState.subreddits,
+    return { 
         subscriptions: state.userState.subscriptions,
         subreddit: state.authorState.subreddit,
         filter: state.authorState.filter

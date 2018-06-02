@@ -30,19 +30,16 @@ const config = {
   entry: {
     main: './app/server/render',
     appStyles: [
-            './css/userSettings.scss',
-            './css/toggle.scss',
-            './css/post.scss',
-            './css/header.scss',
-            './css/site.scss',
-            './css/author.scss',
-            './css/redditlist.scss',
-            './css/manager.scss',
-            './css/timewidget.scss',
-            './css/subredditInputPopup.scss',
-            './css/confirmationPopup.scss',
-            './css/subredditList.scss',
-            'react-toastify/dist/ReactToastify.css'
+      './css/userSettings.scss',
+      './css/toggle.scss',
+      './css/post.scss',
+      './css/header.scss',
+      './css/site.scss',
+      './css/author.scss',
+      './css/redditlist.scss',
+      './css/subredditList.scss',
+      './css/confirmationPopup.scss',
+      'react-toastify/dist/ReactToastify.css'
     ],
     vendor: [
         'react',

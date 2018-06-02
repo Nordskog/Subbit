@@ -3,7 +3,6 @@ import * as ReactDOM from 'react-dom/server'
 import { Provider } from 'react-redux'
 import { flushChunkNames } from 'react-universal-component/server'
 import flushChunks from 'webpack-flush-chunks'
-import configureStore from './configureStore'
 import * as components from '~/client/components'
 
 export default ({ clientStats }) => async (req, res, next) =>
