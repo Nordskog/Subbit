@@ -1,5 +1,5 @@
 
-
+import * as React from 'react';
 
 import * as tools from '~/common/tools'
 
@@ -12,8 +12,15 @@ import * as urls from '~/common/urls'
 import * as config from '~/config';
 import { NetworkException } from '~/common/exceptions';
 
-const apiQueue = new tools.FetchQueue(11);   // Will receive ratelimit header
-const cdnQueue = new tools.FetchQueue(11);   // Will not receive ratelimit header
+import { RateLimitCallback } from '~/common/tools/FetchQueue';
+
+const apiQueue = new tools.FetchQueue(11);      // Will receive ratelimit header
+const cdnQueue = new tools.FetchQueue(11);                                              // Will not receive ratelimit header
+
+export function registerRatelimitCallbacks(  rateLimitCallback : RateLimitCallback, rateLimitedCallback : RateLimitCallback )
+{
+    apiQueue.registerRatelimitCallbacks( rateLimitCallback, rateLimitedCallback  );
+}
 
 export function clearQueue()
 {

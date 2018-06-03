@@ -1,0 +1,30 @@
+@import 'colors';
+
+.notification_background
+{
+    background: $card-background;
+}
+
+.warning_background
+{
+    background: $sketchy;
+}
+
+.error_background
+{
+    background: $danger;
+
+}
+
+.text
+{
+    color: $toast_text_color;
+    font-size: medium;
+    font-weight: bold;
+}
+
+.columnContainer
+{
+    display: flex;
+    flex-direction: column;
+}

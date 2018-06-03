@@ -7,6 +7,11 @@ import { Provider } from 'react-redux'
 import AppContainer from 'react-hot-loader/lib/AppContainer'
 import * as components from '~/client/components'
 import * as Store from '~/client/store'
+import * as setup from './setup'
+
+//Sets up a toast callback
+setup.setupClientStuff();
+
 
 const render = App => {
   const root = document.getElementById('root')

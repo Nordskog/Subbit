@@ -21,15 +21,16 @@ const config = {
     devtool: 'source-map',
     context: basePath,
     resolve: {
-        extensions: ['.js', '.ts', '.tsx', '.css', '.scss'],
+        extensions: [ '.ts', '.tsx', '.js', '.css', '.scss'],
         plugins: [new TsconfigPathsPlugin({ configFile: "tsconfig.json" })]
 
     },
     entry: {
-        main: ['./app/client/', 'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=false&quiet=false&noInfo=false',
+        main: ['./app/client/index.tsx', 'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=false&quiet=false&noInfo=false',
             'react-hot-loader/patch'],
         appStyles: [
 
+            './css/toast.scss',
             './css/userSettings.scss',
             './css/toggle.scss',
             './css/post.scss',
@@ -167,4 +168,4 @@ const config = {
 
 };
 
-export = config;
+export default config;

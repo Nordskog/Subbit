@@ -4,18 +4,25 @@ import { State } from '~/client/store'
 
 import * as actions from '~/client/actions'
 
+function mapStateToProps(state: State)
+{
+    return { 
+ 
+    };
+}
+
 function mapDispatchToProps(): object
 {
     return function (dispatch)
     {
         return {
-            updatePostDetails: ( ) => { dispatch(actions.authors.getAllPostInfoAction()) }
+
         }
     }
 }
 
 const OnPageLoad = connect(
-       null,
+       mapStateToProps,
        mapDispatchToProps,
 )(OnPageLoadComponent);
 

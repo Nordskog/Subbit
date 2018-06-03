@@ -11,15 +11,20 @@ import * as api from '~/common/api'
 
 interface Props
 {
-    updatePostDetails(): void;
+ 
 }
 
-export default class OnPageLoadComponent extends React.Component<Props, null>
+interface State
+{
+
+}
+
+export default class OnPageLoadComponent extends React.Component<Props, State>
 {
 
     componentWillMount()
     {
-        this.props.updatePostDetails();
+       
     }
 
     render()

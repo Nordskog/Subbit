@@ -1,9 +1,10 @@
 import * as tools from '~/common/tools'
 import { CancelledException } from '~/common/exceptions';
 
-interface RateLimitInfo
+export interface RateLimitInfo
 {
     remaining : number;
+    used : number;
     resetAt: number;
 }
 
@@ -20,7 +21,7 @@ class RateMonitor
 
     constructor( maxConcurrent = 5 )
     {
-        this.rateLimit = {remaining: 5, resetAt: 0};
+        this.rateLimit = {remaining: 5, resetAt: 0, used: 0};
         this.activeMax = maxConcurrent;
         if (this.activeMax < 1)
             this.activeMax = 1;
@@ -75,11 +76,12 @@ class RateMonitor
         this.rateLimitHeaderReceived = false;
     }
 
-    updateRateLimitInfo( remaining : number, resetIn: number)
+    updateRateLimitInfo( remaining : number, resetIn: number, used : number)
     {
         this.rateLimitHeaderReceived = true;
         this.rateLimit.remaining = remaining;
         this.rateLimit.resetAt = (Date.now() / 1000) + resetIn;
+        this.rateLimit.used = used;
     }
 }
 
@@ -98,14 +100,25 @@ class QueueItem
     }
 }
 
+export type RateLimitCallback = ( info : RateLimitInfo) => void;
+
 export default class RequestQueue
 {
     monitor : RateMonitor;
     inProgress: Set<QueueItem> = new Set<QueueItem>();
 
+    rateLimitCallback: ( info : RateLimitInfo) => void;
+    rateLimitedCallback: ( info : RateLimitInfo) => void;
+
     constructor( maxConcurrent = 5 )
     {
         this.monitor = new RateMonitor( maxConcurrent );
+    }
+
+    registerRatelimitCallbacks( rateLimitCallback : RateLimitCallback, rateLimitedCallback : RateLimitCallback )
+    {
+        this.rateLimitCallback = rateLimitCallback;
+        this.rateLimitedCallback = rateLimitedCallback;
     }
 
     enqueue( execute : () => Promise<Response>  )
@@ -118,6 +131,22 @@ export default class RequestQueue
          this.processQueue();
     
         return promise;
+    }
+
+    callRatelimitCallback()
+    {
+        if (this.rateLimitCallback != null)
+        {
+            this.rateLimitCallback( this.monitor.rateLimit );
+        }
+    }
+
+    callRateLimitedCallback()
+    {
+        if (this.rateLimitedCallback != null)
+        {
+            this.rateLimitedCallback( this.monitor.rateLimit );
+        }
     }
     
     async processQueue()
@@ -136,9 +165,11 @@ export default class RequestQueue
                     let queueItem = this.monitor.queue.shift();
                     this.inProgress.add(queueItem);
                     this.processItem(queueItem);
+                    this.callRatelimitCallback();
                 }
                 else
                 {
+                    this.callRateLimitedCallback();
                     this.functionProcessDelayed( timeUntilAllowed );
                     break;
                 }
@@ -183,9 +214,10 @@ export default class RequestQueue
     
         if ( response.headers.has("X-Ratelimit-Remaining") )
         {
+            let used : number = Number(response.headers.get("X-Ratelimit-Used"));
             let remaining : number = Number(response.headers.get("X-Ratelimit-Remaining"));
             let resetIn : number = Number(response.headers.get("X-Ratelimit-Reset"));
-            this.monitor.updateRateLimitInfo(remaining, resetIn);   //Rate limit header is ignored until we reach one
+            this.monitor.updateRateLimitInfo(remaining, resetIn, used);   //Rate limit header is ignored until we reach one
         }
         else
         {

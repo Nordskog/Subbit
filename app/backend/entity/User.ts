@@ -2,7 +2,7 @@
 
 import Subscription from './Subscription'
 import Auth from './Auth'
-import UserSettings from '~/backend/entity/UserSettings';
+import UserSettings from './UserSettings';
 
 export default class User extends Wetland.Entity
 {

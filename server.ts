@@ -1,6 +1,7 @@
 ﻿'use strict';
 
 require('module-alias').addAlias("~", __dirname + "/app");
+require('module-alias').addAlias("css", __dirname + "/css");
 
 let debug = require('debug');
 let path = require('path');
@@ -10,8 +11,8 @@ let path = require('path');
 /////////////////
 
 import * as RFY from '~/backend/rfy';
+import * as Entities from '~/backend/entity'
 RFY.initDatabase();
-
 
 ////////////////
 //Hot reload
@@ -37,9 +38,6 @@ const expressWetland = require('express-wetland');
 
 var app: Express.Express = Express();
 
-//Webpack configs
-const clientConfig = require('./webpack_client');
-const serverConfig = require('./webpack_server');
 
 // Middleware
 app.use(bodyParser.json());
@@ -59,6 +57,13 @@ app.use(require('~/backend/resource/user'));
 const DEV = process.env.NODE_ENV === 'development'
 
 //SSR
+//Webpack configs
+//const clientConfig = require('./webpack_client');
+//const serverConfig = require('./webpack_server');
+
+import clientConfig from './webpack_client'
+import serverConfig from './webpack_server'
+
 const publicPath = clientConfig.output.publicPath;
 const outputPath = clientConfig.output.path;
 
@@ -68,7 +73,8 @@ if (DEV)
 {
     console.log("Server configuration: DEV");
 
-    let configs: webpack.Configuration[] = [clientConfig, serverConfig];
+    //let configs: webpack.Configuration[] = [clientConfig, serverConfig];
+    let configs: any[] = [clientConfig, serverConfig];
     const multiCompiler: webpack.MultiCompiler = webpack(configs )
     const clientCompiler = multiCompiler.compilers[0]
 
@@ -102,6 +108,7 @@ else
 
 import * as Http from 'http';
 import * as Net from 'net';
+import { Entity } from 'wetland';
 
 const httpServer : Http.Server = Http.createServer();
 httpServer.on('request', app);

@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { WetlandRequest } from '~/backend/rfy';
 
 import * as RFY from '~/backend/rfy';
-import * as entities from '~/backend/entity';
+import * as Entities from '~/backend/entity';
 
 import * as models from '~/common/models';
 import * as authentication from '~/backend/authentication';
@@ -30,7 +30,7 @@ router.get('/api/user/last_visit', async (req: WetlandRequest, res: Response) =>
     {
         if (token)
         {
-                let user : entities.User = await authentication.verification.getAuthorizedUser(manager, token);
+                let user : Entities.User = await authentication.verification.getAuthorizedUser(manager, token);
 
                     let prevDate = ( (<Date>user.last_visit).getTime() / 1000 );
                     let currentDate = Date.now() / 1000;
@@ -66,8 +66,8 @@ router.get('/api/user/settings', async (req: WetlandRequest, res: Response) =>
     {
         if (token)
         {
-            let user : entities.User = await authentication.verification.getAuthorizedUser(manager, token, { populate: "settings" }, scopes.SETTINGS);
-            res.json( entities.UserSettings.formatModel(user.settings) );
+            let user : Entities.User = await authentication.verification.getAuthorizedUser(manager, token, { populate: "settings" }, scopes.SETTINGS);
+            res.json( Entities.UserSettings.formatModel(user.settings) );
             return;
         }
     }
@@ -87,7 +87,7 @@ router.post('/api/user', async (req: WetlandRequest, res: Response) =>
 
     try
     {
-        let user: entities.User = await authentication.verification.getAuthorizedUser(manager, token, { populate: "settings" },  scopes.SETTINGS);
+        let user: Entities.User = await authentication.verification.getAuthorizedUser(manager, token, { populate: "settings" },  scopes.SETTINGS);
     
         switch(rawReq.type)
         {

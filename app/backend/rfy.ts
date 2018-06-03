@@ -5,10 +5,11 @@ import * as Knex from 'knex';
 import * as Entities from '~/backend/entity';
 
 export let wetland : Wetland;
+import config from './wetland';
 
 export async function initDatabase()
 {
-	wetland = new Wetland(require('./wetland'));
+	wetland = new Wetland(config);
 }
 
 export function rawQuery() : Knex

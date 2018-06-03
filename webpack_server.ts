@@ -15,21 +15,20 @@ const StatsPlugin = require('stats-webpack-plugin')
 
 const SpriteLoaderPlugin = require('svg-sprite-loader/plugin');
 
-
-
 const config = {
     name: 'server',
     target: 'node',
     devtool: 'source-map',
   context: basePath,
   resolve: {
-      extensions: ['.js', '.ts', '.tsx', '.css', '.scss'],
+      extensions: [ '.ts', '.tsx', '.js', '.css', '.scss'],
       plugins: [new TsconfigPathsPlugin({ configFile: "tsconfig.json" })]
       
   },
   entry: {
-    main: './app/server/render',
+    main: './app/server/render.tsx',
     appStyles: [
+      './css/toast.scss',
       './css/userSettings.scss',
       './css/toggle.scss',
       './css/post.scss',
@@ -161,4 +160,4 @@ const config = {
 };
 
 
-export = config;
+export default config;

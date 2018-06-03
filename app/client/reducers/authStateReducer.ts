@@ -70,10 +70,8 @@ export function getDefaultAuthState(userInfo?: models.auth.UserInfo)
                     username: ''
                 },
                 access_token: undefined,
-                last_visit: 0
+                redditAuth: null
             },
-            
-            errorMessage: '',
         };
     }
 }

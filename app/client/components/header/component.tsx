@@ -13,6 +13,9 @@ import * as siteStyles from 'css/site.scss';
 import * as styles from 'css/header.scss'
 
 import * as transitions from 'react-transition-group'
+import { spawn } from 'child_process';
+
+import * as toast from '~/client/toast'
 
 interface Props
 {
@@ -51,6 +54,7 @@ export default class HeaderComponent extends React.Component<Props, null>
                              { /*this.getManagerLink()*/ }
                         </transitions.TransitionGroup>
                     <div className={styles.headerRight}>
+                    {this.getTestButton()}
                     {this.getSettingsPanel()}
                      {this.getPanel()}
                     </div>
@@ -117,6 +121,20 @@ export default class HeaderComponent extends React.Component<Props, null>
         return <div className={siteStyles.loginContainer}>
                 <a href={urls.RFY_AUTHORIZE_REMOTE} className={styles.sortButton}>Login</a>
                 </div>;
+    }
+
+    getTestButton()
+    {
+        let testAction = () => {
+            console.log("toast");
+
+
+
+        };
+
+        return <div className={siteStyles.loginContainer}>
+        <span onClick={testAction} className={styles.sortButton}>Test</span>
+        </div>;
     }
 
     getloggedInPanel()
