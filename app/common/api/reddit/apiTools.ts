@@ -67,7 +67,8 @@ export function getPostsUrl(author : string, after : string, limit : number, oau
             {
                 sort: 'new',
                 after: after,
-                limit: limit
+                limit: limit,
+                raw_json: 1 //Otherwise you get html-safe characters
             };
         
     }
@@ -82,7 +83,8 @@ export function getPostsUrl(author : string, after : string, limit : number, oau
                 q: 'author:'+author,
                 sort: 'new',
                 after: after,
-                limit: limit
+                limit: limit,
+                raw_json: 1     //Otherwise you get html-safe characters
             };
         
     }
