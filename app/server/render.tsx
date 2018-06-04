@@ -21,7 +21,7 @@ export default ({ clientStats }) => async (req, res, next) =>
           <div id="root"></div>
           <script type='text/javascript' src='/static/main.js'></script>
           <script type='text/javascript' src='/static/vendor.js'></script>
-        </body>
+        </body>-
       </html>`
     )
 }
@@ -29,8 +29,3 @@ const createApp = (App, store) =>
     <Provider store={store}>
         <App />
     </Provider>
-
-function pathToStylesheet(path: string) : string
-{
-    return `<link rel="stylesheet" type="text/css" href="${path}" >`;
-}

@@ -12,6 +12,9 @@ import * as setup from './setup'
 //Sets up a toast callback
 setup.setupClientStuff();
 
+///////////////////
+// Render app
+///////////////////
 
 const render = App => {
   const root = document.getElementById('root')
@@ -25,16 +28,18 @@ const render = App => {
 }
 
 render(components.app);
+996
+///////////////
+// Hot reload
+///////////////
 
 declare var module: any
 if (module.hot && process.env.NODE_ENV === 'development')
 {
     console.log("Hot!");
-    module.hot.accept('~/client/components/app/component', () =>
+    module.hot.accept(components.app, () =>
     {
-        // eslint-disable-next-line
-        const AppComp = require('~/client/components/app/component').default
-
-        render(AppComp)
+        render(components.app)
     })
 }
+

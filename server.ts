@@ -54,51 +54,35 @@ app.use(require('~/backend/resource/auth'));
 app.use(require('~/backend/resource/subscription'));
 app.use(require('~/backend/resource/user'));
 
+//////////////
+// Webpack
+//////////////
 const DEV = process.env.NODE_ENV === 'development'
 
-//SSR
-//Webpack configs
-//const clientConfig = require('./webpack_client');
-//const serverConfig = require('./webpack_server');
-
 import clientConfig from './webpack_client'
-import serverConfig from './webpack_server'
+import clientConfigDev from './webpack_client_dev'
 
 const publicPath = clientConfig.output.publicPath;
 const outputPath = clientConfig.output.path;
-
-
 
 if (DEV)
 {
     console.log("Server configuration: DEV");
 
-    //let configs: webpack.Configuration[] = [clientConfig, serverConfig];
-    let configs: any[] = [clientConfig, serverConfig];
-    const multiCompiler: webpack.MultiCompiler = webpack(configs )
-    const clientCompiler = multiCompiler.compilers[0]
+    const clientCompiler = webpack(<any>clientConfigDev);
 
-    app.use(webpackDevMiddleware(multiCompiler, { publicPath }))
+    app.use(webpackDevMiddleware(clientCompiler, { publicPath }))
     app.use(webpackHotMiddleware(clientCompiler))
-    app.use(
-        // keeps serverRender updated with arg: { clientStats, outputPath }
-        webpackHotServerMiddleware(multiCompiler, {
-            serverRendererOptions: { outputPath }
-        })
-    )
+
+    app.use('*', Express.static(outputPath))
 }
 else
 {
     console.log("Server configuration: PROD");
-
-    const clientStats = require('./buildClient/stats.json') // eslint-disable-line import/no-unresolved
-    const serverRender = require('./buildServer/main.js').default // eslint-disable-line import/no-unresolved
-
-    console.log("Public path: ", publicPath);
-    console.log("output path: ", outputPath);
-
     app.use(publicPath, Express.static(outputPath))
-    app.use(serverRender({ clientStats, outputPath }))
+
+    //Anything that isn't api or a static resource gets routed to root
+    app.use('*', Express.static(outputPath))
 }
 
 
@@ -122,15 +106,4 @@ app.set('port', process.env.PORT || 8080);
 httpServer.listen(app.get('port'), function () {
     debug('Server listening on port ' + httpServer.address().port);
 });
-
-
-
-
-/*
-app.set('port', process.env.PORT || 8080);
-var server = app.listen(app.get('port'), function () {
-    debug('Express server listening on port ' + server.address().port);
-});
-*/
-
 

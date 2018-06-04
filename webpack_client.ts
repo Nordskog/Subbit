@@ -1,18 +1,14 @@
 ﻿
 let path = require('path');
-let HtmlWebpackPlugin = require('html-webpack-plugin');
-let webpack = require('webpack');
-
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
-
-const SpriteLoaderPlugin = require('svg-sprite-loader/plugin');
-
 let basePath = __dirname;
 
-//import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
-
+let HtmlWebpackPlugin = require('html-webpack-plugin');
+let webpack = require('webpack');
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const SpriteLoaderPlugin = require('svg-sprite-loader/plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const StatsPlugin = require('stats-webpack-plugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 
 const config = {
@@ -26,8 +22,7 @@ const config = {
 
     },
     entry: {
-        main: ['./app/client/index.tsx', 'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=false&quiet=false&noInfo=false',
-            'react-hot-loader/patch'],
+        main: ['./app/client/index.tsx'],
         appStyles: [
 
             './css/toast.scss',
@@ -62,6 +57,7 @@ const config = {
     },
     module: {
         rules: [
+
             {
                 test: /\.tsx?$/,
                 exclude: /node_modules/,
@@ -147,25 +143,22 @@ const config = {
         ],
     },
     plugins: [
-        new webpack.HotModuleReplacementPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
-        new StatsPlugin('stats.json'),
+        //new StatsPlugin('stats.json'),
         new SpriteLoaderPlugin(),
         new webpack.DefinePlugin({
-            'process.env.NODE_ENV': JSON.stringify('development'),
-            'process.env.IS_CLIENT' : true
+            'process.env.NODE_ENV': JSON.stringify('production'),
         }),
-        new ExtractTextPlugin('main.css', { allChunks: true })
-        /*
-        new webpack.optimize.CommonsChunkPlugin({
-            names: ['bootstrap'], // needed to put webpack bootstrap code before chunks
-            filename: '[name].[chunkhash].js',
-            minChunks: Infinity
+        new ExtractTextPlugin('main.css', { allChunks: true }),
+        new HtmlWebpackPlugin( {
+        template: "./index.html",
+        filename: "index.html",
+        inject: "body"
         }),
-        */
+        new UglifyJsPlugin() //Default config is pretty good
+
 
     ]
-
 };
 
 export default config;
