@@ -4,9 +4,11 @@ import * as components from '~/client/components';
 import * as Toastify from 'react-toastify'
 import * as models from '~/common/models'
 
-//import 'bootstrap/dist/css/bootstrap.css';
-import 'css/site'
-import 'react-toastify/dist/ReactToastify.css';
+
+//import 'css/site'
+//import 'react-toastify/dist/ReactToastify.css';
+
+import * as styles from 'css/site.scss'
 
 interface Props
 {
@@ -18,10 +20,10 @@ export default class app extends React.Component<Props,any>
 {
     render()
     {
-      return <div className="rootContainer">
+      return <div>
                 <Toastify.ToastContainer/>
                 <components.header/>
-                <div className="site-contentOuterContainer">
+                <div className={styles.contentOuterContainer}>
                     {this.renderMain()}
                 </div>
                 <components.tools.onPageLoad/>
@@ -31,7 +33,7 @@ export default class app extends React.Component<Props,any>
 
     renderMain()
     {
-        return   <div className="site-contentContainer">
+        return   <div className={styles.contentContainer}>
                     <components.authors />
                     <components.tools.scrollEndDetector />
                 </div>

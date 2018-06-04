@@ -13,6 +13,8 @@ import * as config from '~/config'
 
 import * as cells from './cells'
 
+import * as authorStyles from 'css/author.scss'
+
 
 import expand_caret from 'assets/images/expand_caret.svg'
 import collapse_caret from 'assets/images/collapse_caret.svg'
@@ -61,6 +63,8 @@ export default class Posts extends React.Component<Props, State>
                 loading: false 
             };
         }
+
+        return null;
     }
 
     render()
@@ -87,7 +91,7 @@ export default class Posts extends React.Component<Props, State>
             }
         };
 
-        return  <div style={ { height: 'auto', overflow: 'hidden' } } className="author-posts">
+        return  <div style={ { height: 'auto', overflow: 'hidden' } } className={authorStyles.posts}>
             
                 <components.animations.AutoHeight>
                     {renderedPosts}
@@ -158,9 +162,9 @@ export default class Posts extends React.Component<Props, State>
             return null;
 
         return <components.transitions.FadeResize key={'_expandButton'}>
-                <div className="author-morePostsContainer"  onClick={ () => this.expandPosts() } > 
-                        <div className="author-morePostsInnerContainer">
-                            <svg className="author-morePostsButton" >
+                <div className={authorStyles.morePostsContainer}  onClick={ () => this.expandPosts() } > 
+                        <div className={authorStyles.morePostsInnerContainer}>
+                            <svg className={authorStyles.morePostsButton} >
                                 <use xlinkHref={expand_caret}></use>
                             </svg>
                         </div>
@@ -176,9 +180,9 @@ export default class Posts extends React.Component<Props, State>
             return null;
 
         return  <components.transitions.FadeResize key={'collapse_button_container'}>
-                    <div className="author-morePostsContainer" key={"_collapsebutton"} onClick={ () => this.collapsePosts() } >
-                        <div className="author-morePostsInnerContainer"> 
-                            <svg className="author-morePostsButton" >
+                    <div className={authorStyles.morePostsContainer} key={"_collapsebutton"} onClick={ () => this.collapsePosts() } >
+                        <div className={authorStyles.morePostsInnerContainer}> 
+                            <svg className={authorStyles.morePostsButton} >
                                 <use xlinkHref={collapse_caret}></use>
                             </svg>
                         </div>

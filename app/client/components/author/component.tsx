@@ -12,9 +12,6 @@ import * as siteStyles from 'css/site.scss'
 
 import * as components from '~/client/components'
 
-import * as animations from 'css/animations.scss'
-
-import 'css/author'
 import * as config from '~/config'
 import expand_caret from 'assets/images/expand_caret.svg'
 import collapse_caret from 'assets/images/collapse_caret.svg'
@@ -125,12 +122,12 @@ export default class AuthorCell extends React.Component<Props, State>
 
     render()
     {
-        return <div className={ this.isSubscribed() ? "author-subscribedAuthor" : "author-author"} key = { this.props.author.author.name } ref={ (c) => {this.container = c}} >
-            <transitions.TransitionGroup component={'div'} className="author-authorHeader">
+        return <div className={ this.isSubscribed() ? styles.subscribedAuthor : styles.author} key = { this.props.author.author.name } ref={ (c) => {this.container = c}} >
+            <transitions.TransitionGroup component={'div'} className={styles.authorHeader}>
                 {this.getButton()}
                 {this.getShowSubredditsButton()}
 
-                <NavLink className="author-nameContainer"
+                <NavLink className={styles.nameContainer}
                     to={ { type: 'AUTHOR', payload: { author:this.props.author.author.name } }  }>
                     {this.props.author.author.name}
                 </NavLink>
@@ -195,11 +192,7 @@ export default class AuthorCell extends React.Component<Props, State>
         }
 
         return null;
-
-
     }
-
-    
 
     getButton()
     {
@@ -212,7 +205,7 @@ export default class AuthorCell extends React.Component<Props, State>
     getSubscribeButton()
     {
         return <div onClick={this.handleSubscribeClick} >
-        <svg className="author-subscribeButton" >
+        <svg className={styles.subscribeButton} >
             <use xlinkHref={subscribeButton}></use>
         </svg>
         </div>
@@ -224,8 +217,8 @@ export default class AuthorCell extends React.Component<Props, State>
         if ( this.isSubscribed() )
         {
             return <components.transitions.FadeHorizontalResize key={'show_subreddits_button'}>
-                        <div className="author-displaySubredditsButtonContainer" onClick={ () => {  this.state.subredditsExpanded ? this.collapseSubreddits() : this.expandSubreddits() } } >
-                            <svg className="author-displaySubredditsButton" >
+                        <div className={styles.displaySubredditsButtonContainer} onClick={ () => {  this.state.subredditsExpanded ? this.collapseSubreddits() : this.expandSubreddits() } } >
+                            <svg className={styles.displaySubredditsButton} >
                                 <use xlinkHref={ this.state.subredditsExpanded ? collapse_caret : expand_caret}></use>
                             </svg>
                         </div>
@@ -236,7 +229,7 @@ export default class AuthorCell extends React.Component<Props, State>
     getUnsubscribeButton()
     {
         return <div onClick={this.handleUnsubscribeClick} >
-                    <svg className="author-unsubscribeButton" >
+                    <svg className={styles.unsubscribeButton} >
                         <use xlinkHref={subscribeButton}></use>
                     </svg>
                 </div>
@@ -249,13 +242,9 @@ export default class AuthorCell extends React.Component<Props, State>
         //Not subscribed, but subscription populated
         if ( this.props.author.subscription != null)
         {
-            console.log("sub: ", this.props.author.subscription);
-
             //User is resubscribing without closing page, repopulate subscribed subreddits
             subreddits = this.props.author.subscription.subreddits.map( ( subreddit : models.data.SubscriptionSubreddit ) => subreddit.name );
         }
-
-        console.log("Resulting subs:",subreddits);
 
         if (this.props.subreddit != null)
         {

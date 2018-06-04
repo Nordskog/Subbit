@@ -12,7 +12,8 @@ import expand_caret from 'assets/images/expand_caret.svg'
 import collapse_caret from 'assets/images/collapse_caret.svg'
 
 import * as components from '~/client/components'
-import 'css/redditlist.scss'
+
+import * as styles from "css/redditlist.scss"
 
 interface Props
 {
@@ -74,13 +75,13 @@ export default class SubredditDropdown extends React.Component<Props, State>
 
     getButton()
     {
-        return  <div className="redditlist-container">
+        return  <div className={styles.container}>
 
-        <div  className="redditlist-selectedContainer">
-            <div className="redditlist-selected">
+        <div  className={styles.selectedContainer}>
+            <div className={styles.selected}>
                 {this.getCurrentSubreddit()}
             </div>
-            <div className='redditlist-expandButtonContainer'>
+            <div className={styles.expandButtonContainer}>
                 {this.getExpandCaret()}
             </div>
         </div>
@@ -140,7 +141,7 @@ export default class SubredditDropdown extends React.Component<Props, State>
 
     getExpandCaret()
     {
-        return  <svg className="redditlist-expandButton" >
+        return  <svg className={styles.expandButton} >
                     <use xlinkHref={expand_caret}></use>
                 </svg>
     }

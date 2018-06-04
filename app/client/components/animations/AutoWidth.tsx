@@ -51,18 +51,6 @@ interface State
         
             if ( this.prevWidth != null)
             {
-                /*
-                gsap.TweenMax.fromTo(this.container, this.state.duration, 
-                    {
-                         width: this.prevWidth,
-                         opacity: 1
-                    },
-                    {
-                        width: width,
-                        clearProps:"width"
-                    });
-                    */
-
                     if (this.timeline != null)
                     {
                         //Wait for it to finish I guess.

@@ -9,7 +9,7 @@ import * as component from '~/client/components/'
 
 import * as models from '~/common/models';
 
-import 'css/author.scss'
+import * as styles from 'css/author.scss';
 
 import * as transitions from 'react-transition-group'
 
@@ -65,7 +65,7 @@ export default class AuthorsComponent extends React.Component<Props, {} >
     public render()
     {
         
-        return <transitions.TransitionGroup component={'div'} className="author-container">
+        return <transitions.TransitionGroup component={'div'} className={styles.container}>
                 { this.renderAuthors()}
                 </transitions.TransitionGroup>;
         

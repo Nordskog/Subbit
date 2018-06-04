@@ -6,6 +6,7 @@ import * as models from '~/common/models';
 import * as tools from '~/common/tools'
 import * as urls from '~/common/urls'
 
+import * as authorStyles from 'css/author.scss'
 
 interface Props
 {
@@ -16,7 +17,7 @@ export default class LastVisitBar extends React.Component<Props, null>
 {
     render()
     {
-        return <div className="author-lastVisit">
+        return <div className={authorStyles.lastVisit}>
                       {this.getTimeSince()}
 
                 </div>

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as models from '~/common/models'
 import { LoadingStatus } from '~/common/models';
+import * as siteStyles from 'css/site.scss'
 
 interface Props extends models.state.PageState
 {
@@ -96,7 +97,7 @@ export default class ScrollEndDetectorComponent extends React.Component<Props,St
 
   getDiv()
   {
-      return <div className="site-loadingStatus">{this.getMessage()}<br/>{this.getProgress()}</div>
+      return <div className={siteStyles.loadingStatus}>{this.getMessage()}<br/>{this.getProgress()}</div>
   }
 
   getProgress()

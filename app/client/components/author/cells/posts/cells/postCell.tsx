@@ -1,17 +1,11 @@
 ﻿import * as React from 'react';
 
-
 import * as models from '~/common/models';
-
 import * as tools from '~/common/tools'
 import * as urls from '~/common/urls'
-import { isNullOrUndefined } from 'util';
-
 import * as styles from 'css/post.scss'
 
 import vote from 'assets/images/vote.svg'
-import { numberTo4CharDisplayString } from '~/common/tools/number';
-import { ENGINE_METHOD_DIGESTS } from 'constants';
 
 const danger_flairs : Set<string> = new Set<string>();
 danger_flairs.add("nsfw");
