@@ -36,25 +36,5 @@ export default (history, preLoadedState) => {
       preLoadedState,
       enhancers);
 
-  /*
-  if (module.hot && process.env.NODE_ENV === 'development') {
-    module.hot.accept('./reducers/index', () => {
-      const reducers = require('./reducers/index')
-      const rootReducer = combineReducers({ ...reducers, location: reducer })
-      store.replaceReducer(rootReducer)
-    })
-  }
-    */
-
   return { store, thunk }
 }
-
-/*
-const composeEnhancers = (...args) =>
-  typeof window !== 'undefined'
-    ? composeWithDevTools({ actionCreators })(...args)
-: compose(...args)
-*/
-//const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-//const composeEnhancers = compose;
-//const composeEnhancers = (...args) => compose(...args);

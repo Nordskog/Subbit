@@ -5,10 +5,11 @@ import * as models from '~/common/models'
 import * as tools from '~/common/tools'
 
 import { State } from '~/client/store';
+import { WrapWithHandler } from '~/client/actions/tools/error';
 
 export function fetchSubscriptions()
 {
-    return async function (dispatch, getState)
+    return WrapWithHandler( async function (dispatch, getState)
     {
         let state: State = getState();
 
@@ -25,12 +26,12 @@ export function fetchSubscriptions()
             type: actions.types.subscription.SUBSCRIPTIONS_FETCHED,
             payload: subscriptions as actions.types.subscription.SUBSCRIPTIONS_FETCHED
         });
-    }
+    });
 }
 
 export function subscribeToAuthorAction(author : string, subreddits : string[])
 {
-    return async function (dispatch, getState)
+    return WrapWithHandler( async function (dispatch, getState)
     {
         let state: State = getState();
 
@@ -44,12 +45,12 @@ export function subscribeToAuthorAction(author : string, subreddits : string[])
             type: actions.types.subscription.SUBSCRIPTION_ADDED,
             payload: subscription as actions.types.subscription.SUBSCRIPTION_ADDED
         });
-    }
+    });
 }
 
 export function unsubscribeFromAuthor(subscription: models.data.Subscription)
 {
-    return async function (dispatch, getState)
+    return WrapWithHandler(  async function (dispatch, getState)
     {
         let state: State = getState();
         let token: string = tools.store.getAccessToken(state);
@@ -60,12 +61,12 @@ export function unsubscribeFromAuthor(subscription: models.data.Subscription)
             type: actions.types.subscription.SUBSCRIPTION_REMOVED,
             payload: subscription as actions.types.subscription.SUBSCRIPTION_REMOVED
         });
-    }
+    });
 }
 
 export function addSubredditToSubscriptionAction(subscription_id : number, subreddit_name : string)
 {
-    return async function (dispatch, getState)
+    return WrapWithHandler( async function (dispatch, getState)
     {
         let state: State = getState();
 
@@ -79,12 +80,12 @@ export function addSubredditToSubscriptionAction(subscription_id : number, subre
             type: actions.types.subscription.SUBSCRIPTION_CHANGED,
             payload: subscription as actions.types.subscription.SUBSCRIPTION_CHANGED
         });
-    }
+    });
 }
 
 export function removeSubredditFromSubscriptionAction(subscription_id : number, subreddit_name : string)
 {
-    return async function (dispatch, getState)
+    return WrapWithHandler(  async function (dispatch, getState)
     {
         let state: State = getState();
 
@@ -99,7 +100,7 @@ export function removeSubredditFromSubscriptionAction(subscription_id : number, 
             payload: subscription as actions.types.subscription.SUBSCRIPTION_CHANGED
         });
         
-    }
+    });
 }
 
 

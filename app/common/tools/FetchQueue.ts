@@ -205,7 +205,7 @@ export default class RequestQueue
             response = await item.execute();
         }
         catch (err)
-        {   
+        {
             item.reject(err);
             return;
         }

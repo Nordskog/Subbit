@@ -34,11 +34,22 @@ export async function getRequest<T>(url : string, parameters? : any, auth?: mode
     url = tools.url.appendUrlParameters(url,parameters);
     let options = getRedditFetchOptions('GET', auth);
 
+
     let response : Response;
-    if (auth != null)
-        response = await apiQueue.enqueue( () => fetch(url, options) );
-    else
-        response = await cdnQueue.enqueue( () => fetch(url, options) );
+
+    try
+    {
+        if (auth != null)
+            response = await apiQueue.enqueue( () => fetch(url, options) );
+        else
+            response = await cdnQueue.enqueue( () => fetch(url, options) );
+    }
+    catch( err)
+    {
+        console.log(err);
+        throw new NetworkException(null, err.message);
+    }
+
 
     if (response.ok)
     {
@@ -46,7 +57,7 @@ export async function getRequest<T>(url : string, parameters? : any, auth?: mode
     }
     else
     {
-        return Promise.reject<T>( NetworkException.fromResponse(response) );
+        throw await NetworkException.fromResponse(response);
     }
 }
 
@@ -60,10 +71,19 @@ export async function postRequest<T, A>(url : string, request : models.Action<A>
     }
 
     let response;
-    if (auth != null)
-        response = await apiQueue.enqueue( () => fetch(url, options) );
-    else
-        response = await cdnQueue.enqueue( () => fetch(url, options) );
+    try
+    {
+        if (auth != null)
+            response = await apiQueue.enqueue( () => fetch(url, options) );
+        else
+            response = await cdnQueue.enqueue( () => fetch(url, options) );
+    }
+    catch( err)
+    {
+        console.log(err);
+        throw new NetworkException(0, err.message);
+    }
+
         
     if (response.ok)
     {
@@ -71,7 +91,7 @@ export async function postRequest<T, A>(url : string, request : models.Action<A>
     }
     else
     {
-        return Promise.reject<T>( NetworkException.fromResponse(response) );
+        throw await NetworkException.fromResponse(response);
     }
 }
 

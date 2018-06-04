@@ -42,14 +42,23 @@ export class NetworkException extends Exception
 {
     constructor( code : number, message : string)
     {
-        super(code+": "+message)
+        super( (code == null ? "" :  code+": ") + message)
     }
 
-    static fromResponse( res : Response) : CancelledException
+    static async fromResponse( res : Response) : Promise<CancelledException>
     {
-        let text : string = res.statusText;
-        if (res.body != null)
-            text = JSON.stringify(res.body);
+        let text : string = null;
+        try
+        {
+            text = await res.json();
+        }
+        catch( err)
+        {
+            //No json body then
+        }
+        if (text == null)
+            text = res.statusText;
+
         return new CancelledException( res.status+": "+text );
     }
 }

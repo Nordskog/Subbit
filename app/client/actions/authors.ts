@@ -1,6 +1,7 @@
 ﻿import { State } from '~/client/store';
 
 import { AuthorFilter, LoadingStatus } from '~/common/models';
+import * as Redux from 'redux';
 import * as api from '~/common/api'
 import * as actions from '~/client/actions'
 import * as models from '~/common/models'
@@ -11,6 +12,8 @@ import * as config from '~/config'
 import * as authority from '~/client/authority'
 import { CancellationError } from 'bluebird';
 import { CancelledException } from '~/common/exceptions';
+import { Dispatch, GetState } from '~/client/actions/tools/types';
+import { WrapWithHandler } from '~/client/actions/tools/error';
 
 export function changeSubreddit( subreddit : string)
 {
@@ -62,7 +65,7 @@ export function viewAuthor( author: string, subreddit? : string)
 
 export function fetchAuthorsAction ( appendResults: boolean = false)
 {
-    return async function (dispatch, getState)
+    return WrapWithHandler( async function (dispatch, getState)
     {
         try
         {
@@ -97,15 +100,15 @@ export function fetchAuthorsAction ( appendResults: boolean = false)
             }
             else
             {
-                console.log(error);
+                throw(error);
             }
         }
-    }
+    });
 }
 
 export function fetchMorePosts( authors : models.data.AuthorEntry[], count : number )
 {
-    return async function (dispatch, getState)
+    return WrapWithHandler( async function (dispatch : Dispatch, getState : GetState)
     {
         let state: State = getState();
 
@@ -165,5 +168,5 @@ export function fetchMorePosts( authors : models.data.AuthorEntry[], count : num
 
         //Process any remaining
         await Promise.all(proms);
-    }
+    });
 }

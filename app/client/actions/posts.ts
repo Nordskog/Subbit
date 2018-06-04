@@ -2,10 +2,11 @@ import { PostDisplay } from "~/common/models";
 import * as actions from '~/client/actions'
 import { api, tools } from "~/common";
 import { State } from "~/client/store";
+import { WrapWithHandler } from "~/client/actions/tools/error";
 
 export function changePostDisplay( mode : PostDisplay)
 {
-    return async function (dispatch, getState)
+    return WrapWithHandler( async function (dispatch, getState)
     {    
         let state: State = getState();
         let token: string = tools.store.getAccessToken(state);
@@ -20,5 +21,5 @@ export function changePostDisplay( mode : PostDisplay)
         { 
             type: actions.types.user.POST_DISPLAY_MODE_CHANGED, payload: mode as actions.types.user.POST_DISPLAY_MODE_CHANGED } 
         );
-    }
+    });
 };

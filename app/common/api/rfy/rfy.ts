@@ -10,15 +10,24 @@ export async function getRequest<T>(url : string, parameters? : any, access_toke
     url = tools.url.appendUrlParameters(url,parameters);
     let options = getBackendFetchOptions('GET', access_token);
 
-    let response = await fetch(url, options);
-    
+    let response;
+    try
+    {
+        response = await fetch(url, options);
+    }
+    catch( err)
+    {
+        console.log(err);
+        throw new NetworkException(null, err.message);
+    }
+
     if (response.ok)
     {
         return await response.json();
     }
     else
     {
-        return Promise.reject<T>( NetworkException.fromResponse(response) );
+        throw await NetworkException.fromResponse(response);
     }
 }
 
@@ -31,7 +40,17 @@ export async function postRequest<T, A>(url : string, request : models.Action<A>
         body: JSON.stringify(request)
     }
 
-    let response = await fetch(url, options);
+    let response;
+    try
+    {
+        response = await fetch(url, options);
+    }
+    catch( err)
+    {
+        console.log(err);
+        throw new NetworkException(null, err.message);
+    }
+
     
     if (response.ok)
     {
@@ -39,7 +58,7 @@ export async function postRequest<T, A>(url : string, request : models.Action<A>
     }
     else
     {
-        return Promise.reject<T>( NetworkException.fromResponse(response) );
+        throw await NetworkException.fromResponse(response);
     }
 }
 

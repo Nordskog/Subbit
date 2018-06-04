@@ -4,7 +4,6 @@ import * as tools from '~/common/tools'
 
 
 
-
 /////////////////////////////////////////////////////
 // Register callbacks to display ratelimit toasts
 /////////////////////////////////////////////////////
@@ -37,3 +36,4 @@ export function setupClientStuff()
 {
     api.reddit.registerRatelimitCallbacks(handleRatelimitCallback, handleRateLimitedCallback);
 }
+
