@@ -30,7 +30,7 @@ function handleRateLimitedCallback(  info : tools.RateLimitInfo )
     let resetTime = info.resetAt - (Date.now() / 1000);
     resetTime = Math.floor(resetTime);
 
-    toast.countdownToast( toast.ToastType.ERROR, resetTime * 1000, resetTime,  "Redit rate limit exceeded", "Reset in", "seconds")
+    toast.countdownToast( toast.ToastType.ERROR, resetTime * 1000, resetTime,  "Reddit rate limit exceeded", "Reset in", "seconds")
 }
 
 export function setupClientStuff()

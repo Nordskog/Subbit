@@ -36,6 +36,7 @@ interface Props
 
 interface State
 {
+    prevProps: Props;
     postsExpanded: boolean;
     loading : boolean;
     expandedPostCount : number;
@@ -47,6 +48,7 @@ export default class Posts extends React.Component<Props, State>
     {
         super(props);
         this.state = {
+            prevProps : props,
             postsExpanded: false,
             loading: false,
             expandedPostCount : 0
@@ -55,11 +57,11 @@ export default class Posts extends React.Component<Props, State>
 
     static getDerivedStateFromProps(nextProps : Props, prevState : State)
     {
-        if (prevState.loading)
+        if (prevState.prevProps != nextProps)
         {
-            //Ignore updates unless awaiting posts I guess?
             return {
                 ...prevState,
+                prevProps: nextProps,
                 loading: false 
             };
         }
