@@ -90,6 +90,14 @@ export function userReducer(state = getDefaultUserState(), action :  models.Acti
                 settings: payload
             }
         }
+
+        case actionTypes.authentication.LOGOUT_SUCCESS:
+        {
+            return {
+                ...state,
+                subscriptions: []
+            }
+        }
     }
 
     return state;
