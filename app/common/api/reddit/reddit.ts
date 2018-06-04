@@ -46,7 +46,6 @@ export async function getRequest<T>(url : string, parameters? : any, auth?: mode
     }
     catch( err)
     {
-        console.log(err);
         throw new NetworkException(null, err.message);
     }
 
@@ -80,7 +79,6 @@ export async function postRequest<T, A>(url : string, request : models.Action<A>
     }
     catch( err)
     {
-        console.log(err);
         throw new NetworkException(0, err.message);
     }
 

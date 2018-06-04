@@ -182,8 +182,6 @@ export default class RedditsCell extends React.Component<Props, State>
 
     handleEnter(keyCode : number)
     {
-        console.log("code: ",keyCode)
-
         if (keyCode == 13 && this.state.searchedItems.length > 0)
         {
             let item : SearchItem = this.getSelectedItem();
