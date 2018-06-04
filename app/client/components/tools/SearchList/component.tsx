@@ -164,7 +164,10 @@ export default class RedditsCell extends React.Component<Props, State>
     getSearchBox( item : SearchItem, index : number )
     {
        return   <components.transitions.FadeResize key={"Search_"+index}>
-                    <input onFocus={() => this.selectMode(index)} onChange={ evt => this.handleInput( item, evt.target.value ) } 
+                    <input 
+                        onFocus={() => this.selectMode(index)} 
+                        onChange={ evt => this.handleInput( item, evt.target.value ) } 
+                        onKeyPress={ (e :  React.KeyboardEvent<HTMLInputElement>) => {  this.handleEnter(e.which)  } }
                         type="text" 
                         placeholder={item.searchPlaceholder}
                         className={ siteStyles.inputContainer }/>
@@ -175,6 +178,19 @@ export default class RedditsCell extends React.Component<Props, State>
     selectMode( index : number)
     {
         this.setState( { ...this.state, selectedItem: index } );
+    }
+
+    handleEnter(keyCode : number)
+    {
+        console.log("code: ",keyCode)
+
+        if (keyCode == 13 && this.state.searchedItems.length > 0)
+        {
+            let item : SearchItem = this.getSelectedItem();
+            let listItem = this.state.searchedItems[0];
+
+            this.handleClick(item, listItem);
+        }
     }
 
     //Wait a bit after input end before sending request
