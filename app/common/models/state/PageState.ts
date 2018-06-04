@@ -1,8 +1,8 @@
+import { LoadingStatus } from "~/common/models";
+
 export default interface ScrollState
 {
-    nextPageLoading : boolean;
-    endReached : boolean;
-    currentPage : number;   //For author subscriptions
+    status : LoadingStatus;
     loadingCount : number;
     loadingProgress : number;
 }

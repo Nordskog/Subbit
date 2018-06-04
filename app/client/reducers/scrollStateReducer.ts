@@ -1,21 +1,20 @@
 ﻿
 import * as actions from '~/client/actions'
 import * as models from '~/common/models'
+import { LoadingStatus } from '~/common/models';
 
 export function scrollStateReducer(state = getDefaultScrollState(), action :  models.Action<any>)
 {
     switch (action.type)
     {
         //used when a brand new listing starting from page 0 is retrieved
-        case actions.types.authors.FETCH_AUTHORS_COMPLETED:
+        case actions.types.page.LOADING_STATE_CHANGED:
         {
-            action = action as models.Action< actions.types.authors.FETCH_AUTHORS_COMPLETED >;
+            let payload : actions.types.page.LOADING_STATE_CHANGED = action.payload;
 
             return {
                 ...state,
-                currentPage: action.payload.page,
-                endReached:  action.payload.end,
-                nextPageLoading: false,
+                status:  payload.status,
                 loadingCount: null,
                 loadingProgress: null
             }
@@ -27,18 +26,19 @@ export function scrollStateReducer(state = getDefaultScrollState(), action :  mo
 
             return {
                 ...state,
-                nextPageLoading: payload.loading,
+                status: payload.status,
                 loadingCount: null,
                 loadingProgress: null
             }
         }
 
-        case actions.types.authors.LOADING_PROGRESS:
+        case actions.types.page.LOADING_PROGRESS:
         {
-            let payload : actions.types.authors.LOADING_PROGRESS = action.payload;
+            let payload : actions.types.page.LOADING_PROGRESS = action.payload;
 
             return {
                 ...state,
+                status: LoadingStatus.LOADING,
                 ...payload
             }
         }
@@ -50,10 +50,7 @@ export function scrollStateReducer(state = getDefaultScrollState(), action :  mo
 export function getDefaultScrollState()
 {
     return {
-        nextPageLoading : true,
-        currentPage: 0,
-        endReached: false,
-        after : null,
+        status: LoadingStatus.LOADING,
         loadingCount: null,
         loadingProgress: null
     } as models.state.PageState;

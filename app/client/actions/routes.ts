@@ -16,7 +16,7 @@ export function authorsRoutes()
         actions.directActions.page.clearPage(true, dispatch);
         actions.directActions.authentication.loadAuthentication(dispatch, getState);
         await firstLoadDuties(dispatch, getState);
-        await actions.authors.fetchAuthorsAction(null, false)(dispatch, getState);
+        await actions.authors.fetchAuthorsAction(false)(dispatch, getState);
         firstLoad = false;
     }
 }

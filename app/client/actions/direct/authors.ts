@@ -109,12 +109,12 @@ export function updateLoadingProgress (count : number, progress : number, dispat
 {
     dispatch
     ({ 
-            type: actions.types.authors.LOADING_PROGRESS,
+            type: actions.types.page.LOADING_PROGRESS,
             payload: 
             { 
                 loadingProgress: progress, 
                 loadingCount: count 
-            } as actions.types.authors.LOADING_PROGRESS
+            } as actions.types.page.LOADING_PROGRESS
     });
 }
 

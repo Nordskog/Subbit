@@ -14,7 +14,7 @@ function mapDispatchToProps(): object
     return function (dispatch)
     {
         return {
-            getNextPage: (page: number ) => { dispatch(actions.authors.fetchAuthorsAction(page, true)) }
+            getNextPage: ( ) => { dispatch(actions.authors.fetchAuthorsAction(true)) }
         }
     }
 }

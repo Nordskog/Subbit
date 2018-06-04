@@ -1,5 +1,6 @@
 ﻿import * as models from '~/common/models'
 import { userInfo } from 'os';
+import { LoadingStatus } from '~/common/models';
 
 export namespace authors
 {
@@ -7,7 +8,6 @@ export namespace authors
     export const POST_DETAILS_UPDATED       : string = 'POST_DETAILS_UPDATED';
     export const SUBREDDIT_CHANGED          : string = 'SUBREDDIT_CHANGED';
     export const POSTS_ADDED                : string = 'POSTS_ADDED';
-    export const LOADING_PROGRESS                : string = 'LOADING_PROGRESS';
 
     export interface FETCH_AUTHORS_COMPLETED
     {
@@ -29,12 +29,6 @@ export namespace authors
         after?: string;
         end: boolean;
 
-    }
-
-    export interface LOADING_PROGRESS
-    {
-        loadingProgress: number;
-        loadingCount: number;
     }
 };
 
@@ -91,11 +85,24 @@ export namespace subscription
 
 export namespace page
 {
-    export const NEW_PAGE   : string = 'NEW_PAGE';
+    export const NEW_PAGE                       : string = 'NEW_PAGE';
+    export const LOADING_PROGRESS               : string = 'LOADING_PROGRESS';
+    export const LOADING_STATE_CHANGED              : string = 'LOADING_STATE_CHANGED';
 
     export interface NEW_PAGE
     {   
-        loading: boolean;
+        status: LoadingStatus;
+    }
+
+    export interface LOADING_PROGRESS
+    {
+        loadingProgress: number;
+        loadingCount: number;
+    }
+
+    export interface LOADING_STATE_CHANGED
+    {
+        status: models.LoadingStatus;
     }
 
 };

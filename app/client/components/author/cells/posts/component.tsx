@@ -51,14 +51,15 @@ export default class Posts extends React.Component<Props, State>
         }
     }
 
-    componentWillReceiveProps(nextProps : Readonly<Props>) 
+    static getDerivedStateFromProps(nextProps : Props, prevState : State)
     {
-        if (this.state.loading)
+        if (prevState.loading)
         {
-            this.setState( {
-                ...this.state,
+            //Ignore updates unless awaiting posts I guess?
+            return {
+                ...prevState,
                 loading: false 
-            });
+            };
         }
     }
 

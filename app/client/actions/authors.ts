@@ -1,6 +1,6 @@
 ﻿import { State } from '~/client/store';
 
-import { AuthorFilter } from '~/common/models';
+import { AuthorFilter, LoadingStatus } from '~/common/models';
 import * as api from '~/common/api'
 import * as actions from '~/client/actions'
 import * as models from '~/common/models'
@@ -61,7 +61,7 @@ export function viewAuthor( author: string, subreddit? : string)
     }
 }
 
-export function fetchAuthorsAction ( page : number = 0, appendResults: boolean = false)
+export function fetchAuthorsAction ( appendResults: boolean = false)
 {
     return async function (dispatch, getState)
     {
@@ -72,12 +72,23 @@ export function fetchAuthorsAction ( page : number = 0, appendResults: boolean =
             dispatch({
                 type: actions.types.authors.FETCH_AUTHORS_COMPLETED,
                 payload: { authors: authorEntries,
-                           page: page,
                            end: after == null,
                            append: appendResults,
                            after: after
                 }  as actions.types.authors.FETCH_AUTHORS_COMPLETED
             });
+
+
+            dispatch({
+                type: actions.types.page.LOADING_STATE_CHANGED,
+                payload: 
+                { 
+                    status: after == null ? LoadingStatus.END : LoadingStatus.DONE,
+
+                }  as actions.types.page.LOADING_STATE_CHANGED
+            });
+
+
         }
         catch ( error )
         {

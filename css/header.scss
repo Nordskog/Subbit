@@ -41,7 +41,15 @@
 .sortButtonActive
 {  
     @extend .sortButton;
-    background: $body-background;
+    //background: $body-background;
+
+    box-shadow:0px -5px 0px $button-highlight-color inset;
+
+    /*
+    border-bottom: 5px solid rgb(233, 21, 21);
+    outline-style: outset;
+    outline-color: yellow;
+    */
 }
 
 

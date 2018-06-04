@@ -43,3 +43,12 @@ export enum PostDisplay
     COMPACT = 'compact',
     NORMAL = 'normal'
 }
+
+export enum LoadingStatus
+{
+    LOADING = "loading",
+    END = "end",
+    EMPTY = "empty",
+    ERROR = "error",
+    DONE = "done"
+}
