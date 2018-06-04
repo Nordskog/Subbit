@@ -1,7 +1,6 @@
 ﻿import * as React from 'react';
 import * as components from '~/client/components';
 
-import { BrowserRouter, Router, Route, Switch } from 'react-router-dom';
 import * as Toastify from 'react-toastify'
 import * as models from '~/common/models'
 

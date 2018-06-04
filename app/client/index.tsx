@@ -4,7 +4,6 @@ import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 
-import AppContainer from 'react-hot-loader/lib/AppContainer'
 import * as components from '~/client/components'
 import * as Store from '~/client/store'
 import * as setup from './setup'
@@ -28,7 +27,7 @@ const render = App => {
 }
 
 render(components.app);
-996
+
 ///////////////
 // Hot reload
 ///////////////

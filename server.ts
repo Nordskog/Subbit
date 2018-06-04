@@ -29,7 +29,6 @@ const webpackHotServerMiddleware =  require('webpack-hot-server-middleware')
 /////////////////////
 
 import * as Express from 'express';
-import * as cookieParser from 'cookie-parser'
 
 import { render } from 'react-dom';
 
@@ -43,11 +42,6 @@ var app: Express.Express = Express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressWetland(RFY.wetland));
-
-
-
-//Cookie parsing and jwt stuff
-app.use(cookieParser());
 
 // Resources for api
 app.use(require('~/backend/resource/auth'));

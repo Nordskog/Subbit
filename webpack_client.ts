@@ -40,7 +40,6 @@ const config = {
         vendor: [
             'react',
             'react-dom',
-            'react-router',
             'redux',
             'redux-first-router',
             'redux-first-router-link',

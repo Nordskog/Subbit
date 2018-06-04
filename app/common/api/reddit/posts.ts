@@ -57,7 +57,7 @@ export async function getAuthors(subreddit? : string, filter? : models.AuthorFil
     
 }
 
-export async function getPosts(author: string, after : string, auth : models.auth.RedditAuth, count : number,  ...subreddits : string[], ) : Promise< { posts : models.reddit.Post[], after : string } >
+export async function getPosts(author: string, after : string, auth : models.auth.RedditAuth, count : number,  ...subreddits : string[] ) : Promise< { posts : models.reddit.Post[], after : string } >
 {
     let {baseUrl, params} = apiTools.getPostsUrl(author, after, count, auth != null, ...subreddits);
 
