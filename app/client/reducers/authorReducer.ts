@@ -68,9 +68,6 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
                     {
                         if (action.payload.has(author.author.name))
                         {
-
-                            console.log("Redrawing ",author.author.name);
-
                             return {
                                 ...author
                             }

@@ -212,7 +212,21 @@ export default class RedditsCell extends React.Component<Props, State>
         }
         else
         {
-            this.search( item, input );
+            if (input.length < 1)
+            {
+                this.setState(
+                    {
+                    ...this.state,
+                    searchedItems: [],
+                    searching: false
+                    }
+                );
+            }
+            else
+            {
+                this.search( item, input );
+
+            }
         }
     }
 
