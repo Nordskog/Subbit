@@ -28,7 +28,6 @@ interface Props
     postDisplay: models.PostDisplay;
     subscribe(author: string, subreddits : string[] ): void;
     unsubscribe(sub: models.data.Subscription): void;
-    getPostDetails(authors : models.data.AuthorEntry[]): void;
     addSubscriptionSubreddit(subscription : number, subreddit : string ): void;
     removeSubscriptionSubreddit(subscription : number, subreddit : string): void;
     fetchMorePosts(author : models.data.AuthorEntry, count : number): void;

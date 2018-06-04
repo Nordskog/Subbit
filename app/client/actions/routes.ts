@@ -25,8 +25,6 @@ export function authorizeRoute()
 {
     return async (dispatch, getState ) =>
     {
-        console.log("auth route");
-
         let { error, code,  state} = getState().location.query;
         if (error)
         {

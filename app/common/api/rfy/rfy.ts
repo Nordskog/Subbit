@@ -65,20 +65,3 @@ export function getBackendFetchOptions(method: string, access_token: string)
     return config;
 }
 
-export function wrapReducerAction<T>( action : string, payload : T ) : string
-{
-    let reducerAction : models.Action< models.Action< T > > =
-    {
-        type : models.SocketAction.REDUCER_ACTION,
-        payload:
-        {
-            type: action,
-            payload: payload
-        }
-    }
-
-    return JSON.stringify( reducerAction );
-}
-
-
-
