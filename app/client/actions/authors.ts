@@ -6,7 +6,6 @@ import * as api from '~/common/api'
 import * as actions from '~/client/actions'
 import * as models from '~/common/models'
 import * as tools from '~/common/tools'
-import * as cache from '~/client/cache'
 import * as config from '~/config'
 
 import * as authority from '~/client/authority'
@@ -144,9 +143,6 @@ export function fetchMorePosts( authors : models.data.AuthorEntry[], count : num
                     {
                         authority.post.updateAuthority(post);
                     } );
-
-                    cache.post.populatePostsFromCache(posts);
-                    //clientTools.PostInfoQueue.addAuthorToQueue(author.author.name, posts, dispatch);
     
                     dispatch({
                         type: actions.types.authors.POSTS_ADDED,

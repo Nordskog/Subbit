@@ -2,7 +2,6 @@ import * as models from '~/common/models'
 import * as api from '~/common/api'
 import { State } from '~/client/store';
 import * as authority from '~/client/authority'
-import * as cache from '~/client/cache'
 import * as actions from '~/client/actions'
 import * as config from '~/config'
 
@@ -157,9 +156,6 @@ export async function poulateInitialPosts(authors : models.data.AuthorEntry[], c
                     {
                         authority.post.updateAuthority(post);
                     });
-
-                    cache.post.populatePostsFromCache(posts);
-                    //clientTools.PostInfoQueue.addAuthorToQueue(author.author.name, posts, dispatch);
     
                     author.after = after;;
                     author.end = after == null;
