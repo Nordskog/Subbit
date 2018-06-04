@@ -15,8 +15,7 @@ const config = {
     entry: {
         ...prodConfig.entry,
         
-        main: ['./app/client/index.tsx', 'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=false&quiet=false&noInfo=false',
-            'react-hot-loader/patch'],
+        main: ['./app/client/index.tsx', 'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=false&quiet=false&noInfo=false'],
     },
 
     plugins: [
@@ -29,13 +28,6 @@ const config = {
             'process.env.IS_CLIENT' : true
         }),
         new ExtractTextPlugin('main.css', { allChunks: true }),
-        /*
-        new webpack.optimize.CommonsChunkPlugin({
-            names: ['bootstrap'], // needed to put webpack bootstrap code before chunks
-            filename: '[name].[chunkhash].js',
-            minChunks: Infinity
-        }),
-        */
 
        new HtmlWebpackPlugin( {
         template: "./index.html",
