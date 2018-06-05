@@ -12,6 +12,7 @@ import * as models from '~/common/models';
 import * as styles from 'css/author.scss';
 
 import * as transitions from 'react-transition-group'
+import { AuthorFilter } from '~/common/models';
 
 interface Props 
 {
@@ -52,7 +53,7 @@ export default class AuthorsComponent extends React.Component<Props, {} >
             renders.push( 
             
             <component.transitions.Fade key={author.author.name} >
-                <component.author.component author={author} />
+                <component.author.component author={author} displaySubreddit={ this.props.filter == null } />
             </component.transitions.Fade>
                 
          

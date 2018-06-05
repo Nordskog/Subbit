@@ -206,7 +206,7 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
         {
             return {
                 ...state,
-                filter: AuthorFilter.NEW,
+                filter: null,
                 subreddit: action.payload.subreddit,
                 author: action.payload.author,
                 after: null

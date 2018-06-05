@@ -21,10 +21,12 @@ import { Query } from 'wetland/dist/src/Query';
 import * as transitions from 'react-transition-group'
 
 import { NavLink} from 'redux-first-router-link'
+import { urls } from '~/common';
 
 interface Props
 {
     author: models.data.AuthorEntry;
+    displaySubreddit : boolean;
     subreddit: string;
     postDisplay: models.PostDisplay;
     subscribe(author: string, subreddits : string[] ): void;
@@ -139,6 +141,12 @@ export default class AuthorCell extends React.Component<Props, State>
         }
     }
 
+    getSubreddit()
+    {
+           if (this.props.displaySubreddit && this.props.subreddit != null)
+             return <div className={styles.subreddit}>in  <a href={urls.getSubredditUrl(this.props.subreddit)}>r/<b>{this.props.subreddit}</b></a></div>
+    }
+
     render()
     {
         return <div className={ this.isSubscribed() ? styles.subscribedAuthor : styles.author} key = { this.props.author.author.name } ref={ (c) => {this.container = c}} >
@@ -150,6 +158,8 @@ export default class AuthorCell extends React.Component<Props, State>
                     to={ { type: 'AUTHOR', payload: { author:this.props.author.author.name } }  }>
                     {this.props.author.author.name}
                 </NavLink>
+
+                {this.getSubreddit()}
             
             </transitions.TransitionGroup>
 

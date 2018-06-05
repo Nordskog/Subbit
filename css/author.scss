@@ -145,6 +145,8 @@
     
 }
 
+
+
 .subscribedAuthor
 {
     @extend .author;
@@ -167,13 +169,32 @@
 
 .nameContainer {
     height:40px;
-    max-width: 200px;
     display: flex;
     justify-content: center;
     flex-direction: column;
     margin-left: 5px;
     margin-right: 5px;
 }
+
+.subreddit
+{
+    color: $hidden-text-color;
+    font-weight: normal;
+    display:flex;
+    align-items:center;
+    flex-shrink: 0;
+    font-size:small;
+    margin-top: 3px;
+}
+.subreddit a:link,
+.subreddit a:visited,
+.subreddit a:hover
+{
+    @extend .subreddit;
+    margin-top:0px;
+    margin-left:5px;
+}
+
 
 .subscriptionButton {
     height: 40px;
