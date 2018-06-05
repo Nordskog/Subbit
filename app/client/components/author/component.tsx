@@ -4,6 +4,7 @@
 import * as cells  from '~/client/components/author/cells'
 
 import subscribeButton from 'assets/images/subscribe_button.svg'
+import subscribeSubredditButton from 'assets/images/subscribe_subreddit_button.svg'
 
 import * as models from '~/common/models';
 
@@ -103,6 +104,25 @@ export default class AuthorCell extends React.Component<Props, State>
        return (this.props.author.subscription != null && ( this.props.author.subscription.subscribed == null || this.props.author.subscription.subscribed )   )
     }
 
+    ifSemiSubscribed() : boolean 
+    {
+        //If we are subscribed to the user, but not in the currently selected subreddit
+        if ( this.isSubscribed() && this.props.subreddit != null )
+        {
+            for ( let i = 0; i < this.props.author.subscription.subreddits.length; i++)
+            {
+                if (this.props.author.subscription.subreddits[i].name == this.props.subreddit)
+                {
+                    return false;
+                }
+
+            }
+            return  true;
+        }
+
+        return false;
+    }
+
     scrollToAuthorTop()
     {
 
@@ -196,18 +216,37 @@ export default class AuthorCell extends React.Component<Props, State>
     getButton()
     {
         if (this.isSubscribed())
-            return this.getUnsubscribeButton();
+        {
+            if (this.ifSemiSubscribed())
+                return this.getSubscribeSubredditButton();
+            else    
+                return this.getUnsubscribeButton();
+            
+        }
         else
             return this.getSubscribeButton();
     }
 
     getSubscribeButton()
     {
-        return <div onClick={this.handleSubscribeClick} >
+        return <div className={styles.subscriptionButtonContainer} onClick={this.handleSubscribeClick} >
         <svg className={styles.subscribeButton} >
             <use xlinkHref={subscribeButton}></use>
         </svg>
         </div>
+       
+    }
+
+    getSubscribeSubredditButton()
+    {
+        return  <div className={styles.subscriptionButtonContainer} onClick={ () => this.handleAddSubredditClick(this.props.subreddit)} style={ { position:"relative" } } >
+                    <svg className={styles.unsubscribeButton} style={ { position:"absolute" } } >
+                        <use xlinkHref={subscribeSubredditButton}></use>
+                     </svg>
+                     <svg className={styles.subscribeButton} style={ { position:"absolute" } } >
+                        <use xlinkHref={subscribeButton}></use>
+                     </svg>
+                </div>
        
     }
 
@@ -227,7 +266,7 @@ export default class AuthorCell extends React.Component<Props, State>
 
     getUnsubscribeButton()
     {
-        return <div onClick={this.handleUnsubscribeClick} >
+        return <div className={styles.subscriptionButtonContainer} onClick={this.handleUnsubscribeClick} >
                     <svg className={styles.unsubscribeButton} >
                         <use xlinkHref={subscribeButton}></use>
                     </svg>
@@ -254,6 +293,8 @@ export default class AuthorCell extends React.Component<Props, State>
 
         this.props.subscribe(this.props.author.author.name, subreddits); 
     }
+
+
 
     handleUnsubscribeClick()
     {

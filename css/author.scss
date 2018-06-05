@@ -154,7 +154,7 @@
 
 .authorHeader {
     display: flex;
-    margin-bottom:10px;
+    margin-bottom:15px;
     font-weight: bold;
 }
 
@@ -188,6 +188,12 @@
     stroke: $background-text-color;
     fill: transparent;
     stroke-width: 11;
+}
+
+.subscriptionButtonContainer
+{
+    height: 40px;
+    width: 40px;
 }
 
 .unsubscribeButton
