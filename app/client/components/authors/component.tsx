@@ -28,12 +28,14 @@ export default class AuthorsComponent extends React.Component<Props, {} >
     {
         let renders = new Array(this.props.authors.length);
 
-        let lastVisitAdded : boolean = false;
+        //list visited only works when sorting by new, so NEW or SUBSCRIPTIONS
+        let lastVisitAdded : boolean = !( this.props.filter == AuthorFilter.NEW || this.props.filter == AuthorFilter.SUBSCRIPTIONS) ;
         if (this.props.authors.length > 0 && this.props.authors[0].author.last_post_date < this.props.lastVisit )
         {
             //Skip if it would end up at the top of the screen
             lastVisitAdded = true;
         }
+
 
         this.props.authors.forEach( (author, index) =>
         {
