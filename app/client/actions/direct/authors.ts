@@ -46,7 +46,7 @@ export async function getAuthors( dispatch, getState )
     else
     {
         //Subreddit
-        let res = await api.reddit.posts.getAuthors( state.authorState.subreddit, state.authorState.filter, state.authorState.after, config.authorDisplayCount, redditAuth );
+        let res = await api.reddit.posts.getAuthors( true, state.authorState.subreddit, state.authorState.filter, state.authorState.after, config.authorDisplayCount, redditAuth );
         authors = res.authors;
         after = res.after;
     }
@@ -151,15 +151,14 @@ export async function poulateInitialPosts(authors : models.data.AuthorEntry[], c
             let prom = new Promise<void>( (resolve, reject) => 
             {
                 api.reddit.posts.getPosts(author.author.name, author.after, redditAuth, count, ...subreddits).then( ( {posts, after } ) => 
-                {
-                    posts.forEach( ( post : models.reddit.Post ) => 
-                    {
-                        authority.post.updateAuthority(post);
-                    });
-    
+                {    
                     author.after = after;;
                     author.end = after == null;
-                    author.author.posts = posts;
+
+                    //Don't overwrite if we don't find any posts.
+                    //May be seeded with normal listing results.
+                    if (posts.length > 0)
+                        author.author.posts = posts;
 
                     authorCompletedCount++;
                     updateLoadingProgress(authorCount, authorCompletedCount, dispatch);

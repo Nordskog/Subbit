@@ -9,7 +9,7 @@ import * as api from '~/common/api';
 
 export const POST_FULLNAME_PREFIX = "t3_";
 
-export async function getAuthors(subreddit? : string, filter? : models.AuthorFilter, after? : string, count? : number, auth? : models.auth.RedditAuth, ) : Promise< { authors : models.data.Author[], after : string } >
+export async function getAuthors( seedWithPost : boolean, subreddit? : string, filter? : models.AuthorFilter, after? : string, count? : number, auth? : models.auth.RedditAuth, ) : Promise< { authors : models.data.Author[], after : string } >
 {
     let result : reddit.ListingResponse = <reddit.ListingResponse> await api.reddit.getRequest(
         apiTools.getFilterUrl(subreddit, filter, auth != null), 
@@ -28,14 +28,23 @@ export async function getAuthors(subreddit? : string, filter? : models.AuthorFil
 
     let authors : models.data.Author[] = result.data.children.map( ( post : reddit.Thing<reddit.Post> ) => 
     {
-        return {
+        let entry = {
             id: -1, //Not provided here
             name: post.data.author,
             last_post_date: post.data.created_utc,   //As far as this listing is concerned
             posts : [],
             post_count : 0,  //hmmm
             subscriptions: []
+        };
+
+        //When a user makes their first post to a subreddit, it will not be present in some of reddit's apis
+        //for some time. Seems to only occur when there is only a single post.
+        //Workaround is to include it here, and just erase later if we get a proper post list.
+        if (seedWithPost)
+        {
+            entry.posts.push(post.data);
         }
+        return entry;
     });
 
     //Remove duplicates, prioritizing lower-index authors

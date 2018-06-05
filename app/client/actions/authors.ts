@@ -138,12 +138,7 @@ export function fetchMorePosts( authors : models.data.AuthorEntry[], count : num
             let prom = new Promise<void>( (resolve, reject) => 
             {
                 api.reddit.posts.getPosts(author.author.name, author.after, redditAuth, count, ...subreddits).then( ( {posts, after } ) => 
-                {
-                    posts.forEach( ( post : models.reddit.Post ) => 
-                    {
-                        authority.post.updateAuthority(post);
-                    } );
-    
+                {    
                     dispatch({
                         type: actions.types.authors.POSTS_ADDED,
                         payload: { 
