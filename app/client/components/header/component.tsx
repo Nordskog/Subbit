@@ -38,21 +38,22 @@ export default class HeaderComponent extends React.Component<Props, null>
     render()
     {
         return <div className={styles.header}>
-                       <transitions.TransitionGroup component="div" className={styles.headerLeft}>
-                            <a className={styles.headerBrand} href="#"></a>
-                            <components.animations.AutoWidth>
-                                <components.tools.SubredditDropdown/>
-                            </components.animations.AutoWidth>
-                            { this.getLink( AuthorFilter.BEST, "best") }
-                            { this.getLink( AuthorFilter.HOT, "hot") }
-                            { this.getLink( AuthorFilter.NEW, "new") }
-                            { this.getLink( AuthorFilter.TOP, "top") }
-                            { this.getLink( AuthorFilter.RISING, "rising") }
-                            { this.getLink( AuthorFilter.CONTROVERSIAL, "controversial") }
-                            <div className={styles.spacer} />
-                            { this.getLink( AuthorFilter.SUBSCRIPTIONS, "subscribed") }
-                             { /*this.getManagerLink()*/ }
-                        </transitions.TransitionGroup>
+                        
+                    <transitions.TransitionGroup component="div" className={styles.headerLeft}>
+                        <a className={styles.headerBrand} href="#"></a>
+                        <components.animations.AutoWidth>
+                            <components.tools.SubredditDropdown/>
+                        </components.animations.AutoWidth>
+                        <div className={styles.spacer} />
+                        { this.getLink( AuthorFilter.BEST, "best") }
+                        { this.getLink( AuthorFilter.HOT, "hot") }
+                        { this.getLink( AuthorFilter.NEW, "new") }
+                        { this.getLink( AuthorFilter.TOP, "top") }
+                        { this.getLink( AuthorFilter.RISING, "rising") }
+                        { this.getLink( AuthorFilter.CONTROVERSIAL, "controversial") }
+                        <div className={styles.spacer} />
+                        { this.getLink( AuthorFilter.SUBSCRIPTIONS, "subscribed") }
+                    </transitions.TransitionGroup>
                     <div className={styles.headerRight}>
                     {this.getSettingsPanel()}
                      {this.getPanel()}
