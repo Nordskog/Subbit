@@ -36,12 +36,13 @@ export interface SearchItem
     items: ListItem[];
     search( name : string) : SearchResult[] | Promise<SearchResult[]>;
     searchPlaceholder : string;
-    onClick( item : ListItem ) : void;
+    onClick( item : ListItem ) : boolean | undefined;
     onAltClick?( item : ListItem ) : void;
     prefix: string;
     highlightMap?: Set<string>;
     delaySearch?: boolean
     emptyMessage?: string;
+
 }
 
 interface Props
@@ -50,7 +51,7 @@ interface Props
     displayHighlight: boolean;
     toggleHighlight: boolean;
     addToDisplayList: boolean;
-    onClick?( item : ListItem ) : void;
+    onClick?( item : ListItem ) : boolean | undefined
     onAltClick?( item : ListItem ) : void;
 }
 
@@ -373,10 +374,25 @@ export default class RedditsCell extends React.Component<Props, State>
 
         if (this.props.onClick != null)
         {
-            this.props.onClick( listItem );
+            let callbackReturn : boolean = this.props.onClick( listItem );
+
+            if (callbackReturn != null && !callbackReturn )
+            {
+                //Callback returned false, do nothing
+                return;
+            }
         }
+
         //This causes a prop update, which we ignore
-        searchItem.onClick(  listItem );
+        if (searchItem.onClick != null)
+        {
+            let callbackReturn : boolean = searchItem.onClick(  listItem );
+            if (callbackReturn != null && !callbackReturn )
+            {
+                //Callback returned false, do nothing
+                return;
+            }    
+        }
 
         //un-highlight in display list
         if (listItem.highlighted)

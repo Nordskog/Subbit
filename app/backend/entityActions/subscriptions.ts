@@ -1,5 +1,6 @@
 import * as Entities from '~/backend/entity'
 import * as Wetland from 'wetland'
+import { EndpointException } from '~/common/exceptions';
 
 //None of these methods will flush the manager
 
@@ -70,7 +71,13 @@ export async function getNewSubscription( manager : Wetland.Scope,  user : Entit
 
 export async function addSubredditToSubscription( manager : Wetland.Scope, sub : Entities.Subscription, ...subreddit_names : string[] )
 {
-    
+    //Reddit limits the search string to something like 1600 characters.
+    //The actual limit assuming max subreddit name length is closer to 23? 25? I think,
+    //but let's play it safe and limit to 20.
+    if (sub.subreddits.length >= 20)
+    {
+        throw new EndpointException(400, "Reached max number of subscribed subreddits for author")
+    }
 
     //Convert to lowercase, remove duplicates
     let nameSet : Set<String> = new Set<string>();

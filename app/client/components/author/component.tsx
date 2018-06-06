@@ -22,6 +22,8 @@ import * as transitions from 'react-transition-group'
 
 import { NavLink} from 'redux-first-router-link'
 import { urls } from '~/common';
+import * as  Toast from '~/client/toast';
+import SubscriptionSubreddit from '~/common/models/data/SubscriptionSubreddit';
 
 interface Props
 {
@@ -175,6 +177,22 @@ export default class AuthorCell extends React.Component<Props, State>
 
         </div>
     }
+
+    getSubscribedCount()
+    {
+        let subCount : number = 0;
+        if (this.props.author.subscription != null && this.props.author.subscription.subscribed)
+        {
+            this.props.author.subscription.subreddits.forEach( (sub :  SubscriptionSubreddit ) => 
+            {
+                if (sub.subscribed)
+                    subCount++;
+            } );
+        }
+
+        return subCount;
+    }
+
     getSubscribedSubreddits()
     {
         if ( this.isSubscribed() && this.state.subredditsExpanded)
@@ -201,6 +219,12 @@ export default class AuthorCell extends React.Component<Props, State>
                         }
                         else
                         {
+                            if ( this.getSubscribedCount() >= 20 )
+                            {
+                                Toast.toast( Toast.ToastType.ERROR, 10000, "Author subreddit limit reached" );
+                                return false;
+                            }
+
                             this.props.addSubscriptionSubreddit(this.props.author.subscription.id, item.name);
                         }
                     }

@@ -105,7 +105,7 @@ export default class SubredditDropdown extends React.Component<Props, State>
             search: async ( name : string ) => { return ( await this.props.searchSubreddit(name) ).map( name => { return { name: name, object: name } }  ) },
             prefix: "r/",
             searchPlaceholder: "Subreddit",
-            onClick: ( item : components.tools.SearchList.ListItem) => { return this.props.changeSubreddit(item.object) }
+            onClick: ( item : components.tools.SearchList.ListItem) => { this.props.changeSubreddit(item.object); return true; }
         }
 
 
@@ -124,7 +124,7 @@ export default class SubredditDropdown extends React.Component<Props, State>
             prefix: "",
             searchPlaceholder: "Author",
             delaySearch : false,
-            onClick: ( item : components.tools.SearchList.ListItem) => { this.props.viewAuthor(item.name) },
+            onClick: ( item : components.tools.SearchList.ListItem) => { this.props.viewAuthor(item.name); return true },
             onAltClick: ( item : components.tools.SearchList.ListItem) => { this.props.viewAuthor(item.name, this.props.subreddit) }
         }
 

@@ -50,6 +50,7 @@ export default class Subscription extends Wetland.Entity
             id: sub.id,
             user : sub.user.username,
             author: sub.author.name,
+            subscribed: true,   //If it exists on the server then we're subscribed
             subreddits : sub.subreddits.map( ( subred : Subreddit ) => 
             {
                 return {
