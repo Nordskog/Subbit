@@ -6,6 +6,7 @@ import * as urls from '~/common/urls'
 import * as styles from 'css/post.scss'
 
 import vote from 'assets/images/vote.svg'
+import { PostDisplay } from '~/common/models';
 
 const danger_flairs : Set<string> = new Set<string>();
 danger_flairs.add("nsfw");
@@ -14,7 +15,7 @@ danger_flairs.add("spoiler");
 
 const defaultThumbnails : Map<string, string> = new Map<string, string>();
 defaultThumbnails.set("self","https://www.reddit.com/static/self_default2.png");
-defaultThumbnails.set("default","https://www.reddit.com/static/noimage.png");
+defaultThumbnails.set("default","https://www.reddit.com/static/self_default2.png");
 defaultThumbnails.set("nsfw","https://www.reddit.com/static/nsfw2.png");
 defaultThumbnails.set("spoiler","https://www.reddit.com/static/self_default2.png");
 const defaultThumbnail = "https://www.reddit.com/static/self_default2.png"
@@ -34,11 +35,27 @@ export default class PostCell extends React.Component<Props, null>
     {
         switch( this.props.postDisplay )
         {
+            case models.PostDisplay.MINIMAL:
+                return this.getMinimalPost();
             case models.PostDisplay.COMPACT:
                 return this.getCompactPost();
-            case models.PostDisplay.NORMAL:
+            case models.PostDisplay.FULL:
                 return this.getNormalPost();
         }
+    }
+
+    getMinimalPost()
+    {
+        return <div className={this.props.isTopPost ? `${styles.postContainer} ${styles.topPost}` : styles.postContainer}>
+        {this.getUpvoted(this.props.post.likes)}
+        {this.getScoreCol()}
+        {this.getLink()}
+        <div className={styles.postedDate}>
+            {this.getDateCol()}
+        </div>
+        {this.getSubreddit()}
+        {this.getComments()}
+        </div>
     }
 
     getCompactPost()
@@ -46,6 +63,7 @@ export default class PostCell extends React.Component<Props, null>
         return <div className={this.props.isTopPost ? `${styles.postContainer} ${styles.topPost}` : styles.postContainer}>
             {this.getUpvoted(this.props.post.likes)}
             {this.getScoreCol()}
+            {this.getImage()}
             {this.getLink()}
             <div className={styles.postedDate}>
                 {this.getDateCol()}
@@ -128,6 +146,7 @@ export default class PostCell extends React.Component<Props, null>
         }
     }
 
+
     getImage()
     {
         let url : string = this.props.post.thumbnail;
@@ -142,7 +161,7 @@ export default class PostCell extends React.Component<Props, null>
 
 
         return  <a href={this.props.post.url}>
-                    <img className={styles.imageContainer} src={url}/>
+                    <img className={ this.props.postDisplay == PostDisplay.FULL ? styles.imageContainer : styles.tinyImageContainer} src={url}/>
                 </a>  
     }
 

@@ -17,8 +17,9 @@ export enum AuthorFilter
 
 export enum PostDisplay
 {
+    MINIMAL = 'minimal',
     COMPACT = 'compact',
-    NORMAL = 'normal'
+    FULL = 'full'
 }
 
 export enum LoadingStatus

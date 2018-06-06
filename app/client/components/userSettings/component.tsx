@@ -4,6 +4,7 @@ import * as components from '~/client/components'
 import { ToggleItem } from '~/client/components/tools';
 
 import * as styles from 'css/userSettings.scss'
+import { PostDisplay } from '~/common/models';
 
 interface Props
 {
@@ -20,24 +21,45 @@ interface State
 
 export default class UserSettingsComponent extends React.Component<Props, State>
 {
-    state = { postDisplayItems: [], postDisplaySelected: null};
+   
+
+    constructor( props : Props)
+    {
+        super(props);
+        this.state = { postDisplayItems: [], postDisplaySelected: null};
+    }
 
     static getDerivedStateFromProps( newProps : Props)
     {
         let selected : ToggleItem = null;
         let items : ToggleItem[] =  [
                                         {
+                                            display: "Minimal",
+                                            object: models.PostDisplay.MINIMAL
+                                        },
+                                        {
                                             display: "Compact",
                                             object: models.PostDisplay.COMPACT
                                         },
                                         {
-                                            display: "Normal",
-                                            object: models.PostDisplay.NORMAL
+                                            display: "Full",
+                                            object: models.PostDisplay.FULL
                                         }
                                     ];
 
         // ...
-        selected = newProps.postDisplay == models.PostDisplay.COMPACT ? items[0] : items[1];
+        switch(newProps.postDisplay)
+        {
+            case PostDisplay.MINIMAL: 
+                selected = items[0];
+                break;
+            case PostDisplay.COMPACT: 
+                selected = items[1];
+                break;
+            case PostDisplay.FULL: 
+                selected = items[2];
+                break;
+        }
 
         return { postDisplayItems: items, postDisplaySelected: selected };
     }

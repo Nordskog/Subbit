@@ -21,7 +21,7 @@ export default class UserSettings extends Wetland.Entity
         mapping.field('post_display_mode',
         {
             type: 'enumeration',
-            enumeration: ['compact','normal'],
+            enumeration: ['minimal','compact', 'full'],
             nullable: false,
             defaultTo: 'compact',
         });
