@@ -61,7 +61,7 @@ export default class Auth extends Wetland.Entity
                 nullable: false
             });
 
-        mapping.oneToOne('user', { targetEntity: 'User', inversedBy: 'auth' }).joinColumn( 'user', {onDelete: 'cascade'} );;
+        mapping.oneToOne('user', { targetEntity: 'User', inversedBy: 'auth' }).joinColumn( 'user', {onDelete: 'cascade'} );
     }
 
     beforeUpdate(updatedValues, EntityManager : Wetland.EntityManager)

@@ -12,3 +12,4 @@ buildClient/
 .bin/
 obj/
 css/*scss.d.ts
+!/migrations/*

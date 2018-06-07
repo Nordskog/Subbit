@@ -1,4 +1,4 @@
-﻿import { Wetland, EntityCtor, Entity, EntityRepository } from 'wetland';
+﻿import { Wetland, EntityCtor, Entity, EntityRepository, Migrator } from 'wetland';
 import { Request, Response } from 'express';
 import * as Knex from 'knex';
 
@@ -7,9 +7,28 @@ import * as Entities from '~/backend/entity';
 export let wetland : Wetland;
 import config from './wetland';
 
-export async function initDatabase()
+export function initDatabase()
 {
-	wetland = new Wetland(config);
+    wetland = new Wetland(config);
+    
+    //Run any missing migrations
+     let migrator: Migrator = wetland.getMigrator();
+     migrator.latest(Migrator.ACTION_RUN).then( ( migrationsRun : string) => 
+     {
+        if (migrationsRun == null)
+        {
+            console.log("No migrations to run");
+        }
+        else
+        {
+            console.log(`Ran ${parseInt(migrationsRun)} migrations`);
+        }
+     }).catch( err => 
+        {
+            console.log("Failed to run migrations");
+            console.log(err);
+        });
+
 }
 
 export function rawQuery() : Knex

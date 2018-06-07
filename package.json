@@ -37,7 +37,7 @@
     "stats-webpack-plugin": "^0.6.1",
     "svgo": "^1.0.5",
     "ts-node": "^6.1.0",
-    "wetland": "^3.0.0"
+    "wetland": "^3.1.0"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.91",

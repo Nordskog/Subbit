@@ -37,14 +37,14 @@ export default class User extends Wetland.Entity
         {
             type: 'timestamp',
             nullable: false,
-            defaultTo: 'now()',
+            defaultTo: mapping.now()
         });
+
+        mapping.uniqueConstraint('username');
 
         mapping.oneToMany('subscriptions', { targetEntity: 'Subscription', mappedBy: 'user' });
         mapping.oneToOne('auth', { targetEntity: 'Auth', mappedBy: 'user' });
         mapping.oneToOne('settings', { targetEntity: 'UserSettings', mappedBy: 'user' });
-
-        mapping.uniqueConstraint('username');
     }
 
     beforeUpdate(updatedValues, EntityManager : Wetland.EntityManager)

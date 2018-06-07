@@ -35,10 +35,9 @@ export default class Subreddit extends Wetland.Entity
         {
             type: 'string',
             nullable: false,
-            defaultTo:'null'
         });
 
-        mapping.uniqueConstraint('name');
+        mapping.uniqueConstraint('name_lower');
     
         mapping.manyToMany('subscriptions', { targetEntity: 'Subscription', mappedBy: 'subreddits' });
     }

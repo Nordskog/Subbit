@@ -26,7 +26,7 @@ export default class UserSettings extends Wetland.Entity
             defaultTo: 'compact',
         });
 
-        mapping.oneToOne('user', { targetEntity: 'User', inversedBy: 'settings' }).joinColumn( 'user', {onDelete: 'cascade'} );;
+        mapping.oneToOne('user', { targetEntity: 'User', inversedBy: 'settings' }).joinColumn( 'user', {onDelete: 'cascade'} );
     }
 
     static formatModel( us : UserSettings )

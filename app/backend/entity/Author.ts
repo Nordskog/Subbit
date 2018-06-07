@@ -38,14 +38,14 @@ export default class Author extends Wetland.Entity
                 type: 'string',
                 nullable: false
             });
-        mapping.uniqueConstraint('name');
 
         mapping.field('name_lower',
         {
             type: 'string',
             nullable: false,
-            defaultTo:'null'
         });
+
+        mapping.uniqueConstraint('name_lower');
 
         mapping.oneToMany('subscriptions', { targetEntity: 'Subscription', mappedBy: 'author' });
     }
