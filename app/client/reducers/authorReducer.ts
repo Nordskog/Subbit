@@ -1,5 +1,5 @@
 ﻿
-import * as routes from '~/client/routes';
+import {Route} from '~/client/routes';
 
 import { AuthorFilter } from '~/common/models';
 import * as models from '~/common/models';
@@ -157,7 +157,7 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
         //   ROUTE  //
         //////////////
 
-        case 'AUTHORIZE':
+        case Route.AUTHENTICATE:
         {
             //subs for now, auth reducer does the heavy lifting
             return {
@@ -169,7 +169,7 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
             }
         }
 
-        case 'HOME':
+        case Route.HOME:
         {
             return {
                 ...state,
@@ -180,35 +180,41 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
             }
         }
 
-        case 'FILTER':
+        case Route.FILTER:
         {
+            let payload : Route.FILTER = action.payload;
+
             return {
                 ...state,
-                filter: action.payload.filter,
+                filter: payload.filter,
                 subreddit: null,
                 author: null,
                 after: null
             }
         }
         
-        case 'SUBREDDIT':
-        {                
+        case Route.SUBREDDIT:
+        {           
+            let payload : Route.SUBREDDIT = action.payload;
+            
             return {
                 ...state,
-                filter: action.payload.filter != null ? action.payload.filter : AuthorFilter.HOT,
+                filter: payload.filter != null ? payload.filter : AuthorFilter.HOT,
                 subreddit: action.payload.subreddit,
                 author: null,
                 after: null
             }
         }
 
-        case 'AUTHOR':
+        case Route.AUTHOR:
         {
+            let payload : Route.AUTHOR = action.payload;
+
             return {
                 ...state,
                 filter: null,
-                subreddit: action.payload.subreddit,
-                author: action.payload.author,
+                subreddit: payload.subreddit,
+                author: payload.author,
                 after: null
             }
         }

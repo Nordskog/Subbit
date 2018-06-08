@@ -1,5 +1,5 @@
 import * as ReduxTypes from './types';
-import { Exception } from "~/common/exceptions";
+import { Exception, CancelledException } from "~/common/exceptions";
 import { toast, ToastType } from "~/client/toast";
 
 export function WrapWithHandler( action : (dispatch : ReduxTypes.Dispatch, getState : ReduxTypes.GetState ) => (any | Promise<any>) )
@@ -19,8 +19,12 @@ export function WrapWithHandler( action : (dispatch : ReduxTypes.Dispatch, getSt
 
 export function handleError( err : Error ) : boolean
 {
+    if (err instanceof CancelledException)
+    {
+        //We always do this on purpose
+    }
     //Display these
-    if ( err instanceof Exception )
+    else if ( err instanceof Exception )
     {
         toast( ToastType.ERROR, 10000, err.message );
     }
