@@ -31,7 +31,7 @@ export function logoutUserAction()
         //No sub means home (frontpage)
         dispatch(
             { 
-                type: 'HOME', payload: { } } 
+                type: actions.types.Route.HOME, payload: { } } 
             );
     }
 }

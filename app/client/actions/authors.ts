@@ -21,7 +21,7 @@ export function changeSubreddit( subreddit : string)
         {
             //No sub means home (frontpage)
             dispatch(
-                { type: 'HOME', payload: { } } 
+                { type: actions.types.Route.HOME, payload: { } } 
                 );
         }
         else
@@ -40,7 +40,7 @@ export function changeSubreddit( subreddit : string)
             }
     
             dispatch(
-            { type: 'SUBREDDIT', payload: { subreddit: subreddit, filter: filter  } } 
+            { type: actions.types.Route.SUBREDDIT, payload: { subreddit: subreddit, filter: filter  } as actions.types.Route.SUBREDDIT } 
             );
         }
 
@@ -56,7 +56,7 @@ export function viewAuthor( author: string, subreddit? : string)
        let state: State = getState();
     
         dispatch(
-        { type: 'AUTHOR', payload: { author: author, subreddit: subreddit  } } 
+        { type: actions.types.Route.AUTHOR, payload: { author: author, subreddit: subreddit  } as actions.types.Route.AUTHOR } 
         );
     }
 }

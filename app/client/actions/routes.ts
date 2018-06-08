@@ -6,6 +6,7 @@ import * as models from '~/common/models'
 import { State } from '~/client/store';
 import { WrapWithHandler } from '~/client/actions/tools/error';
 import { AuthorizationException } from '~/common/exceptions';
+import { AuthorFilter } from '~/common/models';
 
 let firstLoad : boolean = true;
 
@@ -38,7 +39,7 @@ export function authorizeRoute()
             await actions.authentication.authenticatedWithRedditCode(code,state)(dispatch, getState);
             dispatch(
                 { 
-                    type: 'HOME', payload: { } } 
+                    type: actions.types.Route.FILTER, payload: { filter: AuthorFilter.SUBSCRIPTIONS } as actions.types.Route.FILTER } 
                 );
         }
 

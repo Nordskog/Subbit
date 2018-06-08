@@ -1,6 +1,6 @@
 ﻿import * as models from '~/common/models'
 import { userInfo } from 'os';
-import { LoadingStatus } from '~/common/models';
+import { LoadingStatus, AuthorFilter } from '~/common/models';
 
 export namespace authors
 {
@@ -116,4 +116,40 @@ export namespace user
     export type POST_DISPLAY_MODE_CHANGED = models.PostDisplay;
     export type LAST_VISIT_UPDATED = number;
     export type USER_SETTINGS_FETCHED = models.data.UserSettings;
+}
+
+export namespace Route
+{
+    export const HOME           : string = "HOME";
+    export const FILTER         : string = "FILTER";
+    export const SUBREDDIT      : string = "SUBREDDIT";
+    export const AUTHOR         : string = "AUTHOR";
+    export const AUTHENTICATE   : string = "AUTHENTICATE";
+
+    export interface HOME 
+    {
+
+    };
+
+    export interface FILTER
+    {
+        filter : AuthorFilter;
+    }
+
+    export interface SUBREDDIT
+    {
+        subreddit: string;
+        filter?: AuthorFilter;
+    }
+
+    export interface AUTHOR
+    {
+        author: string;
+        subreddit?: string;
+    }
+
+    export interface AUTHENTICATE 
+    {
+        //Uses params
+    };
 }

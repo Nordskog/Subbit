@@ -15,8 +15,9 @@ import * as styles from 'css/header.scss'
 import * as transitions from 'react-transition-group'
 import { spawn } from 'child_process';
 
-import * as toast from '~/client/toast'
+import * as actions from '~/client/actions'
 
+import * as toast from '~/client/toast'
 interface Props
 {
     authState: models.auth.AuthState;
@@ -76,14 +77,6 @@ export default class HeaderComponent extends React.Component<Props, null>
                 </components.transitions.FadeHorizontalResize>   
     }
 
-    getManagerLink()
-    {
-        return <NavLink    className={styles.sortButton}
-                    to={ { type: 'MANAGER' } }>
-                    manager
-                </NavLink>
-    }
-
     getButtonStyleIfFilterMatch(filter : string)
     {
         if (filter == this.props.filter)
@@ -100,11 +93,11 @@ export default class HeaderComponent extends React.Component<Props, null>
     {
         if (this.props.subreddit == null || filter == AuthorFilter.SUBSCRIPTIONS)
         {
-            return { type: 'FILTER', payload: { filter: filter } };
+            return { type: actions.types.Route.FILTER, payload: { filter: filter } as actions.types.Route.FILTER };
         }
         else
         {
-           return { type: 'SUBREDDIT', payload: { subreddit: this.props.subreddit, filter } };
+           return { type: actions.types.Route.SUBREDDIT, payload: { subreddit: this.props.subreddit, filter } as actions.types.Route.SUBREDDIT };
         }
     }
 

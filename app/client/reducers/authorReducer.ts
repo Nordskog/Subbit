@@ -1,7 +1,4 @@
-﻿
-import {Route} from '~/client/routes';
-
-import { AuthorFilter } from '~/common/models';
+﻿import { AuthorFilter } from '~/common/models';
 import * as models from '~/common/models';
 import * as actions from '~/client/actions';
 
@@ -157,7 +154,7 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
         //   ROUTE  //
         //////////////
 
-        case Route.AUTHENTICATE:
+        case actions.types.Route.AUTHENTICATE:
         {
             //subs for now, auth reducer does the heavy lifting
             return {
@@ -169,7 +166,7 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
             }
         }
 
-        case Route.HOME:
+        case actions.types.Route.HOME:
         {
             return {
                 ...state,
@@ -180,9 +177,9 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
             }
         }
 
-        case Route.FILTER:
+        case actions.types.Route.FILTER:
         {
-            let payload : Route.FILTER = action.payload;
+            let payload : actions.types.Route.FILTER = action.payload;
 
             return {
                 ...state,
@@ -193,9 +190,9 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
             }
         }
         
-        case Route.SUBREDDIT:
+        case actions.types.Route.SUBREDDIT:
         {           
-            let payload : Route.SUBREDDIT = action.payload;
+            let payload : actions.types.Route.SUBREDDIT = action.payload;
             
             return {
                 ...state,
@@ -206,9 +203,9 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
             }
         }
 
-        case Route.AUTHOR:
+        case actions.types.Route.AUTHOR:
         {
-            let payload : Route.AUTHOR = action.payload;
+            let payload : actions.types.Route.AUTHOR = action.payload;
 
             return {
                 ...state,
