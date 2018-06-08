@@ -1,27 +1,17 @@
 ﻿
-import * as config from '~/config';
-
-/////////////
-// Server
-/////////////
-const RFY_ADDRESS = '127.0.0.1:8080';
-export const RFY_URL = 'http://'+RFY_ADDRESS;
-
-const RFY_WEBSOCKET = 'ws://'+RFY_ADDRESS+'/api/socket';
-
-export const RFY_WEBSOCKET_MANAGER = RFY_WEBSOCKET+'/manager';
+import config from 'root/config';
 
 /////////////
 // Client
 /////////////
 
-export const RFY_AUTHORIZE_REDIRECT =  RFY_URL+'/authenticate'         //User is redirected here by reddit with access code
+export const RFY_AUTHORIZE_REDIRECT =  config.server.server_address+'/authenticate'         //User is redirected here by reddit with access code
 
 /////////////
 // Backend
 /////////////
 
-export const RFY_API_URL = RFY_URL +'/api';
+export const RFY_API_URL = config.server.server_address +'/api';
 export const RFY_AUTHORIZE_LOCAL =  RFY_API_URL+'/authorize_local'      //Handles response from reddit after user is redirected back to client
 export const RFY_AUTHORIZE_REMOTE =  RFY_API_URL+'/authorize_remote'    //Forwards to reddit
 export const RFY_AUTHORIZE_REFRESH =  RFY_API_URL+'/authorize_refresh'  //Get new access token from backend

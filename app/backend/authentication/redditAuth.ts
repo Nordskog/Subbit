@@ -1,4 +1,4 @@
-﻿import * as config from './config'
+﻿import serverConfig from 'root/server_config'
 import * as base64 from 'base-64'
 
 import * as Wetland from 'wetland';
@@ -52,12 +52,12 @@ export async function getAppClientAccessToken()
 
 export function getAppId() : string
 {
-    return config.redditId;
+    return serverConfig.reddit.redditId;
 }
 
 export function getAppSecret() : string
 {
-    return config.redditSecret;
+    return serverConfig.reddit.redditSecret;
 }
 
 export function getAuthState() : string
@@ -98,7 +98,7 @@ export function confirmAuthState(identifier: string) : boolean
 
 export function getHttpBasicAuthHeader()
 {
-    return { "Authorization" : 'Basic '+ base64.encode(config.redditId + ":" + config.redditSecret), "Content-Type" : "application/x-www-form-urlencoded;charset=UTF-8" };
+    return { "Authorization" : 'Basic '+ base64.encode(serverConfig.reddit.redditId + ":" + serverConfig.reddit.redditSecret), "Content-Type" : "application/x-www-form-urlencoded;charset=UTF-8" };
 }
 
 export function generateRedditLoginUrl()

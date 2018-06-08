@@ -1,7 +1,11 @@
 ﻿'use strict';
 
-require('module-alias').addAlias("~", __dirname + "/app");
-require('module-alias').addAlias("css", __dirname + "/css");
+//Path configs that mirror those found in tsconfig
+//because apparently ts-node ignores those
+require('module-alias').addAlias("~", __dirname + "/");
+require('module-alias').addAlias("css", __dirname + "/../css");
+require('module-alias').addAlias("root", __dirname + "/../");
+
 
 let debug = require('debug');
 let path = require('path');
@@ -11,7 +15,6 @@ let path = require('path');
 /////////////////
 
 import * as RFY from '~/backend/rfy';
-import * as Entities from '~/backend/entity'
 RFY.initDatabase();
 
 ////////////////
@@ -84,20 +87,16 @@ else
 // http to handle express and websockets on same port
 //////////////////////////////////////////////////////////
 
-import * as Http from 'http';
-import * as Net from 'net';
-import { Entity } from 'wetland';
-
+/*
 const httpServer : Http.Server = Http.createServer();
 httpServer.on('request', app);
-
+*/
 /////////////////////////////////////////////////////////
 // Fire up server
 ////////////////////////////////////////////////////
 
-app.set('port', process.env.PORT || 8080);
-
-httpServer.listen(app.get('port'), function () {
-    debug('Server listening on port ' + httpServer.address().port);
+import serverConfig from 'root/server_config'
+app.listen(serverConfig.server.port, function () {
+    debug('Server listening on port ' + app.get('port'));
 });
 

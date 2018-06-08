@@ -1,6 +1,6 @@
 import * as models from '~/common/models'
 import * as urls from '~/common/urls'
-import * as config from '~/config'
+import * as config from 'root/config'
 
 export function getFilterUrl(subreddit : string, filter : models.AuthorFilter, oauth : boolean) : string
 {

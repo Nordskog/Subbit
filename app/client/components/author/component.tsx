@@ -13,7 +13,7 @@ import * as siteStyles from 'css/site.scss'
 
 import * as components from '~/client/components'
 
-import * as config from '~/config'
+import config from 'root/config'
 import expand_caret from 'assets/images/expand_caret.svg'
 import collapse_caret from 'assets/images/collapse_caret.svg'
 import { Query } from 'wetland/dist/src/Query';
@@ -96,7 +96,7 @@ export default class AuthorCell extends React.Component<Props, State>
                 posts={this.props.author.author.posts}
                 postDisplay={this.props.postDisplay}
                 canLoadMore={!this.props.author.end}
-                grabMorePosts={( () => this.props.fetchMorePosts(this.props.author, config.postFetchCount))}
+                grabMorePosts={( () => this.props.fetchMorePosts(this.props.author, config.client.postFetchCount))}
                 scrollToAuthorTop={() => this.scrollToAuthorTop()}
                 displaySubreddit={this.props.subreddit == null}
             />

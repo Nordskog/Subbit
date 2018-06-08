@@ -1,9 +1,9 @@
-﻿import * as config from './config'
+﻿
 import * as jwt from 'jsonwebtoken';
 
 import * as Wetland from 'wetland';
 
-
+import serverConfig from 'root/server_config'
 import * as RFY from '~/backend/rfy';
 import * as Entities from '~/backend/entity';
 import * as models from '~/common/models';
@@ -38,7 +38,7 @@ export async function decodeToken(access_token_raw)
     let decodedToken = null;
     try
     {
-        decodedToken = jwt.verify(access_token_raw, config.secret)
+        decodedToken = jwt.verify(access_token_raw, serverConfig.token.secret)
     }
     catch(err)
     {

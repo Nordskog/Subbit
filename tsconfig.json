@@ -13,8 +13,8 @@
 
       "~/*": [ "./app/*" ],
       "css/*": [ "./css/*" ],
-      "Root/*": [ "./src/*" ],
-      "assets/*": [ "./assets/*" ]
+      "assets/*": [ "./assets/*" ],
+      "root/*": [ "./*" ]
     },
 
     "declaration": false,

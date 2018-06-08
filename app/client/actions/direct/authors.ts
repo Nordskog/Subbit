@@ -3,7 +3,7 @@ import * as api from '~/common/api'
 import { State } from '~/client/store';
 import * as authority from '~/client/authority'
 import * as actions from '~/client/actions'
-import * as config from '~/config'
+import config from 'root/config'
 
 
 export async function getAuthors( dispatch, getState )
@@ -46,7 +46,7 @@ export async function getAuthors( dispatch, getState )
     else
     {
         //Subreddit
-        let res = await api.reddit.posts.getAuthors( true, state.authorState.subreddit, state.authorState.filter, state.authorState.after, config.authorDisplayCount, redditAuth );
+        let res = await api.reddit.posts.getAuthors( true, state.authorState.subreddit, state.authorState.filter, state.authorState.after, config.client.authorDisplayCount, redditAuth );
         authors = res.authors;
         after = res.after;
     }
@@ -69,7 +69,7 @@ export async function getAuthors( dispatch, getState )
     } ); 
 
     await actions.directActions.authors.populateAuthorSubscriptions(authorEntries, getState);   //Important to do this before getting posts
-    await actions.directActions.authors.poulateInitialPosts(authorEntries, config.postDisplayCount, dispatch, getState);
+    await actions.directActions.authors.poulateInitialPosts(authorEntries, config.client.postDisplayCount, dispatch, getState);
 
     if (state.authorState.filter == models.AuthorFilter.SUBSCRIPTIONS)
     {

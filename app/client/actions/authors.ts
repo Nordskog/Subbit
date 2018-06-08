@@ -6,7 +6,6 @@ import * as api from '~/common/api'
 import * as actions from '~/client/actions'
 import * as models from '~/common/models'
 import * as tools from '~/common/tools'
-import * as config from '~/config'
 
 import * as authority from '~/client/authority'
 import { CancellationError } from 'bluebird';

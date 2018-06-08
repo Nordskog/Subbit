@@ -9,7 +9,7 @@ import { isNullOrUndefined } from 'util';
 
 import vote from 'assets/images/vote.svg'
 
-import * as config from '~/config'
+import config from 'root/config'
 
 import * as cells from './cells'
 
@@ -72,7 +72,7 @@ export default class Posts extends React.Component<Props, State>
     render()
     {
         let renderedPosts = [];
-        let limit = this.state.postsExpanded ?  this.state.expandedPostCount + config.postDisplayCount : config.postDisplayCount;
+        let limit = this.state.postsExpanded ?  this.state.expandedPostCount + config.client.postDisplayCount : config.client.postDisplayCount;
         let remaining = this.props.posts.length - limit;
 
         for (let [index, post] of this.props.posts.entries())
@@ -111,7 +111,7 @@ export default class Posts extends React.Component<Props, State>
 
     canExpand() : boolean
     {
-        return (this.props.posts.length > (this.state.expandedPostCount + config.postDisplayCount) || this.props.canLoadMore);
+        return (this.props.posts.length > (this.state.expandedPostCount + config.client.postDisplayCount) || this.props.canLoadMore);
     }
 
     expandPosts()
@@ -126,7 +126,7 @@ export default class Posts extends React.Component<Props, State>
         //else
         {
 
-            let newCount : number = this.state.expandedPostCount + config.postExpandCount;
+            let newCount : number = this.state.expandedPostCount + config.client.postExpandCount;
 
             //Just expanding, grab more if necessary
             if (this.props.posts.length <= newCount && this.props.canLoadMore)

@@ -22,19 +22,19 @@ const config = {
 
     },
     entry: {
-        main: ['./app/client/index.tsx'],
+        main: ['./client/index.tsx'],
         appStyles: [
 
-            './css/toast.scss',
-            './css/userSettings.scss',
-            './css/toggle.scss',
-            './css/post.scss',
-            './css/header.scss',
-            './css/site.scss',
-            './css/author.scss',
-            './css/redditlist.scss',
-            './css/subredditList.scss',
-            './css/confirmationPopup.scss',
+            '../css/toast.scss',
+            '../css/userSettings.scss',
+            '../css/toggle.scss',
+            '../css/post.scss',
+            '../css/header.scss',
+            '../css/site.scss',
+            '../css/author.scss',
+            '../css/redditlist.scss',
+            '../css/subredditList.scss',
+            '../css/confirmationPopup.scss',
             'react-toastify/dist/ReactToastify.css'
         ],
         vendor: [
@@ -51,7 +51,7 @@ const config = {
     },
     output: {
         filename: '[name].js',
-        path: path.join(basePath, './buildClient'),
+        path: path.join(basePath, '../buildClient'),
         publicPath: '/static/'
     },
     module: {

@@ -1,0 +1,47 @@
+const config = 
+{
+    /////////////////////////////////
+    // Database connection
+    /////////////////////////////////
+    database:
+    {
+        client: 'postgres',
+        connection:
+        {
+            host: 'localhost',
+            user: 'user_here',
+            password: 'password_here',
+            database: 'database_name_here'
+        }
+    },
+
+    ///////////////////////////
+    // Reddit app information
+    ///////////////////////////
+
+    reddit:
+    {
+        redditId: "reddit_app_id_here",
+        redditSecret: "reddit_app_secret_here"
+    },
+
+    /////////////////////////////////////
+    // jwt token persistent login
+    /////////////////////////////////////
+
+    token:
+    {
+        secret: "this is a secret",
+        audience: "nodejs-jwt-auth",
+        issuer: "https://example.com",
+    },
+
+    server:
+    {
+        //Server address is configured in config.ts
+        port: 8080
+    }
+
+}
+
+export default config;

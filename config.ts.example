@@ -1,0 +1,32 @@
+﻿const config = 
+{
+    ////////////////////////////////////////////////
+    // General client settings
+    // See server_config.ts for token secret
+    ////////////////////////////////////////////////
+    client:
+    {
+        postDisplayCount: 6,      //Number of posts to display intially before expanding
+        postExpandCount: 10,     //Number of posts to expand by every time more posts button is hit
+        postFetchCount: 36,      //How many posts to fetch in each request
+        authorDisplayCount: 10,  //How many authors to display on one page (subscriptions always displays all)
+        name :  "RFY client (Internal testing)"
+    },
+
+
+    ///////////////////////////////////////////////
+    // Reddit API settings 
+    // See server_config.ts for id and secret
+    /////////////////////////////////////////////////
+    server:
+    {
+        //Port is configured in server_config.ts
+        //Whether they should be the same depends on your setup.
+        server_address: "http://127.0.0.1:8080"
+
+        // append "/authenticate" for reddit redirect url:
+        // http://127.0.0.1:8080/authenticate
+    }
+}
+
+export default config;

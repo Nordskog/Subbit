@@ -1,7 +1,7 @@
 ﻿import * as _ from 'lodash';
-import * as config from './config'
 import * as jwt from 'jsonwebtoken';
 
+import serverConfig from 'root/server_config'
 import * as models from '~/common/models'  
 import * as tools from '~/common/tools'  
 import * as RFY from '~/backend/rfy';
@@ -13,18 +13,17 @@ export enum scopes
     SETTINGS = 'SETTINGS'
 };
 
-export const secret = config.secret;
 
 export function createIdToken(user: Entities.User)
 {
-    return jwt.sign(_.pick(user, ['username'] ), config.secret, { expiresIn: 60 * 60 * 5 });
+    return jwt.sign(_.pick(user, ['username'] ), serverConfig.token.secret, { expiresIn: 60 * 60 * 5 });
 }
 
 export function createAccessToken(user)
 {
     let payload = {
-        iss: config.issuer,
-        aud: config.audience,
+        iss: serverConfig.token.issuer,
+        aud: serverConfig.token.audience,
         exp: Math.floor(Date.now() / 1000) + (60 * 99999),
         scope: [scopes.SUBSCRIPTIONS, scopes.SETTINGS].join(" "),
         sub: user.username,
@@ -32,7 +31,7 @@ export function createAccessToken(user)
         alg: 'HS256'
     };
 
-    return jwt.sign( payload, config.secret);
+    return jwt.sign( payload, serverConfig.token.secret);
 }
 
 // Generate Unique Identifier for the access token

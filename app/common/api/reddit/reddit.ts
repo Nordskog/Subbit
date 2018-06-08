@@ -9,7 +9,7 @@ import * as models from '~/common/models';
 
 import * as urls from '~/common/urls'
 
-import * as config from '~/config';
+import config from 'root/config';
 import { NetworkException } from '~/common/exceptions';
 
 import { RateLimitCallback } from '~/common/tools/FetchQueue';

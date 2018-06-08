@@ -15,7 +15,7 @@ const config = {
     entry: {
         ...prodConfig.entry,
         
-        main: ['./app/client/index.tsx', 'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=false&quiet=false&noInfo=false'],
+        main: ['./client/index.tsx', 'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=false&quiet=false&noInfo=false'],
     },
 
     plugins: [
