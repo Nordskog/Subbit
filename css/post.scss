@@ -22,6 +22,11 @@
     flex-direction: row;
 }
 
+.postLink
+{
+    margin-right: 5px;
+}
+
 .postInfoContainer {
     font-size: small;
     display: flex;
@@ -60,6 +65,7 @@
 }
 
 
+
 .topPost a:link,
 .topPost a:visited,
 .topPost a:hover
@@ -68,7 +74,9 @@
 
 }
 
-.postedDate {
+.postedDate 
+{
+    white-space:nowrap;
     color: $hidden-text-color;
     font-weight: normal;
     text-align: center;
@@ -77,6 +85,7 @@
 
 .subreddit
 {
+    white-space:nowrap;
     color: $hidden-text-color;
     font-weight: normal;
     margin-left: 5px;
@@ -91,6 +100,7 @@
     margin-left: 5px;
     text-align: center;
     flex-shrink: 0;
+    white-space:nowrap;
 }
 
 .comments a:link,

@@ -21,8 +21,14 @@ interface State
     selected : ToggleItem;
 }
 
-export default class UserSettingsComponent extends React.Component<Props, State>
+export default class ToggleComponent extends React.Component<Props, State>
 {
+    constructor( props : Props)
+    {
+        super(props);
+        this.state = { selected: null };
+    }
+
 
     static getDerivedStateFromProps( newProps : Props)
     {

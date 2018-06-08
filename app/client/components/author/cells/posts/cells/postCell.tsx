@@ -15,7 +15,7 @@ danger_flairs.add("spoiler");
 
 const defaultThumbnails : Map<string, string> = new Map<string, string>();
 defaultThumbnails.set("self","https://www.reddit.com/static/self_default2.png");
-defaultThumbnails.set("default","https://www.reddit.com/static/self_default2.png");
+defaultThumbnails.set("default","https://www.reddit.com/static/self_default2.png"); //On purpose
 defaultThumbnails.set("nsfw","https://www.reddit.com/static/nsfw2.png");
 defaultThumbnails.set("spoiler","https://www.reddit.com/static/self_default2.png");
 const defaultThumbnail = "https://www.reddit.com/static/self_default2.png"
@@ -49,12 +49,15 @@ export default class PostCell extends React.Component<Props, null>
         return <div className={this.props.isTopPost ? `${styles.postContainer} ${styles.topPost}` : styles.postContainer}>
         {this.getUpvoted(this.props.post.likes)}
         {this.getScoreCol()}
-        {this.getLink()}
-        <div className={styles.postedDate}>
-            {this.getDateCol()}
-        </div>
-        {this.getSubreddit()}
-        {this.getComments()}
+        {
+                this.getLink
+                (
+                    true,
+                    this.getDateCol(),
+                    this.getSubreddit(),
+                    this.getComments()
+                )
+            }
         </div>
     }
 
@@ -64,18 +67,27 @@ export default class PostCell extends React.Component<Props, null>
             {this.getUpvoted(this.props.post.likes)}
             {this.getScoreCol()}
             {this.getImage()}
-            {this.getLink()}
-            <div className={styles.postedDate}>
-                {this.getDateCol()}
-            </div>
-            {this.getSubreddit()}
-            {this.getComments()}
+            {
+                this.getLink
+                (
+                    true,
+                    this.getDateCol(),
+                    this.getSubreddit(),
+                    this.getComments()
+                )
+            }
             </div>
     }
 
-    getLink( includeFlairs : boolean = true)
+    getLink( includeFlairs : boolean = true, ...inlineElements : JSX.Element[])
     {
-        return <div className={styles.post}>{includeFlairs ? this.getFlairsAndStuff() : null }<a href={this.props.post.url}>{this.props.post.title} </a>  </div> 
+        return <div className={styles.post}>
+            { this.getFlairsAndStuff() }
+            <a className={styles.postLink} href={this.props.post.url}>
+                {this.props.post.title} 
+            </a>
+            {inlineElements}
+            </div> 
     }
 
     getNormalPost()
@@ -91,13 +103,11 @@ export default class PostCell extends React.Component<Props, null>
                     <div className={styles.postColumn} >
                         <div className={styles.postLinkContainer}>
                             {this.getLink()}
-                            {this.getComments()}
                         </div>
                         <div className={styles.postInfoContainer}>  
-                            <div className={styles.postedDate}>
                             {this.getDateCol()}
-                            </div>
                             {this.getSubreddit()}
+                            {this.getComments()}
                         </div>
                     </div>
 
@@ -167,18 +177,18 @@ export default class PostCell extends React.Component<Props, null>
 
     getComments()
     {
-        return <div className={styles.comments}><a href={urls.getPostUrl(this.props.post.subreddit, this.props.post.id)}>{this.props.post.num_comments} comments</a></div>
+        return <span key={"comments_span"} className={styles.comments}><a href={urls.getPostUrl(this.props.post.subreddit, this.props.post.id)}>{this.props.post.num_comments} comments</a></span>
     }
 
     getSubreddit()
     {
            if (this.props.displaySubreddit)
-             return <div className={styles.subreddit}>to <a href={urls.getSubredditUrl(this.props.post.subreddit)}>r/<b>{this.props.post.subreddit}</b></a></div>
+             return <span key={"subreddit_span"} className={styles.subreddit}><a href={urls.getSubredditUrl(this.props.post.subreddit)}>r/<b>{this.props.post.subreddit}</b></a></span>
     }
 
     getDateCol()
     {
-        return <span> {tools.time.getTimeSinceDisplayString(this.props.post.created_utc)} </span>;
+        return <span key={"date_span"} className={styles.postedDate}> {tools.time.getTimeSinceDisplayString(this.props.post.created_utc)} </span>;
     }
 
     getScoreCol()
