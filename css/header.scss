@@ -43,15 +43,31 @@
 .sortButtonActive
 {  
     @extend .sortButton;
-    //background: $body-background;
-
     box-shadow:0px -3px 0px $button-highlight-color inset;
+}
 
-    /*
-    border-bottom: 5px solid rgb(233, 21, 21);
-    outline-style: outset;
-    outline-color: yellow;
-    */
+.sortButtonSub
+{  
+    @extend .sortButton;
+    //background: $hidden-element-color;
+    //margin-top: 20px;
+    font-size: medium;
+    height: 30px;
+}
+
+.sortButtonActiveSub
+{  
+    @extend .sortButton;
+    //background: $hidden-element-color;
+    height: 30px;
+    //margin-top: 20px;
+    font-size: medium;
+    box-shadow:0px -3px 0px $button-highlight-color inset;
+}
+
+.topTimeContainer
+{
+    margin-left: 10px;
 }
 
 
@@ -70,6 +86,20 @@
     width:fit-content;
     display: flex;
     flex-direction: row;
+}
+
+.headerRow
+{
+    width:fit-content;
+    display: flex;
+    flex-direction: row;
+}
+
+.headerColumn
+{
+    width:fit-content;
+    display: flex;
+    flex-direction: column;
 }
 
 .headerRight

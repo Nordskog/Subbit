@@ -134,12 +134,14 @@ export namespace Route
     export interface FILTER
     {
         filter : AuthorFilter;
+        time? : models.PostTimeRange;   //Only for top
     }
 
     export interface SUBREDDIT
     {
         subreddit: string;
         filter?: AuthorFilter;
+        time? : models.PostTimeRange;   //Only for top
     }
 
     export interface AUTHOR

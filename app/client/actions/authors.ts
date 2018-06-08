@@ -28,19 +28,8 @@ export function changeSubreddit( subreddit : string)
         {
             let state: State = getState();
 
-            let filter = state.authorState.filter;
-            if (filter == models.AuthorFilter.SUBSCRIPTIONS)
-            {
-                filter = null;
-            }
-            else if ( filter == AuthorFilter.BEST)
-            {
-                //subreddits only have hot or new
-                filter = AuthorFilter.HOT;
-            }
-    
             dispatch(
-            { type: actions.types.Route.SUBREDDIT, payload: { subreddit: subreddit, filter: filter  } as actions.types.Route.SUBREDDIT } 
+            { type: actions.types.Route.SUBREDDIT, payload: { subreddit: subreddit, filter: null  } as actions.types.Route.SUBREDDIT } 
             );
         }
 

@@ -162,7 +162,8 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
                 filter: AuthorFilter.SUBSCRIPTIONS,
                 subreddit: null,
                 author: null,
-                after: null
+                after: null,
+                time: null
             }
         }
 
@@ -173,7 +174,8 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
                 filter: AuthorFilter.BEST,
                 subreddit: null,
                 author: null,
-                after: null
+                after: null,
+                time: null
             }
         }
 
@@ -186,7 +188,8 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
                 filter: payload.filter,
                 subreddit: null,
                 author: null,
-                after: null
+                after: null,
+                time: payload.filter == AuthorFilter.TOP ? payload.time || models.PostTimeRange.ALL  : null
             }
         }
         
@@ -199,7 +202,8 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
                 filter: payload.filter != null ? payload.filter : AuthorFilter.HOT,
                 subreddit: action.payload.subreddit,
                 author: null,
-                after: null
+                after: null,
+                time: payload.filter == AuthorFilter.TOP ? payload.time || models.PostTimeRange.ALL : null
             }
         }
 
@@ -212,7 +216,8 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
                 filter: null,
                 subreddit: payload.subreddit,
                 author: payload.author,
-                after: null
+                after: null,
+                time: null
             }
         }
     }
@@ -227,6 +232,7 @@ export function getDefaultAuthorState()
         filter: AuthorFilter.NEW,
         author: null,
         subreddit: null,
-        after : null
+        after : null,
+        time : null
     } as models.state.AuthorsState ;
 }

@@ -7,5 +7,6 @@ export default interface AuthorsState
     filter: models.AuthorFilter
     subreddit: string;
     author: string;
+    time: models.PostTimeRange;
     after : string;
 }

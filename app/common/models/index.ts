@@ -15,6 +15,16 @@ export enum AuthorFilter
     CONTROVERSIAL = "controversial",
 };
 
+export enum PostTimeRange
+{
+    HOUR = 'hour',
+    DAY = 'day',
+    WEEK = 'week',
+    MONTH = 'month',
+    YEAR = 'year',
+    ALL = 'all',
+}
+
 export enum PostDisplay
 {
     MINIMAL = 'minimal',

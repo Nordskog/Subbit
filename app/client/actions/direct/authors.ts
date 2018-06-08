@@ -46,7 +46,7 @@ export async function getAuthors( dispatch, getState )
     else
     {
         //Subreddit
-        let res = await api.reddit.posts.getAuthors( true, state.authorState.subreddit, state.authorState.filter, state.authorState.after, config.client.authorDisplayCount, redditAuth );
+        let res = await api.reddit.posts.getAuthors( true, state.authorState.subreddit, state.authorState.filter, state.authorState.time, state.authorState.after, config.client.authorDisplayCount, redditAuth );
         authors = res.authors;
         after = res.after;
     }

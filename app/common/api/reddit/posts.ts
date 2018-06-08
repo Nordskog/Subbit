@@ -9,13 +9,14 @@ import * as api from '~/common/api';
 
 export const POST_FULLNAME_PREFIX = "t3_";
 
-export async function getAuthors( seedWithPost : boolean, subreddit? : string, filter? : models.AuthorFilter, after? : string, count? : number, auth? : models.auth.RedditAuth, ) : Promise< { authors : models.data.Author[], after : string } >
+export async function getAuthors( seedWithPost : boolean, subreddit? : string, filter? : models.AuthorFilter, time?: models.PostTimeRange, after? : string, count? : number, auth? : models.auth.RedditAuth, ) : Promise< { authors : models.data.Author[], after : string } >
 {
     let result : reddit.ListingResponse = <reddit.ListingResponse> await api.reddit.getRequest(
         apiTools.getFilterUrl(subreddit, filter, auth != null), 
         {
             after: after,
-            limit : count
+            limit : count,
+            t: time
         },
         auth);
 
