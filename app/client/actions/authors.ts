@@ -56,6 +56,15 @@ export function fetchAuthorsAction ( appendResults: boolean = false)
     {
         try
         {
+            dispatch
+            ({ 
+                    type: actions.types.page.LOADING_STATE_CHANGED,
+                    payload: 
+                    { 
+                        status: LoadingStatus.LOADING, 
+                    } as actions.types.page.LOADING_STATE_CHANGED
+            });
+
             let { authorEntries, after} = await actions.directActions.authors.getAuthors(dispatch, getState);
 
             dispatch({

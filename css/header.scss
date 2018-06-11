@@ -14,6 +14,30 @@
 
 }
 
+.logo
+{
+    position:absolute;
+    stroke: transparent;
+    fill: #fff;
+    height:70px;
+    width:70px;
+    margin-top: auto;
+    margin-bottom:auto;
+    margin-left: 5px;
+
+}
+
+.logoContainer
+{
+    position:relative;
+    height:auto;
+    width:60px;
+    margin-right: 5px;
+    overflow: visible;
+    display:flex;
+    align-items: center;
+}
+
 
 .spacer
 {

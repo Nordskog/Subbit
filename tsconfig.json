@@ -21,7 +21,8 @@
     "noImplicitAny": false,
     "noLib": false,
     "suppressImplicitAnyIndexErrors": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true  //Necessary for react-svg
 
   },
   "exclude": [

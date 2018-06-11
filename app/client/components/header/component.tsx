@@ -17,6 +17,8 @@ import { spawn } from 'child_process';
 
 import * as actions from '~/client/actions'
 
+import subbit_logo from 'assets/images/subbit_logo.svg'
+
 import * as toast from '~/client/toast'
 interface Props
 {
@@ -42,7 +44,8 @@ export default class HeaderComponent extends React.Component<Props, null>
         return <div className={styles.header}>
                     <div className={styles.headerLeft}>
                         <div className={styles.headerRow}>
-                            <a className={styles.headerBrand} href="#"></a>
+                        
+                            {this.getLogo()}
                             <components.animations.AutoWidth>
                                 <components.tools.SubredditDropdown/>
                             </components.animations.AutoWidth>
@@ -86,6 +89,15 @@ export default class HeaderComponent extends React.Component<Props, null>
                         {display}
                     </NavLink>
                 </components.transitions.FadeHorizontalResize>   
+    }
+
+    getLogo()
+    {
+        return <a className={styles.logoContainer} href="#">
+                    <svg className={styles.logo} >
+                        <use xlinkHref={subbit_logo}></use>
+                    </svg>
+                </a>
     }
 
     getButtonStyleIfFilterMatch(filter : string)

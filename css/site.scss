@@ -83,7 +83,11 @@ a:hover
     font-size: x-large;
     font-weight: bold;
     text-align: center;
+    margin-top:20px;
     margin-bottom:40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 input[type=text] {
@@ -120,3 +124,26 @@ input[type=text] {
     position: relative;
     height:auto;
 }
+
+.loadingImage
+{
+    height:100px;
+    width:100px;
+
+}
+
+.loadingProgressContainer
+{
+    margin: 10px;
+    height: 10px;
+    width:200px;
+    display:flex;
+}
+
+.loadingProgressBar
+{
+    float: left;
+    height: 10px;
+    background: $upvote-color;
+}
+

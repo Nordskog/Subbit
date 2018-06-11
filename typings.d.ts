@@ -1,5 +1,3 @@
-﻿//declare module '*.svg'
-declare module "*.svg" {
-    const content: any;
-    export default content;
-  }
+﻿//Svgs may be handled by svg-sprite-loader or file-loader.
+//The former outputs a module, the other just the filepath.
+declare module '*.svg';

@@ -36,6 +36,7 @@ export default class app extends React.Component<Props,any>
         return   <div className={styles.contentContainer}>
                     <components.authors />
                     <components.tools.scrollEndDetector />
+                    <components.tools.LoadingStatus />
                 </div>
     }
 

@@ -1,0 +1,83 @@
+<svg id="sad" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600">
+  <metadata><?xpacket begin="﻿" id="W5M0MpCehiHzreSzNTczkc9d"?>
+<x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="Adobe XMP Core 5.6-c142 79.160924, 2017/07/13-01:06:39        ">
+   <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+      <rdf:Description rdf:about=""/>
+   </rdf:RDF>
+</x:xmpmeta>
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                           
+<?xpacket end="w"?></metadata>
+<defs>
+    <style>
+      .loading_animation_icon-1, .loading_animation_icon-3, .loading_animation_icon-4 {
+        fill: #252525;
+        stroke: #fff;
+      }
+
+      .loading_animation_icon-1 {
+        stroke-width: 14.501px;
+      }
+
+      .loading_animation_icon-1, .loading_animation_icon-2, .loading_animation_icon-3 {
+        fill-rule: evenodd;
+      }
+
+      .loading_animation_icon-2 {
+        fill: #fff;
+      }
+
+      .loading_animation_icon-3 {
+        stroke-width: 9.752px;
+      }
+
+      .loading_animation_icon-4 {
+        stroke-width: 10.867px;
+      }
+    </style>
+  </defs>
+  <g id="everything">
+    <path id="outline" class="loading_animation_icon-1" d="M459.845,452.631c12.7,23.126,14.109,44.81-1.6,57.74-13.962,11.49-59.292,50.3-162.527,50.149-103.215-.15-140.883-27.693-162.963-48.4-15.714-14.74-14.268-37.1-1.537-60.365-27.652-30.382-44.133-68.609-44.133-110.14,0-98.939,93.506-179.145,208.851-179.145s208.851,80.206,208.85,179.145C504.783,383.543,487.982,422.108,459.845,452.631Z"/>
+    <g id="face">
+      <path id="mark_right" class="loading_animation_icon-2" d="M210.64,478.181c26.588,10.018,74.067-2.377,75.541-8.2s-19.55,1.5-51.509-33.359S191.379,412.6,180,421.743C168.848,430.708,163.926,460.579,210.64,478.181Z"/>
+      <path id="mark_left" class="loading_animation_icon-2" d="M467.187,411.029c-14.718,24.319-59.7,43.935-64.457,40.268s16.295-10.915,19.9-58.08,19.2-45.662,33.8-45.507C470.732,347.861,493.047,368.3,467.187,411.029Z"/>
+      <g id="dead_eyes">
+        <path id="right_eye" class="loading_animation_icon-2" d="M259.776,322.357a58.62,58.62,0,0,1,9.657,18.5c6.778,21.256,1.314,41.987-12.2,46.3-13.467,4.3-29.843-9.314-36.668-30.434Z"/>
+        <path id="right_eye_copy" data-name="right_eye copy" class="loading_animation_icon-2" d="M392.586,305.114c5.689,21.453-.715,41.764-14.367,45.435-13.7,3.684-29.516-10.793-35.318-32.336a58.63,58.63,0,0,1-1.892-20.785Z"/>
+      </g>
+      <g id="right_ear">
+        <path id="right_ear_outer" class="loading_animation_icon-3" d="M141.747,384.669c-21.7-12.713-107.251-83.52-101.085-110.663,7.946-34.98,126.322-61.514,156.383-54.7"/>
+        <path id="right_aer_inner" class="loading_animation_icon-2" d="M157.407,294.131c-7.314,20.082-19.156,45.594-31.3,45.761-6.755.092-63.137-51.974-58.27-64.61,4.626-12.009,63.58-39.072,88-28.181C167.353,252.234,166.794,268.358,157.407,294.131Z"/>
+      </g>
+      <g id="left_ear">
+        <path id="left_ear_outer" class="loading_animation_icon-3" d="M485.9,277.876c8.836-23.631,30.6-132.891,8.682-150.125-28.251-22.209-136.96,32.025-156.015,56.348"/>
+        <path id="left_ear_inner" class="loading_animation_icon-2" d="M416.586,217.286c18.357,11.01,43.659,23.382,53.2,15.83,5.306-4.2,16.245-80.416,4.488-87.176-11.174-6.424-74.054,9.8-86.153,33.736C382.415,190.955,393.027,203.157,416.586,217.286Z"/>
+      </g>
+    </g>
+    <g id="antenna">
+      <path id="antenna_tip" class="loading_animation_icon-2" d="M200,70l52.1-7.569,1.922,13.931-49.389,7.13Z"/>
+      <circle id="antenna_dot" class="loading_animation_icon-4" cx="289.594" cy="64.641" r="31.906"/>
+      <path id="antenna_base" class="loading_animation_icon-2" d="M201.387,73.8L215.3,68.178l37.086,91.791-13.908,5.619Z"/>
+      <circle id="antenna_dot_foreground" class="loading_animation_icon-4" cx="289.594" cy="64.641" r="31.906"/>
+    </g>
+  </g>
+</svg>

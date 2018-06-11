@@ -3,13 +3,15 @@ import * as models from '~/common/models'
 import { LoadingStatus } from '~/common/models';
 import * as siteStyles from 'css/site.scss'
 
-interface Props extends models.state.PageState
+interface Props
 {
     getNextPage() : void; 
+    status: LoadingStatus;
 }
 
-interface State extends models.state.PageState
+interface State
 {
+  status: LoadingStatus;
   prevProps: Props; //I ... guess this is a thing now
 }
 
@@ -75,36 +77,6 @@ export default class ScrollEndDetectorComponent extends React.Component<Props,St
 
 
   render() {
-    return this.getDiv();
-  }
-
-  getMessage()
-  {
-    switch(this.state.status)
-    {
-        case LoadingStatus.DONE:
-          return "Loading...";  //As soon as the user sees it it should be loading anyway
-        case LoadingStatus.LOADING:
-          return "Loading..."; 
-        case LoadingStatus.END:
-          return "No more authors"; 
-        case LoadingStatus.ERROR:
-          return "Something went wrong"; 
-        case LoadingStatus.EMPTY:
-          return "There's nothing here"; 
-    }
-  }
-
-  getDiv()
-  {
-      return <div className={siteStyles.loadingStatus}>{this.getMessage()}<br/>{this.getProgress()}</div>
-  }
-
-  getProgress()
-  {
-    if (this.props.loadingCount != null && this.props.loadingProgress != null)
-    {
-      return this.props.loadingProgress + " / " + this.props.loadingCount;
-    }
+    return <div/>
   }
 }

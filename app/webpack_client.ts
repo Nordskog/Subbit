@@ -46,7 +46,8 @@ const config = {
             'history/createBrowserHistory',
             'redux-thunk',
             'react-redux',
-            'react-toastify'
+            'react-toastify',
+            'react-svg'
         ]
     },
     output: {
@@ -120,25 +121,33 @@ const config = {
                 loader: 'file-loader'
             },
             
+
             {
-                //test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-                test: /\.(svg)$/,
-                exclude: /assets/,
-                loader: 'url-loader?limit=10&mimetype=image/svg+xml'
-            },
-            
-            // webpack >= 2
-            {
+                //Static svgs can be bundled
                 test: /\.svg$/,
-                exclude: /node_modules/,
+                exclude: [/node_modules/, /animations/],
                 use: [
                     { 
                         loader: 'svg-sprite-loader',
                         options: { extract: true, esModule: true }
                     }
               ]
-              }
+            },
             
+            {
+                //file loader necessary for animated svgs,
+                //and anything with bundled styles.
+                test: /\.(svg)$/,
+                exclude: [/node_modules/, /images/],
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: '[name].[ext]',
+                        }
+                    },
+                ]
+            },            
         ],
     },
     plugins: [

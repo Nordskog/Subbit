@@ -6,3 +6,6 @@ export { confirmationPopup as confirmationPopup } from './confirmationPopup'
 export { Toggle as Toggle, ToggleItem as ToggleItem } from './toggle'
 export import SearchList = require('./SearchList');
 export { default as CountdownToast } from './CountdownToast';
+export {default as LoadingIcon } from './LoadingIcon'
+export {default as LoadingProgress } from './LoadingProgress'
+export {LoadingStatus as LoadingStatus } from './LoadingStatus'
