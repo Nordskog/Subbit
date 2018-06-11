@@ -10,7 +10,7 @@ import * as models from '~/common/models';
 import * as urls from '~/common/urls'
 
 import config from 'root/config';
-import { NetworkException } from '~/common/exceptions';
+import { NetworkException, Exception } from '~/common/exceptions';
 
 import { RateLimitCallback } from '~/common/tools/FetchQueue';
 
@@ -46,7 +46,10 @@ export async function getRequest<T>(url : string, parameters? : any, auth?: mode
     }
     catch( err)
     {
-        throw new NetworkException(null, err.message);
+        if (err instanceof Exception)  
+            throw err;
+        else
+            throw new NetworkException(null, err.message, url);
     }
 
 
@@ -79,7 +82,10 @@ export async function postRequest<T, A>(url : string, request : models.Action<A>
     }
     catch( err)
     {
-        throw new NetworkException(0, err.message);
+        if (err instanceof Exception)  
+            throw err;
+        else
+            throw new NetworkException(null, err.message, url);
     }
 
         

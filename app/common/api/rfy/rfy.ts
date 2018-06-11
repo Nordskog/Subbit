@@ -1,7 +1,7 @@
 import * as models from '~/common/models'
 import * as urls from '~/common/urls'
 import * as tools from '~/common/tools'
-import { NetworkException } from '~/common/exceptions';
+import { NetworkException, Exception } from '~/common/exceptions';
 
 
 export async function getRequest<T>(url : string, parameters? : any, access_token?: string) : Promise<T>
@@ -17,7 +17,10 @@ export async function getRequest<T>(url : string, parameters? : any, access_toke
     }
     catch( err)
     {
-        throw new NetworkException(null, err.message);
+        if (err instanceof Exception)  
+            throw err;
+        else
+            throw new NetworkException(null, err.message, url);
     }
 
     if (response.ok)
@@ -46,7 +49,10 @@ export async function postRequest<T, A>(url : string, request : models.Action<A>
     }
     catch( err)
     {
-        throw new NetworkException(null, err.message);
+        if (err instanceof Exception)  
+            throw err;
+        else
+            throw new NetworkException(null, err.message, url);
     }
 
     

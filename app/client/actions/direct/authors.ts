@@ -148,10 +148,13 @@ export async function poulateInitialPosts(authors : models.data.AuthorEntry[], c
                 subreddits = [state.authorState.subreddit];
             }
 
-            let prom = new Promise<void>( (resolve, reject) => 
+            let prom = new Promise<void>( async (resolve, reject) => 
             {
-                api.reddit.posts.getPosts(author.author.name, author.after, redditAuth, count, ...subreddits).then( ( {posts, after } ) => 
-                {    
+                //Doesn't bubble up on its own
+                try
+                {
+                    let { posts, after } = await api.reddit.posts.getPosts(author.author.name, author.after, redditAuth, count, ...subreddits);
+                    
                     author.after = after;;
                     author.end = after == null;
 
@@ -164,7 +167,11 @@ export async function poulateInitialPosts(authors : models.data.AuthorEntry[], c
                     updateLoadingProgress(authorCount, authorCompletedCount, dispatch);
 
                     resolve();
-                });
+                }
+                catch ( err )
+                {
+                    reject (err );
+                }
             });
 
             proms.push(prom);

@@ -23,7 +23,6 @@ export default class LoadingProgress extends React.Component<Props,State> {
     {
       //let progress =  Math.floor( (this.props.loadingProgress / this.props.loadingCount * 100) );
       let progress =  (this.props.loadingProgress / this.props.loadingCount );
-      console.log("progress:",progress);
       return progress;
 
     }

@@ -96,6 +96,9 @@ export function fetchAuthorsAction ( appendResults: boolean = false)
             }
             else
             {
+                //Kill any remaining requests
+                api.cancelAll();
+
                 dispatch({
                     type: actions.types.page.LOADING_STATE_CHANGED,
                     payload: 

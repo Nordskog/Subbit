@@ -1,8 +1,34 @@
-export class Exception extends Error
+export class Exception
 {
-    constructor( message : string)
+    message : string;
+    name : string;
+
+    // ...
+    prototype: any;
+    stack: any;
+
+    constructor( message : string, log : boolean = true)
     {
-        super(message);
+        this.name = "Exception";
+        this.message = message;
+
+        //The corrent Error.captureStackTrace() doesn't work in firefox these days.
+        //This at least gives us something to work with.
+        //Just extending error we don't seem to actually get a stack trace.
+        if (log)
+        {
+            //There are many articles on how to properly extend error, and the grand problem with all of them
+            //is that the resulting stracktrace is completely useless.
+            //This outputs the same as console.trace(), and unlike Error actually gives you the real stracktrace.
+            //We will also receive a separate stacktrace when we throw this, but it will not be very useful.
+            console.error("The below error occurred at:");
+        }
+    }
+
+
+    toString()
+    {
+        return `${this.name}: ${this.message}`;
     }
 }
 
@@ -14,8 +40,17 @@ export class EndpointException extends Exception
 
     constructor( code : number, message : string)
     {
-        super(message);
+        super(message, false);
+        this.name = "EndpointException";
         this.code = code;
+    }
+
+    toString()
+    {
+        if (this.code == null)
+            return `${this.name}: ${this.message}`;
+        else
+            return `${this.name} ${this.code}: ${this.message}`;
     }
 }
 
@@ -24,7 +59,13 @@ export class CancelledException extends Exception
 {
     constructor( message : string)
     {
-        super(message)
+        super(message, false)
+        this.name = "CancelledException";
+    }
+
+    toString()
+    {
+         return `${this.name}: ${this.message}`;
     }
 }
 
@@ -34,18 +75,31 @@ export class AuthorizationException extends Exception
     constructor( message : string)
     {
         super(message)
+        this.name = "AuthorizationException";
+    }
+
+    toString()
+    {
+         return `${this.name}: ${this.message}`;
     }
 }
 
 //Should probably notify user of this
 export class NetworkException extends Exception
 {
-    constructor( code : number, message : string)
+    url : string;
+    code: number;
+
+    constructor( code : number, message : string, url : string)
     {
-        super( (code == null ? "" :  code+": ") + message)
+        super( message );
+        this.name = "NetworkException";
+        this.url = url;
+        this.code = code;
+
     }
 
-    static async fromResponse( res : Response) : Promise<CancelledException>
+    static async fromResponse( res : Response) : Promise<NetworkException>
     {
         let text : string = null;
         try
@@ -59,6 +113,30 @@ export class NetworkException extends Exception
         if (text == null)
             text = res.statusText;
 
-        return new CancelledException( res.status+": "+text );
+        return new NetworkException( res.status, text, res.url);
     }
+
+    toString()
+    {
+        let str; 
+
+        if (this.code == null)
+            str = `${this.name}: ${this.message}`;
+        else
+            str = `${this.name} ${this.code}: ${this.message}`;
+
+        if (this.url != null)
+            str = `${str} at ${this.url}`;
+
+        return str;
+    }
+
+    toSimpleString()
+    {
+        if (this.code == null)
+            return `${this.name}: ${this.message}`;
+        else
+            return `${this.name} ${this.code}: ${this.message}`;
+    }
+
 }
