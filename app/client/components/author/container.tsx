@@ -10,7 +10,8 @@ function mapStateToProps(state: State )
 
     return { 
         subreddit: state.authorState.subreddit, 
-        postDisplay: state.userState.settings.post_display_mode
+        postDisplay: state.userState.settings.post_display_mode,
+        solo: state.authorState.author != null
     }
 }
 

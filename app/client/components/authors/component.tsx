@@ -55,7 +55,7 @@ export default class AuthorsComponent extends React.Component<Props, {} >
             renders.push( 
             
             <component.transitions.Fade key={author.author.name} >
-                <component.author.component author={author} displaySubreddit={ this.props.filter == null } />
+                <component.author.component author={author} />
             </component.transitions.Fade>
                 
          

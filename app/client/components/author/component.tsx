@@ -24,11 +24,14 @@ import { NavLink} from 'redux-first-router-link'
 import { urls } from '~/common';
 import * as  Toast from '~/client/toast';
 import SubscriptionSubreddit from '~/common/models/data/SubscriptionSubreddit';
+import { AuthorFilter } from '~/common/models';
+
+import * as actions from '~/client/actions'
 
 interface Props
 {
     author: models.data.AuthorEntry;
-    displaySubreddit : boolean;
+    solo : boolean;
     subreddit: string;
     postDisplay: models.PostDisplay;
     subscribe(author: string, subreddits : string[] ): void;
@@ -143,10 +146,14 @@ export default class AuthorCell extends React.Component<Props, State>
         }
     }
 
+    
+
     getSubreddit()
     {
-           if (this.props.displaySubreddit && this.props.subreddit != null)
-             return <div className={styles.subreddit}>in  <a href={urls.getSubredditUrl(this.props.subreddit)}>r/<b>{this.props.subreddit}</b></a></div>
+        if (this.props.subreddit != null && this.props.solo)
+        {
+            return <div className={styles.subreddit}>in <a href={urls.getSubredditUrl(this.props.subreddit)}>r/<b>{this.props.subreddit}</b></a></div>
+        }
     }
 
     render()
@@ -155,14 +162,8 @@ export default class AuthorCell extends React.Component<Props, State>
             <transitions.TransitionGroup component={'div'} className={styles.authorHeader}>
                 {this.getButton()}
                 {this.getShowSubredditsButton()}
-
-                <NavLink className={styles.nameContainer}
-                    to={ { type: 'AUTHOR', payload: { author:this.props.author.author.name } }  }>
-                    {this.props.author.author.name}
-                </NavLink>
-
+                {this.getAuthorLink()}
                 {this.getSubreddit()}
-            
             </transitions.TransitionGroup>
 
             <div>
@@ -176,6 +177,21 @@ export default class AuthorCell extends React.Component<Props, State>
             </div>
 
         </div>
+    }
+
+    getAuthorLink()
+    {
+        //If we are in a subreddit, we should link to the user in that subreddit.
+        //If we are already displaying a single author, we should link to the author in all subreddits.
+        let subreddit : string = this.props.subreddit;
+        if (this.props.solo)
+            subreddit = null;
+            
+        return <NavLink 
+                    className={styles.nameContainer}
+                    to={ { type: actions.types.Route.AUTHOR, payload: { author:this.props.author.author.name, subreddit: subreddit } }  }>
+                    {this.props.author.author.name}
+                </NavLink>
     }
 
     getSubscribedCount()

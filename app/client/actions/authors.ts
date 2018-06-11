@@ -96,6 +96,15 @@ export function fetchAuthorsAction ( appendResults: boolean = false)
             }
             else
             {
+                dispatch({
+                    type: actions.types.page.LOADING_STATE_CHANGED,
+                    payload: 
+                    { 
+                        status: LoadingStatus.ERROR,
+    
+                    }  as actions.types.page.LOADING_STATE_CHANGED
+                });
+
                 throw(error);
             }
         }

@@ -8,7 +8,8 @@ export const routesMap = {
 
     //Author
     HOME: { path: '/', thunk: actions.routes.authorsRoutes() }, 
-    FILTER: { path: '/:filter/:time?', thunk: actions.routes.authorsRoutes() },   
     SUBREDDIT: { path: '/r/:subreddit/:filter?/:time?', thunk: actions.routes.authorsRoutes() },
     AUTHOR: { path: '/author/:author/:subreddit?', thunk: actions.routes.authorsRoutes() },
+    FILTER: { path: '/:filter/:time?', thunk: actions.routes.authorsRoutes() },   
+
 };
