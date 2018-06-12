@@ -4,6 +4,7 @@ import * as React from 'react';
 import Popup from "reactjs-popup";
 
 import * as styles from 'css/subredditList.scss'
+import * as animationStyles from 'css/animations.scss'
 
 import * as components from '~/client/components/'
 import * as models from '~/common/models';
@@ -17,9 +18,6 @@ interface Props
 {
     trigger : JSX.Element;
     items: components.tools.SearchList.SearchItem[] | components.tools.SearchList.SearchItem;
-    displayHighlight: boolean;
-    toggleHighlight: boolean;
-    addToDisplayList: boolean;
 }
 
 interface State
@@ -43,13 +41,21 @@ export default class popup extends React.Component<Props, State >
         {
             'width': 'auto',
             'border': '0px',
-            'background':'transparent'
+            'padding': '0px',
+            'background': 'transparent'
+        }
+
+        let overlayStyle =
+        {
+            'background': '#00000080',
+            'animation': animationStyles.fadeIn+" 0.5s"
         }
 
             return <Popup   trigger={ this.props.trigger } 
                             contentStyle={style} 
                             position="bottom left" closeOnDocumentClick
                             arrow={false}
+                            overlayStyle={overlayStyle}
                                                 >
                         {
                             close => 
@@ -59,9 +65,6 @@ export default class popup extends React.Component<Props, State >
                                                 <div className={styles.popupContainer}>
                                                     <components.tools.SearchList.component
                                                         items={this.props.items} 
-                                                        displayHighlight={this.props.displayHighlight}
-                                                        toggleHighlight={this.props.toggleHighlight}
-                                                        addToDisplayList={this.props.addToDisplayList}
                                                         onClick={ ( item) => close() }
                                                         onAltClick={ ( item) => close() }
                                                     />

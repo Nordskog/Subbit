@@ -101,6 +101,9 @@ export default class SubredditDropdown extends React.Component<Props, State>
     getSubredditsPopup( trigger : JSX.Element ) : JSX.Element
     {
         let subSearch : components.tools.SearchList.SearchItem = {
+            toggleHighlight: false,
+            displayHighlight : false,
+            addToDisplayList : false,
             items: this.state.subreddits,
             search: async ( name : string ) => { return ( await this.props.searchSubreddit(name) ).map( name => { return { name: name, object: name } }  ) },
             prefix: "r/",
@@ -110,6 +113,7 @@ export default class SubredditDropdown extends React.Component<Props, State>
 
 
         let authorSearch : components.tools.SearchList.SearchItem = {
+
             items: this.props.subscriptions.map(
                 ( sub : models.data.Subscription) => 
                 {
@@ -120,21 +124,25 @@ export default class SubredditDropdown extends React.Component<Props, State>
                     }
                 }
             ),
+            
             search: ( name : string ) => { return [{name: name, alt: this.props.subreddit != null ? `in r/${this.props.subreddit}` : null}] },   //Can't search for users :(
             prefix: "",
             searchPlaceholder: "Author",
+            displayHighlight: true,
+            toggleHighlight : false,
+            addToDisplayList : false,
             delaySearch : false,
             onClick: ( item : components.tools.SearchList.ListItem) => { this.props.viewAuthor(item.name); return true },
             onAltClick: ( item : components.tools.SearchList.ListItem) => { this.props.viewAuthor(item.name, this.props.subreddit) }
         }
 
+        //The user will eventually be subscribed to too many users so... 
+        authorSearch.items.length = 10;
+
 
         return <components.tools.SearchList.popup
                                 trigger={ trigger }
                                 items={[subSearch, authorSearch]} 
-                                displayHighlight={true}
-                                toggleHighlight={false}
-                                addToDisplayList={false}
         />
     
     }

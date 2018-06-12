@@ -25,6 +25,7 @@ const config = {
         main: ['./client/index.tsx'],
         appStyles: [
 
+            '../css/animations.scss',
             '../css/toast.scss',
             '../css/userSettings.scss',
             '../css/toggle.scss',

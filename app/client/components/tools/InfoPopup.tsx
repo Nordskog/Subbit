@@ -5,6 +5,8 @@ import * as transitions from 'react-transition-group'
 
 import * as siteStyles from 'css/site.scss'
 
+import * as animationStyles from 'css/animations.scss'
+
 interface Props
 {
     text : string;
@@ -27,7 +29,8 @@ export default class InfoPopup extends React.Component<Props, State>
             'background':'transparent',
             'overflow': 'visible',
             'margin' : "0px",
-            'padding' : "0px"
+            'padding' : "0px",
+            'animation': animationStyles.fadeIn+" 0.5s"
         }
 
         let arrowStyle = 
@@ -36,7 +39,8 @@ export default class InfoPopup extends React.Component<Props, State>
             "background": "#141c26",                //must match $input-background-color
             "borderRight": "1px solid #898989",     //Must match $normal-text-color
             "borderBottom": "1px solid #898989",    //must match $normal-text-color
-            "z-index": "99999"
+            "z-index": "99999",
+            'animation': animationStyles.fadeIn+" 0.5s"
         }
 
 
@@ -45,6 +49,7 @@ export default class InfoPopup extends React.Component<Props, State>
                         position="top left" closeOnDocumentClick
                         on={"hover"}
                         arrow={true}
+                        mouseEnterDelay={300}
                         arrowStyle={arrowStyle}
                                             >
                     {

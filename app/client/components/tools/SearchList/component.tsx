@@ -42,15 +42,15 @@ export interface SearchItem
     highlightMap?: Set<string>;
     delaySearch?: boolean
     emptyMessage?: string;
-
+    displayHighlight: boolean;
+    toggleHighlight: boolean;
+    addToDisplayList: boolean;
 }
 
 interface Props
 {
     items: SearchItem[] | SearchItem;
-    displayHighlight: boolean;
-    toggleHighlight: boolean;
-    addToDisplayList: boolean;
+
     onClick?( item : ListItem ) : boolean | undefined
     onAltClick?( item : ListItem ) : void;
 }
@@ -342,8 +342,14 @@ export default class RedditsCell extends React.Component<Props, State>
 
     getIndicator(subreddit : ListItem)
     {
+        let style = subreddit.highlighted ? styles.unsubscribeIndicator : styles.subscribeIndicator;
+        if ( !this.getSelectedItem().displayHighlight  )
+        {
+            style = styles.hiddenIndicator;
+        }
+
         return <div className={ styles.indicatorContainer }>
-                    <svg className={ subreddit.highlighted ? styles.unsubscribeIndicator : styles.subscribeIndicator } >
+                    <svg className={ style } >
                         <use xlinkHref={subscribeButton}></use>
                     </svg>
                 </div>
@@ -397,7 +403,7 @@ export default class RedditsCell extends React.Component<Props, State>
         //un-highlight in display list
         if (listItem.highlighted)
         {
-            if (this.props.toggleHighlight)
+            if (searchItem.toggleHighlight)
                 this.findInDisplay(listItem.name).highlighted = false;
         }
         else
@@ -406,15 +412,15 @@ export default class RedditsCell extends React.Component<Props, State>
             if (this.state.searching)
             {
                 //Add to display list if it doesn't already exist
-                if (this.props.toggleHighlight)
+                if (searchItem.toggleHighlight)
                     listItem.highlighted = true;
-                if (this.props.addToDisplayList)
+                if (searchItem.addToDisplayList)
                     searchItem.items.unshift(listItem);
             }
             else
             {
                  //Highligh in displayList
-                 if (this.props.toggleHighlight)
+                 if (searchItem.toggleHighlight)
                      this.findInDisplay(listItem.name).highlighted = true;
             }
         }

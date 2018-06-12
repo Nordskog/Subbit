@@ -206,6 +206,9 @@ export default class AuthorCell extends React.Component<Props, State>
                 prefix: "r/",
                 searchPlaceholder: "Subreddit",
                 emptyMessage: 'Subscribed in all subreddits',
+                displayHighlight: true,
+                toggleHighlight: true,
+                addToDisplayList: true,
                 onClick:  (item : components.tools.SearchList.ListItem) => 
                     { 
                         if (item.highlighted)
@@ -229,9 +232,6 @@ export default class AuthorCell extends React.Component<Props, State>
              <div className={styles.subscriptionsContainer}>
                 <components.tools.SearchList.component
                             items={subSearch} 
-                            displayHighlight={true}
-                            toggleHighlight={true}
-                            addToDisplayList={true}
                             />
             </div>
 
@@ -282,16 +282,6 @@ export default class AuthorCell extends React.Component<Props, State>
 
     getButton()
     {
-
-        /*
-        if (this.props.author.author.name.toLowerCase() == "british_tea_company")
-        {
-            console.log("Partial star");
-        }
-        */
-
-        
-
         if (this.isSubscribed())
         {
             if (this.isSubscribedAll())
@@ -319,31 +309,6 @@ export default class AuthorCell extends React.Component<Props, State>
         {
             return this.getSubscribeButton();
         }
-
-
-
-
-
-
-
-        /*
-        if (this.isSubscribed())
-        {
-            if (this.isSubscribedAll)
-            {
-
-            }
-
-            if (this.isSubscribedInSubreddit())
-                return this.getSubscribeSubredditButton();
-            else    
-                return this.getUnsubscribeButton();
-                
-            
-        }
-        else
-            return this.getSubscribeButton();
-            */
     }
 
     getSubscribeButton()
@@ -355,9 +320,9 @@ export default class AuthorCell extends React.Component<Props, State>
                         </svg>
                     </div>
 
-        let text : string = "Subscribe";
+        let text : string = "subscribe";
         if (this.props.subreddit != null)
-            text = "Subscribe in r/"+this.props.subreddit;
+            text = "subscribe in r/"+this.props.subreddit;
 
         return <components.tools.InfoPopup
                     trigger={butt}
@@ -378,7 +343,7 @@ export default class AuthorCell extends React.Component<Props, State>
                                         </svg>
                                     </div>
 
-        let text : string = "Subscribe in r/"+this.props.subreddit;
+        let text : string = "subscribe in r/"+this.props.subreddit;
 
         return <components.tools.InfoPopup
                     trigger={butt}
@@ -415,7 +380,7 @@ export default class AuthorCell extends React.Component<Props, State>
                     </svg>
                 </div>
                 
-        let text : string = "Unsubscribe"
+        let text : string = "unsubscribe"
 
         return <components.tools.InfoPopup
                     trigger={butt}
