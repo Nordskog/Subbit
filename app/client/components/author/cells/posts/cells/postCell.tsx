@@ -193,12 +193,6 @@ export default class PostCell extends React.Component<Props, null>
                             to r/<b>{this.props.post.subreddit}</b>
                         </NavLink>
                     </span>
-
-
-/*
-           if (this.props.displaySubreddit)
-             return <span key={"subreddit_span"} className={styles.subreddit}><a href={urls.getSubredditUrl(this.props.post.subreddit)}>r/<b>{this.props.post.subreddit}</b></a></span>
-             */
     }
 
     getDateCol()

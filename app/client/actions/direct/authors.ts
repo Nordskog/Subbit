@@ -29,8 +29,33 @@ export async function getAuthors( dispatch, getState )
     }    
     else if (state.authorState.filter == models.AuthorFilter.SUBSCRIPTIONS)
     {
+        let subscriptions = state.userState.subscriptions;
+
+        //Filter by subreddit if present
+        //Slow? Yes. Could put a hashmap in the state, but even with a few hundred subscriptions
+        //this is going to be essentially instant.
+        if (state.authorState.subreddit != null)
+        {
+            let filteredSubs = [];
+            let lowerCaseSubname = state.authorState.subreddit.toLowerCase();
+
+            subscriptions.forEach( (sub : models.data.Subscription) => 
+            {
+                for (let i = 0; i < sub.subreddits.length; i++)
+                {
+                    if (sub.subreddits[i].name.toLowerCase() == lowerCaseSubname )
+                    {
+                        filteredSubs.push(sub);
+                        break;
+                    }
+                }
+            });
+
+            subscriptions = filteredSubs;
+        }
+
         //Subscriptions
-        authors = state.userState.subscriptions.map( ( sub : models.data.Subscription ) => 
+        authors = subscriptions.map( ( sub : models.data.Subscription ) => 
         {
             return {
                     id : -1,
@@ -42,6 +67,8 @@ export async function getAuthors( dispatch, getState )
                 }
         });
         after = null;
+
+
     }
     else
     {
