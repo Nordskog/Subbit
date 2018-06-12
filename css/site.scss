@@ -147,3 +147,24 @@ input[type=text] {
     background: $upvote-color;
 }
 
+.InfoPopup
+{
+    position:relative;
+    overflow: visible;
+
+    font-size: small;
+    float: left;
+    width: auto;
+    background: $input-background-color;
+    padding: 5px;
+    padding-left:10px;
+    padding-right:10px;
+    font-weight: 600;
+
+    color: $highlighted-text-color;
+
+    border-radius: 5px;
+    border: 1px solid $normal-text-color;
+}
+
+

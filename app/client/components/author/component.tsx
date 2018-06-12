@@ -5,6 +5,7 @@ import * as cells  from '~/client/components/author/cells'
 
 import subscribeButton from 'assets/images/subscribe_button.svg'
 import subscribeSubredditButton from 'assets/images/subscribe_subreddit_button.svg'
+import subscribedPartialButton from 'assets/images/subscribed_partial_button.svg'
 
 import * as models from '~/common/models';
 
@@ -106,30 +107,6 @@ export default class AuthorCell extends React.Component<Props, State>
          </components.transitions.FadeResize>
     }
 
-    isSubscribed() : boolean
-    {
-       return (this.props.author.subscription != null && ( this.props.author.subscription.subscribed == null || this.props.author.subscription.subscribed )   )
-    }
-
-    ifSemiSubscribed() : boolean 
-    {
-        //If we are subscribed to the user, but not in the currently selected subreddit
-        if ( this.isSubscribed() && this.props.subreddit != null )
-        {
-            for ( let i = 0; i < this.props.author.subscription.subreddits.length; i++)
-            {
-                if (this.props.author.subscription.subreddits[i].name == this.props.subreddit)
-                {
-                    return false;
-                }
-
-            }
-            return  true;
-        }
-
-        return false;
-    }
-
     scrollToAuthorTop()
     {
 
@@ -209,6 +186,8 @@ export default class AuthorCell extends React.Component<Props, State>
         return subCount;
     }
 
+
+
     getSubscribedSubreddits()
     {
         if ( this.isSubscribed() && this.state.subredditsExpanded)
@@ -263,41 +242,147 @@ export default class AuthorCell extends React.Component<Props, State>
         return null;
     }
 
-    getButton()
+    isSubscribed() : boolean
+    {
+       return (this.props.author.subscription != null && ( this.props.author.subscription.subscribed == null || this.props.author.subscription.subscribed )   )
+    }
+
+    isSubscribedInSubreddit() : boolean 
+    {
+        //If we are subscribed to the user, but not in the currently selected subreddit
+        if ( this.isSubscribed() && this.props.subreddit != null )
+        {
+            for ( let i = 0; i < this.props.author.subscription.subreddits.length; i++)
+            {
+                if (this.props.author.subscription.subreddits[i].name == this.props.subreddit)
+                {
+                    return true;
+                }
+
+            }
+            return  false;
+        }
+
+        return true;
+    }
+
+    isSubscribedAll() : boolean 
     {
         if (this.isSubscribed())
         {
-            if (this.ifSemiSubscribed())
+            if (this.props.author.subscription.subreddits.length < 1)
+            {
+                return true;
+            }
+        }
+
+        return false;
+
+    }
+
+    getButton()
+    {
+
+        /*
+        if (this.props.author.author.name.toLowerCase() == "british_tea_company")
+        {
+            console.log("Partial star");
+        }
+        */
+
+        
+
+        if (this.isSubscribed())
+        {
+            if (this.isSubscribedAll())
+            {
+            
+                //Full star, click unsubscribes all
+                return this.getUnsubscribeButton(false);
+            }
+            else
+            {
+                if (this.isSubscribedInSubreddit())
+                {
+                    //Display full star with hole? Click unsubscribes all
+                    
+                    return this.getUnsubscribeButton(true);
+                }
+                else
+                {
+                    return this.getSubscribeSubredditButton();
+                }
+            }
+
+        }
+        else
+        {
+            return this.getSubscribeButton();
+        }
+
+
+
+
+
+
+
+        /*
+        if (this.isSubscribed())
+        {
+            if (this.isSubscribedAll)
+            {
+
+            }
+
+            if (this.isSubscribedInSubreddit())
                 return this.getSubscribeSubredditButton();
             else    
                 return this.getUnsubscribeButton();
+                
             
         }
         else
             return this.getSubscribeButton();
+            */
     }
 
     getSubscribeButton()
     {
-        return <div className={styles.subscriptionButtonContainer} onClick={this.handleSubscribeClick} >
-        <svg className={styles.subscribeButton} >
-            <use xlinkHref={subscribeButton}></use>
-        </svg>
-        </div>
+        //Heh
+        let butt : JSX.Element = <div className={styles.subscriptionButtonContainer} onClick={this.handleSubscribeClick} >
+                        <svg className={styles.subscribeButton} >
+                            <use xlinkHref={subscribeButton}></use>
+                        </svg>
+                    </div>
+
+        let text : string = "Subscribe";
+        if (this.props.subreddit != null)
+            text = "Subscribe in r/"+this.props.subreddit;
+
+        return <components.tools.InfoPopup
+                    trigger={butt}
+                    text={text} />
+
        
     }
 
     getSubscribeSubredditButton()
     {
-        return  <div className={styles.subscriptionButtonContainer} onClick={ () => this.handleAddSubredditClick(this.props.subreddit)} style={ { position:"relative" } } >
-                    <svg className={styles.unsubscribeButton} style={ { position:"absolute" } } >
-                        <use xlinkHref={subscribeSubredditButton}></use>
-                     </svg>
-                     <svg className={styles.subscribeButton} style={ { position:"absolute" } } >
-                        <use xlinkHref={subscribeButton}></use>
-                     </svg>
-                </div>
-       
+        //Heh
+        let butt : JSX.Element =    <div className={styles.subscriptionButtonContainer} onClick={ () => this.handleAddSubredditClick(this.props.subreddit)} style={ { position:"relative" } } >
+                                        <svg className={styles.unsubscribeButton} style={ { position:"absolute" } } >
+                                            <use xlinkHref={subscribeSubredditButton}></use>
+                                        </svg>
+                                        <svg className={styles.subscribeButton} style={ { position:"absolute" } } >
+                                            <use xlinkHref={subscribeButton}></use>
+                                        </svg>
+                                    </div>
+
+        let text : string = "Subscribe in r/"+this.props.subreddit;
+
+        return <components.tools.InfoPopup
+                    trigger={butt}
+                    text={text} />
     }
 
     getShowSubredditsButton()
@@ -314,18 +399,35 @@ export default class AuthorCell extends React.Component<Props, State>
         }
     }
 
-    getUnsubscribeButton()
+    getUnsubscribeButton( partialStar : boolean)
     {
-        return <div className={styles.subscriptionButtonContainer} onClick={this.handleUnsubscribeClick} >
+        //Function remains the same, but apperance is slightly different
+        //depending on whether the subscription is all subreddits or only one.
+        let svgName = subscribeButton;
+        if (partialStar)
+        {
+            svgName = subscribedPartialButton;
+        }
+        
+        let butt : JSX.Element = <div className={styles.subscriptionButtonContainer} onClick={this.handleUnsubscribeClick} >
                     <svg className={styles.unsubscribeButton} >
-                        <use xlinkHref={subscribeButton}></use>
+                        <use xlinkHref={svgName}></use>
                     </svg>
                 </div>
+                
+        let text : string = "Unsubscribe"
+
+        return <components.tools.InfoPopup
+                    trigger={butt}
+                    text={text} />
+
     }
 
     handleSubscribeClick()
     {
         let subreddits : string[] = [];
+        
+
         
         //Not subscribed, but subscription populated
         if ( this.props.author.subscription != null)
