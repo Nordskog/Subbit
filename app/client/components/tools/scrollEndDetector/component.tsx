@@ -44,16 +44,27 @@ export default class ScrollEndDetectorComponent extends React.Component<Props,St
   componentWillUnmount() {
     window.removeEventListener("scroll", this.handleScroll);
   }
-
-  canLoadMore()
+  
+  shouldComponentUpdate(nextProps : Props, nextState : State)
   {
-    return this.state.status == LoadingStatus.DONE;
+    //We don't render anything so we don't really care.
+    //If the page content does not extend far enough to make the scroll bar appear,
+    //we will never trigger a scroll event. Here we check if the state changes from 
+    //loading -> done, and do an additional check after a short delay.
+    if (this.props.status == LoadingStatus.LOADING && nextProps.status == LoadingStatus.DONE)
+    {
+      setTimeout( () => 
+      {
+        this.handleScroll();
+      }, 200)
+    }
+
+
+    return true;
   }
 
-  handleScroll() 
-  {
-    if ( !this.canLoadMore() )
-      return;
+isNearBottomOfPage()
+{
     const windowHeight = "innerHeight" in window ? window.innerHeight : document.documentElement.offsetHeight;
     const body = document.body;
     const html = document.documentElement;
@@ -65,6 +76,23 @@ export default class ScrollEndDetectorComponent extends React.Component<Props,St
     //Triggering load once we're within  half screen height to end seems reasonable
     let triggerDistance = (windowHeight);
     if ( (windowBottom) >= (docHeight - triggerDistance) )  
+    {
+        return true;
+    }
+}
+
+
+  canLoadMore()
+  {
+    return this.state.status == LoadingStatus.DONE;
+  }
+
+  handleScroll() 
+  {
+    if ( !this.canLoadMore() )
+      return;
+
+    if ( this.isNearBottomOfPage() )
     {
       this.setState({
         ...this.state,
