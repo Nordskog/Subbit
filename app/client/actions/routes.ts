@@ -6,7 +6,7 @@ import * as models from '~/common/models'
 import { State } from '~/client/store';
 import { WrapWithHandler } from '~/client/actions/tools/error';
 import { AuthorizationException } from '~/common/exceptions';
-import { AuthorFilter } from '~/common/models';
+import { AuthorFilter, LoadingStatus } from '~/common/models';
 
 let firstLoad : boolean = true;
 
@@ -31,7 +31,16 @@ export function authorizeRoute()
         let { error, code,  state} = getState().location.query;
         if (error)
         {
-            //TODO deal with errors
+            dispatch(
+            {
+                type: actions.types.page.LOADING_STATE_CHANGED,
+                payload: 
+                { 
+                    status: LoadingStatus.ERROR,
+
+                }  as actions.types.page.LOADING_STATE_CHANGED
+            });
+
             throw new AuthorizationException(error);
         }
         else
