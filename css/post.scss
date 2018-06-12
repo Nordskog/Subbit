@@ -51,13 +51,6 @@
     font-weight: bold;
     margin-right: 5px;
 }
-.post a:link
-{
-    color: $normal-text-color;
-}
-.post a:visited  {
-    color: $background-text-color;
-}
 
 .topPost {
     //padding-bottom: 5px;
@@ -88,7 +81,6 @@
     white-space:nowrap;
     color: $hidden-text-color;
     font-weight: normal;
-    margin-left: 5px;
     text-align: center;
     flex-shrink: 0;
 }

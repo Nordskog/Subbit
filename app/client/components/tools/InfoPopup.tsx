@@ -39,7 +39,7 @@ export default class InfoPopup extends React.Component<Props, State>
             "background": "#141c26",                //must match $input-background-color
             "borderRight": "1px solid #898989",     //Must match $normal-text-color
             "borderBottom": "1px solid #898989",    //must match $normal-text-color
-            "z-index": "99999",
+            "zIndex": "99999",
             'animation': animationStyles.fadeIn+" 0.5s"
         }
 

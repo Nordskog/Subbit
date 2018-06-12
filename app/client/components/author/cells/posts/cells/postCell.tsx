@@ -1,5 +1,6 @@
 ﻿import * as React from 'react';
 
+import * as actions from '~/client/actions'
 import * as models from '~/common/models';
 import * as tools from '~/common/tools'
 import * as urls from '~/common/urls'
@@ -7,6 +8,7 @@ import * as styles from 'css/post.scss'
 
 import vote from 'assets/images/vote.svg'
 import { PostDisplay } from '~/common/models';
+import { NavLink } from 'redux-first-router-link';
 
 const danger_flairs : Set<string> = new Set<string>();
 danger_flairs.add("nsfw");
@@ -183,8 +185,20 @@ export default class PostCell extends React.Component<Props, null>
 
     getSubreddit()
     {
+        if (this.props.displaySubreddit)
+            return  <span className={styles.subreddit} key={"subreddit_span"}>
+                        <NavLink 
+                            className={styles.subreddit}
+                            to={ { type: actions.types.Route.SUBREDDIT, payload: { subreddit: this.props.post.subreddit } }  }>
+                            to r/<b>{this.props.post.subreddit}</b>
+                        </NavLink>
+                    </span>
+
+
+/*
            if (this.props.displaySubreddit)
              return <span key={"subreddit_span"} className={styles.subreddit}><a href={urls.getSubredditUrl(this.props.post.subreddit)}>r/<b>{this.props.post.subreddit}</b></a></span>
+             */
     }
 
     getDateCol()
