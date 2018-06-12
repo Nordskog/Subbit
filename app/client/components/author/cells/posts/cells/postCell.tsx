@@ -160,7 +160,9 @@ export default class PostCell extends React.Component<Props, null>
     getImage()
     {
         let url : string = this.props.post.thumbnail;
-        if (url == null)
+
+        //In chrome they are sometimes "" instead of null ... ?
+        if (url == null || url.length < 1)
         {
             url = defaultThumbnail;
         }
@@ -168,7 +170,6 @@ export default class PostCell extends React.Component<Props, null>
         {
             url = defaultThumbnails.get(this.props.post.thumbnail) || url;
         }
-
 
         return  <a href={this.props.post.url}>
                     <img className={ this.props.postDisplay == PostDisplay.FULL ? styles.imageContainer : styles.tinyImageContainer} src={url}/>
