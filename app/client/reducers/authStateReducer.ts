@@ -24,7 +24,7 @@ export function authStateReducer(state = getDefaultAuthState(), action : models.
         }
         case actions.types.authentication.LOGOUT_SUCCESS:
         {
-            action = action as models.Action< actions.types.authentication.REDDIT_TOKEN_UPDATED >
+            action = action as models.Action< actions.types.authentication.LOGOUT_SUCCESS >
             return {
                 ...state,
                 ...getDefaultAuthState()
@@ -41,9 +41,7 @@ export function authStateReducer(state = getDefaultAuthState(), action : models.
         }
 
         default:
-            return {
-                ...state
-            }
+            return state;
 
             ///////////////////
             // ROUTES
