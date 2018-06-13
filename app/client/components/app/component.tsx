@@ -26,7 +26,6 @@ export default class app extends React.Component<Props,any>
                 <div className={styles.contentOuterContainer}>
                     {this.renderMain()}
                 </div>
-                <components.tools.onPageLoad/>
                     
              </div>
     }
