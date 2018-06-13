@@ -6,10 +6,11 @@ import * as tools from '~/common/tools'
 
 import { State } from '~/client/store';
 import { WrapWithHandler } from '~/client/actions/tools/error';
+import { Dispatch, GetState } from '~/client/actions/tools/types';
 
 export function fetchSubscriptions()
 {
-    return WrapWithHandler( async function (dispatch, getState)
+    return WrapWithHandler( async function (dispatch : Dispatch, getState : GetState)
     {
         let state: State = getState();
 
@@ -31,7 +32,7 @@ export function fetchSubscriptions()
 
 export function subscribeToAuthorAction(author : string, subreddits : string[])
 {
-    return WrapWithHandler( async function (dispatch, getState)
+    return WrapWithHandler( async function (dispatch : Dispatch, getState : GetState)
     {
         let state: State = getState();
 
@@ -50,7 +51,7 @@ export function subscribeToAuthorAction(author : string, subreddits : string[])
 
 export function unsubscribeFromAuthor(subscription: models.data.Subscription)
 {
-    return WrapWithHandler(  async function (dispatch, getState)
+    return WrapWithHandler(  async function (dispatch : Dispatch, getState : GetState)
     {
         let state: State = getState();
         let token: string = tools.store.getAccessToken(state);
@@ -66,7 +67,7 @@ export function unsubscribeFromAuthor(subscription: models.data.Subscription)
 
 export function addSubredditToSubscriptionAction(subscription_id : number, subreddit_name : string)
 {
-    return WrapWithHandler( async function (dispatch, getState)
+    return WrapWithHandler( async function (dispatch : Dispatch, getState : GetState)
     {
         let state: State = getState();
 
@@ -85,7 +86,7 @@ export function addSubredditToSubscriptionAction(subscription_id : number, subre
 
 export function removeSubredditFromSubscriptionAction(subscription_id : number, subreddit_name : string)
 {
-    return WrapWithHandler(  async function (dispatch, getState)
+    return WrapWithHandler(  async function (dispatch : Dispatch, getState : GetState)
     {
         let state: State = getState();
 

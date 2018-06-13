@@ -2,11 +2,12 @@ import { State } from "~/client/store";
 import { api, tools, models } from "~/common";
 import * as actions from '~/client/actions'
 import { WrapWithHandler } from "~/client/actions/tools/error";
+import { Dispatch, GetState } from "~/client/actions/tools/types";
 
 
 export function getAndUpdateLastVisit()
 {
-    return WrapWithHandler( async function (dispatch, getState)
+    return WrapWithHandler( async function (dispatch : Dispatch, getState : GetState)
     {
         let state: State = getState();
     
@@ -27,7 +28,7 @@ export function getAndUpdateLastVisit()
 
 export function getSettings()
 {
-    return WrapWithHandler( async function (dispatch, getState)
+    return WrapWithHandler( async function (dispatch : Dispatch, getState : GetState)
     {
         let state: State = getState();
     

@@ -1,12 +1,13 @@
 import * as actions from '~/client/actions'
 import * as api from '~/common/api'
 import { handleError } from '~/client/actions/tools/error';
+import { Dispatch, GetState } from '~/client/actions/tools/types';
 
-export async function searchSubreddits( name : string, dispatch) : Promise<string[]>
+export async function searchSubreddits( name : string, dispatch : Dispatch) : Promise<string[]>
 {
     let promise : Promise<string[]> = new Promise( async (resolve, reject) => 
     {
-        dispatch( async (dispatch, getState) => {
+        dispatch( async (dispatch : Dispatch, getState : GetState) => {
 
         try
         {

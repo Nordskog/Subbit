@@ -5,6 +5,7 @@ import component from './component';
 
 import * as actions from '~/client/actions';
 import * as models from '~/common/models';
+import { Dispatch } from '~/client/actions/tools/types';
 
 function mapStateToProps(state: State )
 {
@@ -14,14 +15,12 @@ function mapStateToProps(state: State )
     }
 }
 
-function mapDispatchToProps(dispatch, ownProps) : object
+function mapDispatchToProps(dispatch : Dispatch, ownProps) : object
 {
-    return function (dispatch)
-    {
-        return {
-            changePostDisplay: ( mode: models.PostDisplay  ) => { dispatch(actions.posts.changePostDisplay(mode) ) },
-          };
-    }
+    return {
+        changePostDisplay: ( mode: models.PostDisplay  ) => { dispatch(actions.posts.changePostDisplay(mode) ) },
+        };
+    
 }
 
 

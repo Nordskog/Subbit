@@ -7,6 +7,7 @@ import { State } from '~/client/store';
 import { WrapWithHandler } from '~/client/actions/tools/error';
 import { AuthorizationException } from '~/common/exceptions';
 import { AuthorFilter, LoadingStatus } from '~/common/models';
+import { Dispatch, GetState } from '~/client/actions/tools/types';
 
 let firstLoad : boolean = true;
 
@@ -14,7 +15,7 @@ let firstLoad : boolean = true;
 
 export function authorsRoutes()
 {
-    return WrapWithHandler( async (dispatch, getState ) =>
+    return WrapWithHandler( async (dispatch : Dispatch, getState : GetState ) =>
     {
         actions.directActions.page.clearPage(true, dispatch);
         actions.directActions.authentication.loadAuthentication(dispatch, getState);
@@ -26,7 +27,7 @@ export function authorsRoutes()
 
 export function authorizeRoute()
 {
-    return WrapWithHandler( async (dispatch, getState ) =>
+    return WrapWithHandler( async (dispatch : Dispatch, getState : GetState ) =>
     {
         let { error, code,  state} = getState().location.query;
         if (error)
@@ -56,7 +57,7 @@ export function authorizeRoute()
 }
 
 //Only run on first load
-async function firstLoadDuties(dispatch, getState)
+async function firstLoadDuties(dispatch : Dispatch, getState : GetState)
 {
     if (firstLoad)
     {

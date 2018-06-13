@@ -5,6 +5,7 @@ import component from './component';
 
 import * as actions from '~/client/actions';
 import * as models from '~/common/models';
+import { Dispatch } from '~/client/actions/tools/types';
 
 function mapStateToProps(state: State )
 {
@@ -15,19 +16,18 @@ function mapStateToProps(state: State )
     }
 }
 
-function mapDispatchToProps(dispatch, ownProps) : object
+function mapDispatchToProps(dispatch: Dispatch) : object
 {
-    return function (dispatch)
-    {
-        return {  };
-    }
+    return { 
+
+    };
 }
 
 
 const authors =
     connect(
                 mapStateToProps,
-                mapDispatchToProps,
+                mapDispatchToProps
     )
         (component);
 

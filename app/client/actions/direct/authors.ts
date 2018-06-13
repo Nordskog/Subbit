@@ -4,9 +4,10 @@ import { State } from '~/client/store';
 import * as authority from '~/client/authority'
 import * as actions from '~/client/actions'
 import config from 'root/config'
+import { Dispatch, GetState } from '~/client/actions/tools/types';
 
 
-export async function getAuthors( dispatch, getState )
+export async function getAuthors( dispatch : Dispatch, getState : GetState )
 {
     let state: State = getState();
 
@@ -116,7 +117,7 @@ export async function getAuthors( dispatch, getState )
     return { authorEntries : authorEntries, after : after  };
 }
 
-export function populateAuthorSubscriptions( authors : models.data.AuthorEntry[], getState )
+export function populateAuthorSubscriptions( authors : models.data.AuthorEntry[], getState : GetState )
 {
     let subscriptions : models.data.Subscription[] = (<State> getState()).userState.subscriptions;
     //let subMap : Map<string, models.data.Subscription> = new Map<string, models.data.Subscription>();
@@ -143,7 +144,7 @@ export function updateLoadingProgress (count : number, progress : number, dispat
     });
 }
 
-export async function poulateInitialPosts(authors : models.data.AuthorEntry[], count : number, dispatch, getState)
+export async function poulateInitialPosts(authors : models.data.AuthorEntry[], count : number, dispatch : Dispatch, getState : GetState)
 {
         let state: State = getState();
 

@@ -3,7 +3,7 @@ import * as api from '~/common/api'
 import * as models from '~/common/models'
 import * as actions from '~/client/actions'
 import { State } from '~/client/store';
-import { Dispatch } from '~/client/actions/tools/types';
+import { Dispatch, GetState } from '~/client/actions/tools/types';
 import { RedditAuth } from '~/common/models/auth';
 
 
@@ -39,7 +39,7 @@ export async function retrieveAndUpdateRedditAuth(dispatch : Dispatch, state : S
    return redditAuth;
 }
 
-export function removeAuthentication(dispatch)
+export function removeAuthentication(dispatch : Dispatch)
 {
     localStorage.removeItem('id_token');
     localStorage.removeItem('access_token');
@@ -63,7 +63,7 @@ export function saveRedditAuth( auth : RedditAuth )
     localStorage.setItem('reddit_auth', JSON.stringify( auth ) );
 }
 
-export function loadAuthentication(dispatch, getState)
+export function loadAuthentication(dispatch : Dispatch, getState : GetState)
 {
     let state : State = getState();
     if (!state.authState.isAuthenticated)

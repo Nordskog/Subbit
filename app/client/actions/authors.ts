@@ -15,7 +15,7 @@ import { WrapWithHandler } from '~/client/actions/tools/error';
 
 export function changeSubreddit( subreddit : string)
 {
-    return async function (dispatch, getState)
+    return async function (dispatch : Dispatch, getState : GetState)
     {    
         if (subreddit == null)
         {
@@ -40,7 +40,7 @@ export function changeSubreddit( subreddit : string)
 
 export function viewAuthor( author: string, subreddit? : string)
 {
-    return async function (dispatch, getState)
+    return async function (dispatch : Dispatch, getState : GetState)
     {
        let state: State = getState();
     
@@ -52,7 +52,7 @@ export function viewAuthor( author: string, subreddit? : string)
 
 export function fetchAuthorsAction ( appendResults: boolean = false)
 {
-    return WrapWithHandler( async function (dispatch, getState)
+    return WrapWithHandler( async function (dispatch : Dispatch, getState : GetState)
     {
         try
         {

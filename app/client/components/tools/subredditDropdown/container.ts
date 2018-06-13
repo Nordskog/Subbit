@@ -3,6 +3,7 @@ import component from './component';
 import { State } from '~/client/store'
 
 import * as actions from '~/client/actions'
+import { Dispatch } from '~/client/actions/tools/types';
 
 function mapStateToProps(state: State )
 {
@@ -13,17 +14,15 @@ function mapStateToProps(state: State )
     }
 }
 
-function mapDispatchToProps(): object
+function mapDispatchToProps( dispatch : Dispatch): object
 {
-    return function (dispatch)
-    {
-        return {
-            searchSubreddit: ( name : string ) => { return actions.statelessActions.subreddits.searchSubreddits(name, dispatch) },
-            searchAuthor: ( name : string ) => { return actions.statelessActions.subreddits.searchSubreddits(name, dispatch) },
-            changeSubreddit: ( subreddit : string ) => { dispatch(actions.authors.changeSubreddit(subreddit)) },
-            viewAuthor: ( author: string, subreddit? : string ) => { dispatch(actions.authors.viewAuthor( author, subreddit)) },
-        }
+    return {
+        searchSubreddit: ( name : string ) => { return actions.statelessActions.subreddits.searchSubreddits(name, dispatch) },
+        searchAuthor: ( name : string ) => { return actions.statelessActions.subreddits.searchSubreddits(name, dispatch) },
+        changeSubreddit: ( subreddit : string ) => { dispatch(actions.authors.changeSubreddit(subreddit)) },
+        viewAuthor: ( author: string, subreddit? : string ) => { dispatch(actions.authors.viewAuthor( author, subreddit)) },
     }
+
 }
 
 const RedditList = connect(

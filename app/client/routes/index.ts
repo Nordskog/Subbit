@@ -1,7 +1,8 @@
 ﻿import * as actions from '~/client/actions';
 import { AuthorFilter } from '~/common/models';
+import { RoutesMap } from 'redux-first-router';
 
-export const routesMap = {
+export const routesMap : RoutesMap<any, any> = {
 
     //Auth //If last route in map, the HOME route is triggered instead. Something is very broken with RFR
     AUTHENTICATE: { path: '/authenticate', thunk: actions.routes.authorizeRoute() },

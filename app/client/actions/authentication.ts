@@ -6,10 +6,11 @@ import * as models from '~/common/models'
 
 import { State } from '~/client/store';
 import { WrapWithHandler } from '~/client/actions/tools/error';
+import { Dispatch, GetState } from '~/client/actions/tools/types';
 
 export function authenticatedWithRedditCode(code : string, state : string)
 {
-    return WrapWithHandler( async (dispatch, getState) =>
+    return WrapWithHandler( async (dispatch : Dispatch, getState : GetState) =>
     {
         let userInfo : models.auth.UserInfo = await api.rfy.authentication.authenticate(code,state);
 
@@ -25,7 +26,7 @@ export function authenticatedWithRedditCode(code : string, state : string)
 
 export function logoutUserAction()
 {
-    return async dispatch =>
+    return async (dispatch : Dispatch ) =>
     {
         actions.directActions.authentication.removeAuthentication(dispatch);
         //No sub means home (frontpage)

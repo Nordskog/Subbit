@@ -3,6 +3,7 @@ import component from './component';
 import { State } from '~/client/store'
 
 import * as actions from '~/client/actions'
+import { Dispatch } from '~/client/actions/tools/types';
 
 function mapStateToProps(state: State)
 {
@@ -15,14 +16,11 @@ function mapStateToProps(state: State)
     };
 }
 
-function mapDispatchToProps(): object
+function mapDispatchToProps( dispatch : Dispatch): object
 {
-    return function (dispatch)
-    {
         return {
             logout: () => { dispatch(actions.authentication.logoutUserAction()) },
         }
-    }
 }
 
 const HeaderComponent = connect(

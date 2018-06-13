@@ -3,10 +3,11 @@ import * as actions from '~/client/actions'
 import { api, tools } from "~/common";
 import { State } from "~/client/store";
 import { WrapWithHandler } from "~/client/actions/tools/error";
+import { Dispatch, GetState } from "~/client/actions/tools/types";
 
 export function changePostDisplay( mode : PostDisplay)
 {
-    return WrapWithHandler( async function (dispatch, getState)
+    return WrapWithHandler( async function (dispatch : Dispatch, getState : GetState)
     {    
         let state: State = getState();
         let token: string = tools.store.getAccessToken(state);
