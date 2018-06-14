@@ -5,6 +5,8 @@ import * as authority from '~/client/authority'
 import * as actions from '~/client/actions'
 import config from 'root/config'
 import { Dispatch, GetState } from '~/client/actions/tools/types';
+import { Post } from '~/common/models/reddit';
+import { postedDate } from 'css/main.scss';
 
 
 export async function getAuthors( dispatch : Dispatch, getState : GetState )
@@ -196,7 +198,21 @@ export async function poulateInitialPosts(authors : models.data.AuthorEntry[], c
                         {
                             if (author.author.posts[0].created_utc > posts[0].created_utc)
                             {
-                                posts.unshift(author.author.posts[0]);
+                                // There have been rare cases of reddit going completely mental
+                                //and including a post with the same id but different created_utc times.
+                                //Since it is rare that this block will be run, we might as well handle that case too.
+                                let postExists : boolean = false;
+                                for ( let post of posts )
+                                {
+                                    if (post.id == author.author.posts[0].id )
+                                    {
+                                        postExists = true;
+                                        break;
+                                    }
+                                }
+
+                                if (!postExists)
+                                    posts.unshift(author.author.posts[0]);
                             }
                         }
 
