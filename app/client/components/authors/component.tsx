@@ -13,6 +13,7 @@ import * as styles from 'css/author.scss';
 
 import * as transitions from 'react-transition-group'
 import { AuthorFilter } from '~/common/models';
+import { AuthorEntry } from '~/common/models/data';
 
 interface Props 
 {
@@ -22,20 +23,29 @@ interface Props
 
 }
 
+
+
 export default class AuthorsComponent extends React.Component<Props, {} >
 {
+    shouldRenderLastVisitBar()
+    {
+        let shouldRender = ( this.props.filter == AuthorFilter.NEW || this.props.filter == AuthorFilter.SUBSCRIPTIONS) && this.props.authors.length > 0;
+        if (shouldRender)
+        {
+            let topAuthor : AuthorEntry = this.props.authors[0];
+            if (topAuthor.author.last_post_date < this.props.lastVisit )
+                return false;
+        }
+
+        return shouldRender;
+    }
+
     renderAuthors()
     {
         let renders = new Array(this.props.authors.length);
 
         //list visited only works when sorting by new, so NEW or SUBSCRIPTIONS
-        let lastVisitAdded : boolean = !( this.props.filter == AuthorFilter.NEW || this.props.filter == AuthorFilter.SUBSCRIPTIONS) ;
-        if (this.props.authors.length > 0 && this.props.authors[0].author.last_post_date < this.props.lastVisit )
-        {
-            //Skip if it would end up at the top of the screen
-            lastVisitAdded = true;
-        }
-
+        let lastVisitAdded : boolean = !this.shouldRenderLastVisitBar();
 
         this.props.authors.forEach( (author, index) =>
         {

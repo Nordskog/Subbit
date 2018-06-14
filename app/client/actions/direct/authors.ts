@@ -186,10 +186,28 @@ export async function poulateInitialPosts(authors : models.data.AuthorEntry[], c
                     author.after = after;;
                     author.end = after == null;
 
-                    //Don't overwrite if we don't find any posts.
-                    //May be seeded with normal listing results.
+                    //Author will usually be seeded by a single post we got via the normal listing.
+                    //If existing post is newer than any we got via search,
+                    //include it at the beginning. New posts are usually available
+                    //via search instantly, but they are sometimes delayed by over a day.
                     if (posts.length > 0)
+                    {
+                        if (author.author.posts.length > 0)
+                        {
+                            if (author.author.posts[0].created_utc > posts[0].created_utc)
+                            {
+                                posts.unshift(author.author.posts[0]);
+                            }
+                        }
+
                         author.author.posts = posts;
+                    }
+
+                    if (author.author.posts.length > 0)
+                    {
+                        author.author.last_post_date = author.author.posts[0].created_utc;
+                    }
+                     
 
                     authorCompletedCount++;
                     updateLoadingProgress(authorCount, authorCompletedCount, dispatch);

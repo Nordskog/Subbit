@@ -21,12 +21,6 @@ export async function retrieveAndUpdateRedditAuth(dispatch : Dispatch, state : S
     //Refresh if expiry in less than 30 seconds
     if ( (redditAuth.expiry - 30) < (Date.now() / 1000 ) )
     {
-        console.log("Reddit token expired, refreshing");
-
-        console.log("Stored: ",redditAuth.expiry);
-        console.log("Now   : ",(Date.now() / 1000 ));
-
-
         redditAuth = await api.rfy.authentication.refreshRedditAccessToken(user,token);
         saveRedditAuth(redditAuth);
 
