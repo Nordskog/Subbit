@@ -1,0 +1,96 @@
+@import 'colors';
+
+.container
+{
+    margin-top:30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    font-size: large;
+    color: $highlighted-text-color;
+}
+
+
+.title
+{   
+    font-size:xx-large;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.row
+{
+    margin-top: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.corner
+{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    
+
+    width:70px;
+    height:40px;
+    border-top-left-radius: 10px;
+    background: $card-background;
+}
+
+.caret
+{
+    margin: auto;
+}
+
+.hidden
+{
+    opacity: 0.25;
+}
+
+
+.rowMessage
+{
+    white-space: nowrap;
+    width: 320px;
+    padding-left: 10px;
+    font-weight: bold;
+}
+
+.spanRow
+{
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    align-items: center;
+}
+
+.spacer
+{
+
+    height:20px;
+}
+
+.loginContainer
+{
+    width:360px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-weight: bold;
+    background: $card-background;
+
+    border-radius: 10px;
+    
+}
+
+.loginButton
+{
+    background: $card-button-color;
+    border-radius: 5px;
+}
+

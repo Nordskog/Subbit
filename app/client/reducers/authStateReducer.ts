@@ -51,7 +51,7 @@ export function authStateReducer(state = getDefaultAuthState(), action : models.
 
 export function getDefaultAuthState(userInfo?: models.auth.UserInfo)
 {
-    if (userInfo)
+    if (userInfo != null)
     {
         return {
             isAuthenticated: true,

@@ -75,7 +75,7 @@ export function loadAuthentication(dispatch : Dispatch, getState : GetState)
         if (id_token != null && access_token != null && reddit_auth_json != null)
         {
             let userInfo : models.auth.UserInfo = tools.jwt.decodeTokensToUserInfo(id_token, access_token, reddit_auth_json );
-
+            
             dispatch({
                 type: actions.types.authentication.LOGIN_SUCCESS,
                 payload: userInfo as actions.types.authentication.LOGIN_SUCCESS

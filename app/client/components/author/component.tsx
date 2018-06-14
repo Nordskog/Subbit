@@ -35,12 +35,14 @@ interface Props
     solo : boolean;
     subreddit: string;
     postDisplay: models.PostDisplay;
+    authenticated: boolean;
     subscribe(author: string, subreddits : string[] ): void;
     unsubscribe(sub: models.data.Subscription): void;
     addSubscriptionSubreddit(subscription : number, subreddit : string ): void;
     removeSubscriptionSubreddit(subscription : number, subreddit : string): void;
     fetchMorePosts(author : models.data.AuthorEntry, count : number): void;
     searchSubreddits( name : string) : Promise< string[] >;
+    goToSubscriptions(): void;
 }
 interface State
 {
@@ -254,7 +256,7 @@ export default class AuthorCell extends React.Component<Props, State>
         {
             for ( let i = 0; i < this.props.author.subscription.subreddits.length; i++)
             {
-                if (this.props.author.subscription.subreddits[i].name == this.props.subreddit)
+                if (this.props.author.subscription.subreddits[i].name.toLowerCase() == this.props.subreddit.toLowerCase())
                 {
                     return true;
                 }
@@ -390,9 +392,14 @@ export default class AuthorCell extends React.Component<Props, State>
 
     handleSubscribeClick()
     {
-        let subreddits : string[] = [];
-        
+        if (!this.props.authenticated)
+        {
+            this.props.goToSubscriptions();
+            return;
+            //Forward to subs page, which asks user to log in.
+        }
 
+        let subreddits : string[] = [];
         
         //Not subscribed, but subscription populated
         if ( this.props.author.subscription != null)

@@ -136,10 +136,6 @@ export default class SubredditDropdown extends React.Component<Props, State>
             onAltClick: ( item : components.tools.SearchList.ListItem) => { this.props.viewAuthor(item.name, this.props.subreddit) }
         }
 
-        //The user will eventually be subscribed to too many users so... 
-        authorSearch.items.length = 10;
-
-
         return <components.tools.SearchList.popup
                                 trigger={ trigger }
                                 items={[subSearch, authorSearch]} 

@@ -12,7 +12,9 @@ function mapStateToProps(state: State )
     return { 
         subreddit: state.authorState.subreddit, 
         postDisplay: state.userState.settings.post_display_mode,
-        solo: state.authorState.author != null
+        solo: state.authorState.author != null,
+        authenticated: state.authState.isAuthenticated,
+
     }
 }
 
@@ -23,7 +25,8 @@ function mapDispatchToProps(dispatch: Dispatch) : object
                 unsubscribe: (sub: models.data.Subscription) => { dispatch(actions.subscription.unsubscribeFromAuthor(sub)) },
                 fetchMorePosts: (author : models.data.AuthorEntry, count : number) => { dispatch(actions.authors.fetchMorePosts( [author], count)) },
                 addSubscriptionSubreddit: (subscription : number, subreddit : string) => { dispatch(actions.subscription.addSubredditToSubscriptionAction(subscription, subreddit)) },
-                removeSubscriptionSubreddit: (subscription : number, subreddit : string) => { dispatch(actions.subscription.removeSubredditFromSubscriptionAction(subscription, subreddit)) }
+                removeSubscriptionSubreddit: (subscription : number, subreddit : string) => { dispatch(actions.subscription.removeSubredditFromSubscriptionAction(subscription, subreddit)) },
+                goToSubscriptions: () => { dispatch(actions.authors.changeFilter(models.AuthorFilter.SUBSCRIPTIONS)) },
     };
 }
 

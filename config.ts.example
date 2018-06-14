@@ -10,7 +10,8 @@
         postExpandCount: 10,     //Number of posts to expand by every time more posts button is hit
         postFetchCount: 36,      //How many posts to fetch in each request
         authorDisplayCount: 10,  //How many authors to display on one page (subscriptions always displays all)
-        name :  "RFY client (Internal testing)"
+        userAgent:  "Subbit",
+        siteName: "Subbit"
     },
 
 

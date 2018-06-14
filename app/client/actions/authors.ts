@@ -32,9 +32,27 @@ export function changeSubreddit( subreddit : string)
             { type: actions.types.Route.SUBREDDIT, payload: { subreddit: subreddit, filter: null  } as actions.types.Route.SUBREDDIT } 
             );
         }
+    }
+}
 
+export function changeFilter( filter : AuthorFilter, subreddit? : string)
+{
+    return async function (dispatch : Dispatch, getState : GetState)
+    {    
+        if (subreddit == null)
+        {
+            dispatch(
+                        { type: actions.types.Route.FILTER, payload: { filter: filter } as actions.types.Route.FILTER  } 
+                );
+        }
+        else
+        {
+            let state: State = getState();
 
-
+            dispatch(
+            { type: actions.types.Route.SUBREDDIT, payload: { subreddit: subreddit, filter: filter  } as actions.types.Route.SUBREDDIT } 
+            );
+        }
     }
 }
 
