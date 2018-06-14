@@ -29,5 +29,9 @@
 {
     background: $card-background;
     min-width: 400px;
-    border: 2px solid $hidden-text-color;
+    border-left: 2px solid $hidden-text-color;
+    border-right: 2px solid $hidden-text-color;
+    border-bottom: 2px solid $hidden-text-color;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
 }

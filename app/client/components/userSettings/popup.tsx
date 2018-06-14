@@ -9,7 +9,7 @@ import Popup from "reactjs-popup";
 import * as transitions from 'react-transition-group'
 
 import * as styles from 'css/userSettings.scss'
-import * as siteStyles from 'css/site.scss';
+import * as animationStyles from 'css/animations.scss';
 import * as headerStyles from 'css/header.scss'
 
 
@@ -23,7 +23,14 @@ export default class popup extends React.Component<null, null>
         {
             'width': 'auto',
             'border': '0px',
+            'padding': '0px',
             'background':'transparent'
+        }
+
+        let overlayStyle =
+        {
+            'background': '#00000080',
+            'animation': animationStyles.fadeIn+" 0.5s"
         }
 
         let trigger = <div className={headerStyles.sortButton}>Settings</div>;
@@ -32,6 +39,7 @@ export default class popup extends React.Component<null, null>
                         contentStyle={style} 
                         position="bottom right" closeOnDocumentClick
                         arrow={false}
+                        overlayStyle={overlayStyle}
                                             >
                     {
                         close => 
