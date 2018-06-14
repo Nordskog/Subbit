@@ -89,14 +89,15 @@ export class NetworkException extends Exception
 {
     url : string;
     code: number;
+    res: Response;
 
-    constructor( code : number, message : string, url : string)
+    constructor( code : number, message : string, url : string, res? : Response)
     {
         super( message );
         this.name = "NetworkException";
         this.url = url;
         this.code = code;
-
+        this.res = res;
     }
 
     static async fromResponse( res : Response) : Promise<NetworkException>
@@ -104,7 +105,30 @@ export class NetworkException extends Exception
         let text : string = null;
         try
         {
-            text = await res.json();
+            let resBody : any = await res.json();
+
+            console.log("resBody:",resBody);
+
+            //It's fairly common for servers to return a json object with a message field
+            if ( resBody.message != null )
+            {
+                text = resBody.message;
+            }
+            else
+            {
+                //If not, the body may be a primitive
+                if (resBody !== Object(resBody))
+                {
+                    text = resBody;
+                }
+                else
+                {
+                    //Otherwise just stringify the thing
+                    //and pray we don't end up with Object object
+                    text = JSON.stringify(resBody);
+                }
+  
+            }
         }
         catch( err)
         {

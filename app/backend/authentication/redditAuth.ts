@@ -25,7 +25,8 @@ interface AuthRequestState
 //Requests or updates app-only token
 export async function getAppClientAccessToken()
 {
-    if (clientAuthentication.expiry > ( (Date.now() / 1000) + 30 ))
+    //Refresh within 5min of limit
+    if (clientAuthentication.expiry > ( (Date.now() / 1000) - (5 * 60) ))
     {
         //Token still valid
         return clientAuthentication;

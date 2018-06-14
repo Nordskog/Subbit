@@ -9,7 +9,7 @@ import * as tools from '~/common/tools'
 
 import * as authority from '~/client/authority'
 import { CancellationError } from 'bluebird';
-import { CancelledException } from '~/common/exceptions';
+import { CancelledException, NetworkException, Exception } from '~/common/exceptions';
 import { Dispatch, GetState } from '~/client/actions/tools/types';
 import { WrapWithHandler } from '~/client/actions/tools/error';
 
@@ -126,7 +126,24 @@ export function fetchAuthorsAction ( appendResults: boolean = false)
                     }  as actions.types.page.LOADING_STATE_CHANGED
                 });
 
-                throw(error);
+                if ( error instanceof NetworkException)
+                {
+                    //Reddit's servers are melting
+                    if ( error.code == 500 )
+                    {
+                        throw new Exception("Reddit: Internal Server Error");
+                    }
+                    else
+                    {
+                        throw(error);
+                    }
+                }
+                else
+                {
+                    throw(error);
+                }
+
+                
             }
         }
     });

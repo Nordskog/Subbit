@@ -6,6 +6,7 @@ import * as urls from '~/common/urls'
 import * as tools from '~/common/tools'
 
 import * as api from '~/common/api'
+import { NetworkException } from '~/common/exceptions';
 
 export async function authenticateWithCode(code : string, redirect : string, appBasicAuthHeader )
 {
@@ -27,9 +28,7 @@ export async function authenticateWithCode(code : string, redirect : string, app
     }
     else
     {
-        let fetchError = "Auth error: " + JSON.stringify(response.status)+JSON.stringify(response.statusText);
-        console.log(fetchError);
-        return null;
+        throw await NetworkException.fromResponse(response);
     }
 }
 
@@ -50,9 +49,7 @@ export async function authenticateAsClient(appBasicAuthHeader )
     }
     else
     {
-        let fetchError = "Auth error: " + JSON.stringify(response.status)+JSON.stringify(response.statusText);
-        console.log(fetchError);
-        return null;
+        throw await NetworkException.fromResponse(response);
     }
 }
 
@@ -75,8 +72,7 @@ export async function authenticatedWithRefreshToken(token : string, appBasicAuth
     }
     else
     {
-        let fetchError = "Auth error: " + JSON.stringify(response.status)+JSON.stringify(response.statusText);
-        console.log(fetchError);
+        throw await NetworkException.fromResponse(response);
     }
 }
 
@@ -88,6 +84,8 @@ export async function getUsername( auth : models.auth.RedditAuth )
 
     },
     auth);
+
+    
 
     return result.name;
 }
