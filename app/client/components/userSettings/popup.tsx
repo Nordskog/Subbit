@@ -10,7 +10,8 @@ import * as transitions from 'react-transition-group'
 
 import * as styles from 'css/userSettings.scss'
 import * as animationStyles from 'css/animations.scss';
-import * as headerStyles from 'css/header.scss'
+
+import settings_icon from 'assets/images/settings_icon.svg'
 
 
 
@@ -33,7 +34,9 @@ export default class popup extends React.Component<null, null>
             'animation': animationStyles.fadeIn+" 0.5s"
         }
 
-        let trigger = <div className={headerStyles.sortButton}>Settings</div>;
+        let trigger =   <svg className={styles.button} >
+                            <use xlinkHref={settings_icon}></use>
+                        </svg>;
 
         return <Popup   trigger={ trigger } 
                         contentStyle={style} 
