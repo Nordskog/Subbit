@@ -150,9 +150,7 @@ export async function poulateInitialPosts(authors : models.data.AuthorEntry[], c
 {
         let state: State = getState();
 
-        let redditAuth = null;
-        if (state.authState.isAuthenticated)
-            redditAuth = state.authState.user.redditAuth;
+        let redditAuth = await actions.directActions.authentication.retrieveAndUpdateRedditAuth( dispatch, state);
 
         let authorCount : number = authors.length;
         let authorCompletedCount : number = 0;

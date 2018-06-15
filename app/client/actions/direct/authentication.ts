@@ -18,8 +18,8 @@ export async function retrieveAndUpdateRedditAuth(dispatch : Dispatch, state : S
     }
 
     let redditAuth : models.auth.RedditAuth  = tools.store.getRedditAuth(state);
-    //Refresh if expiry in less than 30 seconds
-    if ( (redditAuth.expiry - 30) < (Date.now() / 1000 ) )
+    //Refresh if expiry in less than 5min
+    if (redditAuth.expiry < ( (Date.now() / 1000) + (5 * 60) ))
     {
         redditAuth = await api.rfy.authentication.refreshRedditAccessToken(user,token);
         saveRedditAuth(redditAuth);

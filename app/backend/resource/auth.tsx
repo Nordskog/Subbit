@@ -43,6 +43,8 @@ router.get('/api/authorize_refresh', async (req: WetlandRequest, res: Express.Re
     {
         let user : Entities.User = await authentication.verification.getAuthorizedUser(manager, token, username);
 
+        //TODO store token and prevent user from spamming refresh
+
         let result = await api.reddit.auth.authenticatedWithRefreshToken( user.auth.refresh_token, redditAuth.getHttpBasicAuthHeader() );
         if (result == null || result.access_token == null)
         {
