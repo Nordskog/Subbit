@@ -81,12 +81,22 @@ export default class PostCell extends React.Component<Props, null>
             </div>
     }
 
+    getTitleLinebreakFix()
+    {
+        //For some inane reason, the last word of the title will 
+        //follow the posted date and whatnot and be broken to the next line,
+        //despite there being plenty of space available on the first line.
+        //It only moves the last element, so inserting an empty span inside
+        //the title link leaves the rest of the title unharmed.
+        return <span> </span>
+    }
+
     getLink( includeFlairs : boolean = true, ...inlineElements : JSX.Element[])
     {
         return <div className={styles.post}>
             { this.getFlairsAndStuff() }
             <a className={styles.postLink} href={this.props.post.url}>
-                {this.props.post.title} 
+                {this.props.post.title}{this.getTitleLinebreakFix()}
             </a>
             {inlineElements}
             </div> 
