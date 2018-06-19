@@ -26,7 +26,7 @@ router.get('/api/subscription', async (req: WetlandRequest, res: Response) =>
 {
 
     let manager = RFY.wetland.getManager();
-    let token = req.headers.access_token;
+    let token : string  = req.headers.access_token as string;
 
     try
     {
@@ -62,7 +62,7 @@ router.get('/api/subscription', async (req: WetlandRequest, res: Response) =>
 router.post('/api/subscription', async (req: WetlandRequest, res: Response) =>
 {   
     let manager = RFY.wetland.getManager();
-    let token = req.headers.access_token;
+    let token : string  = req.headers.access_token as string;
     let rawReq : models.Action<any> = req.body;
 
     let user: Entities.User = null;

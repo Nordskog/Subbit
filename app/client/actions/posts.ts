@@ -2,7 +2,7 @@ import { PostDisplay } from "~/common/models";
 import * as actions from '~/client/actions'
 import { api, tools } from "~/common";
 import { State } from "~/client/store";
-import { WrapWithHandler } from "~/client/actions/tools/error";
+import { WrapWithHandler, handleError } from "~/client/actions/tools/error";
 import { Dispatch, GetState } from "~/client/actions/tools/types";
 
 export function changePostDisplay( mode : PostDisplay)
@@ -15,7 +15,10 @@ export function changePostDisplay( mode : PostDisplay)
         if (token != null)
         {
             //Don't want for server response
-            api.rfy.user.setPostDisplayMode(mode, token);
+            api.rfy.user.setPostDisplayMode(mode, token).catch( err => 
+            {
+                handleError(err);
+            });
         }
 
         dispatch(

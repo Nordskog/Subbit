@@ -15,5 +15,7 @@ css/*scss.d.ts
 
 config.ts
 server_config.ts
+jwtRS256.key
+jwtRS256.key.pub
 
 !/migrations/*

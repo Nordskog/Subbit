@@ -55,6 +55,7 @@ class Migration {
       table.string('username', 255).notNullable();
       table.timestamp('last_visit').notNullable().defaultTo(builder.knex.raw('CURRENT_TIMESTAMP'));
       table.unique(['username'], 'username_unique');
+      table.integer('generation').unsigned().nullable();
     });
 
     builder.schema.createTable('user_settings', table => {

@@ -88,6 +88,7 @@ export function confirmAuthState(identifier: string) : boolean
         }
         else
         {
+            activeAuthStates.delete(identifier);
             return false;
         }
     }
@@ -166,8 +167,9 @@ export async function createOrUpdateUserFromRedditToken( manager : Wetland.Scope
     {
         //Init settings
         let userSettings = new Entities.UserSettings;
-    
-        user = populator.assign(Entities.User, { username: username, auth: auth, settings: userSettings}, user, true)
+        let generation = Math.floor( Date.now() / 1000 );
+
+        user = populator.assign(Entities.User, { username: username, auth: auth, settings: userSettings, generation }, user, true)
     }
     else
     {

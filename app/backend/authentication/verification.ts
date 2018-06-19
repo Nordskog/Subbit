@@ -4,27 +4,31 @@ import * as jwt from 'jsonwebtoken';
 import * as Wetland from 'wetland';
 
 import serverConfig from 'root/server_config'
-import * as RFY from '~/backend/rfy';
 import * as Entities from '~/backend/entity';
-import * as models from '~/common/models';
 import { AuthorizationException } from '~/common/exceptions';
 import { scopes } from '~/backend/authentication/generation';
+import { AccessToken } from '~/common/models/auth';
 
 
-export async function getAuthorizedUser (manager : Wetland.Scope, access_token_raw, options? : any, scope?: scopes, )
+export async function getAuthorizedUser (manager : Wetland.Scope, access_token_raw : string, options? : any, scope?: scopes, )
 {
     if (access_token_raw == null)
     {
         throw new AuthorizationException("No user token provided");
     }
 
-    let decodedToken = await decodeToken(access_token_raw);
+    let decodedToken : AccessToken = await decodeToken(access_token_raw);
 
     let user : Entities.User = await getUserFromToken(manager, decodedToken, options);
 
+    if (user.generation != decodedToken.generation)
+    {
+        throw new AuthorizationException("Token generation has been invalidated");
+    }
+
     if (scope != null)
     {
-        if (!checkScope(decodedToken.scopes,scope) )
+        if (!checkScope(scope, decodedToken.scope) )
         {
             throw new AuthorizationException("Token does not provide access to scope: "+scope);
         }
@@ -33,12 +37,12 @@ export async function getAuthorizedUser (manager : Wetland.Scope, access_token_r
     return user;
 }
 
-export async function decodeToken(access_token_raw)
+async function decodeToken(access_token_raw : string) : Promise<AccessToken>
 {
-    let decodedToken = null;
+    let decodedToken : AccessToken = null;
     try
     {
-        decodedToken = jwt.verify(access_token_raw, serverConfig.token.secret)
+        decodedToken = jwt.verify(access_token_raw, serverConfig.token.publicKey) as AccessToken
     }
     catch(err)
     {
@@ -67,12 +71,12 @@ async function getUserFromToken(manager : Wetland.Scope, decodedToken, options :
     return user;
 }
 
-function checkScope(scope: scopes, scopes: string) {
-    if (scope)  //If no scope specified then ignore
+function checkScope( requiredScope: scopes, permittedScopes: string) {
+    if ( requiredScope != null)  //If no scope specified then ignore
     {
-        let scopesArray: string[] = scopes.split(' ');
+        let scopesArray: string[] = permittedScopes.split(' ');
         for (let singleScope of scopesArray) {
-            if (singleScope === scope) {
+            if (singleScope ===  requiredScope) {
                 return true;
             }
         };
@@ -81,11 +85,9 @@ function checkScope(scope: scopes, scopes: string) {
     }
 
     return true;
-
-
 }
 
-export function checkuser(sub: string, user: Entities.User): boolean {
+function checkuser(sub: string, user: Entities.User): boolean {
     return user.username == sub;
 
 }

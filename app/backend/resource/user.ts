@@ -24,7 +24,7 @@ const router = express.Router();
 router.get('/api/user/last_visit', async (req: WetlandRequest, res: Response) =>
 {
     let manager = RFY.wetland.getManager();
-    let token = req.headers.access_token;
+    let token : string  = req.headers.access_token as string;
 
     try
     {
@@ -60,7 +60,7 @@ router.get('/api/user/last_visit', async (req: WetlandRequest, res: Response) =>
 router.get('/api/user/settings', async (req: WetlandRequest, res: Response) =>
 {
     let manager = RFY.wetland.getManager();
-    let token = req.headers.access_token;
+    let token : string  = req.headers.access_token as string;
 
     try
     {
@@ -82,7 +82,7 @@ router.get('/api/user/settings', async (req: WetlandRequest, res: Response) =>
 router.post('/api/user', async (req: WetlandRequest, res: Response) =>
 {   
     let manager = RFY.wetland.getManager();
-    let token = req.headers.access_token;
+    let token : string  = req.headers.access_token as string;
     let rawReq : models.Action<any> = req.body;
 
     try

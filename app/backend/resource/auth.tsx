@@ -34,8 +34,8 @@ router.get('/api/authorize_remote', (req: WetlandRequest, res: Express.Response)
 
 router.get('/api/authorize_refresh', async (req: WetlandRequest, res: Express.Response) =>
 {
-    let token = req.headers.access_token;
-    let username = req.query.user;
+    let token : string = req.headers.access_token as string;
+    let username : string = req.query.user;
 
     let manager : Wetland.Scope = RFY.wetland.getManager()
 

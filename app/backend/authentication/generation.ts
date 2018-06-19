@@ -4,8 +4,8 @@ import * as jwt from 'jsonwebtoken';
 import serverConfig from 'root/server_config'
 import * as models from '~/common/models'  
 import * as tools from '~/common/tools'  
-import * as RFY from '~/backend/rfy';
 import * as Entities from '~/backend/entity';
+import { AccessToken } from '~/common/models/auth/';
 
 export enum scopes
 {
@@ -13,25 +13,33 @@ export enum scopes
     SETTINGS = 'SETTINGS'
 };
 
-
 export function createIdToken(user: Entities.User)
 {
-    return jwt.sign(_.pick(user, ['username'] ), serverConfig.token.secret, { expiresIn: 60 * 60 * 5 });
+    return jwt.sign(_.pick(user, ['username'] ), serverConfig.token.privateKey, { expiresIn: 60 * 60 * 5 });
 }
 
-export function createAccessToken(user)
+export function createAccessToken(user : Entities.User)
 {
-    let payload = {
-        iss: serverConfig.token.issuer,
-        aud: serverConfig.token.audience,
-        exp: Math.floor(Date.now() / 1000) + (60 * 99999),
+    //generation is stored in the db for each user.
+    //After token has been verified this value is also checked.
+    //This allows us to invalidate all existing tokens for this user.
+
+    let payload : AccessToken = {
         scope: [scopes.SUBSCRIPTIONS, scopes.SETTINGS].join(" "),
         sub: user.username,
-        jti: genJti(), // unique identifier for the token
-        alg: 'HS256'
+        generation: user.generation
     };
 
-    return jwt.sign( payload, serverConfig.token.secret);
+    let options : jwt.SignOptions = {
+        issuer: serverConfig.token.issuer,
+        audience: serverConfig.token.audience,
+        expiresIn: '1 year',
+        algorithm: 'RS256',
+        jwtid: genJti(), // unique identifier for the token
+    };
+
+
+    return jwt.sign( payload, serverConfig.token.privateKey, options );
 }
 
 // Generate Unique Identifier for the access token
@@ -49,10 +57,8 @@ function genJti()
 
 export function generateUserInfo( user : Entities.User)
 {
-    let id_token = createIdToken(user);
-    let access_token = createAccessToken(user);
-
-    let redditTokenExpiry : Date = user.auth.expiry;
+    let id_token : string = createIdToken(user);
+    let access_token : string = createAccessToken(user);
 
     let userInfo: models.auth.UserInfo = {
         id_token: id_token,

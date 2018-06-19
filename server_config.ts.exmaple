@@ -31,8 +31,9 @@ const config =
 
     token:
     {
-        secret: "this is a secret",
-        audience: "nodejs-jwt-auth",
+        privateKey: fs.readFileSync("./jwtRS256.key"),
+        publicKey: fs.readFileSync("./jwtRS256.key.pub"),
+        audience: "meandmyself",
         issuer: "https://example.com",
     },
 
