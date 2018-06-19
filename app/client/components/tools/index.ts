@@ -10,3 +10,4 @@ export {default as LoadingProgress } from './LoadingProgress'
 export {LoadingStatus as LoadingStatus } from './LoadingStatus'
 export {default as InfoPopup } from './InfoPopup'
 export { Message, MessageType} from './message';
+export { FilterDropdown } from './filterDropdown'

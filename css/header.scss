@@ -9,9 +9,32 @@
     display: block;
     background: $card-background;
     height: auto;
-    min-height: $header-height;
-    
+    min-height: var( --header-height );
+    max-width: 100%;
+    box-sizing: border-box;
+    border-radius: var( --insignificant-gap );
+}
 
+.mobileHeaderBackground
+{
+    position: absolute;
+    height: var( --header-height );
+    bottom: 0px;
+    width:100%;
+    background: $card-background;
+
+    //border-bottom-left-radius: var(--small-gap);
+    border-radius: var( --insignificant-gap );
+    border-top-left-radius: var(--small-gap);
+
+    z-index: -1;
+}
+
+.mobileHeaderContainer
+{
+    display: flex;
+    flex-direction: column;
+    margin-top: var(--tiny-gap);
 }
 
 .logo
@@ -19,11 +42,12 @@
     position:absolute;
     stroke: transparent;
     fill: #fff;
-    height:70px;
-    width:70px;
+    height:var( --logo-size );
+    width:var( --logo-size );
     margin-top: auto;
     margin-bottom:auto;
-    margin-left: 5px;
+    margin-left: var( --tiny-gap );
+    z-index: 1;
 
 }
 
@@ -31,8 +55,8 @@
 {
     position:relative;
     height:auto;
-    width:60px;
-    margin-right: 5px;
+    width:var( --header-height );
+    margin-right: var( --tiny-gap );
     overflow: visible;
     display:flex;
     align-items: center;
@@ -41,8 +65,8 @@
 
 .spacer
 {
-    height:10px;
-    width:10px;
+    height:var( --header-separator-size );
+    width:var( --header-separator-size );
     background: $body-background;
     margin-bottom:auto;
 }
@@ -50,24 +74,25 @@
 .headerBrand
 {
     width: fit-content;
-    padding:10px;
+    padding:var( --small-gap );
     overflow:visible;
     color: $normal-text-color;
 
     font-weight: bolder;
-    font-size: large;
+    font-size: var(--font-large);
 }
 
 .sortButton
 {  
     @extend %button;
-    font-size: large;
+    background: transparent;
+    font-size: var(--font-large);
 }
 
 .sortButtonActive
 {  
     @extend .sortButton;
-    box-shadow:0px -3px 0px $button-highlight-color inset;
+    box-shadow:0px var( --header-button-underline-height ) 0px $button-highlight-color inset;
 }
 
 .sortButtonSub
@@ -75,33 +100,44 @@
     @extend .sortButton;
     //background: $hidden-element-color;
     //margin-top: 20px;
-    font-size: medium;
-    height: 30px;
+    font-size: var(--font-medium);
+    height: var( --header-sub-button-height );
 }
 
 .sortButtonActiveSub
 {  
     @extend .sortButton;
     //background: $hidden-element-color;
-    height: 30px;
+    height: var( --header-sub-button-height );
     //margin-top: 20px;
-    font-size: medium;
-    box-shadow:0px -3px 0px $button-highlight-color inset;
+    font-size: var(--font-medium);
+    box-shadow:0px var( --header-button-underline-height ) 0px $button-highlight-color inset;
 }
 
 .topTimeContainer
 {
-    margin-left: 10px;
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    align-items: center;
+    height: var(--header-height);
+    margin: 0px;
+    width: 100%;
+
+    background: $card-background;
 }
 
-
-.headerItem
+.topTimeFloatContainer
 {
-    width: fit-content;
-    padding:10px;
+    float: left;
+}
 
-    font-weight: bold;
-    font-size: normal;
+.topTimeMobileSpacer
+{
+    //Normally compensates spacer
+    width: var(--header-separator-size);
+    min-width: 0px;
+    max-width: var(--header-separator-size);
 }
 
 .headerLeft
@@ -109,14 +145,26 @@
     float:left;
     width:fit-content;
     display: flex;
-    flex-direction: row;
+    flex-direction: row
+}
+
+.headerLeftDoubleHeight
+{
+    //When displaying the top time range options
+    //in the compact header, we want the right float
+    //(user settings, login/out) to be displayed below them.
+    //header is --header-height with overflow visible,
+    //so making the left float twice the height makes 
+    //the right float appear in the right location.
+    height: calc( var( --header-height ) * 2 )
 }
 
 .headerRow
 {
-    width:fit-content;
+    //width:fit-content;
     display: flex;
     flex-direction: row;
+    
 }
 
 .headerColumn
@@ -124,17 +172,82 @@
     width:fit-content;
     display: flex;
     flex-direction: column;
+    overflow: visible;
 }
 
 .headerRight
 {
+    position: relative;
     float:right;
     display: flex;
     flex-direction: row;
-    padding-right:20px;
+    padding-right:var( --large-gap );
+    background: $card-background;
+    border-bottom-left-radius: var(--small-gap);
+
+    //Would want to switch this on only when pushed to second line
+    //box-shadow: 0px 10px 10px $card-shadow-color;
+}
+
+
+//Nonense for an inverted rounded corner
+.headerRightCornerOuter
+{
+    position: absolute;
+    height: var(--tiny-gap);
+    width: var(--tiny-gap);
+
+    left: calc( 0px - var(--tiny-gap));
+    
+    background: $card-background;
+
+    //Needs to be hidden behind headerbackground
+    z-index: -2;
+}
+
+.headerRightCornerInner
+{
+    position: absolute;
+    height: var(--tiny-gap);
+    width: var(--tiny-gap);
+
+    background: $body-background;
+    border-top-right-radius: var(--tiny-gap);
+
+    //Needs to be hidden behind headerbackground
+    z-index: -1;
 }
 
 .headerClear
 {
     clear: both;
+}
+
+
+///////////////////////
+// Mobile
+////////////////////////
+
+@media only screen and (max-width: 1100px)
+{
+    .header {
+        background: transparent;
+        position: relative;
+        height: var(--header-height);
+        //margin-top: var(--small-gap);
+        
+    }
+
+    .headerRight
+    {
+        margin-left: var(--tiny-gap);
+    }
+
+    .topTimeMobileSpacer
+    {
+        //Compensate for icon + icon margin
+        width: calc( var(--logo-size) + var(--tiny-gap) );
+        min-width: 0px;
+        max-width: calc( var(--logo-size) + var(--tiny-gap) );
+    }
 }

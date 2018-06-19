@@ -1,20 +1,24 @@
 @import 'colors';
+@import 'dimens';
 
 //////////////
 //Posts
 //////////////
 
-.posts {
-    margin-left: 10px;
-    display: flex;
-    flex-direction: column;
-}
-
 .postContainer {
-    font-size: small;
+    font-size: var(--font-small);
     display: flex;
     flex-direction: row;
+    margin-bottom: var(--post-spacing);
+    color: $normal-text-color;
 }
+
+.topPostContainer 
+{
+    font-size: var(--font-medium);
+    color: $highlighted-text-color;
+}
+
 
 .postLinkContainer 
 {
@@ -24,15 +28,20 @@
 
 .postLink
 {
-    margin-right: 5px;
+    margin-right: var( --tiny-gap );
     display: contents;
 }
 
-.postInfoContainer {
-    font-size: small;
+.titleAndInfoSeparator
+{
+    display: flex;
+    flex-direction: column;
+}
+
+.infoContainer
+{
     display: flex;
     flex-direction: row;
-    margin-left:0px;
 }
 
 .postColumn {
@@ -50,19 +59,18 @@
 .post
 {
     font-weight: bold;
-    margin-right: 5px;
+    margin-right: var( --tiny-gap );
 }
 
-.topPost {
-    //padding-bottom: 5px;
-    font-size: medium;
+//Needs to be shifted slightly to align with larger title text
+.topImage
+{
+    margin-top: 3px;
 }
 
-
-
-.topPost a:link,
-.topPost a:visited,
-.topPost a:hover
+.topPostContainer a:link,
+.topPostopPostContainert a:visited,
+.topPostContainer a:hover
 {
     color: $highlighted-text-color;
 
@@ -90,7 +98,7 @@
 {
     color: $hidden-text-color;
     font-weight: normal;
-    margin-left: 5px;
+    margin-left: var( --tiny-gap );
     text-align: center;
     flex-shrink: 0;
     white-space:nowrap;
@@ -112,47 +120,47 @@
 
 .scoreContainer {
     text-align: center;
-    color: $background-text-color;
+    //color: $background-text-color;
     font-weight: normal;
-    width:40px;
+    width:var( --score-width );
     flex-shrink: 0;
-    margin-left:15px;
-    margin-right:15px;
+    margin-left:var( --medium-gap );
+    margin-right:var( --medium-gap );
 }
 
 .topScoreContainer
 {
     @extend .scoreContainer;
-    //color: #965500;
     font-weight: bold;
 }
 
 .postReadContainer
 {
-    width:20px;
+    width:var( --small-icon-size );
     flex-shrink: 0;
 }
 
-.voteAndScoreCenterer
-{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.voteAndScoreCentererInner
+.voteScoreImageAligner
 {
     display: flex;
     flex-direction: row;
     justify-content: center;
+    align-items: center;
 }
 
+.voteScoreImageAlignerOuter
+{
+    margin-top: 0px;
+}
+
+
+
 .voteIndicator {
-    height: 20px;
-    width: 20px;
+    height: var( --small-icon-size );
+    width: var( --small-icon-size );
     fill: transparent;
     stroke: transparent;
-    stroke-width:10;
+    stroke-width:var( --stroke-width );
 }
 
 .upvote
@@ -164,16 +172,16 @@
 
 .imageContainer
 {
-    height:35px;
-    width:50px;
-    margin-right: 10px;
+    height: (var( --card-image-height ));
+    width: calc( var( --card-image-height ) * 1.4 ) ;
+    margin-right: var( --small-gap );
 }
 
 .tinyImageContainer
 {
-    height:20px;
-    width:30px;
-    margin-right: 10px;
+    height:( var( --card-small-image-height ) );
+    width: calc( var( --card-small-image-height ) * 1.5 ) ;
+    margin-right: var( --small-gap );
 }
 
 .downvote
@@ -186,15 +194,12 @@
 .flair
 {
     font-weight: 800;
-    padding-left: 6px;
-    padding-right: 6px;
+    padding-left: var( --tiny-gap );
+    padding-right: var( --tiny-gap );
     padding-top: 0px;
     padding-bottom: 0px;
     margin-left: 0px;
-    margin-right: 4px;
-    font-size: small;   //So the boxes line up
-
-    height: 20px;
+    margin-right: var( --tiny-gap );
     color: $background-text-color;
     background: $raised-element-color;
 }
@@ -210,4 +215,76 @@
     @extend .flair;
     color: $sketchy;
 }
+
+.postTitlecenterer
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.imageVerticalCenter
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+
+    
+///////////////////////
+// Mobile
+////////////////////////
+
+
+@media only screen and (max-width: 1100px)
+{
+    .scoreContainer {
+        margin-left:0px;
+        margin-right:var(--tiny-gap);
+    }
+
+    .topScoreContainer
+    {
+        margin-left:0px;
+        margin-right:var(--tiny-gap);
+    }
+
+    .imageContainer
+    {
+
+        margin-right: var( --tiny-gap );
+    }
+
+    .tinyImageContainer
+    {
+        margin-right: var( --tiny-gap );
+    }
+
+    .voteIndicator {
+        height: var( --tiny-icon-size );
+        width: var( --tiny-icon-size );
+
+        
+    }
+
+    .postReadContainer
+    {
+    width:var( --tiny-icon-size );
+    margin-left: calc( -(var(--small-gap)));
+    }
+
+    .tinyImageContainer
+    {
+        //If you are on mobile, post titles and post info are 
+        //almost certainly going to end up wrapping to the next line.
+        //Everything is prettieur if the top of the text aligns with
+        //the top of the image
+           // margin-top: 10px;
+    }
+
+    //But the score shoul
+
+}
+
 

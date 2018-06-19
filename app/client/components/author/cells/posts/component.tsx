@@ -3,12 +3,6 @@ import * as React from 'react';
 
 import * as models from '~/common/models';
 
-import * as tools from '~/common/tools'
-import * as urls from '~/common/urls'
-import { isNullOrUndefined } from 'util';
-
-import vote from 'assets/images/vote.svg'
-
 import config from 'root/config'
 
 import * as cells from './cells'
@@ -22,7 +16,6 @@ import collapse_caret from 'assets/images/collapse_caret.svg'
 import * as components from '~/client/components'
 
 import * as transitions from 'react-transition-group'
-import { numberTo4CharDisplayString } from '~/common/tools/number';
 
 interface Props
 {

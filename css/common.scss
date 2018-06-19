@@ -1,8 +1,10 @@
+@import 'dimens';
+
 %button
 {
-    padding-left:10px;
-    padding-right:10px;
-    height: 50px;
+    padding-left:var( --small-gap );
+    padding-right:var( --small-gap );
+    height: var( --header-height ); //Buttons normally only go in the header
     color: $highlighted-text-color;
 
     display:Flex;
@@ -24,13 +26,13 @@
 {
     @extend %button;
     background: $hidden-text-color;
-    margin:5px;
+    margin: var( --tiny-gap );
 }
 
 %popup
 {
-    padding:10px;
-    border: 2px solid $highlighted-text-color;
+    padding:var( --small-gap );
+    border: var( --insignificant-gap ) solid $highlighted-text-color;
     background: $card-background;
     width:100%;
 }

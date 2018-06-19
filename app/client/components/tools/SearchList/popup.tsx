@@ -18,6 +18,7 @@ interface Props
 {
     trigger : JSX.Element;
     items: components.tools.SearchList.SearchItem[] | components.tools.SearchList.SearchItem;
+    position?: string;
 }
 
 interface State
@@ -51,9 +52,15 @@ export default class popup extends React.Component<Props, State >
             'animation': animationStyles.fadeIn+" 0.5s"
         }
 
+        let position = "bottom left";
+        if (this.props.position != null)
+        {
+            position = this.props.position;
+        }
+
             return <Popup   trigger={ this.props.trigger } 
                             contentStyle={style} 
-                            position="bottom left" closeOnDocumentClick
+                            position={position} closeOnDocumentClick
                             arrow={false}
                             overlayStyle={overlayStyle}
                                                 >

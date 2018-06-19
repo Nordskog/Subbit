@@ -1,4 +1,5 @@
 ﻿@import 'colors';
+@import 'dimens';
 
 //////////////////
 //List indicators
@@ -7,14 +8,14 @@
 .lastVisit {
     text-align: center;
     color: $primary-text-color;
-    font-size: large;
+    font-size: var(--font-large);
     font-weight:bold;
-    margin: 5px;
-    padding: 10px;
+    margin: var( --tiny-gap );
+    padding: var( --small-gap );
     background: $card-highlighted-background;
-    margin-left:-20px;
-    margin-right:-20px;
-    border-radius: 5px;
+    margin-left: (-var( --large-gap ));
+    margin-right:(-var( --large-gap ));
+    border-radius: var( --tiny-gap );
 }
 
 //////////////
@@ -22,107 +23,10 @@
 //////////////
 
 .posts {
-    margin-left: 10px;
+    margin-left: var( --small-gap );
     display: flex;
     flex-direction: column;
 }
-
-.postContainer {
-    font-size: small;
-    display: flex;
-    flex-direction: row;
-}
-
-.post a:link  {
-    color: $normal-text-color;
-}
-.post a:visited  {
-    color: $background-text-color;
-}
-
-.post
-{
-    font-weight: bold;
-}
-.post a:link
-{
-    color: $normal-text-color;
-}
-.post a:visited  {
-    color: $background-text-color;
-}
-
-.topPost {
-    padding-bottom: 5px;
-    font-size: medium;
-}
-
-
-.topPost a:link,
-.topPost a:visited,
-.topPost a:hover
-{
-    color: $highlighted-text-color;
-    font-weight: bold;
-    font-size: medium;
-}
-
-.postedDate {
-    color: $background-text-color;
-    font-weight: normal;
-    margin-left: 5px;
-    text-align: center;
-    flex-shrink: 0;
-}
-
-.scoreContainer {
-    text-align: center;
-    color: $background-text-color;
-    font-weight: normal;
-    margin-left: 5px;
-    margin-right: 5px;
-    width:40px;
-    flex-shrink: 0;
-}
-
-.topScoreContainer
-{
-    @extend .scoreContainer;
-    //color: #965500;
-    font-weight: bold;
-}
-
-.postReadContainer
-{
-    width:40px;
-    flex-shrink: 0;
-}
-
-.voteIndicator {
-    height: 20px;
-    width: 20px;
-    fill: transparent;
-    stroke: transparent;
-    stroke-width:10;
-}
-
-.upvote
-{
-    @extend .voteIndicator;
-    stroke:transparent;
-    fill: $upvote-color;
-}
-
-.downvote
-{
-    @extend .voteIndicator;
-    stroke:transparent;
-    fill: $downvote-color;
-}
-
-
-
-
 
 //////////////
 //Author
@@ -139,12 +43,12 @@
 }
 
 .author {
-    font-size: large;
-    margin: 5px;
-    padding: 10px;
+    font-size: var(--font-large);
+    margin: var( --tiny-gap );
+    padding: var( --small-gap );
     background: $card-background;
-    border-radius: 3px;
-    border-top-left-radius: 10px;
+    border-radius: var( --insignificant-gap );
+    border-top-left-radius: var( --small-gap );
 }
 
 
@@ -158,7 +62,7 @@
 
 .authorHeader {
     display: flex;
-    margin-bottom:15px;
+    margin-bottom: var( --medium-gap );
     font-weight: bold;
 }
 
@@ -170,12 +74,12 @@
 }
 
 .nameContainer {
-    height:40px;
+    height:var( --card-line-height );
     display: flex;
     justify-content: center;
     flex-direction: column;
-    margin-left: 5px;
-    margin-right: 5px;
+    margin-left: var( --tiny-gap );
+    margin-right: var( --tiny-gap );
 }
 
 .subreddit
@@ -185,8 +89,8 @@
     display:flex;
     align-items:center;
     flex-shrink: 0;
-    font-size:small;
-    margin-top: 3px;
+    font-size: var(--font-small);
+    margin-top: var( --insignificant-gap );
 }
 .subreddit a:link,
 .subreddit a:visited,
@@ -194,13 +98,13 @@
 {
     @extend .subreddit;
     margin-top:0px;
-    margin-left:5px;
+    margin-left:var( --tiny-gap );
 }
 
 
 .subscriptionButton {
-    height: 40px;
-    width: 40px;
+    height: var( --card-line-height );
+    width: var( --card-line-height );
     //pointer-events: none;   //Otherwise click does not propagate to parent
     cursor: pointer;
 }
@@ -210,13 +114,13 @@
     @extend .subscriptionButton;
     stroke: $background-text-color;
     fill: transparent;
-    stroke-width: 11;
+    stroke-width: var( --stroke-width );
 }
 
 .subscriptionButtonContainer
 {
-    height: 40px;
-    width: 40px;
+    height: var( --card-line-height );
+    width: var( --card-line-height );
 }
 
 .unsubscribeButton
@@ -232,8 +136,8 @@
 .morePostsContainer
 {
     font-weight: bold;
-    padding-left: 10px;
-    margin-top:10px;
+    padding-left: var( --small-gap );
+    margin-top: var( --small-gap );
     color:$interactive-text-color;
     cursor: pointer;
 
@@ -251,9 +155,9 @@
 .morePostsButton
 {
     
-    height:20px;
-    width:20px;
-    margin-right:10px;
+    height: var( --small-icon-size );
+    width: var( --small-icon-size );
+    margin-right: var( --small-gap );
     fill: $interactive-text-color;
 }
 
@@ -272,16 +176,46 @@
 
 .displaySubredditsButton
 {
-    height:20px;
-    width:20px;
-    margin-right: 5px;
+    height:var( --small-icon-size );
+    width:var( --small-icon-size );
+    margin-right: var( --tiny-gap );
     fill: $subscribed-highlight-color;
     cursor: pointer;
 }
 
 .subscriptionsContainer
 {
-    margin-left: 40px;
+    //Offset by width normally consumed by the score column
+    margin-left: var( --score-width );
 }
 
     
+///////////////////////
+// Mobile
+////////////////////////
+
+@media only screen and (max-width: 1100px)
+{
+    .posts {
+        margin-left: 0;
+    }
+
+    .author
+    {
+        margin: var( --tiny-gap );
+        margin-right: 0px;
+        margin-left: 0px;
+
+        padding-left: var(--tiny-gap);
+    }
+
+    .authorHeader {
+        padding-left: var(--tiny-gap);
+    }
+
+    .morePostsContainer
+    {
+        //Match center to subscribe button / score column
+        padding-left: calc( var( --tiny-gap ) +  var(--tiny-icon-size) );
+    }
+}

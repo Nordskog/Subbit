@@ -1,1 +1,201 @@
+//////////////////////
+// Gloal
+///////////////////////
+
+$insignificant-gap: 3px;
+$tiny-gap: 5px;
+$small-gap: 10px;
+$medium-gap: 15px;
+$large-gap: 20px;
+
+$stroke-width: 10px;
+
+$small-icon-size: 20px;
+
+$loading-icon-size: 100px;
+
+/////////////////////
+// Header
+////////////////////
+
 $header-height: 50px;
+$logo-size: 70px;
+$header-separator-size: 10px;
+
+$header-button-underline-height: -3px;
+$header-sub-button-height: 30px;
+
+////////////////////////
+// card
+////////////////////////
+
+$small-card-max-width: 360px;
+$large-card-max-width: 1200px;
+
+$score-width: 40px;
+$card-line-height: 40px;
+
+
+$card-image-height: 35px;
+
+$card-small-image-height: 20px; //Must match title font height
+$card-small-image-width: 30px;
+
+////////////////////////// 
+// Post
+//////////////////////////
+
+$post-spacing: 0px;
+
+////////////////////////// 
+// subreddit dropdown
+//////////////////////////
+
+$dropdown-menu-min-width: 400px;
+
+////////////////////////
+// Message 
+////////////////////////
+
+$message-top-margin: 30px;
+$message-card-corner-width: 70px;
+$message-card-corner-height: 40px;
+
+///////////////////////////////////////////////////
+// I guess font-size keywords are useless now
+//////////////////////////////////////////////////////
+
+$font-small: 0.8rem;
+$font-medium: 3;
+$font-large: 4;
+$font-x-large: 5;
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+// CSS variables of the above values, since we cannot define media queries with scss variables
+// The above variables are still used as fallbacks.
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+:root
+{
+    //////////////////////
+    // Gloal
+    ///////////////////////
+
+    --insignificant-gap: 3px;
+    --tiny-gap: 5px;
+    --small-gap: 10px;
+    --medium-gap: 15px;
+    --large-gap: 20px;
+
+    --stroke-width: 10px;
+
+    --tiny-icon-size: 10px;
+    --small-icon-size: 20px;
+
+    --loading-icon-size: 100px;
+
+    /////////////////////
+    // Header
+    ////////////////////
+
+    --header-height: 50px;
+    --upper-header-height: 80px;    //Mobile only
+    --logo-size: 70px;
+    --header-separator-size: 10px;
+
+    --header-button-underline-height: -3px;
+    --header-sub-button-height: 30px;
+
+    ////////////////////////
+    // card
+    ////////////////////////
+
+    --small-card-max-width: 360px;
+    --large-card-max-width: 1200px;
+
+    --score-width: 40px;
+    --card-line-height: 40px;
+
+
+    --card-image-height: 35px;
+
+    --card-small-image-height: 20px; //Must match title font height
+
+    ////////////////////////// 
+    // Post
+    //////////////////////////
+
+    --post-spacing: 0px;
+
+    ////////////////////////// 
+    // subreddit dropdown
+    //////////////////////////
+
+    --dropdown-menu-min-width: 400px;
+
+    ////////////////////////
+    // Message 
+    ////////////////////////
+
+    --message-top-margin: 30px;
+    --message-card-corner-width: 70px;
+    --message-card-corner-height: 40px;
+
+    ///////////////////////////////////////////////////
+    // I guess font-size keywords are useless now
+    //////////////////////////////////////////////////////
+
+    //This is the root font size. Changing this changes everything.
+    //DO NOT override with media queries
+    font-size: 100%;
+
+    //Change these instead
+    --font-small: 0.8rem;
+    --font-medium: 1rem;
+    --font-large: 1.2rem;
+    --font-x-large: 1.5rem;
+    --font-xx-large: 2rem;
+}
+
+@media only screen and (max-width: 1100px)
+{
+   :root
+   {
+        font-size: 30px;
+        --post-spacing: 10px;
+
+        --insignificant-gap: 5px;
+        --tiny-gap: 15px;
+        --small-gap: 25px;
+        --medium-gap: 35px;
+        --large-gap: 40px;
+
+        --card-image-height: 80px;
+        --card-small-image-height: 45px; //Must match title font height
+        --card-line-height: 80px;
+
+        --small-card-max-width: 100%;
+        --large-card-max-width: 100%;
+
+        --score-width: 70px;
+
+        --header-height: 80px;
+        --upper-header-height: 70px;    //Mobile only
+
+        --logo-size: 100px;
+
+        --tiny-icon-size: 20px;
+        --small-icon-size: 40px;
+
+
+        --message-top-margin: 30px;
+        --message-card-corner-width: 140px;
+        --message-card-corner-height: 80px;
+
+
+
+        --header-button-underline-height: -6px;
+        --header-sub-button-height: 80px;
+   }
+}

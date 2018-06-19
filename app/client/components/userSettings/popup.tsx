@@ -13,9 +13,12 @@ import * as animationStyles from 'css/animations.scss';
 
 import settings_icon from 'assets/images/settings_icon.svg'
 
+interface Props
+{
+    mobile : boolean;
+}
 
-
-export default class popup extends React.Component<null, null>
+export default class popup extends React.Component<Props, null>
 {
 
     public render()
@@ -38,11 +41,14 @@ export default class popup extends React.Component<null, null>
                             <use xlinkHref={settings_icon}></use>
                         </svg>;
 
+        console.log("modal: ",this.props.mobile);
+
         return <Popup   trigger={ trigger } 
                         contentStyle={style} 
                         position="bottom right" closeOnDocumentClick
                         arrow={false}
                         overlayStyle={overlayStyle}
+                        modal={this.props.mobile}
                                             >
                     {
                         close => 

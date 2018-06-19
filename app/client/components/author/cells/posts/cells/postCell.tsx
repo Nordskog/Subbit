@@ -9,6 +9,7 @@ import * as styles from 'css/post.scss'
 import vote from 'assets/images/vote.svg'
 import { PostDisplay } from '~/common/models';
 import { NavLink } from 'redux-first-router-link';
+import { classConcat } from '~/common/tools/css';
 
 const danger_flairs : Set<string> = new Set<string>();
 danger_flairs.add("nsfw");
@@ -48,16 +49,18 @@ export default class PostCell extends React.Component<Props, null>
 
     getMinimalPost()
     {
-        return <div className={this.props.isTopPost ? `${styles.postContainer} ${styles.topPost}` : styles.postContainer}>
-        {this.getUpvoted(this.props.post.likes)}
-        {this.getScoreCol()}
+        return <div className={this.props.isTopPost ? `${styles.postContainer} ${styles.topPostContainer}` : styles.postContainer}>
+            <div className={styles.voteScoreImageAlignerOuter}>
+                <div className={styles.voteScoreImageAligner}>
+                    {this.getUpvoted(this.props.post.likes)}
+                    {this.getScoreCol()}
+                </div>
+            </div>
         {
                 this.getLink
                 (
                     true,
                     this.getDateCol(),
-                    this.getSubreddit(),
-                    this.getComments()
                 )
             }
         </div>
@@ -65,10 +68,14 @@ export default class PostCell extends React.Component<Props, null>
 
     getCompactPost()
     {
-        return <div className={this.props.isTopPost ? `${styles.postContainer} ${styles.topPost}` : styles.postContainer}>
-            {this.getUpvoted(this.props.post.likes)}
-            {this.getScoreCol()}
-            {this.getImage()}
+        return <div className={this.props.isTopPost ? `${styles.postContainer} ${styles.topPostContainer}` : styles.postContainer}>
+            <div className={styles.voteScoreImageAlignerOuter}>
+                <div className={styles.voteScoreImageAligner}>
+                    {this.getUpvoted(this.props.post.likes)}
+                    {this.getScoreCol()}
+                    {this.getImage()}
+                </div>
+            </div>
             {
                 this.getLink
                 (
@@ -93,37 +100,45 @@ export default class PostCell extends React.Component<Props, null>
 
     getLink( includeFlairs : boolean = true, ...inlineElements : JSX.Element[])
     {
-        return <div className={styles.post}>
-            { this.getFlairsAndStuff() }
-            <a className={styles.postLink} href={this.props.post.url}>
-                {this.props.post.title}{this.getTitleLinebreakFix()}
-            </a>
-            {inlineElements}
-            </div> 
+        return <div className={styles.postTitlecenterer}>
+                    <div className={styles.post}>
+                        { this.getFlairsAndStuff() }
+                        <a className={styles.postLink} href={this.props.post.url}>
+                            {this.props.post.title}{this.getTitleLinebreakFix()}
+                        </a>
+                        {inlineElements}
+                        </div> 
+                 </div> 
+        
     }
 
     getNormalPost()
     {
-        return <div className={this.props.isTopPost ? `${styles.postContainer} ${styles.topPost}` : styles.postContainer}>
-                    <div className={styles.voteAndScoreCenterer}>
-                        <div className={styles.voteAndScoreCentererInner}>
-                            {this.getUpvoted(this.props.post.likes)}
-                            {this.getScoreCol()}
-                        </div>
-                    </div>
+        return <div className={this.props.isTopPost ? `${styles.postContainer} ${styles.topPostContainer}` : styles.postContainer}>
+            <div className={styles.voteScoreImageAlignerOuter}>
+                <div className={styles.voteScoreImageAligner}>
+                    {this.getUpvoted(this.props.post.likes)}
+                    {this.getScoreCol()}
                     {this.getImage()}
-                    <div className={styles.postColumn} >
-                        <div className={styles.postLinkContainer}>
-                            {this.getLink()}
-                        </div>
-                        <div className={styles.postInfoContainer}>  
-                            {this.getDateCol()}
-                            {this.getSubreddit()}
-                            {this.getComments()}
-                        </div>
-                    </div>
-
                 </div>
+            </div>
+
+            <div className={styles.titleAndInfoSeparator}>
+            {
+                this.getLink
+                (
+                    true
+                )
+            }
+            <div className={styles.infoContainer}>
+                {this.getDateCol()}
+                {this.getSubreddit()}
+                {this.getComments()}
+            </div>
+
+            </div>
+
+            </div>
 
     }
 
@@ -168,7 +183,6 @@ export default class PostCell extends React.Component<Props, null>
         }
     }
 
-
     getImage()
     {
         let url : string = this.props.post.thumbnail;
@@ -183,8 +197,13 @@ export default class PostCell extends React.Component<Props, null>
             url = defaultThumbnails.get(this.props.post.thumbnail) || url;
         }
 
-        return  <a href={this.props.post.url}>
-                    <img className={ this.props.postDisplay == PostDisplay.FULL ? styles.imageContainer : styles.tinyImageContainer} src={url}/>
+        let style = [];
+        style.push( this.props.postDisplay == PostDisplay.FULL ? styles.imageContainer : styles.tinyImageContainer );
+        if (this.props.isTopPost)
+            style.push( styles.topImage );
+
+        return  <a href={this.props.post.url} className={styles.imageVerticalCenter} >
+                    <img className={ classConcat(...style) } src={url}/>
                 </a>  
     }
 
@@ -207,7 +226,7 @@ export default class PostCell extends React.Component<Props, null>
 
     getDateCol()
     {
-        return <span key={"date_span"} className={styles.postedDate}> {tools.time.getTimeSinceDisplayString(this.props.post.created_utc)} </span>;
+            return <span key={"date_span"} className={styles.postedDate}> {tools.time.getTimeSinceDisplayString(this.props.post.created_utc)} </span>;
     }
 
     getScoreCol()

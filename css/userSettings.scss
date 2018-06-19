@@ -1,4 +1,6 @@
 @import 'colors';
+@import 'dimens';
+@import 'common';
 
 .container
 {
@@ -12,6 +14,7 @@
     display:flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
 }
 
 .description
@@ -19,26 +22,59 @@
     color: $highlighted-text-color;
     text-align: center;
     font-weight: bold;
-    margin: 10px;
-    padding:10px;
+    margin: var( --small-gap );
+    padding:var( --small-gap );
 
-    font-size: large;
+    font-size: var(--font-large);
 }
 
 .button
 {
-    padding: 10px;
-    height:30px;
-    width: 30px;
+    @extend %button;
+    background: transparent;
+    margin: auto;
+    padding: 0px;
+    padding-left: var( --small-gap);
+
+    height: calc( var( --header-height ) - (var( --small-gap ) * 2) );
+    width:  calc( var( --header-height ) - (var( --small-gap ) * 2) );
 }
 
 .popupContainer
 {
     background: $card-background;
-    min-width: 400px;
+    min-width: var( --dropdown-menu-min-width );
     border-left: 2px solid $hidden-text-color;
     border-right: 2px solid $hidden-text-color;
     border-bottom: 2px solid $hidden-text-color;
-    border-bottom-right-radius: 5px;
-    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: var( --tiny-gap );
+    border-bottom-left-radius: var( --tiny-gap );
+}
+
+///////////////////////
+// Mobile
+////////////////////////
+
+@media only screen and (max-width: 1100px)
+{
+    .button
+    {
+        height: calc( var( --header-height ) - (var( --tiny-gap ) * 2 ) );
+        width:  calc( var( --header-height ) - (var( --tiny-gap ) * 2 ) );
+    }
+
+    .popupContainer
+    {
+        background: $card-background;
+        min-width: var( --dropdown-menu-min-width );
+        border: 2px solid $hidden-text-color;
+
+        border-radius: var( --tiny-gap );
+    }
+
+    .description
+    {
+        margin: 0px;
+    }
+
 }

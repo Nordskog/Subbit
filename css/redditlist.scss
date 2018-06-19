@@ -3,7 +3,7 @@
 
 .container
 {
-    height:$header-height;
+    height:var( --header-height );
     display: block;
 
     overflow:visible;
@@ -19,11 +19,11 @@
     flex-direction: row;
     justify-content: center;
     height:100%;
-    background: $card-background;
+    //background: $card-background;
     cursor: pointer;
 
-    padding-left: 20px;
-    padding-right:20px;
+    padding-left: var( --large-gap );
+    padding-right:var( --large-gap );
 }
 
 .selected
@@ -32,55 +32,11 @@
     flex-direction: column;
     justify-content: center;
 
-    padding-left:10px;
-    padding-right:5px;
+    padding-left:var( --small-gap );
+    padding-right:var( --tiny-gap );
     text-align: left,center;
     font-weight: bold;
-    font-size: larger;
-}
-
-
-
-.listOuter
-{
-    display: inline-block;
-    overflow:visible;
-    width:1px;
-}
-
-.listContainer
-{
-    display: flex;
-    flex-direction: column;
-    overflow:visible;
-    display: inline-block;
-    border: 2px solid $body-background;
-
-    background: $card-background;
-    
-    padding-top:10px;
-    padding-bottom:10px;
-}
-
-.listItem
-{
-    
-    min-width:100px;
-
-    display:flex;
-    flex-direction: column;
-    justify-content: center;
-
-    height:40px;
-
-    width: fit-content;
-    padding-left:10px;
-    padding-right:10px;
-    overflow:visible;
-
-    font-weight: bold;
-    font-size: larger;
-    cursor: pointer;
+    font-size: var(--font-large);
 }
 
 .expandButtonContainer
@@ -92,27 +48,25 @@
 
 .expandButton
 {
-    height:20px;
-    width:20px;
+    height: var( --small-icon-size );
+    width: var( --small-icon-size );
     fill: $interactive-text-color;
 }
 
+    
+///////////////////////
+// Mobile
+////////////////////////
 
 
-.listItem:link,
-.listItem:visited,
-.listItem:hover
+@media only screen and (max-width: 1100px)
 {
+    .selectedContainer {
+        padding-left: var( --tiny-gap );
+        padding-right:var( --tiny-gap );
+    }
 
 
-    color: $highlighted-text-color;
-    text-decoration: none;
-   // line-height:40px;
-}
-
-.listItem:hover
-{
-    background: $menu-highlight-color;
 }
 
 

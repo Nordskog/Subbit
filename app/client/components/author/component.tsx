@@ -1,8 +1,5 @@
 ﻿import * as React from 'react';
 
-
-import * as cells  from '~/client/components/author/cells'
-
 import subscribeButton from 'assets/images/subscribe_button.svg'
 import subscribeSubredditButton from 'assets/images/subscribe_subreddit_button.svg'
 import subscribedPartialButton from 'assets/images/subscribed_partial_button.svg'
@@ -10,14 +7,13 @@ import subscribedPartialButton from 'assets/images/subscribed_partial_button.svg
 import * as models from '~/common/models';
 
 import * as styles from 'css/author.scss'
-import * as siteStyles from 'css/site.scss'
+
 
 import * as components from '~/client/components'
 
 import config from 'root/config'
 import expand_caret from 'assets/images/expand_caret.svg'
 import collapse_caret from 'assets/images/collapse_caret.svg'
-import { Query } from 'wetland/dist/src/Query';
 
 import * as transitions from 'react-transition-group'
 
@@ -25,7 +21,7 @@ import { NavLink} from 'redux-first-router-link'
 import { urls } from '~/common';
 import * as  Toast from '~/client/toast';
 import SubscriptionSubreddit from '~/common/models/data/SubscriptionSubreddit';
-import { AuthorFilter } from '~/common/models';
+
 
 import * as actions from '~/client/actions'
 
@@ -98,15 +94,15 @@ export default class AuthorCell extends React.Component<Props, State>
             return null;
 
        return <components.transitions.FadeResize key={'posts_container'}>
-            <components.author.cells.Posts
-                posts={this.props.author.author.posts}
-                postDisplay={this.props.postDisplay}
-                canLoadMore={!this.props.author.end}
-                grabMorePosts={( () => this.props.fetchMorePosts(this.props.author, config.client.postFetchCount))}
-                scrollToAuthorTop={() => this.scrollToAuthorTop()}
-                displaySubreddit={this.props.subreddit == null}
-            />
-         </components.transitions.FadeResize>
+                <components.author.cells.Posts
+                    posts={this.props.author.author.posts}
+                    postDisplay={this.props.postDisplay}
+                    canLoadMore={!this.props.author.end}
+                    grabMorePosts={( () => this.props.fetchMorePosts(this.props.author, config.client.postFetchCount))}
+                    scrollToAuthorTop={() => this.scrollToAuthorTop()}
+                    displaySubreddit={this.props.subreddit == null}
+                />
+            </components.transitions.FadeResize>
     }
 
     scrollToAuthorTop()

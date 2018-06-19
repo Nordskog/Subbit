@@ -19,7 +19,7 @@
 .text
 {
     color: $toast_text_color;
-    font-size: medium;
+    font-size: var(--font-medium);
     font-weight: bold;
 }
 

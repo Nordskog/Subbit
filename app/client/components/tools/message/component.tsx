@@ -197,26 +197,29 @@ export default class MessageComponent extends React.Component<Props,null>
 
               <div className={styles.spacer}/>
 
-              <div className={styles.row}>
-                {this.getSubscribeButton()}
-                {this.getTextMessage("Not subscribed")}
+              <div className={styles.rowMessageCenterer}>
+                <div className={styles.row}>
+                  {this.getSubscribeButton()}
+                  {this.getTextMessage("Not subscribed")}
+                </div>
+                <div className={styles.row}>
+                  {this.getUnsubscribeButton(true)}
+                  {this.getTextMessage("Subscribed in some Subreddits")}
+                </div>
+                <div className={styles.row}>
+                  {this.getUnsubscribeButton(false)}
+                  {this.getTextMessage("Subscribed in all Subreddits")}
+                </div>
+                <div className={styles.row}>
+                  {this.getSubscribeSubredditButton()}
+                  {this.getTextMessage("Subscribed, but not in this Subreddit")}
+                </div>
+                <div className={styles.row}>
+                  {this.getExpandExample()}
+                  {this.getTextMessage("Manage subscribed Subreddits")}
+                </div>
               </div>
-              <div className={styles.row}>
-                {this.getUnsubscribeButton(true)}
-                {this.getTextMessage("Subscribed in some Subreddits")}
-              </div>
-              <div className={styles.row}>
-                {this.getUnsubscribeButton(false)}
-                {this.getTextMessage("Subscribed in all Subreddits")}
-              </div>
-              <div className={styles.row}>
-                {this.getSubscribeSubredditButton()}
-                {this.getTextMessage("Subscribed, but not in this Subreddit")}
-              </div>
-              <div className={styles.row}>
-                {this.getExpandExample()}
-                {this.getTextMessage("Manage subscribed Subreddits")}
-              </div>
+
 
             </div>
   }

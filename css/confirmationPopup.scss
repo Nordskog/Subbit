@@ -1,5 +1,6 @@
 @import 'colors';
 @import 'common';
+@import 'dimens';
 
 
 ////////////////
@@ -18,7 +19,7 @@
 
 .messageContainer
 {
-    margin:10px;
+    margin:var( --small-gap );
     display:flex;
     flex-direction: column;
     justify-content: center;
@@ -29,7 +30,7 @@
     display:flex;
     flex-direction: column;
     justify-content: center;
-    font-size: large;
+    font-size: var(--font-large);
 }
 
 .buttonContainer
@@ -42,13 +43,13 @@
 .saveButton
 {
     width:100%;
-    margin:5px;
+    margin:var( --tiny-gap );
     @extend %outlinedButton;
 }
 
 .cancelButton
 {
     width:100%;
-    margin:5px;
+    margin:var( --tiny-gap );
     @extend %outlinedButton;
 }

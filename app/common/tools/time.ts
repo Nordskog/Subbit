@@ -30,7 +30,13 @@ export function getTimeSinceDisplayString(secondsSince: number) : string
     return secondsToTimeSinceString(now - secondsSince);
 }
 
-function secondsToTimeSinceString(seconds: number) : string
+export function getSimpleTimeSinceDisplayString(secondsSince: number) : string
+{
+    let now: number = Math.floor(Date.now() / 1000);
+    return secondsToSimpleTimeSinceString(now - secondsSince);
+}
+
+function distributeSeconds( seconds : number)
 {
     let years, months, weeks, days, hours, minutes: number = 0;
 
@@ -52,6 +58,13 @@ function secondsToTimeSinceString(seconds: number) : string
     minutes = Math.floor(seconds / SECONDS_IN_MINUTE);
     seconds -= minutes * SECONDS_IN_MINUTE;
 
+    return { years, months, weeks, days, hours, minutes }
+}
+
+function secondsToTimeSinceString(seconds: number) : string
+{
+    let { years, months, weeks, days, hours, minutes } = distributeSeconds(seconds);
+
     if (years > 0)
         return formatTime("year", years) + "ago";
     if (months > 0)
@@ -66,14 +79,26 @@ function secondsToTimeSinceString(seconds: number) : string
         return formatTime("minute", minutes) + "ago";
     if (seconds > 0)
         return formatTime("second", seconds) + "ago";
+}
 
-    /*
-    return  formatTime("year", years) +
-            formatTime("month", months) +
-            formatTime("week", weeks) +
-            formatTime("day", days) +
-            formatTime("minute", minutes) +
-            formatTime("second", seconds) +"ago" */
+function secondsToSimpleTimeSinceString(seconds: number) : string
+{
+    let { years, months, weeks, days, hours, minutes } = distributeSeconds(seconds);
+
+    if (years > 0)
+        return formatTime("year", years);
+    if (months > 0)
+        return formatTime("month", months);
+    if (weeks > 0)
+        return formatTime("week", weeks);
+    if (days > 0)
+        return formatTime("day", days);
+    if (hours > 0)
+        return formatTime("hour", hours);
+    if (minutes > 0)
+        return minutes+ " min";
+    if (seconds > 0)
+        return seconds+ " sec";
 }
 
 export function sleep(ms) {

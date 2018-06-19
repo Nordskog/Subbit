@@ -2,16 +2,12 @@
 
 
 
-//import  AuthorCell from '~/client/components/author/cells/authorCell'
-//import { LastVisitBar } from '~/client/components/tools/LastVisitBar'
-
 import * as component from '~/client/components/'
 
 import * as models from '~/common/models';
 
 import * as styles from 'css/author.scss';
 
-import * as transitions from 'react-transition-group'
 import { AuthorFilter } from '~/common/models';
 import { AuthorEntry } from '~/common/models/data';
 
@@ -64,13 +60,7 @@ export default class AuthorsComponent extends React.Component<Props, {} >
 
 
             renders.push( 
-            
-                
-            <component.transitions.Fade key={author.author.name} >
                 <component.author.component author={author} />
-            </component.transitions.Fade>
-                
-         
              );
         } )
 
@@ -80,9 +70,9 @@ export default class AuthorsComponent extends React.Component<Props, {} >
     public render()
     {
         
-        return <transitions.TransitionGroup component={'div'} className={styles.container}>
-                { this.renderAuthors()}
-                </transitions.TransitionGroup>;
+        return <div className={styles.container}>
+                    { this.renderAuthors()}
+                </div>;
         
     }
 

@@ -34,8 +34,8 @@ interface SearchResult
 export interface SearchItem 
 {
     items: ListItem[];
-    search( name : string) : SearchResult[] | Promise<SearchResult[]>;
-    searchPlaceholder : string;
+    search?( name : string) : SearchResult[] | Promise<SearchResult[]>;
+    searchPlaceholder? : string;
     onClick( item : ListItem ) : boolean | undefined;
     onAltClick?( item : ListItem ) : void;
     prefix: string;
@@ -141,13 +141,20 @@ export default class RedditsCell extends React.Component<Props, State>
         {
             this.state.items.forEach( (item : SearchItem, index : number) => 
             {
-                boxes.push( this.getSearchBox(item, index) );
+                if (item.search != null)
+                {
+                    boxes.push( this.getSearchBox(item, index) );
+                }
             });
         }
         else
         {
-            //Push only the selected item
-            boxes.push( this.getSearchBox( this.state.items[this.state.selectedItem], this.state.selectedItem) );
+            if (this.getSelectedItem().search != null)
+            {
+                //Push only the selected item
+                boxes.push( this.getSearchBox( this.state.items[this.state.selectedItem], this.state.selectedItem) );
+            }
+
         }
 
         return boxes;
@@ -345,7 +352,7 @@ export default class RedditsCell extends React.Component<Props, State>
         let style = subreddit.highlighted ? styles.unsubscribeIndicator : styles.subscribeIndicator;
         if ( !this.getSelectedItem().displayHighlight  )
         {
-            style = styles.hiddenIndicator;
+            return null;
         }
 
         return <div className={ styles.indicatorContainer }>

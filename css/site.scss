@@ -9,8 +9,21 @@ body {
     font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
     font-size: 14px;
     line-height: 1.42857143;
+
+    //absolute background
+    z-index: -10;
+
+    //width: 100%;
+    box-sizing: border-box;
 }
 
+html, body
+{
+    text-size-adjust: none;
+    -webkit-text-size-adjust: none;
+    -moz-text-size-adjust: none;
+    -ms-text-size-adjust: none;
+}
 
 a:link
 {
@@ -44,7 +57,7 @@ a:hover
 .contentContainer {
 
     width:100%;
-    max-width:1200px;
+    max-width: var( --large-card-max-width );
 
     display: flex;
     flex-direction: column;
@@ -79,12 +92,11 @@ a:hover
 
 .loadingStatus
 {
-    padding:10px;
-    font-size: x-large;
+    font-size: var(--font-x-large);
     font-weight: bold;
     text-align: center;
-    margin-top:20px;
-    margin-bottom:40px;
+    margin-top:var( --message-top-margin );
+    margin-bottom:var( --message-top-margin );
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -93,10 +105,10 @@ a:hover
 input[type=text] {
     width: 100%;
     box-sizing: border-box;
-    border: 2px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-    padding: 12px 20px 12px 12px;
+    border: 0px solid #ccc;
+    border-radius: var( --tiny-gap );
+    font-size: var(--font-large);
+    padding: var( --medium-gap ) var( --medium-gap ) var( --medium-gap ) var( --medium-gap );
     color: $input-text-color;
     background: $input-background-color;
 }
@@ -113,9 +125,9 @@ input[type=text] {
     flex-direction: row;
     justify-content: center left;
 
-    font-size: large;
+    font-size: var(--font-large);
     font-weight: bold;
-    padding: 5px;
+    padding: var( --tiny-gap );
 }
 
 
@@ -127,23 +139,23 @@ input[type=text] {
 
 .loadingImage
 {
-    height:100px;
-    width:100px;
+    height:var( --loading-icon-size );
+    width: var( --loading-icon-size );
 
 }
 
 .loadingProgressContainer
 {
-    margin: 10px;
-    height: 10px;
-    width:200px;
+    margin: var( --small-gap );
+    height: var( --small-gap );
+    width: calc( var( --loading-icon-size ) * 2.0 );
     display:flex;
 }
 
 .loadingProgressBar
 {
     float: left;
-    height: 10px;
+    height: var( --small-gap );
     background: $upvote-color;
 }
 
@@ -152,18 +164,18 @@ input[type=text] {
     position:relative;
     overflow: visible;
 
-    font-size: small;
+    font-size: var(--font-small);
     float: left;
     width: auto;
     background: $input-background-color;
-    padding: 5px;
-    padding-left:10px;
-    padding-right:10px;
+    padding: var( --tiny-gap );
+    padding-left:var( --small-gap );
+    padding-right:var( --small-gap );
     font-weight: 600;
 
     color: $highlighted-text-color;
 
-    border-radius: 5px;
+    border-radius: var( --tiny-gap );
     border: 1px solid $normal-text-color;
 }
 

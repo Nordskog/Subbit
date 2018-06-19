@@ -40,3 +40,4 @@ export enum LoadingStatus
     ERROR = "error",
     DONE = "done"
 }
+

@@ -1,5 +1,4 @@
 ﻿import * as React from 'react';
-import Link from 'redux-first-router-link'
 import { NavLink} from 'redux-first-router-link'
 
 import * as urls from '~/common/urls'
@@ -13,13 +12,15 @@ import * as siteStyles from 'css/site.scss';
 import * as styles from 'css/header.scss'
 
 import * as transitions from 'react-transition-group'
-import { spawn } from 'child_process';
 
 import * as actions from '~/client/actions'
 
 import subbit_logo from 'assets/images/subbit_logo.svg'
 
-import * as toast from '~/client/toast'
+import MediaQuery from 'react-responsive'
+import { getTimeRangeDisplayString, getFilterDisplayString } from '~/common/tools/string';
+import { classConcat } from '~/common/tools/css';
+
 interface Props
 {
     authState: models.auth.AuthState;
@@ -41,6 +42,25 @@ export default class HeaderComponent extends React.Component<Props, null>
 
     render()
     {
+        return  <MediaQuery query="screen and (max-width: 1100px)">
+                {
+                    (matches : boolean) => 
+                    {
+                        if (matches)
+                        {
+                            return this.getCompactHeader();
+                        }
+                        else
+                        {
+                            return this.getheader();
+                        }
+                    } 
+                }
+                </MediaQuery>
+    }
+
+    getheader()
+    {
         return <div className={styles.header}>
                     <div className={styles.headerLeft}>
                         <div className={styles.headerRow}>
@@ -54,14 +74,14 @@ export default class HeaderComponent extends React.Component<Props, null>
                         <div className={styles.headerColumn}>
                             <transitions.TransitionGroup component="div" className={styles.headerRow}>
                                 <div className={styles.spacer} />
-                                { this.getLink( AuthorFilter.BEST, "best") }
-                                { this.getLink( AuthorFilter.HOT, "hot") }
-                                { this.getLink( AuthorFilter.NEW, "new") }
-                                { this.getLink( AuthorFilter.TOP, "top") }
-                                { this.getLink( AuthorFilter.RISING, "rising") }
-                                { this.getLink( AuthorFilter.CONTROVERSIAL, "controversial") }
+                                { this.getLink( AuthorFilter.BEST) }
+                                { this.getLink( AuthorFilter.HOT) }
+                                { this.getLink( AuthorFilter.NEW) }
+                                { this.getLink( AuthorFilter.TOP) }
+                                { this.getLink( AuthorFilter.RISING) }
+                                { this.getLink( AuthorFilter.CONTROVERSIAL) }
                                 <div className={styles.spacer} />
-                                { this.getLink( AuthorFilter.SUBSCRIPTIONS, "subscribed") }
+                                { this.getLink( AuthorFilter.SUBSCRIPTIONS) }
                             </transitions.TransitionGroup>
                             <transitions.TransitionGroup component="div">
                                 {this.getTopTimePanels()}
@@ -69,35 +89,93 @@ export default class HeaderComponent extends React.Component<Props, null>
                         </div>
                     </div>
                     <div className={styles.headerRight}>
-                    {this.getSettingsPanel()}
-                     {this.getPanel()}
+                    {this.getSettingsPanel(false)}
+                    {this.getPanel()}
                     </div>
+
+                    <div className={styles.headerClear} />
                     
-                    <div className={styles.headerClear}/>
+                   
                 </div>
     }
 
-    getLink( filter : AuthorFilter, display : string)
+    
+    getCompactHeader()
+    {
+        let headerLeftStyles = [];
+        headerLeftStyles.push( styles.headerLeft );
+        //Enlargen left-floated div to make the right float 
+        //line break twice the normal distance, so it appears
+        //below the top time range row
+        if (this.props.filter == AuthorFilter.TOP)
+            headerLeftStyles.push( styles.headerLeftDoubleHeight );
+
+
+        return <div className={styles.mobileHeaderContainer}>
+
+                    <div className={styles.header}>
+
+                        <div className={ classConcat(...headerLeftStyles) }>
+                            <div className={styles.headerColumn}>
+                                <div className={styles.headerRow}>
+                                    {this.getLogo()}
+                                    <components.animations.AutoWidth>
+                                        <components.tools.SubredditDropdown/>
+                                    </components.animations.AutoWidth>
+
+                                    <components.animations.AutoWidth>
+                                        <components.tools.FilterDropdown/>
+                                    </components.animations.AutoWidth>
+                                </div>
+                            </div>
+                        </div>
+
+                         <div className={styles.headerRight}>
+                            {this.getSettingsPanel(true)}
+                            {this.getPanel()}
+                            {this.getRightCorner()}
+                        </div>
+
+
+                        <div className={styles.headerClear} />
+                        <div className={styles.mobileHeaderBackground}/>
+                    </div>
+
+                    <transitions.TransitionGroup component="div">
+                        {this.getTopTimePanels()}
+                    </transitions.TransitionGroup>
+                </div>
+    }
+
+    getRightCorner()
+    {
+        return  <div className={ styles.headerRightCornerOuter }>
+                    <div className={ styles.headerRightCornerInner } />
+                </div>
+    }
+
+    getLink( filter : AuthorFilter)
     {
 
         if (this.props.subreddit != null && filter == AuthorFilter.BEST)
             return null;
 
-        return <components.transitions.FadeHorizontalResize key={"filterlink_"+display}>
+        return <components.transitions.FadeHorizontalResize key={"filterlink_"+getFilterDisplayString(filter)}>
                     <NavLink    className={ this.getButtonStyleIfFilterMatch(filter )}
                         to={ this.getFilterLink(filter) }>
-                        {display}
+                        {getFilterDisplayString(filter)}
                     </NavLink>
                 </components.transitions.FadeHorizontalResize>   
     }
 
     getLogo()
     {
-        return <a className={styles.logoContainer} href="#">
+        return <NavLink    className={ styles.logoContainer }
+                    to={ { type: actions.types.Route.HOME, payload: {  } as actions.types.Route.HOME } }>
                     <svg className={styles.logo} >
                         <use xlinkHref={subbit_logo}></use>
                     </svg>
-                </a>
+        </NavLink>
     }
 
     getButtonStyleIfFilterMatch(filter : string)
@@ -139,12 +217,13 @@ export default class HeaderComponent extends React.Component<Props, null>
             return null;
 
         let elements = [
-            this.getTopTimePanel("hour", PostTimeRange.HOUR),
-            this.getTopTimePanel("day", PostTimeRange.DAY),
-            this.getTopTimePanel("week", PostTimeRange.WEEK),
-            this.getTopTimePanel("month", PostTimeRange.MONTH),
-            this.getTopTimePanel("year", PostTimeRange.YEAR),
-            this.getTopTimePanel("all", PostTimeRange.ALL),
+            <div className={styles.topTimeMobileSpacer}/>,
+            this.getTopTimePanel( PostTimeRange.HOUR),
+            this.getTopTimePanel( PostTimeRange.DAY),
+            this.getTopTimePanel( PostTimeRange.WEEK),
+            this.getTopTimePanel( PostTimeRange.MONTH),
+            this.getTopTimePanel( PostTimeRange.YEAR),
+            this.getTopTimePanel( PostTimeRange.ALL),
 
         ];
 
@@ -155,12 +234,12 @@ export default class HeaderComponent extends React.Component<Props, null>
                 </components.transitions.FadeResize>   
     }
 
-    getTopTimePanel( display : string, time : PostTimeRange)
+    getTopTimePanel( time : PostTimeRange)
     {
 
         return <NavLink    className={ this.props.time == time ? styles.sortButtonActiveSub : styles.sortButtonSub }
                             to={ this.getTopLink(time) }>
-                            {display}
+                            {getTimeRangeDisplayString(time)}
                 </NavLink>
                  
     }
@@ -190,13 +269,15 @@ export default class HeaderComponent extends React.Component<Props, null>
         return <div className={siteStyles.loginContainer}>
             <div
                 className={styles.sortButton}
-                onClick={() => this.handleLogoutClick() }>logout</div>
+                onClick={() => this.handleLogoutClick() }>Logout</div>
              </div>;
     }
 
-    getSettingsPanel()
+    getSettingsPanel( mobile : boolean = false)
     {
-        return <components.userSettings.Popup />
+        return <components.userSettings.Popup
+                    mobile={mobile}
+        />
     }
 
    handleLogoutClick()
