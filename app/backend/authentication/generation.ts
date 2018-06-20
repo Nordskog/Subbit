@@ -9,8 +9,10 @@ import { AccessToken } from '~/common/models/auth/';
 
 export enum scopes
 {
+    REDDIT = 'REDDIT',
     SUBSCRIPTIONS = 'SUBSCRIPTIONS',
-    SETTINGS = 'SETTINGS'
+    SETTINGS = 'SETTINGS',
+    LOGOUT = 'LOGOUT'
 };
 
 export function createIdToken(user: Entities.User)
@@ -25,7 +27,7 @@ export function createAccessToken(user : Entities.User)
     //This allows us to invalidate all existing tokens for this user.
 
     let payload : AccessToken = {
-        scope: [scopes.SUBSCRIPTIONS, scopes.SETTINGS].join(" "),
+        scope: [scopes.SUBSCRIPTIONS, scopes.SETTINGS, scopes.LOGOUT, scopes.REDDIT].join(" "),
         sub: user.username,
         generation: user.generation
     };

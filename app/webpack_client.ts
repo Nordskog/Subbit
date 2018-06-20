@@ -25,6 +25,7 @@ const config = {
         main: ['./client/index.tsx'],
         appStyles: [
 
+            '../css/confirmationDropdown.scss',
             '../css/message.scss',
             '../css/animations.scss',
             '../css/toast.scss',

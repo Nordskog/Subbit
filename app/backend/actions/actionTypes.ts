@@ -36,6 +36,12 @@ export namespace subscription
 export namespace auth
 {
     export const AUTHENTICATE_WITH_REDDIT_CODE: string = 'AUTHENTICATE_WITH_REDDIT_CODE'
+    export const UNAUTHORIZE_ALL_DEVICES: string = 'UNAUTHORIZE_ALL_DEVICES'
+
+    export interface UNAUTHORIZE_ALL_DEVICES
+    {
+        
+    }
 
     export interface AUTHENTICATE_WITH_REDDIT_CODE
     {

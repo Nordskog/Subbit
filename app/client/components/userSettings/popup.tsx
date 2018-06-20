@@ -56,7 +56,9 @@ export default class popup extends React.Component<Props, null>
                                 return <transitions.TransitionGroup >
                                         <components.transitions.Fade key={'userSettingsPopup'} appear={true}>
                                             <div className={styles.popupContainer}>
-                                                <Component />
+                                                <Component 
+                                                    close={close}
+                                                />
                                             </div>
                                         </components.transitions.Fade>
                                         </transitions.TransitionGroup>

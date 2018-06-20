@@ -24,7 +24,20 @@ export function refreshRedditAccessToken(user: string, access_token : string) : 
     return api.rfy.getRequest(
         '/authorize_refresh', 
         {
-            "user": user,
         },
         access_token    );
+}
+
+export function logoutOnAllDevices(access_token : string) : Promise<models.auth.RedditAuth>
+{
+    return api.rfy.postRequest(
+        '/authorize_local', 
+        {
+            type :    serverActions.auth.UNAUTHORIZE_ALL_DEVICES,
+            payload : < serverActions.auth.UNAUTHORIZE_ALL_DEVICES >
+            {
+
+            }
+        },
+        access_token );
 }

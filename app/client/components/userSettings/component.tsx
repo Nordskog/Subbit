@@ -9,7 +9,10 @@ import { PostDisplay } from '~/common/models';
 interface Props
 {
     postDisplay : models.PostDisplay;
+    authenticated : boolean;
     changePostDisplay( mode: models.PostDisplay) : void;
+    logoutOnAllDevices() : void;
+    close?() : void;
 
 }
 
@@ -21,8 +24,6 @@ interface State
 
 export default class UserSettingsComponent extends React.Component<Props, State>
 {
-   
-
     constructor( props : Props)
     {
         super(props);
@@ -68,6 +69,7 @@ export default class UserSettingsComponent extends React.Component<Props, State>
     {
         return <div className={ styles.container }>
                     {this.getPostDisplayToggle()}
+                    {this.getlogoutOnAllDevicesButton()}
                 </div>
     }
 
@@ -81,6 +83,31 @@ export default class UserSettingsComponent extends React.Component<Props, State>
                         onClick={ (item : ToggleItem ) => { this.props.changePostDisplay(item.object) } }
                     />          
                 </div>
+    }
+
+    getlogoutOnAllDevicesButton()
+    {
+        if (this.props.authenticated)
+        {
+            return <components.tools.ConfirmationDropdown
+                        onClick={ ok => this.handleLogoutAllClick(ok) }
+                        message={"Logout on all devices"}
+                        positiveMessage={"Logout"}
+                        negativeMessage={"Never mind"}
+            />
+
+
+        }
+    }
+
+    handleLogoutAllClick( ok : boolean )
+    {
+        if (ok)
+        {
+            if (this.props.close != null)
+                this.props.close();
+            this.props.logoutOnAllDevices();
+        }
     }
 
 };

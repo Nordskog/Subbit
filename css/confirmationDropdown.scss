@@ -1,0 +1,63 @@
+@import 'colors';
+@import 'dimens';
+@import 'common';
+
+.container
+{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: var( --small-gap );
+}
+
+.responseContainer
+{
+    display: flex;
+    flex-direction: row;
+}
+
+.dangerButton
+{
+    @extend %button;
+    margin: var( --small-gap );
+    border-radius: var( --insignificant-gap );
+    border-top-left-radius: var( --small-gap );
+    border-top-right-radius: var( --small-gap );
+    background: $danger;
+    margin-bottom: 0px;
+}
+
+.subButton 
+{
+    @extend %button;
+    
+    margin: var( --small-gap );
+    //border-radius: var( --small-gap );
+
+    border-radius: var( --insignificant-gap );
+    border-bottom-left-radius: var( --small-gap );
+    border-bottom-right-radius: var( --small-gap );
+}
+
+.dangerSubButton
+{
+    @extend .subButton;
+    //border-bottom-left-radius: var( --small-gap );
+    width: 50%;
+    background: $danger;
+    margin-right: var( --tiny-gap );
+
+    //margin-left: var( --small-gap );
+}
+
+.safeSubButton
+{
+    @extend .subButton;
+    //border-bottom-right-radius: var( --small-gap );
+    width: 50%;
+    background: $safe;
+
+    margin-left: var( --tiny-gap );
+
+
+    //margin-right: var( --small-gap );
+}

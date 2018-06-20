@@ -18,7 +18,7 @@
 
     justify-content: center;
 
-    font-size: normal;
+    font-size: var(--font-medium);
     text-align: center;
 }
 
@@ -27,6 +27,7 @@
     @extend %button;
     background: $hidden-text-color;
     margin: var( --tiny-gap );
+    border-radius: var( --tiny-gap );
 }
 
 %popup

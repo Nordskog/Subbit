@@ -37,3 +37,21 @@ export function logoutUserAction()
     }
 }
 
+export function logoutUserOnAllDevices()
+{
+    return WrapWithHandler( async (dispatch : Dispatch, getState : GetState ) =>
+    {
+        let state : State = getState();
+        let token: string = tools.store.getAccessToken(state);
+
+        await api.rfy.authentication.logoutOnAllDevices(token);
+
+        actions.directActions.authentication.removeAuthentication(dispatch);
+        //No sub means home (frontpage)
+        dispatch(
+            { 
+                type: actions.types.Route.HOME, payload: { } } 
+            );
+    });
+}
+

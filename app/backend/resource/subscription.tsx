@@ -68,7 +68,7 @@ router.post('/api/subscription', async (req: WetlandRequest, res: Response) =>
     let user: Entities.User = null;
     try
     {
-        user = await authentication.verification.getAuthorizedUser(manager, token, authentication.generation.scopes.SUBSCRIPTIONS);
+        user = await authentication.verification.getAuthorizedUser(manager, token, null, authentication.generation.scopes.SUBSCRIPTIONS);
     
         switch(rawReq.type)
         {

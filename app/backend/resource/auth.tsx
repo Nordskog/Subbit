@@ -19,6 +19,7 @@ import * as redditAuth from '~/backend/authentication/redditAuth'
 
 import * as endpointCommons from './endpointCommons'
 import { AuthorizationException } from '~/common/exceptions';
+import { scopes } from '~/backend/authentication/generation';
 
 const express = require('express');
 const router = express.Router();
@@ -35,13 +36,12 @@ router.get('/api/authorize_remote', (req: WetlandRequest, res: Express.Response)
 router.get('/api/authorize_refresh', async (req: WetlandRequest, res: Express.Response) =>
 {
     let token : string = req.headers.access_token as string;
-    let username : string = req.query.user;
 
     let manager : Wetland.Scope = RFY.wetland.getManager()
 
     try
     {
-        let user : Entities.User = await authentication.verification.getAuthorizedUser(manager, token, username);
+        let user : Entities.User = await authentication.verification.getAuthorizedUser(manager, token, null, scopes.REDDIT);
 
         //TODO store token and prevent user from spamming refresh
 
@@ -68,7 +68,7 @@ router.get('/api/authorize_refresh', async (req: WetlandRequest, res: Express.Re
 
 router.post('/api/authorize_local', async (req: WetlandRequest, res: Express.Response) =>
 {
-    let token = req.headers.access_token;
+    let token : string = req.headers.access_token as string;
     let action : models.Action<any> = req.body;
     let manager : Wetland.Scope = RFY.wetland.getManager();
 
@@ -101,15 +101,27 @@ router.post('/api/authorize_local', async (req: WetlandRequest, res: Express.Res
 
                 return;
             }
+
+            case serverActions.auth.UNAUTHORIZE_ALL_DEVICES:
+            {
+                let user : Entities.User = await authentication.verification.getAuthorizedUser(manager, token, null, scopes.LOGOUT);
+
+                console.log("Logging out on all devices: ", user.username);
+
+                //Just needs to be different, really.
+                user.generation = Math.floor(  (Date.now() / 1000) );
+                manager.flush();
+
+                res.json(true);
+
+                return;
+            }
         }
     }
     catch (err)
     {
         endpointCommons.handleException(err, res);
     }
-
-
 });
-
 
 module.exports = router;
