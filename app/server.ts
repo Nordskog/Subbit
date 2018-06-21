@@ -76,10 +76,20 @@ if (DEV)
 else
 {
     console.log("Server configuration: PROD");
-    app.use(publicPath, Express.static(outputPath))
 
-    //Anything that isn't api or a static resource gets routed to root
-    app.use('*', Express.static(outputPath))
+    //All static resources
+    app.use(publicPath, Express.static(outputPath));
+
+    //Html will fetch favicon from static, but this will still receive requests
+    app.get('/favicon.ico', function(req, res){
+        res.sendFile( path.join(outputPath, "favicon.ico") );
+      });
+
+    //Anything else gets app container
+    app.get('/*', function(req, res){
+        res.sendFile( path.join(outputPath, "index.html") );
+      });
+
 }
 
 

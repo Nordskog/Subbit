@@ -162,9 +162,10 @@ const config = {
         }),
         new ExtractTextPlugin('main.css', { allChunks: true }),
         new HtmlWebpackPlugin( {
-        template: "./index.html",
-        filename: "index.html",
-        inject: "body"
+            favicon: '../assets/images/favicon.ico',
+            template: "./index.html",
+            filename: "index.html",
+            inject: "body"
         }),
         new UglifyJsPlugin() //Default config is pretty good
 

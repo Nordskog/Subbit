@@ -1,5 +1,6 @@
 import * as api from '~/common/api'
 import * as actions from '~/client/actions'
+import * as actionTools from '~/client/actions/tools'
 import * as tools from '~/common/tools'
 import * as models from '~/common/models'
 
@@ -17,11 +18,11 @@ export function authorsRoutes()
 {
     return WrapWithHandler( async (dispatch : Dispatch, getState : GetState ) =>
     {
+        actionTools.title.updateTitle(getState);
         actions.directActions.page.clearPage(true, dispatch);
         actions.directActions.authentication.loadAuthentication(dispatch, getState);
         await firstLoadDuties(dispatch, getState);
         await actions.authors.fetchAuthorsAction(false)(dispatch, getState);
-        firstLoad = false;
     });
 }
 
@@ -29,6 +30,7 @@ export function authorizeRoute()
 {
     return WrapWithHandler( async (dispatch : Dispatch, getState : GetState ) =>
     {
+        actionTools.title.updateTitle(getState);
         let { error, code,  state} = getState().location.query;
         if (error)
         {
@@ -69,3 +71,4 @@ async function firstLoadDuties(dispatch : Dispatch, getState : GetState)
                             ]);
     }
 }
+

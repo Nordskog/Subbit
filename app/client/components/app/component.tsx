@@ -4,10 +4,6 @@ import * as components from '~/client/components';
 import * as Toastify from 'react-toastify'
 import * as models from '~/common/models'
 
-
-//import 'css/site'
-//import 'react-toastify/dist/ReactToastify.css';
-
 import * as styles from 'css/site.scss'
 import { MessageType } from '~/client/components/tools';
 
