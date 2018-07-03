@@ -10,6 +10,7 @@ class StatsEntry
     value : number = 0;
     end : Date;
     count? : number = 1 ; //For average. Calculated when entry is finalized (new data is outside range)
+    finalized : boolean = false;
 
     constructor( end : Date,  value? : number, count? : number )
     {
@@ -49,6 +50,8 @@ class StatsEntry
 
     finalize( type : StatsDataType)
     {
+        this.finalized = true;
+
         switch(type)
         {
             case StatsDataType.AVERAGE:
@@ -174,11 +177,17 @@ class StatsTimeline
     {
         if (this.latestEntry != null)
         {
-            this.latestEntry.finalize( this.type );
-            // Perform same check in higher time units
-            this.notifyParent(this.latestEntry.value, this.latestEntry.count, newDate);
-    
-            this.finalizedCallback(this, this.latestEntry);
+            //When we have loaded history, the lastest entry
+            //will be an item that is already finalized and stored.
+            //Do not emit any signals for it.
+            if (!this.latestEntry.finalized)
+            {
+                this.latestEntry.finalize( this.type );
+                // Perform same check in higher time units
+                this.notifyParent(this.latestEntry.value, this.latestEntry.count, newDate);
+        
+                this.finalizedCallback(this, this.latestEntry);
+            }
         }
     }
 
@@ -319,9 +328,13 @@ export class StatsTracker
             return;
         }
 
+        //Loaded items are marked as finalized so that even if there is not an existing latestItem
+        //it will not be re-saved
         timeline.entries = data.map( ( entry ) => 
         {
-            return new StatsEntry( entry.end, entry.value);
+            let newEntry = new StatsEntry( entry.end, entry.value);
+            newEntry.finalized = true;
+            return newEntry;
         });
 
         //Lowest unit has an entry added in the constructor,

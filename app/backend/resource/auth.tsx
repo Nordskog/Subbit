@@ -80,30 +80,38 @@ router.post('/api/authorize_local', async (req: WetlandRequest, res: Express.Res
         {
             case serverActions.auth.AUTHENTICATE_WITH_REDDIT_CODE:
             {
-                let payload : serverActions.auth.AUTHENTICATE_WITH_REDDIT_CODE = action.payload;
+                try
+                {
+                    let payload : serverActions.auth.AUTHENTICATE_WITH_REDDIT_CODE = action.payload;
     
-                if ( !authentication.redditAuth.confirmAuthState(payload.state) )   
-                {
-                    throw new AuthorizationException("Authorization state invalid");
+                    if ( !authentication.redditAuth.confirmAuthState(payload.state) )   
+                    {
+                        throw new AuthorizationException("Authorization state invalid");
+                    }
+    
+                    let result = await api.reddit.auth.authenticateWithCode(payload.code, urls.RFY_AUTHORIZE_REDIRECT, authentication.redditAuth.getHttpBasicAuthHeader() );
+                    if (result == null || result.access_token == null)
+                    {
+                        throw new AuthorizationException("Did not receive authorization response from reddit");
+                    }
+    
+                    let manager : Wetland.Scope = RFY.wetland.getManager()
+                    let user : Entities.User = await redditAuth.createOrUpdateUserFromRedditToken(manager,result);
+    
+                    let userInfo : models.auth.UserInfo = authentication.generation.generateUserInfo(user);
+    
+                    console.log("Logging in: ", user.username);
+                    res.json( userInfo );
+    
+                    stats.add(stats.StatsCategoryType.SUCCESSFUL_LOGINS);
+    
+                    return;
                 }
-
-                let result = await api.reddit.auth.authenticateWithCode(payload.code, urls.RFY_AUTHORIZE_REDIRECT, authentication.redditAuth.getHttpBasicAuthHeader() );
-                if (result == null || result.access_token == null)
+                catch ( err )
                 {
-                    throw new AuthorizationException("Did not receive authorization response from reddit");
+                    stats.add(stats.StatsCategoryType.FAILED_LOGINS);
+                    throw err;
                 }
-
-                let manager : Wetland.Scope = RFY.wetland.getManager()
-                let user : Entities.User = await redditAuth.createOrUpdateUserFromRedditToken(manager,result);
-
-                let userInfo : models.auth.UserInfo = authentication.generation.generateUserInfo(user);
-
-                console.log("Logging in: ", user.username);
-                res.json( userInfo );
-
-                stats.add(stats.StatsCategoryType.SUCCESSFUL_LOGINS);
-
-                return;
             }
 
             case serverActions.auth.UNAUTHORIZE_ALL_DEVICES:
@@ -124,11 +132,6 @@ router.post('/api/authorize_local', async (req: WetlandRequest, res: Express.Res
     }
     catch (err)
     {
-        if ( err instanceof AuthorizationException)
-        {
-            stats.add(stats.StatsCategoryType.FAILED_LOGINS);
-        }
-
         endpointCommons.handleException(err, res);
     }
 });
