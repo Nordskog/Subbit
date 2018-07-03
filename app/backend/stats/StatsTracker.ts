@@ -11,7 +11,7 @@ class StatsEntry
     end : Date;
     count? : number = 1 ; //For average. Calculated when entry is finalized (new data is outside range)
 
-    constructor( end : Date,  value? : number, )
+    constructor( end : Date,  value? : number, count? : number )
     {
         this.end = end;
         this.value = value;
@@ -26,10 +26,19 @@ class StatsEntry
         }
     }
      
-    add( value : number)
+    add( value : number, count? : number)
     {
         this.value += value;
-        this.count++;
+        if (count == null)
+        {
+            this.count++;
+        }
+        else
+        {
+            this.count += count;
+        }
+
+
     }
 
     set( value : number)
@@ -81,35 +90,31 @@ class StatsTimeline
     //Caller is responsible for ensuring that value is not null.
     //In the case of cumulative the value should be the actual total,
     //not the difference from previous add.
-    add( value : number, newDate : Date = new Date())
+    add( value : number, count : number, newDate : Date = new Date() )
     {
         if (this.latestEntry == null || this.latestEntry.end < newDate )
         {
-            this.closeCurrentEntry();
-            this.prune();
+            this.closeCurrentEntry(newDate);
 
             //Time surpassed end of last previous entry, creat enew.
-            this.addNewEntry(newDate, value);
+            this.addNewEntry(newDate, value, count);
 
-            // Perform same check in higher time units
-            this.notifyParent(value, newDate);
+            this.prune();
         }
         else
         {
             //Time within end of entry, add data.
-            this.addToCurrentEntry(value);
+            this.addToCurrentEntry(value, 1);
         }
     }
 
     //Add to current entry without checking date
-    addToCurrentEntry(value : number)
+    addToCurrentEntry(value : number, count : number)
     {
         if (this.type == StatsDataType.CUMULATIVE)
             this.latestEntry.set(value);
         else
-            this.latestEntry.add(value);
-        
-        this.notifyParent(value);
+            this.latestEntry.add(value, count);
     }
 
     getCurrentValue()
@@ -119,15 +124,15 @@ class StatsTimeline
         return 0;
     }
 
-    addNewEntry( date : Date, value : number)
+    addNewEntry( date : Date, value : number, count : number = 1)
     {   
-        let newEntry = new StatsEntry(getTimeRangeEnd(date, this.timeRange), value);
+        let newEntry = new StatsEntry(getTimeRangeEnd(date, this.timeRange), value, count);
         this.entries.push(newEntry);
         this.latestEntry = newEntry;
     }
     
     //Let higher timeranges know of new data
-    notifyParent(value : number, newDate? : Date )
+    notifyParent(value : number, count : number, newDate? : Date )
     {
         if (this.parent != null)
         {
@@ -135,45 +140,44 @@ class StatsTimeline
             {
                 //If date isn't included self is in same entry as before,
                 //which means the parent will be too.
-                this.parent.addToCurrentEntry(value);
+                this.parent.addToCurrentEntry(value, count);
             }
             else
             {
-                this.parent.add(value, newDate);
+                this.parent.add(value, count, newDate);
             }
         }
     }
 
     prune()
     {
-        if ( this.latestEntry != null)
+        let ageLimit = getAgeLimit(new Date(), this.timeRange);
+        
+        let firstValidIndex : number = 0;
+        for ( let entry of this.entries)
         {
-            let ageLimit = getAgeLimit(this.latestEntry.end, this.timeRange);
-            
-            let firstValidIndex : number = 0;
-            for ( let entry of this.entries)
+            if (entry.end > ageLimit)
             {
-                if (entry.end > ageLimit)
-                {
-                    break;
-                }
-
-                firstValidIndex++;
+                break;
             }
 
-            if (firstValidIndex > 0)
-            {
-                this.entries = this.entries.slice(firstValidIndex);
-            }
+            firstValidIndex++;
+        }
+
+        if (firstValidIndex > 0)
+        {
+            this.entries = this.entries.slice(firstValidIndex);
         }
     }
 
-    closeCurrentEntry()
+    closeCurrentEntry( newDate : Date = new Date())
     {
         if (this.latestEntry != null)
         {
             this.latestEntry.finalize( this.type );
-
+            // Perform same check in higher time units
+            this.notifyParent(this.latestEntry.value, this.latestEntry.count, newDate);
+    
             this.finalizedCallback(this, this.latestEntry);
         }
     }
@@ -181,36 +185,26 @@ class StatsTimeline
     //Check if we have passed end time of latest entry and should finalize it.
     check( date? : Date, value? : number )
     {
-        if ( this.latestEntry != null )
+        if (date == null)
+            date = new Date();
+
+        if ( this.latestEntry.end < date )
         {
-            this.prune();
+            this.closeCurrentEntry();
 
-            if (date == null)
-                date = new Date();
+            //Check may be called without a value.
+            //If end passed we add a null value,
+            //or copy existing value of cumulative.
+            if ( value == null)
+                value = 0; 
+            if (this.type == StatsDataType.CUMULATIVE)
+                value = this.getCurrentValue();
 
-            if ( this.latestEntry.end < date )
-            {
-                this.closeCurrentEntry();
-
-                //Check may be called without a value.
-                //If end passed we add a null value,
-                //or copy existing value of cumulative.
-                if ( value == null)
-                    value = 0; 
-                if (this.type == StatsDataType.CUMULATIVE)
-                    value = this.getCurrentValue();
-
-                this.addNewEntry(date, value); 
-                if ( this.parent != null )
-                    this.parent.check(date);
-            
-            }
-        }
-        else
-        {
-            //Gotto have parents check anyway
+            this.addNewEntry(date, value); 
             if ( this.parent != null )
                 this.parent.check(date);
+
+            this.prune();
         }
     }
 }
@@ -239,17 +233,27 @@ export class StatsTracker
         for( let timeRange of timeRanges)
         {
             let timeLine = new StatsTimeline( timeRange, type, prevTimeline, (timeline, entry) => this.handleEntryFinalized(timeline,entry) )
+
             this.timelines.push( timeLine );
             prevTimeline = timeLine;
         };
 
-        
-
         this.lowestUnitTimeLine = this.timelines[ this.timelines.length - 1 ]
 
+
+        if ( type == StatsDataType.ONGOING || type == StatsDataType.AVERAGE )
+        {
+            //Call add on self to kick things off, with an explicit value of 0
+            //Do not do this for cumulative
+            this.add(0);
+        }
+        
         //Only makes sense for ongoing
         if ( type == StatsDataType.ONGOING )
+        {
             this.entryEndCheckLoop();
+        }
+
     }
 
     //Checks if entries have surpassed their end time and should be finalized,
@@ -257,9 +261,13 @@ export class StatsTracker
     //Only call once, will repeat itself.
     entryEndCheckLoop()
     {
+        
+
         let nowTime = new Date();
         let newCheck = getTimeRangeEnd( nowTime, this.lowestUnitTimeLine.timeRange );
         let diff = newCheck.getTime() - nowTime.getTime();
+        diff += 500;
+
         setTimeout(() => 
         {
             this.lowestUnitTimeLine.check();
@@ -283,7 +291,7 @@ export class StatsTracker
             }
         }
 
-        this.lowestUnitTimeLine.add(value);
+        this.lowestUnitTimeLine.add(value, 1);
     }
 
     handleEntryFinalized( timeline : StatsTimeline, entry : StatsEntry )
@@ -316,8 +324,18 @@ export class StatsTracker
             return new StatsEntry( entry.end, entry.value);
         });
 
+        //Lowest unit has an entry added in the constructor,
+        //but the rest do not.
         if (timeline.latestEntry != null)
+        {
             timeline.entries.push(timeline.latestEntry );
+        }
+        else if (timeline.entries.length > 0)
+        {
+            timeline.latestEntry = timeline.entries[ timeline.entries.length - 1 ];
+        }
+
+        
     }
 
     getHistory( timeRange : StatsTimeRange ) : models.stats.StatsHistory

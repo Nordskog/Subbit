@@ -47,7 +47,7 @@ async function setupMain()
     ///////////////////
     // Stats tracking
     ///////////////////
-    setup.stats.setup();
+    await setup.stats.setup();
 
     ////////////////
     //Hot reload

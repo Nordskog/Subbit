@@ -126,7 +126,11 @@ export default class StatsCategory
                                                                                 { 
                                                                                     category_id : this.getCategoryId(), 
                                                                                     interval_id: this.getIntervalId(interval)
-                                                                                }) || [];
+                                                                                },
+                                                                                {
+                                                                                        orderBy: {"end": 'asc' }
+                                                                                }
+                                                                            ) || [];
             if (entries != null && entries.length > 0)
                 this.tracker.populateHistory(interval, entries);
         }

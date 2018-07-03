@@ -45,9 +45,16 @@ export function getTracker( category : StatsCategoryType)
     return trackers.get(category);
 }
 
-export function add( type : StatsCategoryType, value? : number)
-{
-    getTracker(type).add(value);
+export function add( category : StatsCategoryType, value? : number)
+{   let cat : StatsCategory = getTracker(category);
+    if (cat == null)
+    {
+        //Not tracking this category
+    }
+    else
+    {
+        getTracker(category).add(value);
+    }
 }
 
 export function getHistory( category : StatsCategoryType, timeRange : StatsTimeRange)
