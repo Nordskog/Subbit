@@ -12,3 +12,5 @@ export {default as InfoPopup } from './InfoPopup'
 export { Message, MessageType} from './message';
 export { FilterDropdown } from './filterDropdown'
 export { ConfirmationDropdown } from './ConfirmationDropdown'
+export { OptionDropdown } from './optionDropdown'
+export import StatsChart = require('./StatsChart');

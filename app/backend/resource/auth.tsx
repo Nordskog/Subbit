@@ -19,7 +19,9 @@ import * as redditAuth from '~/backend/authentication/redditAuth'
 
 import * as endpointCommons from './endpointCommons'
 import { AuthorizationException } from '~/common/exceptions';
-import { scopes } from '~/backend/authentication/generation';
+import { Scope } from '~/backend/authentication/generation';
+
+import * as stats from '~/backend/stats'
 
 const express = require('express');
 const router = express.Router();
@@ -41,7 +43,7 @@ router.get('/api/authorize_refresh', async (req: WetlandRequest, res: Express.Re
 
     try
     {
-        let user : Entities.User = await authentication.verification.getAuthorizedUser(manager, token, null, scopes.REDDIT);
+        let user : Entities.User = await authentication.verification.getAuthorizedUser(manager, token, null, Scope.REDDIT);
 
         //TODO store token and prevent user from spamming refresh
 
@@ -99,12 +101,14 @@ router.post('/api/authorize_local', async (req: WetlandRequest, res: Express.Res
                 console.log("Logging in: ", user.username);
                 res.json( userInfo );
 
+                stats.add(stats.StatsCategoryType.SUCCESSFUL_LOGINS);
+
                 return;
             }
 
             case serverActions.auth.UNAUTHORIZE_ALL_DEVICES:
             {
-                let user : Entities.User = await authentication.verification.getAuthorizedUser(manager, token, null, scopes.LOGOUT);
+                let user : Entities.User = await authentication.verification.getAuthorizedUser(manager, token, null, Scope.LOGOUT);
 
                 console.log("Logging out on all devices: ", user.username);
 
@@ -120,6 +124,11 @@ router.post('/api/authorize_local', async (req: WetlandRequest, res: Express.Res
     }
     catch (err)
     {
+        if ( err instanceof AuthorizationException)
+        {
+            stats.add(stats.StatsCategoryType.FAILED_LOGINS);
+        }
+
         endpointCommons.handleException(err, res);
     }
 });

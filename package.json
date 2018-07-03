@@ -6,6 +6,7 @@
     "start": "ts-node ./app/server.ts",
     "run:dev": "cross-env NODE_ENV=development ts-node ./app/server.ts",
     "build": "rimraf buildClient && cross-env NODE_ENV=production webpack --progress --config ./app/webpack_client.ts",
+    "cli": "cross-env NODE_ENV=production ts-node ./app/cli",
     "clean": "rimraf buildClient"
   },
   "description": "RedditFuckYeah",
@@ -38,9 +39,12 @@
     "stats-webpack-plugin": "^0.6.1",
     "svgo": "^1.0.5",
     "ts-node": "^6.1.0",
-    "wetland": "^3.1.0"
+    "victory": "^0.27.2",
+    "wetland": "^3.1.0",
+    "ws": "^5.2.1"
   },
   "devDependencies": {
+    "@types/ws": "^5.1.2",
     "@types/base-64": "^0.1.2",
     "@types/bluebird": "^3.5.18",
     "@types/debug": "0.0.30",
@@ -66,6 +70,7 @@
     "@types/redux-first-router-link": "^1.4.1",
     "@types/typescript": "^2.0.0",
     "@types/uglifyjs-webpack-plugin": "^1.1.0",
+    "@types/victory": "^0.9.16",
     "@types/webpack": "^3.8.12",
     "@types/webpack-dev-middleware": "^2.0.0",
     "@types/webpack-hot-middleware": "^2.16.2",

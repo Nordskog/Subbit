@@ -6,7 +6,7 @@
 {
     display: flex;
     flex-direction: column;
-    margin-bottom: var( --small-gap );
+    //margin-bottom: var( --small-gap );
 }
 
 .responseContainer
@@ -14,6 +14,30 @@
     display: flex;
     flex-direction: row;
 }
+
+.genericButton
+{
+    @extend %button;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    margin-left: var( --small-gap );
+    margin-right: var( --small-gap );
+    margin-top: var( --insignificant-gap );
+    margin-bottom: var( --insignificant-gap );
+
+
+    border-radius: var( --insignificant-gap );
+
+    font-size: var( --font-large);
+}
+
+.genericButton:hover
+{
+    background: $menu-highlight-color;
+}
+
 
 .dangerButton
 {
@@ -24,6 +48,12 @@
     border-top-right-radius: var( --small-gap );
     background: $danger;
     margin-bottom: 0px;
+}
+
+.dropdownContainer
+{
+    //background: $card-shadow-color; 
+    box-shadow: inset 0 5px 20px 0 $card-shadow-color;
 }
 
 .subButton 
@@ -49,6 +79,8 @@
     //margin-left: var( --small-gap );
 }
 
+
+
 .safeSubButton
 {
     @extend .subButton;
@@ -60,4 +92,14 @@
 
 
     //margin-right: var( --small-gap );
+}
+
+.safeSubButton:hover
+{
+    box-shadow: inset 0 0 5px 0px #000000;
+}
+
+.dangerSubButton:hover
+{
+    box-shadow: inset 0 0 5px 0px #000000;
 }

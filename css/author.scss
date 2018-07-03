@@ -51,6 +51,14 @@
     border-top-left-radius: var( --small-gap );
 }
 
+.noPostsContainer
+{
+    font-size: var(--font-large);
+    margin: auto;
+    font-weight: bold;
+    margin-left: var( --score-width);
+    padding-bottom: var( --small-gap )
+}
 
 
 .subscribedAuthor
@@ -64,6 +72,7 @@
     display: flex;
     margin-bottom: var( --medium-gap );
     font-weight: bold;
+    font-size: var(--font-large);
 }
 
 .authorHeader a:link,

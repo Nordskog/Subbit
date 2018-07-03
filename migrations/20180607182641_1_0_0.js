@@ -2,6 +2,7 @@ class Migration {
   static up(migration) {
     let builder = migration.getBuilder('defaultStore');
 
+
     builder.schema.createTable('auths', table => {
       table.increments('id').notNullable().primary();
       table.string('auth_type', 255).notNullable();
@@ -56,6 +57,8 @@ class Migration {
       table.timestamp('last_visit').notNullable().defaultTo(builder.knex.raw('CURRENT_TIMESTAMP'));
       table.unique(['username'], 'username_unique');
       table.integer('generation').unsigned().nullable();
+      table.boolean('admin_access').notNullable().defaultTo(false);
+      table.boolean('stats_access').notNullable().defaultTo(false);
     });
 
     builder.schema.createTable('user_settings', table => {
@@ -82,6 +85,35 @@ class Migration {
 
     builder.schema.alterTable('user_settings', table => {
       table.foreign('user_id').references('id').inTable('users').onDelete('cascade');
+    });
+    
+    builder.schema.createTable('stats_categories', table => {
+      table.increments('id').notNullable().primary();
+      table.datetime('createdAt').notNullable().defaultTo(builder.knex.raw('CURRENT_TIMESTAMP'));
+      table.datetime('updatedAt').notNullable().defaultTo(builder.knex.raw('CURRENT_TIMESTAMP'));
+      table.string('category', 255).notNullable();
+      table.unique(['category'], 'stats_categories_category_unique');
+    });
+
+    builder.schema.createTable('stats_entries', table => {
+      table.increments('id').notNullable().primary();
+      table.timestamp('end').notNullable().defaultTo(builder.knex.raw('CURRENT_TIMESTAMP'));
+      table.float('value', 8, 2).notNullable();
+      table.integer('interval_id').unsigned().nullable();
+      table.integer('category_id').unsigned().nullable();
+    });
+
+    builder.schema.createTable('stats_intervals', table => {
+      table.increments('id').notNullable().primary();
+      table.datetime('createdAt').notNullable().defaultTo(builder.knex.raw('CURRENT_TIMESTAMP'));
+      table.datetime('updatedAt').notNullable().defaultTo(builder.knex.raw('CURRENT_TIMESTAMP'));
+      table.integer('interval').notNullable();
+      table.unique(['interval'], 'stats_intervals_interval_unique');
+    });
+
+    builder.schema.alterTable('stats_entries', table => {
+      table.foreign('interval_id').references('id').inTable('stats_intervals').onDelete('cascade');
+      table.foreign('category_id').references('id').inTable('stats_categories').onDelete('cascade');
     });
     
     ///////////////////////
@@ -125,6 +157,11 @@ class Migration {
     builder.schema.alterTable('user_settings', table => {
       table.dropForeign('user_id');
     });
+    
+    builder.schema.alterTable('stats_entries', table => {
+      table.dropForeign('interval_id');
+      table.dropForeign('category_id');
+    });
 
     builder.schema.dropTable('auths');
 
@@ -139,6 +176,12 @@ class Migration {
     builder.schema.dropTable('user_settings');
 
     builder.schema.dropTable('subscriptions_subreddits');
+    
+    builder.schema.dropTable('stats_categories');
+
+    builder.schema.dropTable('stats_entries');
+
+    builder.schema.dropTable('stats_intervals');
   }
 }
 

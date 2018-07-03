@@ -1,0 +1,1 @@
+export import stats = require('./stats');

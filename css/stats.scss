@@ -1,0 +1,156 @@
+@import 'colors';
+@import 'dimens';
+
+.container
+{
+    
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    
+}
+
+
+.section 
+{
+    text-align: center;
+    color: $primary-text-color;
+    font-size: var(--font-large);
+    font-weight:bold;
+    margin: var( --tiny-gap );
+    padding: var( --small-gap );
+    background: $card-highlighted-background;
+    margin-left: (-var( --large-gap ));
+    margin-right:(-var( --large-gap ));
+    border-radius: var( --tiny-gap );
+}
+
+
+.chartContainer
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height:160px;
+    width:300px;
+}
+
+svg
+{
+    overflow: visible; //required for tooltip.
+}
+
+
+
+.categoryHeader
+{
+    height:var( --card-line-height );
+    display: flex;
+    //margin-bottom: var( --medium-gap );
+    font-weight: bold;
+    font-size: var(--font-large);
+    font-weight: bold;
+}
+
+.categoryTitle
+{
+    font-size: var(--font-large);
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin-left: var( --tiny-gap );
+    margin-right: var( --tiny-gap );
+
+    //Chart has padding on the left to display y axis
+    //Shift title a bit to make it appear centered
+    padding-left: 30px;
+}
+
+.chartTitle
+{
+    @extend .categoryTitle;
+    font-size: var(--font-medium);
+    font-weight: bold;
+    margin: auto;
+
+}
+
+.categoryContainer
+{
+    margin: var( --tiny-gap );
+    padding: var( --small-gap );
+    background: $card-background;
+    border-radius: var( --insignificant-gap );
+    border-top-left-radius: var( --small-gap );
+}
+
+.categoryChartContainer
+{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+}
+
+.text
+{
+    //margin: auto;
+    font-size: var(--font-large);
+    font-weight: bold;
+    height: auto;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    overflow: visible;
+
+}
+
+//Lots of weird stuff going on to make 
+//the tooltrip draw in the right position,
+//and not make firefox spaz out
+
+.textInner
+{
+
+    padding: 5px;
+    background: $chart-tooltip-background-color;
+    border-radius: 5px;
+
+    margin-right: auto;
+    width: auto;
+
+    white-space: nowrap;
+
+    overflow: visible;
+}
+
+
+
+
+///////////////////////
+// Mobile
+////////////////////////
+
+@media only screen and (max-width: 1100px)
+{
+    .chartContainer
+    {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height:320px;
+        width:600px;
+    }
+
+    .text
+    {
+        //margin: auto;
+        font-size: var(--font-small);
+
+    }
+
+}

@@ -18,6 +18,7 @@ interface Props
     delay?: number;
     duration?: number;
     appear?: boolean;
+    className? : string;
 }
 
 interface State
@@ -89,7 +90,7 @@ interface State
 
     render()
     {
-        return  <div ref={c => this.container = c} style={ { overflow: 'hidden' } }>
+        return  <div ref={c => this.container = c} className={this.props.className} style={ { overflow: 'hidden' } }>
                     {this.props.children}
                 </div>
     }

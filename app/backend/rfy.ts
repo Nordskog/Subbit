@@ -7,28 +7,30 @@ import * as Entities from '~/backend/entity';
 export let wetland : Wetland;
 import config from './wetland';
 
-export function initDatabase()
+export async function initDatabase()
 {
     wetland = new Wetland(config);
     
-    //Run any missing migrations
-     let migrator: Migrator = wetland.getMigrator();
-     migrator.latest(Migrator.ACTION_RUN).then( ( migrationsRun : string) => 
-     {
+    try
+    {
+        //Run any missing migrations
+        let migrator: Migrator = wetland.getMigrator();
+        let migrationsRun : string = await migrator.latest(Migrator.ACTION_RUN);
+
         if (migrationsRun == null)
         {
-            console.log("No migrations to run");
+            //console.log("No migrations to run");
         }
         else
         {
             console.log(`Ran ${parseInt(migrationsRun)} migrations`);
         }
-     }).catch( err => 
-        {
-            console.log("Failed to run migrations");
-            console.log(err);
-        });
-
+    }
+    catch ( err )
+    {
+        console.log("Failed to run migrations");
+        console.log(err);
+    }
 }
 
 export function rawQuery() : Knex

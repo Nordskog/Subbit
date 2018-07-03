@@ -167,6 +167,7 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
             }
         }
 
+        case actions.types.Route.STATS: //Doesn't really matter
         case actions.types.Route.HOME:
         {
             return {
@@ -220,6 +221,8 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
                 time: null
             }
         }
+
+
     }
 
     return state;

@@ -1,6 +1,8 @@
 ﻿import * as React from 'react';
 import * as components from '~/client/components';
 
+import { Stats } from '~/client/components/stats'
+
 import * as Toastify from 'react-toastify'
 import * as models from '~/common/models'
 
@@ -9,6 +11,7 @@ import { MessageType } from '~/client/components/tools';
 
 interface Props
 {
+    siteMode : models.SiteMode,
     authenticated: boolean;
     subscriptionCount: number;
     filter: models.AuthorFilter;
@@ -32,7 +35,12 @@ export default class app extends React.Component<Props,any>
     }
 
     getContent()
-    {
+    {   
+        if (this.props.siteMode == models.SiteMode.STATS )
+        {
+            return this.getStats();
+        }
+
         if (this.props.filter == models.AuthorFilter.SUBSCRIPTIONS  )
         {
             if ( !this.props.authenticated)
@@ -61,6 +69,12 @@ export default class app extends React.Component<Props,any>
                     <components.tools.scrollEndDetector key={"scrollEndDetector"} />,
                     <components.tools.LoadingStatus key={"LoadingStatus"} />
                ]
+    }
+
+    getStats()
+    {
+        return <Stats
+        />
     }
 
 }

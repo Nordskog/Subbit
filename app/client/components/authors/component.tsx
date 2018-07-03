@@ -60,7 +60,7 @@ export default class AuthorsComponent extends React.Component<Props, {} >
 
 
             renders.push( 
-                <component.author.component author={author} />
+                <component.author.component key={author.author.name} author={author} />
              );
         } )
 

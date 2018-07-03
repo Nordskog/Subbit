@@ -69,6 +69,20 @@ export class CancelledException extends Exception
     }
 }
 
+export class SocketException extends Exception
+{
+    constructor( message : string)
+    {
+        super(message, false)
+        this.name = "SocketException";
+    }
+
+    toString()
+    {
+         return `${this.name}: ${this.message}`;
+    }
+}
+
 //Usually expected behavior, doesn't need to be logged
 export class AuthorizationException extends Exception
 {

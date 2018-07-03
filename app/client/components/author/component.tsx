@@ -88,10 +88,20 @@ export default class AuthorCell extends React.Component<Props, State>
         return null;
     }
 
+    renderNoPostsMessage()
+    {
+        return <div className={styles.noPostsContainer}>No posts here</div>
+    }
+
     renderPosts()
     {
         if (this.state.subredditsExpanded)
             return null;
+
+        if (this.props.author.author.posts.length < 1)
+        {
+            return this.renderNoPostsMessage();
+        }
 
        return <components.transitions.FadeResize key={'posts_container'}>
                 <components.author.cells.Posts

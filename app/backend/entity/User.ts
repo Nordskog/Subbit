@@ -14,6 +14,8 @@ export default class User extends Wetland.Entity
     public subscriptions : Wetland.ArrayCollection<Subscription>;
     public settings : UserSettings;
 
+    public admin_access : boolean;
+    public stats_access : boolean;
 
     public id : number;
     public createdAt : Date;
@@ -34,6 +36,22 @@ export default class User extends Wetland.Entity
                 nullable: false
             });
 
+
+        //Unused, but I might use it for something eventually.
+        mapping.field('admin_access',
+            {
+                type: 'boolean',
+                nullable: false,
+                defaultTo: false
+            });
+
+        mapping.field('stats_access',
+            {
+                type: 'boolean',
+                nullable: false,
+                defaultTo: false
+            });
+
         mapping.field('username',
             {
                 type: 'string',
@@ -47,6 +65,7 @@ export default class User extends Wetland.Entity
             defaultTo: mapping.now()
         });
 
+        //Username will be grabbed from reddit, so case should be constant
         mapping.uniqueConstraint('username');
 
         mapping.oneToMany('subscriptions', { targetEntity: 'Subscription', mappedBy: 'user' });

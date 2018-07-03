@@ -23,10 +23,20 @@
      font-size: var(--font-large);
 }
 
+.item:hover
+{
+    background: $menu-highlight-color;
+}
+
 .itemSelected
 {
     @extend .item;
-    background: $card-button-color;
+    background: $safe;
+}
+
+.itemSelected:hover
+{
+    background:  $safe;
 }
 
 

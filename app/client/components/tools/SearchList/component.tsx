@@ -123,9 +123,8 @@ export default class RedditsCell extends React.Component<Props, State>
                             {this.getSearchBoxes()}
                         </transitions.TransitionGroup>
                     </div>
-                    <div className={ styles.searchBarSpacer }/>
                     <components.animations.AutoSize>
-                        <div style={  { height: 'auto', overflow: 'hidden' } } >
+                        <div className={styles.itemContainer} >
                             {this.getListItems()}
                             {this.getEmptyListIndicator()}
                         </div>

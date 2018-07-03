@@ -1,6 +1,7 @@
 export import auth = require('./auth');
 export import data = require('./data');
 export import state = require('./state');
+export import stats = require('./stats');
 export import reddit = require('./reddit');
 export * from './Action';
 
@@ -41,3 +42,9 @@ export enum LoadingStatus
     DONE = "done"
 }
 
+export enum SiteMode
+{
+    AUTHORS, STATS
+}
+
+export type WebsocketReconnectCallback = () => void;

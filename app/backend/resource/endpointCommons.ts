@@ -1,8 +1,11 @@
 import { Response } from "express";
 import { EndpointException, AuthorizationException, NetworkException } from "~/common/exceptions";
+import * as stats from '~/backend/stats'
 
 export function handleException( exception : Error, res : Response)
 {
+    stats.add(stats.StatsCategoryType.ERRORS);
+    
     if ( exception instanceof EndpointException )
     {
         //Respond to user with error and only log the message

@@ -8,6 +8,7 @@ import { Dispatch } from '~/client/actions/tools/types';
 function mapStateToProps(state: State)
 {
     return { 
+        siteMode: state.scrollState.mode,
         authenticated: state.authState.isAuthenticated,
         subscriptionCount: state.userState.subscriptions.length,
         filter : state.authorState.filter

@@ -6,26 +6,40 @@
 {
     display:flex;
     flex-direction: column;
+    margin-top: var(--small-gap);
+    margin-bottom: var(--small-gap);
     
 }
 
-.row
+
+.genericButton
 {
-    display:flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+    @extend %button;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    margin-left: var( --small-gap );
+    margin-right: var( --small-gap );
+    margin-top: var( --insignificant-gap );
+    margin-bottom: var( --insignificant-gap );
+
+    border-radius: var( --insignificant-gap );
+
+    font-size: var( --font-large);
+
+
 }
 
-.description
+a.genericButton:hover
 {
-    color: $highlighted-text-color;
-    text-align: center;
-    font-weight: bold;
-    margin: var( --small-gap );
-    padding:var( --small-gap );
+    text-decoration: none;
+}
 
-    font-size: var(--font-large);
+.genericButton:hover
+{
+    color: $bright-text-color;
+    background: $menu-highlight-color;
 }
 
 .button
@@ -38,6 +52,12 @@
 
     height: calc( var( --header-height ) - (var( --small-gap ) * 2) );
     width:  calc( var( --header-height ) - (var( --small-gap ) * 2) );
+}
+
+.button:hover 
+{
+    stroke:  $bright-text-color;
+    fill: $bright-text-color;
 }
 
 .popupContainer

@@ -3,7 +3,7 @@ $body-background: #252525;
 $card-background: #0c0c0c;
 $card-highlighted-background: #0c0c0c;
 
-$card-shadow-color: #050505;
+$card-shadow-color: #020202;
 
 $card-button-color: #131d27;
 
@@ -11,13 +11,14 @@ $card-button-color: #131d27;
 $button-indicator-color: #294d70;
 $button-highlight-color: #4784c2;
 $menu-highlight-color: #162029;
-$nested-highlight-color: #1d2a35;
+$nested-highlight-color: #192e42;
 
-$bright-text-color: #4f9eee;
+$bright-primary-text-color: #6db6ff;
 $primary-text-color: #4a95df;
 
 $interactive-text-color:#4c6c8a;
 
+$bright-text-color: #ffffff;
 $highlighted-text-color: #e0e0e0;
 $normal-text-color: #898989;
 $background-text-color: #636363;
@@ -42,3 +43,8 @@ $danger: #a12626;
 $sketchy: #e7a008;
 
 $toast-text-color: #353535;
+
+
+///////////////////
+
+$chart-tooltip-background-color: #1d1d1da6

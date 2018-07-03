@@ -17,13 +17,27 @@
     flex-direction: row;
     justify-content: space-between;
     cursor: pointer;
+
+    color: $highlighted-text-color;
+
+    margin-left: var( --small-gap );
+    margin-right: var( --small-gap );
+    border-radius: var( --insignificant-gap );
 }
 
 .subscriptionSubredditContainer:hover
 {
     background: $menu-highlight-color;
+    color: $bright-text-color;
 }
 
+.itemContainer
+{
+    margin-top: var( --small-gap);
+    margin-bottom: var( --small-gap);
+    height: auto;
+    overflow: hidden;
+}
 
 .subscriptionSubredditInnerContainer
 {
@@ -42,7 +56,7 @@
 .altBox
 {
     width:auto;
-    color: $background-text-color;
+    //color: $background-text-color;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -52,6 +66,9 @@
     color: $interactive-text-color;
     cursor: pointer;
     white-space: nowrap;
+
+    border-bottom-right-radius: var( --insignificant-gap );
+    border-top-right-radius: var( --insignificant-gap );
 
 }
 
@@ -73,10 +90,8 @@
     
    // width: 200px;
 
-   display: flex;
-   flex-direction: row;
-
-    color: $highlighted-text-color;
+    display: flex;
+    flex-direction: row;
     text-align: left;
 
     border-radius: var( --small-gap );

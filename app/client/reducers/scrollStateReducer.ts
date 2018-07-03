@@ -42,6 +42,30 @@ export function scrollStateReducer(state = getDefaultScrollState(), action :  mo
                 ...payload
             }
         }
+
+        //////////////////
+        // Routes
+        //////////////////
+
+        case actions.types.Route.STATS:
+        {
+            return {
+                ...state,
+                mode: models.SiteMode.STATS
+            }
+        }
+
+        case actions.types.Route.AUTHOR:
+        case actions.types.Route.AUTHENTICATE:
+        case actions.types.Route.FILTER:
+        case actions.types.Route.HOME:
+        case actions.types.Route.SUBREDDIT:
+        {
+            return {
+                ...state,
+                mode: models.SiteMode.AUTHORS
+            }
+        }
     }
 
     return state;

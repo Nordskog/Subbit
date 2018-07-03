@@ -113,6 +113,12 @@ input[type=text] {
     background: $input-background-color;
 }
 
+input[type=text]:hover::placeholder
+{
+
+    color: $bright-primary-text-color;
+}
+
 ::placeholder 
 {
     color: $input-placeholder-color;

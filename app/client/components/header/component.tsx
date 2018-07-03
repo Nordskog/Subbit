@@ -132,7 +132,6 @@ export default class HeaderComponent extends React.Component<Props, null>
 
                          <div className={styles.headerRight}>
                             {this.getSettingsPanel(true)}
-                            {this.getPanel()}
                             {this.getRightCorner()}
                         </div>
 
@@ -205,7 +204,7 @@ export default class HeaderComponent extends React.Component<Props, null>
     getPanel()
     {
         if (this.props.authState.isAuthenticated)
-            return this.getloggedInPanel();
+            return null;    //Hide logout in menu
         else
             return this.getLoginPanel();
     }
@@ -262,15 +261,6 @@ export default class HeaderComponent extends React.Component<Props, null>
         return <div className={siteStyles.loginContainer}>
                 <a href={urls.RFY_AUTHORIZE_REMOTE} className={styles.sortButton}>Login</a>
                 </div>;
-    }
-
-    getloggedInPanel()
-    {
-        return <div className={siteStyles.loginContainer}>
-            <div
-                className={styles.sortButton}
-                onClick={() => this.handleLogoutClick() }>Logout</div>
-             </div>;
     }
 
     getSettingsPanel( mobile : boolean = false)

@@ -17,7 +17,11 @@ const config =
                     Entities.Subreddit,
                     Entities.Subscription,
                     Entities.User,
-                    Entities.UserSettings  
+                    Entities.UserSettings,
+
+                    Entities.StatsEntry,
+                    Entities.StatsCategory,
+                    Entities.StatsInterval  
                 ]
 
 };

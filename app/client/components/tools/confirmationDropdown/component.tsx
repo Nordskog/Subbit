@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import * as styles from 'css/confirmationDropdown.scss'
+import * as styles from 'css/optionDropdown.scss'
 import * as components from '~/client/components'
 import * as transitions from 'react-transition-group'
 
@@ -28,7 +28,7 @@ export default class confirmationDropdown extends React.Component<Props, State>
     public render()
     {
         return  <transitions.TransitionGroup component={'div'} className={styles.container}>
-                    <div className={styles.dangerButton} onClick={() => this.handleClick()  }>
+                    <div className={styles.genericButton} onClick={() => this.handleClick()  }>
                         {this.props.message}
                     </div>
                     {this.getDropdown()}
@@ -39,7 +39,7 @@ export default class confirmationDropdown extends React.Component<Props, State>
     {
         if (this.state.expanded)
         {
-        return    <components.transitions.FadeResize key={"dropdown"}>
+        return    <components.transitions.FadeResize className={styles.dropdownContainer} key={"dropdown"}>
                         <div className={styles.responseContainer}>
                             <div onClick={() => this.handleResponseClick(true)} className={styles.dangerSubButton}>{this.props.positiveMessage}</div>
                             <div onClick={() => this.handleResponseClick(false)} className={styles.safeSubButton}>{this.props.negativeMessage}</div>

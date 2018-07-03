@@ -7,17 +7,19 @@ import * as tools from '~/common/tools'
 import * as Entities from '~/backend/entity';
 import { AccessToken } from '~/common/models/auth/';
 
-export enum scopes
+export enum Scope
 {
     REDDIT = 'REDDIT',
     SUBSCRIPTIONS = 'SUBSCRIPTIONS',
     SETTINGS = 'SETTINGS',
-    LOGOUT = 'LOGOUT'
+    LOGOUT = 'LOGOUT',
+    ADMIN = 'ADMIN',
+    STATS = 'STATS'
 };
 
 export function createIdToken(user: Entities.User)
 {
-    return jwt.sign(_.pick(user, ['username'] ), serverConfig.token.privateKey, { expiresIn: 60 * 60 * 5 });
+    return jwt.sign(_.pick(user, ['username', 'admin_access', 'stats_access'] ), serverConfig.token.privateKey, { expiresIn: '1 year' });
 }
 
 export function createAccessToken(user : Entities.User)
@@ -26,8 +28,18 @@ export function createAccessToken(user : Entities.User)
     //After token has been verified this value is also checked.
     //This allows us to invalidate all existing tokens for this user.
 
+    //Default scopes any user will have access to
+    let tokenScopes : Scope[] = [Scope.SUBSCRIPTIONS, Scope.SETTINGS, Scope.LOGOUT, Scope.REDDIT];
+
+    //Admin and stats scopes.
+    //These are verified server-side, and are only used to display ui stuff
+    if (user.admin_access)
+        tokenScopes.push( Scope.ADMIN);
+    if (user.stats_access)
+        tokenScopes.push( Scope.STATS);
+
     let payload : AccessToken = {
-        scope: [scopes.SUBSCRIPTIONS, scopes.SETTINGS, scopes.LOGOUT, scopes.REDDIT].join(" "),
+        scope: tokenScopes.join(" "),
         sub: user.username,
         generation: user.generation
     };
@@ -63,7 +75,7 @@ export function generateUserInfo( user : Entities.User)
     let access_token : string = createAccessToken(user);
 
     let userInfo: models.auth.UserInfo = {
-        id_token: id_token,
+        id_token: { raw:  id_token },
         access_token: access_token,
         redditAuth : {
             access_token : user.auth.access_token,

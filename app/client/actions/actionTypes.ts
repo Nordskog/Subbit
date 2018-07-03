@@ -78,9 +78,6 @@ export namespace subscription
     {   
         id: number;
     }
-
-
-    
 };
 
 export namespace page
@@ -125,6 +122,12 @@ export namespace Route
     export const SUBREDDIT      : string = "SUBREDDIT";
     export const AUTHOR         : string = "AUTHOR";
     export const AUTHENTICATE   : string = "AUTHENTICATE";
+    export const STATS          : string = "STATS";
+
+    export interface STATS 
+    {
+
+    };
 
     export interface HOME 
     {

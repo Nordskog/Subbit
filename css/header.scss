@@ -69,6 +69,9 @@
     width:var( --header-separator-size );
     background: $body-background;
     margin-bottom:auto;
+
+    border-bottom-left-radius: var(--small-gap);
+    border-bottom-right-radius: var(--small-gap);
 }
 
 .headerBrand
@@ -89,11 +92,29 @@
     font-size: var(--font-large);
 }
 
+a.sortButton
+{
+    text-decoration: none;
+}
+
+.sortButton:hover
+{
+    box-shadow:0px var( --header-button-underline-height ) 0px $button-indicator-color inset;
+    color: $bright-text-color;
+}
+
+
 .sortButtonActive
 {  
     @extend .sortButton;
     box-shadow:0px var( --header-button-underline-height ) 0px $button-highlight-color inset;
 }
+
+.sortButtonActive:hover
+{
+    box-shadow:0px var( --header-button-underline-height ) 0px $button-highlight-color inset;
+}
+
 
 .sortButtonSub
 {  
@@ -177,6 +198,7 @@
 
 .headerRight
 {
+    height: var( --header-height );
     position: relative;
     float:right;
     display: flex;

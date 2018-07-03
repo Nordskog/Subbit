@@ -24,6 +24,14 @@
 
     padding-left: var( --large-gap );
     padding-right:var( --large-gap );
+
+    fill: $interactive-text-color;
+}
+
+.selectedContainer:hover 
+{
+    fill: $button-highlight-color;
+    color: $bright-text-color;
 }
 
 .selected
@@ -50,8 +58,11 @@
 {
     height: var( --small-icon-size );
     width: var( --small-icon-size );
-    fill: $interactive-text-color;
+    
+    //Controlled by parent element so we can change with hover
+    //fill: $interactive-text-color;
 }
+
 
     
 ///////////////////////

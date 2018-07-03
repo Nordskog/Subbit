@@ -11,13 +11,11 @@ import * as authentication from '~/backend/authentication';
 
 import * as Wetland from 'wetland';
 
-import * as Knex from 'knex';
-import { subreddit } from 'css/manager.scss';
-
 import * as entityActions from '~/backend/entityActions'
 
 import * as endpointCommons from './endpointCommons'
 import { EndpointException } from '~/common/exceptions';
+
 
 const express = require('express');
 const router = express.Router();
@@ -30,7 +28,7 @@ router.get('/api/subscription', async (req: WetlandRequest, res: Response) =>
 
     try
     {
-        let user = await authentication.verification.getAuthorizedUser(manager, token, {}, authentication.generation.scopes.SUBSCRIPTIONS);
+        let user = await authentication.verification.getAuthorizedUser(manager, token, {}, authentication.generation.Scope.SUBSCRIPTIONS);
         
         //Just grabbing the user and populating everything we need generates terrible, complicated with a binding for each 
         //sub. Short of doing a raw query this is generally the best approach.
@@ -68,7 +66,7 @@ router.post('/api/subscription', async (req: WetlandRequest, res: Response) =>
     let user: Entities.User = null;
     try
     {
-        user = await authentication.verification.getAuthorizedUser(manager, token, null, authentication.generation.scopes.SUBSCRIPTIONS);
+        user = await authentication.verification.getAuthorizedUser(manager, token, null, authentication.generation.Scope.SUBSCRIPTIONS);
     
         switch(rawReq.type)
         {

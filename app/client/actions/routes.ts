@@ -26,6 +26,17 @@ export function authorsRoutes()
     });
 }
 
+export function statsRoute()
+{
+    return WrapWithHandler( async (dispatch : Dispatch, getState : GetState ) =>
+    {
+        actionTools.title.updateTitle(getState);
+        actions.directActions.page.clearPage(true, dispatch);
+        actions.directActions.authentication.loadAuthentication(dispatch, getState);
+        await firstLoadDuties(dispatch, getState);
+    });
+}
+
 export function authorizeRoute()
 {
     return WrapWithHandler( async (dispatch : Dispatch, getState : GetState ) =>

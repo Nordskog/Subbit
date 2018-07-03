@@ -41,8 +41,6 @@ export default class popup extends React.Component<Props, null>
                             <use xlinkHref={settings_icon}></use>
                         </svg>;
 
-        console.log("modal: ",this.props.mobile);
-
         return <Popup   trigger={ trigger } 
                         contentStyle={style} 
                         position="bottom right" closeOnDocumentClick

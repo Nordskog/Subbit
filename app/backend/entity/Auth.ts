@@ -1,6 +1,7 @@
 ﻿import * as Wetland from 'wetland';
 import User from './User'
 
+//Reddit auth
 export default class Auth extends Wetland.Entity
 {
     public access_token : string;

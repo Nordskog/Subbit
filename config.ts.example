@@ -23,7 +23,8 @@
     {
         //Port is configured in server_config.ts
         //Whether they should be the same depends on your setup.
-        server_address: "http://127.0.0.1:8080"
+        server_address: "http://127.0.0.1:8080",
+        websocket_address: "ws://127.0.0.1:8080"
 
         // append "/authenticate" for reddit redirect url:
         // http://127.0.0.1:8080/authenticate

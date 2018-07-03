@@ -115,3 +115,19 @@ export async function removeSubredditFromSubscription( manager : Wetland.Scope, 
     let subreddit : Entities.Subreddit = await manager.getRepository(Entities.Subreddit).findOne({ name_lower: subreddit_name.toLowerCase() }, { })
     sub.subreddits.remove(subreddit);
 }
+
+export async function getCount(manager : Wetland.Scope)
+{
+    let queryBuilder : Wetland.QueryBuilder<Entities.Subscription> = manager.getRepository(Entities.Subscription).getQueryBuilder("sub");
+
+    let count : number = await queryBuilder
+                        .select({count: 'sub.id'})
+                        .getQuery()
+                        .getSingleScalarResult();
+
+    //Wetland typings wrong, returns string of value
+    if ( typeof count == "string")
+        count = Number.parseInt(count as any);
+        
+    return count;
+}

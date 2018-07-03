@@ -15,7 +15,9 @@ import * as entityActions from '~/backend/entityActions'
 
 import * as endpointCommons from './endpointCommons'
 import { EndpointException } from '~/common/exceptions';
-import { scopes } from '~/backend/authentication/generation';
+import { Scope } from '~/backend/authentication/generation';
+
+import * as stats from '~/backend/stats'
 
 const express = require('express');
 const router = express.Router();
@@ -30,7 +32,9 @@ router.get('/api/user/last_visit', async (req: WetlandRequest, res: Response) =>
     {
         if (token)
         {
-                let user : Entities.User = await authentication.verification.getAuthorizedUser(manager, token);
+                    let user : Entities.User = await authentication.verification.getAuthorizedUser(manager, token);
+
+                    stats.add(stats.StatsCategoryType.USER_PAGE_LOADS);
 
                     let prevDate = ( (<Date>user.last_visit).getTime() / 1000 );
                     let currentDate = Date.now() / 1000;
@@ -66,7 +70,7 @@ router.get('/api/user/settings', async (req: WetlandRequest, res: Response) =>
     {
         if (token)
         {
-            let user : Entities.User = await authentication.verification.getAuthorizedUser(manager, token, { populate: "settings" }, scopes.SETTINGS);
+            let user : Entities.User = await authentication.verification.getAuthorizedUser(manager, token, { populate: "settings" }, Scope.SETTINGS);
             res.json( Entities.UserSettings.formatModel(user.settings) );
             return;
         }
@@ -87,7 +91,7 @@ router.post('/api/user', async (req: WetlandRequest, res: Response) =>
 
     try
     {
-        let user: Entities.User = await authentication.verification.getAuthorizedUser(manager, token, { populate: "settings" },  scopes.SETTINGS);
+        let user: Entities.User = await authentication.verification.getAuthorizedUser(manager, token, { populate: "settings" },  Scope.SETTINGS);
     
         switch(rawReq.type)
         {
