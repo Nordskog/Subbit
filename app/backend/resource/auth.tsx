@@ -43,17 +43,25 @@ router.get('/api/authorize_refresh', async (req: WetlandRequest, res: Express.Re
 
     try
     {
-        let user : Entities.User = await authentication.verification.getAuthorizedUser(manager, token, null, Scope.REDDIT);
+        let user : Entities.User = await authentication.verification.getAuthorizedUser(manager, token, { populate: 'auth' }, Scope.REDDIT);
 
-        //TODO store token and prevent user from spamming refresh
-
-        let result = await api.reddit.auth.authenticatedWithRefreshToken( user.auth.refresh_token, redditAuth.getHttpBasicAuthHeader() );
-        if (result == null || result.access_token == null)
+        //The client side will refresh the token if it will expire within 5min.
+        //Return stored token if valid for longer than 5min.
+        if (user.auth.expiry < new Date( Date.now() + ( 1000 * 60 * 5 ) ))
         {
-            throw new AuthorizationException("Did not receive authorization response from reddit");
+            //Refresh token
+            let result = await api.reddit.auth.authenticatedWithRefreshToken( user.auth.refresh_token, redditAuth.getHttpBasicAuthHeader() );
+            if (result == null || result.access_token == null)
+            {
+                throw new AuthorizationException("Reddit refused token refresh. Please try logging out and back in");
+            }
+    
+            user = await redditAuth.createOrUpdateUserFromRedditToken(manager, result, user);
         }
-
-        user = await redditAuth.createOrUpdateUserFromRedditToken(manager, result, user);
+        else
+        {
+            //Existing token still valid for at least 5min, return that.
+        }
 
         let userInfo : models.auth.UserInfo = authentication.generation.generateUserInfo(user);
 

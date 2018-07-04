@@ -5,7 +5,7 @@ import * as Wetland from 'wetland';
 
 import serverConfig from 'root/server_config'
 import * as Entities from '~/backend/entity';
-import { AuthorizationException } from '~/common/exceptions';
+import { AuthorizationException, AuthorizationInvalidException } from '~/common/exceptions';
 import { Scope } from '~/backend/authentication/generation';
 import { AccessToken } from '~/common/models/auth';
 
@@ -14,7 +14,7 @@ export async function getAuthorizedUser (manager : Wetland.Scope, access_token_r
 {
     if (access_token_raw == null)
     {
-        throw new AuthorizationException("No user token provided");
+        throw new AuthorizationInvalidException("No user token provided");
     }
 
     let decodedToken : AccessToken = await decodeToken(access_token_raw);
@@ -23,7 +23,7 @@ export async function getAuthorizedUser (manager : Wetland.Scope, access_token_r
 
     if (user.generation != decodedToken.generation)
     {
-        throw new AuthorizationException("Token generation has been invalidated");
+        throw new AuthorizationInvalidException("Token generation has been invalidated");
     }
 
     if (scope != null)
@@ -80,7 +80,7 @@ async function decodeToken(access_token_raw : string) : Promise<AccessToken>
     catch(err)
     {
         console.log(err);
-        throw new AuthorizationException("Token could not be verified");
+        throw new AuthorizationInvalidException( `Token could not be verified because of ${err.name}`);
     }
 
     return decodedToken;

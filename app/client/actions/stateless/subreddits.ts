@@ -17,7 +17,7 @@ export async function searchSubreddits( name : string, dispatch : Dispatch) : Pr
         }
         catch( err )
         {
-            handleError(err);
+            handleError(dispatch, err);
             reject(err);
         }
 

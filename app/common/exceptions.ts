@@ -98,6 +98,22 @@ export class AuthorizationException extends Exception
     }
 }
 
+//Access token has expired or otherwise invalidated.
+//Corresponds to http code 401, which should trigger a logout.
+export class AuthorizationInvalidException extends Exception
+{
+    constructor( message : string)
+    {
+        super(message)
+        this.name = "AuthorizationInvalidException";
+    }
+
+    toString()
+    {
+         return `${this.name}: ${this.message}`;
+    }
+}
+
 //Should probably notify user of this
 export class NetworkException extends Exception
 {
