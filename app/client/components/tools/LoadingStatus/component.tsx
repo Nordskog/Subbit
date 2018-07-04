@@ -4,7 +4,7 @@ import { LoadingStatus } from '~/common/models';
 import * as siteStyles from 'css/site.scss'
 import { LoadingIcon, LoadingProgress } from '~/client/components/tools';
 
-interface Props extends models.state.PageState
+interface Props extends models.state.SiteState
 {
   
 }

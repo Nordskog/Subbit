@@ -7,7 +7,7 @@ import { Dispatch } from '~/client/actions/tools/types';
 
 function mapStateToProps(state: State)
 {
-    return { ...state.scrollState };
+    return { ...state.siteState };
 }
 
 function mapDispatchToProps( dispatch : Dispatch): object

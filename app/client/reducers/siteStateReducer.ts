@@ -3,7 +3,7 @@ import * as actions from '~/client/actions'
 import * as models from '~/common/models'
 import { LoadingStatus } from '~/common/models';
 
-export function scrollStateReducer(state = getDefaultScrollState(), action :  models.Action<any>)
+export function siteStateReducer(state = getDefaultSiteState(), action :  models.Action<any>)
 {
     switch (action.type)
     {
@@ -71,11 +71,11 @@ export function scrollStateReducer(state = getDefaultScrollState(), action :  mo
     return state;
 }
 
-export function getDefaultScrollState()
+export function getDefaultSiteState()
 {
     return {
         status: LoadingStatus.LOADING,
         loadingCount: null,
         loadingProgress: null
-    } as models.state.PageState;
+    } as models.state.SiteState;
 }

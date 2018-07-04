@@ -1,6 +1,7 @@
 import { GetState } from "~/client/actions/tools/types";
 import { State } from "~/client/store";
 import config from 'root/config';
+import * as models from '~/common/models'
 import { getFilterDisplayString } from "~/common/tools/string";
 
 export function updateTitle( getState : GetState)
@@ -10,7 +11,11 @@ export function updateTitle( getState : GetState)
     //Otherwise keep title generic, with filter if present.
     let state : State = getState();
 
-    if (state.authorState.author != null)
+    if (state.siteState.mode == models.SiteMode.STATS)
+    {
+        document.title = config.client.siteName+" - Stats"
+    }
+    else if (state.authorState.author != null)
     {
         if (state.authorState.subreddit != null)
         {

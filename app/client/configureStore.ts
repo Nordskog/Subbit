@@ -27,7 +27,7 @@ export default (history, preLoadedState) => {
         authState: reducers.authStateReducer,
         location: reducer,
         userState: reducers.userReducer,
-        scrollState: reducers.scrollStateReducer,
+        siteState: reducers.siteStateReducer,
     });
     const middlewares = applyMiddleware(middleware, ReduxThunk,);
   const enhancers : any = compose(enhancer, middlewares)

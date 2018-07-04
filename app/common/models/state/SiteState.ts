@@ -1,6 +1,6 @@
 import { LoadingStatus, SiteMode } from "~/common/models";
 
-export default interface ScrollState
+export default interface SiteState
 {
     mode : SiteMode;
     status : LoadingStatus;
