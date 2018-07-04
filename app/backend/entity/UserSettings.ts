@@ -18,21 +18,13 @@ export default class UserSettings extends Wetland.Entity
 
         mapping.autoFields();
 
-        mapping.field('post_display_mode',
-        {
-            type: 'enumeration',
-            enumeration: ['minimal','compact', 'full'],
-            nullable: false,
-            defaultTo: 'compact',
-        });
-
         mapping.oneToOne('user', { targetEntity: 'User', inversedBy: 'settings' }).joinColumn( 'user', {onDelete: 'cascade'} );
     }
 
     static formatModel( us : UserSettings )
     {
         return {
-            post_display_mode: us.post_display_mode
+            //Nothing!
         }
     }
 

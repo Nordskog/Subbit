@@ -26,7 +26,16 @@ export function getAndUpdateLastVisit()
     });
 }
 
-export function getSettings()
+export function getLocalSettings()
+{
+    return WrapWithHandler( async function (dispatch : Dispatch, getState : GetState)
+    {
+        actions.directActions.user.loadUserSettings(dispatch);
+    });
+}
+
+//Currently unused, but endpoint exists.
+export function getRemoteSettings()
 {
     return WrapWithHandler( async function (dispatch : Dispatch, getState : GetState)
     {

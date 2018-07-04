@@ -78,7 +78,8 @@ async function firstLoadDuties(dispatch : Dispatch, getState : GetState)
          await Promise.all( [
                                 actions.subscription.fetchSubscriptions()(dispatch, getState),
                                 actions.user.getAndUpdateLastVisit()(dispatch, getState),
-                                actions.user.getSettings()(dispatch, getState)
+                                actions.user.getLocalSettings()(dispatch, getState)
+                                //actions.user.getRemoteSettings()(dispatch, getState)  //Currently unused, so let's skip this call
                             ]);
     }
 }

@@ -61,6 +61,8 @@ router.get('/api/user/last_visit', async (req: WetlandRequest, res: Response) =>
 
 });
 
+//There are currently no settings stored server side
+//But if there were any, this is where you'd get them.
 router.get('/api/user/settings', async (req: WetlandRequest, res: Response) =>
 {
     let manager = RFY.wetland.getManager();
@@ -91,19 +93,11 @@ router.post('/api/user', async (req: WetlandRequest, res: Response) =>
 
     try
     {
-        let user: Entities.User = await authentication.verification.getAuthorizedUser(manager, token, { populate: "settings" },  Scope.SETTINGS);
+        //Unused for the moment
+        //let user: Entities.User = await authentication.verification.getAuthorizedUser(manager, token, { populate: "settings" },  Scope.SETTINGS);
     
         switch(rawReq.type)
         {
-            case serverActions.user.SET_SETTING_POST_DISPLAY_MODE:
-            {
-                let payload : serverActions.user.SET_SETTING_POST_DISPLAY_MODE = rawReq.payload;
-                entityActions.user.setPostDisplayMode(manager, user, payload.mode);
-                await manager.flush();
-                res.json( true );
-                break;
-            }
-
             default:
             {
                 throw new EndpointException(400, `Unknown action requested: ${rawReq.type}`);

@@ -87,7 +87,7 @@ export function userReducer(state = getDefaultUserState(), action :  models.Acti
 
             return {
                 ...state,
-                settings: payload
+                settings: {  ...state.settings, ...payload }
             }
         }
 

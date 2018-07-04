@@ -84,7 +84,7 @@ export default class UserSettingsComponent extends React.Component<Props, State>
 
     getPostDisplayToggle()
     {
-        return  <components.tools.OptionDropdown message={"Post format"}> 
+        return  <components.tools.OptionDropdown message={"Post display format"}> 
                          <components.tools.Toggle
                         items={this.state.postDisplayItems}
                         selected={this.state.postDisplaySelected}

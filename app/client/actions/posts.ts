@@ -1,6 +1,6 @@
 import { PostDisplay } from "~/common/models";
 import * as actions from '~/client/actions'
-import { api, tools } from "~/common";
+import { api, tools, models } from "~/common";
 import { State } from "~/client/store";
 import { WrapWithHandler, handleError } from "~/client/actions/tools/error";
 import { Dispatch, GetState } from "~/client/actions/tools/types";
@@ -8,18 +8,14 @@ import { Dispatch, GetState } from "~/client/actions/tools/types";
 export function changePostDisplay( mode : PostDisplay)
 {
     return WrapWithHandler( async function (dispatch : Dispatch, getState : GetState)
-    {    
-        let state: State = getState();
-        let token: string = tools.store.getAccessToken(state);
+    {   
+        let userSettings : models.data.UserSettings = {
+            ...getState().userState.settings,
+            post_display_mode: mode
+        };
 
-        if (token != null)
-        {
-            //Don't want for server response
-            api.rfy.user.setPostDisplayMode(mode, token).catch( err => 
-            {
-                handleError(err);
-            });
-        }
+        //Maybe rethink if we ever add more than a few settings
+        actions.directActions.user.saveUserSettings(userSettings);
 
         dispatch(
         { 

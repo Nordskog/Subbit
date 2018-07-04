@@ -65,7 +65,6 @@ class Migration {
       table.increments('id').notNullable().primary();
       table.datetime('createdAt').notNullable().defaultTo(builder.knex.raw('CURRENT_TIMESTAMP'));
       table.datetime('updatedAt').notNullable().defaultTo(builder.knex.raw('CURRENT_TIMESTAMP'));
-      table.enu('post_display_mode', ['minimal','compact','full']).notNullable().defaultTo('compact');
       table.integer('user_id').unsigned().nullable();
     });
 
