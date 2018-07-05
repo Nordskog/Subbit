@@ -45,6 +45,11 @@ export interface Post
     thumbnail_height: number;
 }
 
+export interface AboutSubreddit
+{
+    display_name : string;
+}
+
 export type ListingResponse = Thing< Listing< Post > >
 {
     

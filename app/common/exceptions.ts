@@ -137,12 +137,17 @@ export class NetworkException extends Exception
         {
             let resBody : any = await res.json();
 
-            console.log("resBody:",resBody);
-
             //It's fairly common for servers to return a json object with a message field
             if ( resBody.message != null )
             {
-                text = resBody.message;
+                if (resBody.reason != null)
+                {
+                    text = `${resBody.message}: ${resBody.reason}`;
+                }
+                else
+                {
+                    text = resBody.message;
+                }
             }
             else
             {

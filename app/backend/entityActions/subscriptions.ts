@@ -1,6 +1,8 @@
 import * as Entities from '~/backend/entity'
 import * as Wetland from 'wetland'
-import { EndpointException } from '~/common/exceptions';
+import { EndpointException, Exception } from '~/common/exceptions';
+import * as api from '~/common/api';
+import * as RFY from '~/backend/rfy'
 
 //None of these methods will flush the manager
 
@@ -63,7 +65,7 @@ export async function getNewSubscription( manager : Wetland.Scope,  user : Entit
     }
 
     //If none specified, user will be subscribed to all of author's posts
-    if (subreddit_names != null)
+    if (subreddit_names != null && subreddit_names.length > 0)
         await addSubredditToSubscription(manager, sub, ...subreddit_names);
 
     return sub;
@@ -71,6 +73,8 @@ export async function getNewSubscription( manager : Wetland.Scope,  user : Entit
 
 export async function addSubredditToSubscription( manager : Wetland.Scope, sub : Entities.Subscription, ...subreddit_names : string[] )
 {
+
+
     //Reddit limits the search string to something like 1600 characters.
     //The actual limit assuming max subreddit name length is closer to 23? 25? I think,
     //but let's play it safe and limit to 20.
@@ -80,34 +84,46 @@ export async function addSubredditToSubscription( manager : Wetland.Scope, sub :
     }
 
     //Convert to lowercase, remove duplicates
-    let nameSet : Set<String> = new Set<string>();
-    subreddit_names.forEach( name => nameSet.add(name.toLowerCase()) );
+    let nameSet : Map<string, string> = new Map<string, string>();
+    subreddit_names.forEach( name => nameSet.set(name.toLowerCase(), name) );
 
     //Remove any subreddits we are already subscribed to from set
     sub.subreddits.forEach( ( subreddit : Entities.Subreddit ) =>  nameSet.delete(subreddit.name_lower ) );
         
-    //Get existing subreddits
-    let subreddits : Entities.Subreddit[] = await manager.getRepository(Entities.Subreddit).find({ name_lower: Array.from(nameSet) }, { }) || [];
+    //Get as array
+    let uniqueLowerNames = [];
+    nameSet.forEach( ( name: string, lower : string) =>
+    {
+        uniqueLowerNames.push(lower);
+    });
+
+    let subreddits : Entities.Subreddit[] = await manager.getRepository(Entities.Subreddit).find({ name_lower: uniqueLowerNames }, { }) || [];
     
     //Map names to existing subreddits
     let subredditMap : Map<string, Entities.Subreddit> = new Map<string, Entities.Subreddit>();
     subreddits.forEach( ( subreddit : Entities.Subreddit ) => subredditMap.set( subreddit.name_lower, subreddit) );
 
-    nameSet.forEach( (name : string) => 
+    for ( let  [lower, name] of nameSet )   //Note that arg order (key, value) is opposite of forEach callback
     {
         //Get existing subreddit from map, create if new
-        let subreddit : Entities.Subreddit = subredditMap.get(name);
+        let subreddit : Entities.Subreddit = subredditMap.get(lower);
         if (subreddit == null)
         {
             subreddit = new Entities.Subreddit();
-            subreddit.name = name;
+
+            subreddit.name = name;  
             manager.persist(subreddit);
+
+            //Async confirm with reddit that subreddit exists and casing is correct.
+            //Runs a network request so work here should finished before it accesses db to make corrections.
+            //do not await.
+            confirmSubreddit(name);
         }
 
         //and finally add to sub list
         sub.subreddits.add(subreddit);
 
-    });
+    };
 }
 
 export async function removeSubredditFromSubscription( manager : Wetland.Scope, sub : Entities.Subscription, subreddit_name : string )
@@ -130,4 +146,38 @@ export async function getCount(manager : Wetland.Scope)
         count = Number.parseInt(count as any);
         
     return count;
+}
+
+//A user may attempt to subscribe to a subreddit that does not exist.
+//They may also provide the subreddit name with incorrect casing.
+//Confirm new subreddits with reddit and update/delete accordingly.
+export async function confirmSubreddit( name : string )
+{
+    let casedName = await api.reddit.subreddits.getNameIfExists(name);
+
+    if ( casedName == null || casedName != name)
+    {
+
+        let manager : Wetland.Scope =  RFY.wetland.getManager();
+        let subreddit : Entities.Subreddit = await manager.getRepository(Entities.Subreddit).findOne( { "name_lower" : name.toLowerCase() }, {} );
+        
+        if (subreddit == null)
+        {
+            throw new Exception("Attempted to confirm subreddit on subreddit that does not exist: "+name);
+        }
+
+        if (casedName == null)
+        {
+            console.log("User attempted to subscribe to subreddit that does not exist:",name);
+            manager.remove(subreddit);
+        }
+        else if ( casedName != name )
+        {
+            //Subreddit exists but casing is wrong. Correct!
+            console.log("User provided wrong subreddit case for:",name,"corrected to:",casedName);
+            subreddit.name = casedName;
+        }
+
+        await manager.flush();
+    }
 }
