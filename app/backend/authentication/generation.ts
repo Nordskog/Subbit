@@ -24,7 +24,7 @@ export function createIdToken(user: Entities.User, loginType : models.auth.Login
         {
             username: user.username,
             admin_access: user.admin_access,
-            stats_address: user.stats_access,
+            stats_access: user.stats_access,
             loginType: loginType 
         } as models.auth.IdToken, serverConfig.token.privateKey, { expiresIn: '1 year' });
 }
