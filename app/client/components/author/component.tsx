@@ -90,7 +90,9 @@ export default class AuthorCell extends React.Component<Props, State>
 
     renderNoPostsMessage()
     {
-        return <div className={styles.noPostsContainer}>No posts here</div>
+        return  <components.transitions.FadeResize key={'no_posts_container'} className={styles.noPostsContainer}>
+                    No posts here
+                </components.transitions.FadeResize>
     }
 
     renderPosts()

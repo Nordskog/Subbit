@@ -7,6 +7,7 @@ import config from 'root/config'
 import { Dispatch, GetState } from '~/client/actions/tools/types';
 import { Post } from '~/common/models/reddit';
 import { postedDate } from 'css/main.scss';
+import { NetworkException } from '~/common/exceptions';
 
 
 export async function getAuthors( dispatch : Dispatch, getState : GetState )
@@ -230,7 +231,21 @@ export async function poulateInitialPosts(authors : models.data.AuthorEntry[], c
                 }
                 catch ( err )
                 {
-                    reject (err );
+                    //User may be subscribed to subreddits that they do not have access to.
+                    //Reddit will return 404 if banned, and 403 if otherwuse not authorized.
+                    //If we have gotten the author list it means we have access to the subreddit
+                    //we are in, or are viewing subscriptions, and we don't want this to fail the rest of them.
+                    //Especially since this will prevent them from unsubscribing to them.
+                    //Maybe we should never reject and just display a separate error from here?
+                    if ( err instanceof NetworkException && (err.code == 404 || err.code == 403) )
+                    {
+                        resolve();
+                    } 
+                    else
+                    {
+                        reject (err);
+                    }
+                    
                 }
             });
 
