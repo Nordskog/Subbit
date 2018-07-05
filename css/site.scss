@@ -185,4 +185,50 @@ input[type=text]:hover::placeholder
     border: 1px solid $normal-text-color;
 }
 
+//Hide all checkboxes
+input[type=checkbox] {
+    width: var(--small-icon-size);
+    height: var(--small-icon-size);
+    position: absolute;
+    opacity: 0;
+    margin: 0px;
+    padding: 0px;
+}
+
+//And place them inside this
+.checkboxContainer
+{
+    position: relative;
+    width: var(--small-icon-size);
+    height: var(--small-icon-size);
+    background: $raised-element-color;
+    border-radius: var(--insignificant-gap);
+    border: 1px solid $normal-text-color;
+    cursor: pointer;
+}
+
+.checkboxContainer:hover
+{
+    background: $card-button-highlight-color;
+
+
+}
+
+.checkBox
+{
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: var(--small-icon-size);
+    height: var(--small-icon-size);
+    margin: 0px;
+    fill: transparent;
+}
+
+.checkBoxChecked
+{
+    @extend .checkBox;
+    fill: $upvote-color;
+}
+
 

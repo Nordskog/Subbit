@@ -90,7 +90,6 @@ export default class HeaderComponent extends React.Component<Props, null>
                     </div>
                     <div className={styles.headerRight}>
                     {this.getSettingsPanel(false)}
-                    {this.getPanel()}
                     </div>
 
                     <div className={styles.headerClear} />
@@ -201,15 +200,6 @@ export default class HeaderComponent extends React.Component<Props, null>
         }
     }
 
-    getPanel()
-    {
-        if (this.props.authState.isAuthenticated)
-            return null;    //Hide logout in menu
-        else
-            return this.getLoginPanel();
-    }
-
-    
     getTopTimePanels()
     {
         if (this.props.filter !=  AuthorFilter.TOP )
@@ -254,14 +244,7 @@ export default class HeaderComponent extends React.Component<Props, null>
            return { type: actions.types.Route.SUBREDDIT, payload: { subreddit: this.props.subreddit, filter: AuthorFilter.TOP, time: time } as actions.types.Route.SUBREDDIT };
         }
     }
-    
 
-    getLoginPanel()
-    {
-        return <div className={siteStyles.loginContainer}>
-                <a href={urls.RFY_AUTHORIZE_REMOTE} className={styles.sortButton}>Login</a>
-                </div>;
-    }
 
     getSettingsPanel( mobile : boolean = false)
     {

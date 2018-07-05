@@ -30,8 +30,10 @@ require('isomorphic-fetch');
 
 router.get('/api/authorize_remote', (req: WetlandRequest, res: Express.Response) =>
 {
+    let sessionLogin : boolean = req.query.session == 'true';
+
     //Login via reddit
-    let url = authentication.redditAuth.generateRedditLoginUrl();
+    let url = authentication.redditAuth.generateRedditLoginUrl(sessionLogin ? models.auth.LoginType.SESSION : models.auth.LoginType.PERMANENT);
     res.redirect(url); 
 });
 
@@ -63,7 +65,9 @@ router.get('/api/authorize_refresh', async (req: WetlandRequest, res: Express.Re
             //Existing token still valid for at least 5min, return that.
         }
 
-        let userInfo : models.auth.UserInfo = authentication.generation.generateUserInfo(user);
+        //Reusing existing login type on refresh
+        let existingAccessToken : models.auth.AccessToken = await authentication.verification.getDecodedTokenWithoutVerifying(token);
+        let userInfo : models.auth.UserInfo = authentication.generation.generateUserInfo(user, existingAccessToken.loginType);
 
         res.json( userInfo.redditAuth );
         return;
@@ -92,10 +96,8 @@ router.post('/api/authorize_local', async (req: WetlandRequest, res: Express.Res
                 {
                     let payload : serverActions.auth.AUTHENTICATE_WITH_REDDIT_CODE = action.payload;
     
-                    if ( !authentication.redditAuth.confirmAuthState(payload.state) )   
-                    {
-                        throw new AuthorizationException("Authorization state invalid");
-                    }
+                    //Will throw if invalid
+                    let loginType = authentication.redditAuth.confirmAuthState(payload.state);
     
                     let result = await api.reddit.auth.authenticateWithCode(payload.code, urls.RFY_AUTHORIZE_REDIRECT, authentication.redditAuth.getHttpBasicAuthHeader() );
                     if (result == null || result.access_token == null)
@@ -106,7 +108,7 @@ router.post('/api/authorize_local', async (req: WetlandRequest, res: Express.Res
                     let manager : Wetland.Scope = RFY.wetland.getManager()
                     let user : Entities.User = await redditAuth.createOrUpdateUserFromRedditToken(manager,result);
     
-                    let userInfo : models.auth.UserInfo = authentication.generation.generateUserInfo(user);
+                    let userInfo : models.auth.UserInfo = authentication.generation.generateUserInfo(user, loginType);
     
                     console.log("Logging in: ", user.username);
                     res.json( userInfo );

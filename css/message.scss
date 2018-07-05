@@ -93,13 +93,39 @@
 
     border-radius: var( --small-gap );
     box-sizing: border-box;
-    
+}
+
+.loginContainerInner
+{
+    display: flex;
+    flex-direction: column;
+    align-items: center;  
 }
 
 .loginButton
 {
     background: $card-button-color;
-    border-radius: var( --tiny-gap );
+    border-radius: var(--insignificant-gap);
+}
+
+.loginButton:hover 
+{
+    background: $card-button-highlight-color;
+}
+
+a.loginButton
+{
+    text-decoration: none;
+}
+
+.rememberMeContainer
+{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    font-size: var(--font-medium);
+
 }
 
 ///////////////////////

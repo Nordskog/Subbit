@@ -91,6 +91,8 @@ export function userReducer(state = getDefaultUserState(), action :  models.Acti
             }
         }
 
+        
+
         case actionTypes.authentication.LOGOUT_SUCCESS:
         {
             return {

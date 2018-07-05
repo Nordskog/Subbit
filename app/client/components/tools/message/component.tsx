@@ -11,6 +11,8 @@ import subscribeSubredditButton from 'assets/images/subscribe_subreddit_button.s
 import subscribedPartialButton from 'assets/images/subscribed_partial_button.svg'
 import expand_caret from 'assets/images/expand_caret.svg'
 
+import * as components from '~/client/components'
+
 import { classConcat } from '~/common/tools/css';
 
 import * as authorStyles from 'css/author.scss'
@@ -28,8 +30,15 @@ interface Props
   message : MessageType;
 }
 
-export default class MessageComponent extends React.Component<Props,null> 
+interface State 
 {
+  rememberMe : boolean;
+}
+
+export default class MessageComponent extends React.Component<Props,State> 
+{
+
+  state = { rememberMe : true };
 
   render() 
   {
@@ -122,6 +131,19 @@ export default class MessageComponent extends React.Component<Props,null>
               
   }
 
+  getRememberMeCheckbox()
+  {
+    return  <div className={styles.rememberMeContainer} onClick={ () => this.setRememberMe( !this.state.rememberMe ) }>
+            <components.tools.Checkbox checked={this.state.rememberMe} callback={ (checked) => this.setRememberMe(checked) } />
+             Remember me 
+            </div>
+  }
+
+  setRememberMe( rememberMe : boolean ) 
+  {
+    this.setState( { rememberMe : rememberMe } );
+  }
+
   getUnsubscribeButton( partialStar : boolean)
   {
       //Function remains the same, but apperance is slightly different
@@ -167,12 +189,16 @@ export default class MessageComponent extends React.Component<Props,null>
     else
     {
       return <div className={styles.loginContainer}>
+                <div className={styles.loginContainerInner}>
                 <span>Papers, please.</span>
+                <div className={styles.spacer}/>
                 <div className={styles.spacer}/>
 
                 <div className={siteStyles.loginContainer}>
-                  <a href={urls.RFY_AUTHORIZE_REMOTE} className={ classConcat( siteStyles.button, styles.loginButton)}>Login with Reddit</a>
+                  <a href={urls.getClientLoginUrl(!this.state.rememberMe)} className={ classConcat( siteStyles.button, styles.loginButton)}>Login with Reddit</a>
                 </div> 
+                {this.getRememberMeCheckbox()}
+                </div>
             </div>
       
     }

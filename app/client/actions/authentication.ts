@@ -52,6 +52,7 @@ export function logoutUserOnAllDevices()
         await api.rfy.authentication.logoutOnAllDevices(token);
 
         actions.directActions.authentication.removeAuthentication(dispatch);
+
         //No sub means home (frontpage)
         dispatch(
             { 

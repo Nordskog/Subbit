@@ -18,8 +18,9 @@ let clientAuthentication : models.auth.RedditAuth = {access_token : "", expiry: 
 
 interface AuthRequestState
 {
+    loginType: models.auth.LoginType;
     identifier: string;
-    expiresAt: number;
+    expiresAt: Date;
 }
 
 //Requests or updates app-only token
@@ -61,13 +62,14 @@ export function getAppSecret() : string
     return serverConfig.reddit.redditSecret;
 }
 
-export function getAuthState() : string
+export function getAuthState( loginType : models.auth.LoginType) : string
 {
     let identifier: string = Math.floor(Math.random() * 10000000).toString();
 
     let state = {
         identifier: identifier,
-        expiresAt: new Date().getTime()
+        expiresAt: new Date( Date.now() + ( 1000 * 60 * 5) ), //Valid for 5min
+        loginType: loginType
     }
 
     activeAuthStates.set(identifier, state);
@@ -75,26 +77,28 @@ export function getAuthState() : string
     return identifier;
 }
 
-export function confirmAuthState(identifier: string) : boolean
+//Throws if invalid
+export function confirmAuthState(identifier: string) : models.auth.LoginType
 {
     let req : AuthRequestState = activeAuthStates.get(identifier);
     if (req)
     {
         //Valid for 5min
-        if (req.expiresAt < (new Date().getTime() + (5 * 60 * 1000)))
+        if ( req.expiresAt > new Date() )
         {
             activeAuthStates.delete(identifier);
-            return true;
-        }
+
+            return req.loginType;
+        }   
         else
         {
             activeAuthStates.delete(identifier);
-            return false;
+            throw new AuthorizationException("Log in attempted with expired state");
         }
     }
     else
     {
-        return false;
+        throw new AuthorizationException("Log in attempted with unrecorded state");
     }
 }
 
@@ -103,13 +107,13 @@ export function getHttpBasicAuthHeader()
     return { "Authorization" : 'Basic '+ base64.encode(serverConfig.reddit.redditId + ":" + serverConfig.reddit.redditSecret), "Content-Type" : "application/x-www-form-urlencoded;charset=UTF-8" };
 }
 
-export function generateRedditLoginUrl()
+export function generateRedditLoginUrl( loginType : models.auth.LoginType )
 {
     return tools.url.appendUrlParameters(urls.REDDIT_AUTH_URL,
         {
             client_id: authentication.redditAuth.getAppId(),
             response_type: "code",
-            state: authentication.redditAuth.getAuthState(),
+            state: authentication.redditAuth.getAuthState(loginType),    //Keeps track of permanent/session login type
             redirect_uri: urls.RFY_AUTHORIZE_REDIRECT,
             duration: "permanent",
             scope: "identity read history"

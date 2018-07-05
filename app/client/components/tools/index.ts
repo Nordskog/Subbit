@@ -14,3 +14,4 @@ export { FilterDropdown } from './filterDropdown'
 export { ConfirmationDropdown } from './ConfirmationDropdown'
 export { OptionDropdown } from './optionDropdown'
 export import StatsChart = require('./StatsChart');
+export { default as Checkbox } from './Checkbox';

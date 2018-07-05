@@ -9,6 +9,18 @@ import { AuthorizationException, AuthorizationInvalidException } from '~/common/
 import { Scope } from '~/backend/authentication/generation';
 import { AccessToken } from '~/common/models/auth';
 
+//Convenience function. Only use this after you have already validated the token.
+export async function getDecodedTokenWithoutVerifying( access_token_raw : string ) : Promise<AccessToken>
+{
+    if (access_token_raw == null)
+    {
+        throw new AuthorizationInvalidException("No user token provided");
+    }
+
+    let decodedToken : AccessToken = await decodeToken(access_token_raw);
+
+    return decodedToken;
+}
 
 export async function getAuthorizedUser (manager : Wetland.Scope, access_token_raw : string, options? : any, scope?: Scope, )
 {
@@ -79,7 +91,16 @@ async function decodeToken(access_token_raw : string) : Promise<AccessToken>
     }
     catch(err)
     {
-        console.log(err);
+        if ( err instanceof jwt.TokenExpiredError)
+        {
+            //This is expected
+        }
+        else
+        {
+            //Anything else is not expected and may suggest foul play
+            console.log(err);
+        }
+    
         throw new AuthorizationInvalidException( `Token could not be verified because of ${err.name}`);
     }
 

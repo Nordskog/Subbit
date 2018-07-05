@@ -17,12 +17,19 @@ export enum Scope
     STATS = 'STATS'
 };
 
-export function createIdToken(user: Entities.User)
+export function createIdToken(user: Entities.User, loginType : models.auth.LoginType)
 {
-    return jwt.sign(_.pick(user, ['username', 'admin_access', 'stats_access'] ), serverConfig.token.privateKey, { expiresIn: '1 year' });
+    //id token info is only used to toggle visibility of ui elements; don't never really trust it.
+    return jwt.sign(
+        {
+            username: user.username,
+            admin_access: user.admin_access,
+            stats_address: user.stats_access,
+            loginType: loginType 
+        } as models.auth.IdToken, serverConfig.token.privateKey, { expiresIn: '1 year' });
 }
 
-export function createAccessToken(user : Entities.User)
+export function createAccessToken(user : Entities.User, loginType : models.auth.LoginType)
 {
     //generation is stored in the db for each user.
     //After token has been verified this value is also checked.
@@ -41,13 +48,28 @@ export function createAccessToken(user : Entities.User)
     let payload : AccessToken = {
         scope: tokenScopes.join(" "),
         sub: user.username,
-        generation: user.generation
+        generation: user.generation,
+        loginType: loginType
     };
+
+    //Expiry is whatever, but as long as the user does a refresh 
+    //within the limit (which will happen when they refresh the reddit token hourly)
+    //it can be used indefinitely, or until the user invalidates the entire token generation.
+    //
+    let expiry = '2 hours'
+    switch(loginType)
+    {
+        case models.auth.LoginType.PERMANENT:  
+            expiry = '30 days'; //Turns out '1 month' is not a valid value
+            break;
+        case models.auth.LoginType.SESSION:
+            expiry = '2 hours'  
+    }
 
     let options : jwt.SignOptions = {
         issuer: serverConfig.token.issuer,
         audience: serverConfig.token.audience,
-        expiresIn: '1 year',
+        expiresIn: expiry,
         algorithm: 'RS256',
         jwtid: genJti(), // unique identifier for the token
     };
@@ -69,10 +91,10 @@ function genJti()
     return jti;
 }
 
-export function generateUserInfo( user : Entities.User)
+export function generateUserInfo( user : Entities.User, loginType : models.auth.LoginType)
 {
-    let id_token : string = createIdToken(user);
-    let access_token : string = createAccessToken(user);
+    let id_token : string = createIdToken(user, loginType);
+    let access_token : string = createAccessToken(user, loginType);
 
     let userInfo: models.auth.UserInfo = {
         id_token: { raw:  id_token },

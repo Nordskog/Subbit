@@ -71,6 +71,53 @@ a.genericButton:hover
     border-bottom-left-radius: var( --tiny-gap );
 }
 
+.loginContainer
+{
+    @extend .genericButton;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    justify-items: center;
+}
+
+.loginButton
+{
+    @extend .genericButton;
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+    background: transparent;
+}
+
+//I don't care anymore
+.rememberMeCenterer
+{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.rememberMeContainer
+{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    font-size: var(--font-medium);
+    font-weight: bold;
+    white-space: nowrap;
+
+    margin-top: var( --insignificant-gap );
+    margin-bottom: var( --insignificant-gap );
+
+}
+
+.rememberMeText
+{
+    margin-left: var(--small-gap);
+}
+
 ///////////////////////
 // Mobile
 ////////////////////////

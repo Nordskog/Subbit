@@ -26,6 +26,7 @@ interface State
 {
     postDisplayItems : ToggleItem[];
     postDisplaySelected : ToggleItem;
+    rememberMe : boolean;
 }
 
 export default class UserSettingsComponent extends React.Component<Props, State>
@@ -33,7 +34,7 @@ export default class UserSettingsComponent extends React.Component<Props, State>
     constructor( props : Props)
     {
         super(props);
-        this.state = { postDisplayItems: [], postDisplaySelected: null};
+        this.state = { rememberMe: true, postDisplayItems: [], postDisplaySelected: null};
     }
 
     static getDerivedStateFromProps( newProps : Props)
@@ -96,8 +97,23 @@ export default class UserSettingsComponent extends React.Component<Props, State>
     {
         if (!this.props.authenticated)
         {
-            return <a href={urls.RFY_AUTHORIZE_REMOTE} className={styles.genericButton}>Login</a>
+           return <div className={styles.loginContainer}>
+                 <a href={urls.getClientLoginUrl(!this.state.rememberMe)} className={styles.loginButton}>Login</a>
+                 <div className={styles.rememberMeCenterer} onClick={ () => this.setRememberMe( !this.state.rememberMe ) } >
+                    <div className={styles.rememberMeContainer} >
+                        <components.tools.Checkbox checked={this.state.rememberMe} callback={ (checked) => this.setRememberMe(checked) } />
+                        <span className={styles.rememberMeText}> Remember me</span> 
+                    </div>
+                </div>
+
+            </div>
+
         }
+    }
+
+    setRememberMe( rememberMe : boolean)
+    {
+        this.setState( { rememberMe: rememberMe } );
     }
 
     getStatsButton()
