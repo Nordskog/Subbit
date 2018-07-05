@@ -49,9 +49,6 @@ export function handleError(dispatch : ReduxTypes.Dispatch, err : Error )
             //Simplify for user consumption
             toast( ToastType.ERROR, 10000, err.toSimpleString());
         }
-
-        //401 from the server means access token invalidate, force a logout.
-        dispatch(actions.authentication.logoutUserAction());
     }
     else if ( err instanceof Exception )
     {
