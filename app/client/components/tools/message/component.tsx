@@ -22,7 +22,7 @@ import config from 'root/config'
 
 export enum MessageType 
 {
-  NOT_LOGGED_IN, NO_SUBSCRIPTIONS
+  NOT_LOGGED_IN, NO_SUBSCRIPTIONS, ABOUT
 }
 
 interface Props
@@ -57,6 +57,11 @@ export default class MessageComponent extends React.Component<Props,State>
         case MessageType.NO_SUBSCRIPTIONS:
         {
           return this.getNoSubscriptionsMessage(true);
+        }
+
+        case MessageType.ABOUT:
+        {
+          return this.getAboutMessage();
         }
 
         default:
@@ -223,28 +228,7 @@ export default class MessageComponent extends React.Component<Props,State>
 
               <div className={styles.spacer}/>
 
-              <div className={styles.rowMessageCenterer}>
-                <div className={styles.row}>
-                  {this.getSubscribeButton()}
-                  {this.getTextMessage("Not subscribed")}
-                </div>
-                <div className={styles.row}>
-                  {this.getUnsubscribeButton(true)}
-                  {this.getTextMessage("Subscribed in some Subreddits")}
-                </div>
-                <div className={styles.row}>
-                  {this.getUnsubscribeButton(false)}
-                  {this.getTextMessage("Subscribed in all Subreddits")}
-                </div>
-                <div className={styles.row}>
-                  {this.getSubscribeSubredditButton()}
-                  {this.getTextMessage("Subscribed, but not in this Subreddit")}
-                </div>
-                <div className={styles.row}>
-                  {this.getExpandExample()}
-                  {this.getTextMessage("Manage subscribed Subreddits")}
-                </div>
-              </div>
+              {this.getSubscriptionInfo()}
 
 
             </div>
@@ -253,6 +237,76 @@ export default class MessageComponent extends React.Component<Props,State>
   getTextMessage( text : string )
   {
     return <span className={styles.rowMessage}>{text}</span>
+  }
+
+  getSubscriptionInfo()
+  {
+    return <div className={styles.rowMessageCenterer}>
+            <div className={styles.row}>
+              {this.getSubscribeButton()}
+              {this.getTextMessage("Not subscribed")}
+            </div>
+            <div className={styles.row}>
+              {this.getUnsubscribeButton(true)}
+              {this.getTextMessage("Subscribed in some Subreddits")}
+            </div>
+            <div className={styles.row}>
+              {this.getUnsubscribeButton(false)}
+              {this.getTextMessage("Subscribed in all Subreddits")}
+            </div>
+            <div className={styles.row}>
+              {this.getSubscribeSubredditButton()}
+              {this.getTextMessage("Subscribed, but not in this Subreddit")}
+            </div>
+            <div className={styles.row}>
+              {this.getExpandExample()}
+              {this.getTextMessage("Manage subscribed Subreddits")}
+            </div>
+          </div>
+  }
+
+  /////////////////////////////
+  // About
+  /////////////////////////////
+
+
+  getAboutMessage()
+  {
+    return <div className={styles.container}>
+              <ReactSVG className={siteStyles.loadingImage}
+              path={loading_done}
+              evalScripts={"never"} />
+              <div className={styles.title}>
+                <span>Welcome to {config.client.siteName}!</span>
+              </div>
+
+              <div className={styles.paragraphContainer}>
+                <span>{config.client.siteName} lets you keep up with your favorite authors on Reddit.</span>
+                <div className={styles.spacer}/>
+                <span>You can also browse the rest of Reddit,<br/>making it easy to find and subscribe to new authors</span>
+              </div>
+
+              <div className={styles.spacer}/>
+
+              <div className={styles.paragraphContainer}>
+                {config.client.aboutMessage}
+
+              </div>
+
+              <div className={styles.spacer}/>
+
+              {this.getSubscriptionInfo()}
+
+              
+              <div className={styles.spacer}/>
+
+              <div className={styles.linkContainer}>
+                  <a className={styles.link} href={config.client.contactUrl}>Contact</a>
+                  <a className={styles.link} href={config.client.sourceCodeUrl}>Source code</a>
+              </div>
+
+
+            </div>
   }
 
 }

@@ -78,6 +78,7 @@ export default class UserSettingsComponent extends React.Component<Props, State>
                     {this.getLoginButton()}
                     {this.getPostDisplayToggle()}
                     {this.getStatsButton()}
+                    {this.getAboutButton()}
                     {this.getLogoutButton()}
                     {this.getlogoutOnAllDevicesButton()}
                 </div>
@@ -125,6 +126,14 @@ export default class UserSettingsComponent extends React.Component<Props, State>
                         Stats
                     </NavLink>
         }
+    }
+
+    getAboutButton()
+    {
+        return  <NavLink onClick={ () => this.props.close()} className={ styles.genericButton }
+                    to={ { type: actions.types.Route.ABOUT, payload: { } } as actions.types.Route.ABOUT }>
+                    About
+                </NavLink>  
     }
 
     getLogoutButton()

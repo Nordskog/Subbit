@@ -128,6 +128,35 @@ a.loginButton
 
 }
 
+.paragraphContainer
+{
+    background: $card-background;
+
+    border-radius: var( --small-gap );
+
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding: var( --large-gap );
+}
+
+.linkContainer
+{
+    margin-top: var(--small-gap);
+    display: flex;
+    flex-direction: row;
+}
+
+.link
+{
+    background: $card-background;
+    padding: var(--small-gap);
+    margin: var(--small-gap);
+    border-radius: var( --insignificant-gap );
+    font-weight: bold;
+    
+}
+
 ///////////////////////
 // Mobile
 ////////////////////////

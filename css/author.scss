@@ -13,8 +13,6 @@
     margin: var( --tiny-gap );
     padding: var( --small-gap );
     background: $card-highlighted-background;
-    margin-left: (-var( --large-gap ));
-    margin-right:(-var( --large-gap ));
     border-radius: var( --tiny-gap );
 }
 
@@ -211,11 +209,18 @@
 
     .author
     {
-        margin: var( --tiny-gap );
+        margin: var( --insignificant-gap );
         margin-right: 0px;
         margin-left: 0px;
 
         padding-left: var(--tiny-gap);
+    }
+
+    .lastVisit
+    {
+        margin: var( --insignificant-gap );
+        margin-left: 0px;
+        margin-right: 0px;
     }
 
     .authorHeader {

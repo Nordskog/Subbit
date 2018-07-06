@@ -55,6 +55,14 @@ export function siteStateReducer(state = getDefaultSiteState(), action :  models
             }
         }
 
+        case actions.types.Route.ABOUT:
+        {
+            return {
+                ...state,
+                mode: models.SiteMode.ABOUT
+            }
+        }
+
         case actions.types.Route.AUTHOR:
         case actions.types.Route.AUTHENTICATE:
         case actions.types.Route.FILTER:

@@ -11,7 +11,10 @@
         postFetchCount: 36,      //How many posts to fetch in each request
         authorDisplayCount: 10,  //How many authors to display on one page (subscriptions always displays all)
         userAgent:  "Subbit",
-        siteName: "Subbit"
+        siteName: "Subbit",
+        aboutMessage: "Let Roughy on Reddit or in #HFY on Freenode know of any problems",
+        contactUrl: "mailto:example@exmaple.com",
+        sourceCodeUrl: "https://github.com/Nordskog/Subbit"
     },
 
 

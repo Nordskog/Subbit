@@ -41,6 +41,13 @@ export default class app extends React.Component<Props,any>
             return this.getStats();
         }
 
+        if (this.props.siteMode == models.SiteMode.ABOUT)
+        {
+            return <components.tools.Message 
+                        message={MessageType.ABOUT}
+                    />
+        }
+
         if (this.props.filter == models.AuthorFilter.SUBSCRIPTIONS  )
         {
             if ( !this.props.authenticated)
@@ -76,5 +83,6 @@ export default class app extends React.Component<Props,any>
         return <Stats
         />
     }
+
 
 }

@@ -123,6 +123,12 @@ export namespace Route
     export const AUTHOR         : string = "AUTHOR";
     export const AUTHENTICATE   : string = "AUTHENTICATE";
     export const STATS          : string = "STATS";
+    export const ABOUT          : string = "ABOUT";
+
+    export interface ABOUT 
+    {
+
+    };
 
     export interface STATS 
     {
