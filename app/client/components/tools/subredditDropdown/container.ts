@@ -17,6 +17,7 @@ function mapStateToProps(state: State )
 function mapDispatchToProps( dispatch : Dispatch): object
 {
     return {
+        searchPosts: (subreddit : string, query : string ) => { return actions.statelessActions.posts.searchPosts(subreddit, query, dispatch) },
         searchSubreddit: ( name : string ) => { return actions.statelessActions.subreddits.searchSubreddits(name, dispatch) },
         searchAuthor: ( name : string ) => { return actions.statelessActions.subreddits.searchSubreddits(name, dispatch) },
         changeSubreddit: ( subreddit : string ) => { dispatch(actions.authors.changeSubreddit(subreddit)) },

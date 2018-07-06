@@ -36,9 +36,9 @@ export default class optionDropdown extends React.Component<Props, State>
     {
         if (this.state.expanded)
         {
-        return   <components.transitions.FadeResize className={styles.dropdownContainer}  key={"dropdown"}>
+        return   <components.transitions.FadeVerticalResize className={styles.dropdownContainer}  key={"dropdown"}>
                     {this.props.children}
-                    </components.transitions.FadeResize>
+                    </components.transitions.FadeVerticalResize>
         }
     }
 

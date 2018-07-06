@@ -7,7 +7,10 @@
     width: auto;
     display: flex;
     flex-direction: column;
+    justify-content: space-evenly;
     margin-left:0px;
+    overflow-y:auto;
+    max-height: calc( 100vh - 100px );
 }
 
 .subscriptionSubredditContainer
@@ -33,10 +36,11 @@
 
 .itemContainer
 {
-    margin-top: var( --small-gap);
-    margin-bottom: var( --small-gap);
-    height: auto;
-    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding-top: var( --small-gap);
+    padding-bottom: var( --small-gap);
+    overflow-y: auto;
 }
 
 .subscriptionSubredditInnerContainer
@@ -66,6 +70,8 @@
     color: $interactive-text-color;
     cursor: pointer;
     white-space: nowrap;
+
+    font-size: var(--font-small);
 
     border-bottom-right-radius: var( --insignificant-gap );
     border-top-right-radius: var( --insignificant-gap );
@@ -116,6 +122,15 @@
     border-bottom: 2px solid $hidden-text-color;
 
     //border: 2px solid $hidden-text-color;
+}
+
+.modalPopupContainer
+{
+    @extend .popupContainer;
+    max-height: calc( 100vh - 100px );
+
+    border-left: 2px solid transparent;
+    border-right: 2px solid transparent;
 }
 
 .popupContainer input[type=text] 
@@ -169,3 +184,5 @@
     color: $subscribed-highlight-color;
    // border: 2px solid $subscribed-highlight-color;
 }
+
+

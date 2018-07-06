@@ -156,7 +156,7 @@ export default class Posts extends React.Component<Props, State>
         if (!this.canExpand() )
             return null;
 
-        return <components.transitions.FadeResize key={'_expandButton'}>
+        return <components.transitions.FadeVerticalResize key={'_expandButton'}>
                 <div className={authorStyles.morePostsContainer}  onClick={ () => this.expandPosts() } > 
                         <div className={authorStyles.morePostsInnerContainer}>
                             <svg className={authorStyles.morePostsButton} >
@@ -166,7 +166,7 @@ export default class Posts extends React.Component<Props, State>
 
                         <span>{this.state.loading ? 'Loading...' : 'More posts'}</span>
                 </div>
-            </components.transitions.FadeResize >
+            </components.transitions.FadeVerticalResize >
     }
 
     getCollapseButton()
@@ -174,7 +174,7 @@ export default class Posts extends React.Component<Props, State>
         if (!this.state.postsExpanded)
             return null;
 
-        return  <components.transitions.FadeResize key={'collapse_button_container'}>
+        return  <components.transitions.FadeVerticalResize key={'collapse_button_container'}>
                     <div className={authorStyles.morePostsContainer} key={"_collapsebutton"} onClick={ () => this.collapsePosts() } >
                         <div className={authorStyles.morePostsInnerContainer}> 
                             <svg className={authorStyles.morePostsButton} >
@@ -182,7 +182,7 @@ export default class Posts extends React.Component<Props, State>
                             </svg>
                         </div>
                     </div>
-                </components.transitions.FadeResize>
+                </components.transitions.FadeVerticalResize>
     }
     
 }

@@ -19,6 +19,7 @@ interface Props
     trigger : JSX.Element;
     items: components.tools.SearchList.SearchItem[] | components.tools.SearchList.SearchItem;
     position?: string;
+    modal?: boolean;
 }
 
 interface State
@@ -38,19 +39,40 @@ export default class popup extends React.Component<Props, State >
 
     public render()
     {
-        let style = 
-        {
-            'width': 'auto',
-            'border': '0px',
-            'padding': '0px',
-            'background': 'transparent'
-        }
+        let modal = this.props.modal != null ? this.props.modal : false;
 
+        let style = null;
+        if (modal)
+        {
+            style = 
+            {
+                'maxHeight': '100%',
+                'width': '100%',
+                'marginTop': "100px",   //match --header-height + --tiny-gap + 5px ) to match header
+                'border': '0px',
+                'padding': '0px',
+                'background': 'transparent',
+            }
+        }
+        else
+        {
+            style =
+            {
+                'width': 'auto',
+                'border': '0px',
+                'padding': '0px',
+                'background': 'transparent'
+            }
+        }
+    
+    
         let overlayStyle =
         {
+            'height': '100vh',
             'background': '#00000080',
             'animation': animationStyles.fadeIn+" 0.5s"
         }
+
 
         let position = "bottom left";
         if (this.props.position != null)
@@ -63,13 +85,15 @@ export default class popup extends React.Component<Props, State >
                             position={position} closeOnDocumentClick
                             arrow={false}
                             overlayStyle={overlayStyle}
+                            modal={ modal }
+                            lockScroll={ modal}
                                                 >
                         {
                             close => 
                             {
                                  return <transitions.TransitionGroup >
                                             <components.transitions.Fade key={'subreddit_popup'} appear={true}>
-                                                <div className={styles.popupContainer}>
+                                                <div className={modal ? styles.modalPopupContainer : styles.popupContainer}>
                                                     <components.tools.SearchList.component
                                                         items={this.props.items} 
                                                         onClick={ ( item) => close() }

@@ -90,9 +90,9 @@ export default class AuthorCell extends React.Component<Props, State>
 
     renderNoPostsMessage()
     {
-        return  <components.transitions.FadeResize key={'no_posts_container'} className={styles.noPostsContainer}>
+        return  <components.transitions.FadeVerticalResize key={'no_posts_container'} className={styles.noPostsContainer}>
                     No posts here
-                </components.transitions.FadeResize>
+                </components.transitions.FadeVerticalResize>
     }
 
     renderPosts()
@@ -105,7 +105,7 @@ export default class AuthorCell extends React.Component<Props, State>
             return this.renderNoPostsMessage();
         }
 
-       return <components.transitions.FadeResize key={'posts_container'}>
+       return <components.transitions.FadeVerticalResize key={'posts_container'}>
                 <components.author.cells.Posts
                     posts={this.props.author.author.posts}
                     postDisplay={this.props.postDisplay}
@@ -114,7 +114,7 @@ export default class AuthorCell extends React.Component<Props, State>
                     scrollToAuthorTop={() => this.scrollToAuthorTop()}
                     displaySubreddit={this.props.subreddit == null}
                 />
-            </components.transitions.FadeResize>
+            </components.transitions.FadeVerticalResize>
     }
 
     scrollToAuthorTop()
@@ -133,16 +133,6 @@ export default class AuthorCell extends React.Component<Props, State>
         }
     }
 
-    
-
-    getSubreddit()
-    {
-        if (this.props.subreddit != null && this.props.solo)
-        {
-            return <div className={styles.subreddit}>in <a href={urls.getSubredditUrl(this.props.subreddit)}>r/<b>{this.props.subreddit}</b></a></div>
-        }
-    }
-
     render()
     {
         return <div className={ this.isSubscribed() ? styles.subscribedAuthor : styles.author} key = { this.props.author.author.name } ref={ (c) => {this.container = c}} >
@@ -150,7 +140,7 @@ export default class AuthorCell extends React.Component<Props, State>
                 {this.getButton()}
                 {this.getShowSubredditsButton()}
                 {this.getAuthorLink()}
-                {this.getSubreddit()}
+                {this.getSubredditLink()}
             </transitions.TransitionGroup>
 
             <div>
@@ -164,6 +154,20 @@ export default class AuthorCell extends React.Component<Props, State>
             </div>
 
         </div>
+    }
+
+    getSubredditLink()
+    {
+        if (this.props.subreddit != null && this.props.solo)
+        {
+            return <div className={styles.subreddit}>
+            in 
+            <NavLink 
+                to={ { type: actions.types.Route.SUBREDDIT, payload: { subreddit: this.props.subreddit } }  }>
+                r/<b>{this.props.subreddit}</b>
+            </NavLink>
+            </div>
+        }
     }
 
     getAuthorLink()
@@ -238,14 +242,14 @@ export default class AuthorCell extends React.Component<Props, State>
                     }
             }
 
-            return  <components.transitions.FadeResize key={'subs_container'}>
+            return  <components.transitions.FadeVerticalResize key={'subs_container'}>
              <div className={styles.subscriptionsContainer}>
                 <components.tools.SearchList.component
                             items={subSearch} 
                             />
             </div>
 
-            </components.transitions.FadeResize>
+            </components.transitions.FadeVerticalResize>
 
         }
 

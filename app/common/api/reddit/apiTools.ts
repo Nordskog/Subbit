@@ -91,3 +91,24 @@ export function getPostsUrl(author : string, after : string, limit : number, oau
 
     return { baseUrl: url, params: params };
 }
+
+export function getPostSearchUrl( searchTerm : string, subreddit : string, oauth : boolean, limit = 10) : { baseUrl, params }
+{
+    let url = oauth ?  urls.REDDIT_OAUTH_API_URL : urls.REDDIT_URL;
+    let params;
+    {
+        url = url + `/r/${subreddit}/search${ oauth ? '' : '.json' }`
+
+        params =
+            {
+                restrict_sr: 'on',
+                include_over_18: 'on',
+                q: `title:"${searchTerm}"`,
+                limit: limit,
+                raw_json: 1     //Otherwise you get html-safe characters
+            };
+        
+    }
+
+    return { baseUrl: url, params: params };
+}

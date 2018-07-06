@@ -123,11 +123,9 @@ export default class RedditsCell extends React.Component<Props, State>
                             {this.getSearchBoxes()}
                         </transitions.TransitionGroup>
                     </div>
-                    <components.animations.AutoSize>
-                        <div className={styles.itemContainer} >
+                    <components.animations.AutoSize className={styles.itemContainer}>
                             {this.getListItems()}
                             {this.getEmptyListIndicator()}
-                        </div>
                     </components.animations.AutoSize>
                 </div>
     }
@@ -170,7 +168,7 @@ export default class RedditsCell extends React.Component<Props, State>
 
     getSearchBox( item : SearchItem, index : number )
     {
-       return   <components.transitions.FadeResize key={"Search_"+index}>
+       return   <components.transitions.FadeVerticalResize key={"Search_"+index}>
                     <input 
                         onFocus={() => this.selectMode(index)} 
                         onChange={ evt => this.handleInput( item, evt.target.value ) } 
@@ -178,7 +176,7 @@ export default class RedditsCell extends React.Component<Props, State>
                         type="text" 
                         placeholder={item.searchPlaceholder}
                         className={ siteStyles.inputContainer }/>
-                </components.transitions.FadeResize>
+                </components.transitions.FadeVerticalResize>
                                  
     }
 

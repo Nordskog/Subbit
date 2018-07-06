@@ -88,4 +88,26 @@ export async function getPosts(author: string, after : string, auth : models.aut
 
 }
 
+//Normal reddit search will also search the contents of self text posts, making them useless for searching by post title.
+//with title:"something something" you can narrow it down to the title, but it only accepts full words, no partials.
+//Go with the latter as it at least produces somewhat useful results.
+export async function searchPosts( subreddit: string, searchTerm : string, limit? : number, auth? : models.auth.RedditAuth ) : Promise<models.reddit.Post[]>
+{
+    let {baseUrl, params} = apiTools.getPostSearchUrl(searchTerm, subreddit, auth != null, limit);
+
+    let result : reddit.ListingResponse = <reddit.ListingResponse> await api.reddit.getRequest(
+        baseUrl,
+        params,
+        auth);
+  
+    let posts : models.reddit.Post[] = result.data.children.map( ( post : reddit.Thing<reddit.Post> ) => 
+    {
+        return post.data
+    });
+
+    //Filter stickied posts for now. TODO: think about stickies
+    posts = posts.filter( ( post : models.reddit.Post ) => { return !post.stickied } );
+
+    return posts;
+}
 

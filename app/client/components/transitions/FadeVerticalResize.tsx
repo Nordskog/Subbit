@@ -21,7 +21,6 @@ import Transition from './Transition';
     come(container : HTMLDivElement, callback)
     {
         let height : number = container.clientHeight;
-        let width : number = container.clientWidth;
         let timeline = new gsap.TimelineMax();
 
 
@@ -30,15 +29,13 @@ import Transition from './Transition';
         timeline.fromTo(container, this.state.duration, 
             { 
                 opacity: 0,
-                height: 0,
-                width: 0
+                height: 0
 
             }, 
             {
-                width: width,
                 height: height,
                 opacity: 1,
-                clearProps: 'height, width, opacity'
+                clearProps: 'height, opacity'
             });
 
             timeline.eventCallback( 'onComplete', callback );
@@ -49,17 +46,14 @@ import Transition from './Transition';
     {
         
         let height : number = container.clientHeight;
-        let width : number = container.clientWidth;
         gsap.TweenMax.fromTo(container, this.state.duration, 
             {
-                width: width,
-                height: height,
-                opacity: 1
+                 height: height,
+                 opacity: 1
             },
             {
-                width: 0,
                 height: 0,
-                opacity : 0,
+                 opacity : 0,
                 onComplete: callback,
                 clearProps: 'height, opacity'
             });

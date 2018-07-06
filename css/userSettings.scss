@@ -134,9 +134,10 @@ a.genericButton:hover
     {
         background: $card-background;
         min-width: var( --dropdown-menu-min-width );
-        border: 2px solid $hidden-text-color;
-
-        border-radius: var( --tiny-gap );
+        border-left: 2px solid transparent;
+        border-right: 2px solid transparent;
+        border-bottom: 2px solid $hidden-text-color;
+        border-radius: 0px;
     }
 
     .description

@@ -123,7 +123,9 @@ export default class HeaderComponent extends React.Component<Props, null>
                                     </components.animations.AutoWidth>
 
                                     <components.animations.AutoWidth>
-                                        <components.tools.FilterDropdown/>
+                                        <components.tools.FilterDropdown
+                                            modal={true}
+                                        />
                                     </components.animations.AutoWidth>
                                 </div>
                             </div>
@@ -216,11 +218,11 @@ export default class HeaderComponent extends React.Component<Props, null>
 
         ];
 
-        return <components.transitions.FadeResize  key={"top_time_links"}>
+        return <components.transitions.FadeVerticalResize  key={"top_time_links"}>
                     <div className={ `${styles.headerRow} ${styles.topTimeContainer}` }>
                         {elements}
                     </div>
-                </components.transitions.FadeResize>   
+                </components.transitions.FadeVerticalResize>   
     }
 
     getTopTimePanel( time : PostTimeRange)

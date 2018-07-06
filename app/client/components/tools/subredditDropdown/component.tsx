@@ -14,6 +14,9 @@ import collapse_caret from 'assets/images/collapse_caret.svg'
 import * as components from '~/client/components'
 
 import * as styles from "css/redditlist.scss"
+import { Post } from '~/common/models/reddit';
+
+import MediaQuery from 'react-responsive'
 
 interface Props
 {
@@ -23,6 +26,7 @@ interface Props
     viewAuthor( author : string, subreddit? : string) : void;
     filter : models.AuthorFilter;
     searchSubreddit( name : string) : Promise< string[] >;
+    searchPosts(subreddit : string, query : string ): Promise<Post[]>
 }
 
 interface State
@@ -100,6 +104,12 @@ export default class SubredditDropdown extends React.Component<Props, State>
 
     getSubredditsPopup( trigger : JSX.Element ) : JSX.Element
     {
+        let searches : components.tools.SearchList.SearchItem[] = [];
+
+        /////////////////////////
+        // Subreddits
+        /////////////////////////
+
         let subSearch : components.tools.SearchList.SearchItem = {
             toggleHighlight: false,
             displayHighlight : false,
@@ -111,6 +121,11 @@ export default class SubredditDropdown extends React.Component<Props, State>
             onClick: ( item : components.tools.SearchList.ListItem) => { this.props.changeSubreddit(item.object); return true; }
         }
 
+        searches.push(subSearch);
+
+        ////////////////////////////
+        // Authors
+        ////////////////////////////
 
         let authorSearch : components.tools.SearchList.SearchItem = {
 
@@ -136,11 +151,61 @@ export default class SubredditDropdown extends React.Component<Props, State>
             onAltClick: ( item : components.tools.SearchList.ListItem) => { this.props.viewAuthor(item.name, this.props.subreddit) }
         }
 
-        return <components.tools.SearchList.popup
-                                trigger={ trigger }
-                                items={[subSearch, authorSearch]} 
-        />
-    
+        searches.push(authorSearch);
+
+        ////////////////////////////
+        // Posts
+        ////////////////////////////
+
+        if (this.props.subreddit != null && this.props.subreddit != "All")  //No point in searching all
+        {
+            let postSearch : components.tools.SearchList.SearchItem = {
+
+                items: [],
+                search: async ( query : string ) => 
+                    { 
+                        return ( await this.props.searchPosts(this.props.subreddit, query) ).map( post => 
+                            { 
+                                return { name: post.title, object: post.author, alt: post.author } 
+                            }) 
+                    },
+                prefix: "",
+                searchPlaceholder: "Post",
+                displayHighlight: false,
+                toggleHighlight : false,
+                addToDisplayList : false,
+                delaySearch : true,
+                onClick: ( item : components.tools.SearchList.ListItem) => { this.props.viewAuthor(item.object, this.props.subreddit); return true },
+                onAltClick: ( item : components.tools.SearchList.ListItem) => { this.props.viewAuthor(item.object, this.props.subreddit) }
+            }
+
+            searches.push(postSearch);
+        }
+
+
+        return <MediaQuery query="screen and (max-width: 1100px)">
+        {
+            (matches : boolean) => 
+            {
+                if (matches)
+                {
+                    return <components.tools.SearchList.popup
+                    modal={true}
+                    trigger={ trigger }
+                    items={searches} />
+                }
+                else
+                {
+                    return <components.tools.SearchList.popup
+                    modal={false}
+                    trigger={ trigger }
+                    items={searches} />
+                }
+            } 
+        }
+        </MediaQuery>
+
+
     }
 
     getExpandCaret()

@@ -17,6 +17,7 @@ interface Props
 {
     delay?: number;
     duration?: number;
+    className?: string;
 }
 
 interface State
@@ -72,7 +73,7 @@ interface State
                             {
                                  height: height,
                                  width: width,
-                                 clearProps:  'height'
+                                 clearProps:  'height, width'
                             });
                 
                             this.timeline.eventCallback( 'onComplete', () => { this.timeline = null }) ;
@@ -87,7 +88,7 @@ interface State
 
     render()
     {
-        return  <div ref={c => this.container = c} style={ { overflow: 'hidden' } }>
+        return  <div ref={c => this.container = c} className={this.props.className}>
                     {this.props.children}
                 </div>
     }

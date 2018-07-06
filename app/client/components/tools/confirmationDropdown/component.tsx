@@ -39,12 +39,12 @@ export default class confirmationDropdown extends React.Component<Props, State>
     {
         if (this.state.expanded)
         {
-        return    <components.transitions.FadeResize className={styles.dropdownContainer} key={"dropdown"}>
+        return    <components.transitions.FadeVerticalResize className={styles.dropdownContainer} key={"dropdown"}>
                         <div className={styles.responseContainer}>
                             <div onClick={() => this.handleResponseClick(true)} className={styles.dangerSubButton}>{this.props.positiveMessage}</div>
                             <div onClick={() => this.handleResponseClick(false)} className={styles.safeSubButton}>{this.props.negativeMessage}</div>
                         </div>
-                    </components.transitions.FadeResize>
+                    </components.transitions.FadeVerticalResize>
         }
     }
 

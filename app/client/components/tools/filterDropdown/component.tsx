@@ -23,6 +23,7 @@ interface Props
     subreddit : string;
     changeFilter( filter : models.AuthorFilter, subreddit : string ) : void; 
     filter : models.AuthorFilter;
+    modal? : boolean;
 }
 
 interface State
@@ -114,10 +115,13 @@ export default class FilterDropdown extends React.Component<Props, State>
             onClick: ( item : components.tools.SearchList.ListItem) => { this.props.changeFilter(item.object, item.object == AuthorFilter.SUBSCRIPTIONS ? null : this.props.subreddit); return true; }
         }
 
+
+
         return <components.tools.SearchList.popup
                                 trigger={ trigger }
                                 items={[filters]} 
                                 position={"bottom right"}
+                                modal={this.props.modal}
         />
     
     }

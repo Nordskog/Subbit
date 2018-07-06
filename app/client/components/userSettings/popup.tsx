@@ -23,6 +23,7 @@ export default class popup extends React.Component<Props, null>
 
     public render()
     {
+        /*
         let style = 
         {
             'width': 'auto',
@@ -36,6 +37,39 @@ export default class popup extends React.Component<Props, null>
             'background': '#00000080',
             'animation': animationStyles.fadeIn+" 0.5s"
         }
+        */
+
+       let style = null;
+       if (this.props.mobile)
+       {
+           style = 
+           { 
+               'maxHeight': '100%',
+               'width': '100%',
+               'marginTop': "75px",   //match --header-height to match header
+               'border': '0px',
+               'padding': '0px',
+               'background': 'transparent',
+           }
+       }
+       else
+       {
+           style =
+           {
+               'width': 'auto',
+               'border': '0px',
+               'padding': '0px',
+               'background': 'transparent'
+           }
+       }
+   
+   
+       let overlayStyle =
+       {
+           'height': '100vh',
+           'background': '#00000080',
+           'animation': animationStyles.fadeIn+" 0.5s"
+       }
 
         let trigger =   <svg className={styles.button} >
                             <use xlinkHref={settings_icon}></use>
@@ -47,6 +81,7 @@ export default class popup extends React.Component<Props, null>
                         arrow={false}
                         overlayStyle={overlayStyle}
                         modal={this.props.mobile}
+                        lockScroll={ this.props.mobile}
                                             >
                     {
                         close => 
