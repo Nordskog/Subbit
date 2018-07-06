@@ -36,8 +36,6 @@
 
 .itemContainer
 {
-    display: flex;
-    flex-direction: column;
     padding-top: var( --small-gap);
     padding-bottom: var( --small-gap);
     overflow-y: auto;
@@ -53,8 +51,6 @@
 .searchContainer
 {
     width: auto;
-    display: flex;
-    flex-direction: column;
 }
 
 .altBox
