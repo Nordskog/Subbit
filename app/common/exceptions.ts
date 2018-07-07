@@ -1,30 +1,41 @@
-export class Exception
+const isNode = require('detect-node');
+
+export class Exception extends Error
 {
     message : string;
     name : string;
 
     // ...
     prototype: any;
-    stack: any;
+    stack: string;
 
-    constructor( message : string, log : boolean = true)
+    constructor( message : string)
     {
+        super(message);
         this.name = "Exception";
         this.message = message;
 
         //The corrent Error.captureStackTrace() doesn't work in firefox these days.
         //This at least gives us something to work with.
         //Just extending error we don't seem to actually get a stack trace.
-        if (log)
+        if (isNode)
         {
-            //There are many articles on how to properly extend error, and the grand problem with all of them
-            //is that the resulting stracktrace is completely useless.
-            //This outputs the same as console.trace(), and unlike Error actually gives you the real stracktrace.
-            //We will also receive a separate stacktrace when we throw this, but it will not be very useful.
-            console.error("The below error occurred at:");
+            //Make sure the stack trace is actually correct.
+            Error.captureStackTrace(this, this.constructor );
+        }
+        else 
+        {
+            this.stack = ( new Error(message) ).stack; 
         }
     }
 
+    //Append a stack to this error's stack.
+    //Necessary for nested promises
+    appendStack( appendStack : string)
+    {
+        console.log("appending stack:",appendStack);
+        this.stack = this.stack.concat(appendStack);
+    }
 
     toString()
     {
@@ -40,7 +51,7 @@ export class EndpointException extends Exception
 
     constructor( code : number, message : string)
     {
-        super(message, false);
+        super(message);
         this.name = "EndpointException";
         this.code = code;
     }
@@ -59,7 +70,7 @@ export class CancelledException extends Exception
 {
     constructor( message : string)
     {
-        super(message, false)
+        super(message)
         this.name = "CancelledException";
     }
 
@@ -73,7 +84,7 @@ export class SocketException extends Exception
 {
     constructor( message : string)
     {
-        super(message, false)
+        super(message)
         this.name = "SocketException";
     }
 
@@ -198,4 +209,10 @@ export class NetworkException extends Exception
             return `${this.name} ${this.code}: ${this.message}`;
     }
 
+}
+
+export function appendStack( err : any, stack : string)
+{
+    if (err.stack != null)
+        err.stack = err.stack.concat(stack);
 }

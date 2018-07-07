@@ -2,6 +2,7 @@ import * as models from '~/common/models'
 import * as urls from '~/common/urls'
 import * as tools from '~/common/tools'
 import { NetworkException, Exception } from '~/common/exceptions';
+import { exceptions } from '~/common';
 
 
 export async function getRequest<T>(url : string, parameters? : any, access_token?: string) : Promise<T>
@@ -9,6 +10,11 @@ export async function getRequest<T>(url : string, parameters? : any, access_toke
     url = urls.RFY_API_URL + url;
     url = tools.url.appendUrlParameters(url,parameters);
     let options = getBackendFetchOptions('GET', access_token);
+
+    //Stack trace in catch-block when using await is useless.
+    //Grab actual stack trace here and append below.
+    //Only necessary when creating a new exception in catch.
+    let stacktrace = new Error().stack;
 
     let response;
     try
@@ -20,7 +26,11 @@ export async function getRequest<T>(url : string, parameters? : any, access_toke
         if (err instanceof Exception)  
             throw err;
         else
-            throw new NetworkException(null, err.message, url);
+        {
+            let exception = new NetworkException(null, err.message, url);
+            exceptions.appendStack(exception, stacktrace);
+            throw exception;
+        }
     }
 
     if (response.ok)
@@ -42,6 +52,11 @@ export async function postRequest<T, A>(url : string, request : models.Action<A>
         body: JSON.stringify(request)
     }
 
+    //Stack trace in catch-block when using await is useless.
+    //Grab actual stack trace here and append below.
+    //Only necessary when creating a new exception in catch.
+    let stacktrace = new Error().stack;
+
     let response;
     try
     {
@@ -52,7 +67,11 @@ export async function postRequest<T, A>(url : string, request : models.Action<A>
         if (err instanceof Exception)  
             throw err;
         else
-            throw new NetworkException(null, err.message, url);
+        {
+            let exception = new NetworkException(null, err.message, url);
+            exceptions.appendStack(exception, stacktrace);
+            throw exception;
+        }
     }
 
     

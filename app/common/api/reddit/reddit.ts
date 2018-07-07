@@ -13,6 +13,7 @@ import config from 'root/config';
 import { NetworkException, Exception } from '~/common/exceptions';
 
 import { RateLimitCallback } from '~/common/tools/FetchQueue';
+import { exceptions } from '~/common';
 
 const apiQueue = new tools.FetchQueue(11);      // Will receive ratelimit header
 const cdnQueue = new tools.FetchQueue(11);                                              // Will not receive ratelimit header
@@ -37,6 +38,11 @@ export async function getRequest<T>(url : string, parameters? : any, auth?: mode
 
     let response : Response;
 
+    //Stack trace in catch-block when using await is useless.
+    //Grab actual stack trace here and append below.
+    //Only necessary when creating a new exception in catch.
+    let stacktrace = new Error().stack;
+
     try
     {
         if (auth != null)
@@ -49,7 +55,11 @@ export async function getRequest<T>(url : string, parameters? : any, auth?: mode
         if (err instanceof Exception)  
             throw err;
         else
-            throw new NetworkException(null, err.message, url);
+        {
+            let exception = new NetworkException(null, err.message, url);
+            exceptions.appendStack(exception, stacktrace);
+            throw exception;
+        }
     }
 
 
@@ -72,6 +82,11 @@ export async function postRequest<T, A>(url : string, request : models.Action<A>
         body: JSON.stringify(request)
     }
 
+    //Stack trace in catch-block when using await is useless.
+    //Grab actual stack trace here and append below.
+    //Only necessary when creating a new exception in catch.
+    let stacktrace = new Error().stack;
+
     let response;
     try
     {
@@ -85,7 +100,11 @@ export async function postRequest<T, A>(url : string, request : models.Action<A>
         if (err instanceof Exception)  
             throw err;
         else
-            throw new NetworkException(null, err.message, url);
+        {
+            let exception = new NetworkException(null, err.message, url);
+            exceptions.appendStack(exception, stacktrace);
+            throw exception;
+        }
     }
 
         

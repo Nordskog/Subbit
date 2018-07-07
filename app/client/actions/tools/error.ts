@@ -55,15 +55,6 @@ export function handleError(dispatch : ReduxTypes.Dispatch, err : Error )
         toast( ToastType.ERROR, 10000, err.message );
     }
 
-    if ( err instanceof Exception)
-    {
-        //Also log any of our own, since throwing them here just makes them vanish into the void.
-        console.error( err.toString() );
-    }
-    else
-    {
-        throw err;
-    }
-
+    console.log(err);
 
 }
