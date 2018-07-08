@@ -6,7 +6,6 @@ export import jwt = require('./jwt');
 export import query = require('./query');
 export import reddit = require('./reddit');
 export {default as FetchQueue, RateLimitInfo as RateLimitInfo} from './FetchQueue'
-export import IntervalBot = require('./IntervalBot');
 export import css = require('./css');
 export import string = require('./string');
 
