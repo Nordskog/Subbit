@@ -3,7 +3,7 @@ let path = require('path');
 let basePath = __dirname;
 
 let HtmlWebpackPlugin = require('html-webpack-plugin');
-let webpack = require('webpack');
+import * as Webpack from 'webpack';
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const SpriteLoaderPlugin = require('svg-sprite-loader/plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
@@ -155,10 +155,10 @@ const config = {
         ],
     },
     plugins: [
-        new webpack.NoEmitOnErrorsPlugin(),
+        new Webpack.NoEmitOnErrorsPlugin(),
         //new StatsPlugin('stats.json'),
         new SpriteLoaderPlugin(),
-        new webpack.DefinePlugin({
+        new Webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify('production'),
         }),
         new ExtractTextPlugin('main.css', { allChunks: true }),
@@ -168,7 +168,11 @@ const config = {
             filename: "index.html",
             inject: "body"
         }),
-        new UglifyJsPlugin() //Default config is pretty good
+        new UglifyJsPlugin(), //Default config is pretty good
+        new Webpack.NormalModuleReplacementPlugin(   //Replace nodejs log library with console output on client
+            /rfyServerLogging.ts/,
+            'rfyClientLogging.ts'
+        )
 
 
     ]

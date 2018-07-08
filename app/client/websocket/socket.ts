@@ -60,7 +60,7 @@ export function connect( access_token : string )
     
     ws.onerror = ( ev: Event ) =>
     {
-        console.log("socket error: ", ev);
+        //TODO deal with socket errors, get them even on clean disconnects.
     }
 
 

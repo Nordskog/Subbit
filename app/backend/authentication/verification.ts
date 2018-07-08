@@ -8,6 +8,7 @@ import * as Entities from '~/backend/entity';
 import { AuthorizationException, AuthorizationInvalidException } from '~/common/exceptions';
 import { Scope } from '~/backend/authentication/generation';
 import { AccessToken } from '~/common/models/auth';
+import * as Log from '~/common/log';
 
 //Convenience function. Only use this after you have already validated the token.
 export async function getDecodedTokenWithoutVerifying( access_token_raw : string ) : Promise<AccessToken>
@@ -98,7 +99,7 @@ async function decodeToken(access_token_raw : string) : Promise<AccessToken>
         else
         {
             //Anything else is not expected and may suggest foul play
-            console.log(err);
+            Log.E(err);
         }
     
         throw new AuthorizationInvalidException( `Token could not be verified because of ${err.name}`);

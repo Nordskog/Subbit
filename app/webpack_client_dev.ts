@@ -2,10 +2,11 @@
 let basePath = __dirname;
 
 let HtmlWebpackPlugin = require('html-webpack-plugin');
-let webpack = require('webpack');
+import * as Webpack from 'webpack';
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const SpriteLoaderPlugin = require('svg-sprite-loader/plugin');
 const StatsPlugin = require('stats-webpack-plugin')
+
 
 import prodConfig from './webpack_client'
 
@@ -19,21 +20,26 @@ const config = {
     },
 
     plugins: [
-        new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoEmitOnErrorsPlugin(),
+        new Webpack.HotModuleReplacementPlugin(),
+        new Webpack.NoEmitOnErrorsPlugin(),
         new StatsPlugin('stats.json'),
         new SpriteLoaderPlugin(),
-        new webpack.DefinePlugin({
+        new Webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify('development'),
             'process.env.IS_CLIENT' : true
         }),
         new ExtractTextPlugin('main.css', { allChunks: true }),
 
-       new HtmlWebpackPlugin( {
-        template: "./index.html",
-        filename: "index.html",
-        inject: "body"
-      })
+        new HtmlWebpackPlugin( {
+            template: "./index.html",
+            filename: "index.html",
+            inject: "body"
+        }),
+        new Webpack.NormalModuleReplacementPlugin   //Replace nodejs log library with console output on client
+        (
+            /rfyServerLogging.ts/,
+            'rfyClientLogging.ts'
+        )
 
     ]
 }

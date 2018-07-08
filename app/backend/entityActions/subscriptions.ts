@@ -3,6 +3,7 @@ import * as Wetland from 'wetland'
 import { EndpointException, Exception } from '~/common/exceptions';
 import * as api from '~/common/api';
 import * as RFY from '~/backend/rfy'
+import * as Log from '~/common/log';
 
 //None of these methods will flush the manager
 
@@ -13,14 +14,11 @@ export async function getSubscription(manager : Wetland.Scope, subscription_id :
 
     if (sub != null && user != null)
     {
-        console.log("sub");
-
         if (user.id != sub.user.id)
         {
             throw new Error("Attempted to get subscription belonging to different user");
         }
 
-    
         sub.user = user;
     }
 
@@ -163,18 +161,19 @@ export async function confirmSubreddit( name : string )
         
         if (subreddit == null)
         {
-            throw new Exception("Attempted to confirm subreddit on subreddit that does not exist: "+name);
+            Log.E(`Attempted to confirm subreddit on subreddit that does not exist: ${name}`);
+            return;
         }
 
         if (casedName == null)
         {
-            console.log("User attempted to subscribe to subreddit that does not exist:",name);
+            Log.I(`User attempted to subscribe to subreddit that does not exist: ${name}`);
             manager.remove(subreddit);
         }
         else if ( casedName != name )
         {
             //Subreddit exists but casing is wrong. Correct!
-            console.log("User provided wrong subreddit case for:",name,"corrected to:",casedName);
+            Log.I(`User provided wrong subreddit case for: ${name}, corrected to: ${casedName}`);
             subreddit.name = casedName;
         }
 

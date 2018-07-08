@@ -11,6 +11,8 @@ import * as RFY from '~/backend/rfy'
 
 import {StatsTimeRange, StatsCategoryType} from './types';
 
+import * as Log from '~/common/log';
+
 
 /////////////////////////////////////////////////////////////////
 // Wrapper from StatsTracker that will handle saving/loading
@@ -157,10 +159,9 @@ export default class StatsCategory
         }
         catch ( err )
         {
-            console.log(err);
+            Log.E("Problem saving stats entry");
+            Log.E(err);
         }
-
-
     }
 
     handleUpdate( value, end, timeRange, tracker)

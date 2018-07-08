@@ -33,7 +33,6 @@ export class Exception extends Error
     //Necessary for nested promises
     appendStack( appendStack : string)
     {
-        console.log("appending stack:",appendStack);
         this.stack = this.stack.concat(appendStack);
     }
 

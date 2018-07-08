@@ -389,7 +389,6 @@ export default class AuthorCell extends React.Component<Props, State>
     {
         if ( this.isSubscribed() )
         {
-            console.log("Awaiting posts?:",this.state.awaitingPosts);
 
             if (this.state.awaitingPosts)
             //if (true)
@@ -431,7 +430,6 @@ export default class AuthorCell extends React.Component<Props, State>
             if (this.state.subscriptionsModified && this.props.filter == models.AuthorFilter.SUBSCRIPTIONS)
             {
                 this.props.fetchPosts(this.props.author, config.client.postFetchCount);
-                console.log("Setting stat thing");
                 this.setState( { subredditsExpanded: true, subscriptionsModified: false, awaitingPosts: true } );
             }
             else

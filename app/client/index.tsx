@@ -8,6 +8,8 @@ import * as components from '~/client/components'
 import * as Store from '~/client/store'
 import * as setup from './setup'
 
+import * as Log from '~/common/log';
+
 //Sets up a toast callback
 setup.setupClientStuff();
 
@@ -35,7 +37,7 @@ render(components.app);
 declare var module: any
 if (module.hot && process.env.NODE_ENV === 'development')
 {
-    console.log("Hot!");
+    Log.I("Hot!");
     module.hot.accept(components.app, () =>
     {
         render(components.app)

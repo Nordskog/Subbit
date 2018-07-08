@@ -157,9 +157,6 @@ export async function createOrUpdateUserFromRedditToken( manager : Wetland.Scope
         username = user.username;
     }
 
-    console.log("Got username: "+ username);
-
-
     if ( username == null)
     {
         throw new AuthorizationException("Could not retrieve username from reddit");

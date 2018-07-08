@@ -3,6 +3,7 @@ import {  AuthorizationException, SocketException, Exception } from "~/common/ex
 import * as WebSocket from 'ws'; 
 import * as stats from '~/backend/stats'
 import * as actions from './actions'
+import * as Log from '~/common/log';
 
 
 export function handleException( exception : Error, ws : WebSocket)
@@ -12,13 +13,13 @@ export function handleException( exception : Error, ws : WebSocket)
     if ( exception instanceof Exception  )
     {
         //Respond to user with error and only log the message
-        console.log( exception );
+        Log.E( exception.toString() );
         actions.errors.sendError(ws, exception.message);
     }
     else
     {
        //Something went wrong that should not go wrong, log everything but don't share with user
-       console.log( exception );
+       Log.E( exception );
        actions.errors.sendError(ws, "Something went wrong");
     }
 }

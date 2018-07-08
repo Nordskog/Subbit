@@ -1,6 +1,7 @@
 import { Response } from "express";
 import { EndpointException, AuthorizationException, NetworkException, AuthorizationInvalidException } from "~/common/exceptions";
 import * as stats from '~/backend/stats'
+import * as Log from '~/common/log';
 
 export function handleException( exception : Error, res : Response)
 {
@@ -9,29 +10,30 @@ export function handleException( exception : Error, res : Response)
     if ( exception instanceof EndpointException )
     {
         //Respond to user with error and only log the message
-        console.log( exception.message );
+        Log.I(exception.toString());
         res.status(exception.code).json( exception.message );
     }
     else if ( exception instanceof AuthorizationInvalidException )
     {
-        console.log( exception.message );
+        Log.I(exception.toString());
         res.status(401).json( exception.message );
     }
     else if ( exception instanceof AuthorizationException )
     {
-        console.log( exception.message );
+        Log.W(exception.toString());
         res.status(403).json( exception.message );
     }
     else if (exception instanceof NetworkException)
     {
-        //Endpoint communicates with reddit when authenticating user and such. Might as well pass these along.
-        console.log( exception );
+        //Endpoint communicates with reddit when authenticating user and such.
+        //For us this is usually very bad.
+        Log.E(exception);
         res.status(500).json( "Problem communicating with reddit:"+exception.message );
     }
     else
     {
        //Something went wrong that should not go wrong, log everything but don't share with user
-       console.log( exception );
+       Log.E(exception);
        res.sendStatus(500);
     }
 }

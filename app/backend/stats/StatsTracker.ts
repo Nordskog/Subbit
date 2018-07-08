@@ -3,6 +3,7 @@ import * as models from '~/common/models';
 
 import { StatsTimeRange, StatsDataType } from './types';
 import { getAgeLimit, getTimeRangeEnd } from './helpers';
+import * as Log from '~/common/log';
 
 //A single value
 class StatsEntry
@@ -324,7 +325,7 @@ export class StatsTracker
         let timeline : StatsTimeline = this.getTimeline(timeRange);
         if (timeline == null)
         {
-            console.log("Attempted to restore history of timeline that doesn't exist");
+            Log.W("Attempted to restore history of timeline that doesn't exist");
             return;
         }
 

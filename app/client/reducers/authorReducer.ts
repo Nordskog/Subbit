@@ -31,8 +31,6 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
         case actions.types.authors.POSTS_ADDED:
         {
             let payload = action.payload as actions.types.authors.POSTS_ADDED;
-            
-            console.log("Got action");
 
             return {
                 ...state,

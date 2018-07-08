@@ -110,7 +110,6 @@ router.post('/api/authorize_local', async (req: WetlandRequest, res: Express.Res
     
                     let userInfo : models.auth.UserInfo = authentication.generation.generateUserInfo(user, loginType);
     
-                    console.log("Logging in: ", user.username);
                     res.json( userInfo );
     
                     stats.add(stats.StatsCategoryType.SUCCESSFUL_LOGINS);
@@ -127,8 +126,6 @@ router.post('/api/authorize_local', async (req: WetlandRequest, res: Express.Res
             case serverActions.auth.UNAUTHORIZE_ALL_DEVICES:
             {
                 let user : Entities.User = await authentication.verification.getAuthorizedUser(manager, token, null, Scope.LOGOUT);
-
-                console.log("Logging out on all devices: ", user.username);
 
                 //Just needs to be different, really.
                 user.generation = Math.floor(  (Date.now() / 1000) );

@@ -62,7 +62,7 @@ function init(httpServer : Http.Server)
 
         ws.on('error', (err : Error) =>
         {
-            console.log(err.message)
+            //TODO deal with socket errors, get them even on clean disconnects.
         });
 
         ws.on('close', () => 

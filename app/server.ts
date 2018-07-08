@@ -28,6 +28,8 @@ import * as Net from 'net';
 import * as socket from '~/backend/sockets'
 import * as WebSocket from 'ws'
 
+import * as Log from '~/common/log';
+
 const bodyParser = require('body-parser');
 const expressWetland = require('express-wetland');
 
@@ -89,7 +91,7 @@ async function setupMain()
 
     if (DEV)
     {
-        console.log("Server configuration: DEV");
+        Log.I("Server configuration: DEV");
 
         const clientCompiler = webpack(<any>clientConfigDev);
 
@@ -100,7 +102,7 @@ async function setupMain()
     }
     else
     {
-        console.log("Server configuration: PROD");
+        Log.I("Server configuration: PROD");
 
         //All static resources
         app.use(publicPath, Express.static(outputPath));
@@ -139,8 +141,6 @@ async function setupMain()
 
     //Handle separate websockets for manager / client
     httpServer.on('upgrade', (request : Http.IncomingMessage, socket : Net.Socket, head : Buffer) => {
-
-        console.log(request.url);
 
         //if (request.url === '/api/socket/manager') 
         {

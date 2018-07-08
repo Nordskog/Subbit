@@ -1,6 +1,8 @@
 import * as tools from '~/common/tools'
 import { CancelledException } from '~/common/exceptions';
 
+import * as Log from '~/common/log';
+
 export interface RateLimitInfo
 {
     remaining : number;
@@ -158,8 +160,6 @@ export default class RequestQueue
                 //Check ratelimit
                 let timeUntilAllowed = this.monitor.timeUntilRequestAllowed();
     
-                //console.log("Time until allowed: ", timeUntilAllowed);
-    
                 if (timeUntilAllowed <= 0)
                 {
                     let queueItem = this.monitor.queue.shift();
@@ -184,14 +184,14 @@ export default class RequestQueue
         if (!this.monitor.queued)
         {   
             this.monitor.queued = true;
-            console.log("Processing queued in ",delaySeconds," seconds");
+            Log.W(`Fetch queue exceeded ratelimit, will resume in: ${delaySeconds} seconds`);
             await tools.time.sleep( delaySeconds * 1000);
             this.monitor.queued = false;
             this.processQueue();
         }
         else
         {
-            console.log("Attempted to process delayed when bool already true");
+            Log.E(`Attempted to schedule fetch queue for later, but was already scheduled.`);
         }
     }
     

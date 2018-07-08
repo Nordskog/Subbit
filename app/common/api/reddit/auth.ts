@@ -19,7 +19,6 @@ export async function authenticateWithCode(code : string, redirect : string, app
             "redirect_uri": redirect })
     }
 
-    console.log("Sending authentication code");
     let response : Response = await fetch("https://www.reddit.com/api/v1/access_token", config);
 
     if(response.ok)

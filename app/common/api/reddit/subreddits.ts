@@ -6,6 +6,8 @@ import * as api from '~/common/api'
 import { Thing, AboutSubreddit } from '~/common/models/reddit'
 import { exceptions } from '~/common';
 
+import * as Log from '~/common/log';
+
 interface namesResponse
 {
     names: string[]
@@ -83,8 +85,8 @@ export async function getNameIfExists( name: string, auth? : models.auth.RedditA
         }
         else
         {
-            console.log("Problem fetching subreddit name for:",name);
-            console.log(err);
+            Log.E(`Problem fetching subreddit name for: ${name}`);
+            Log.E(err);
         }
     }  
 

@@ -2,7 +2,7 @@
 import { Request, Response } from 'express';
 import * as Knex from 'knex';
 
-import * as Entities from '~/backend/entity';
+import * as Log from '~/common/log';
 
 export let wetland : Wetland;
 import config from './wetland';
@@ -17,19 +17,16 @@ export async function initDatabase()
         let migrator: Migrator = wetland.getMigrator();
         let migrationsRun : string = await migrator.latest(Migrator.ACTION_RUN);
 
-        if (migrationsRun == null)
+        if (migrationsRun != null)
         {
-            //console.log("No migrations to run");
-        }
-        else
-        {
-            console.log(`Ran ${parseInt(migrationsRun)} migrations`);
+            Log.I(`Ran ${parseInt(migrationsRun)} migrations`);
         }
     }
     catch ( err )
     {
-        console.log("Failed to run migrations");
-        console.log(err);
+        Log.E(err);
+        Log.E("Database migration failed, exiting.");
+        process.exit(1);
     }
 }
 
