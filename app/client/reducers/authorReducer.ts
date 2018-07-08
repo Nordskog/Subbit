@@ -17,7 +17,6 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
                     ...state,
                     authors: state.authors.concat(action.payload.authors),
                     after: action.payload.after
-
                 }
             }
             else
@@ -31,23 +30,24 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
         }
         case actions.types.authors.POSTS_ADDED:
         {
-
-            action = action as models.Action< actions.types.authors.POSTS_ADDED >;
+            let payload = action.payload as actions.types.authors.POSTS_ADDED;
+            
+            console.log("Got action");
 
             return {
                 ...state,
                 authors: state.authors.map( author => 
                     {
-                        if (author.author.name == action.payload.author )
+                        if (author.author.name == payload.author )
                         {
                             return {
                                 ...author,
                                 author: {
                                     ...author.author,
-                                    posts: author.author.posts.concat(action.payload.posts)
+                                    posts: payload.replace ? payload.posts : author.author.posts.concat(payload.posts)
                                 },
-                                after: action.payload.after,
-                                end: action.payload.end
+                                after: payload.after,
+                                end: payload.end
                             }
                         }
                         else
@@ -55,6 +55,7 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
                     })
             }
         }
+        
         case actions.types.authors.POST_DETAILS_UPDATED:
         {
             action = action as models.Action< actions.types.authors.FETCH_AUTHORS_COMPLETED >;

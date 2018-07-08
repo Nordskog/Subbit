@@ -149,6 +149,51 @@ export function fetchAuthorsAction ( appendResults: boolean = false)
     });
 }
 
+//Ignores after
+export function fetchPosts( author : models.data.AuthorEntry, count : number )
+{
+    return WrapWithHandler( async function (dispatch : Dispatch, getState : GetState)
+    {
+        let state: State = getState();
+
+        let redditAuth = await actions.directActions.authentication.retrieveAndUpdateRedditAuth( dispatch, state);
+
+        let subreddits : string[] = [];
+        if (state.authorState.filter == models.AuthorFilter.SUBSCRIPTIONS)
+        {
+            //Well that shouldn't happen
+            if (author.subscription == null)
+                return;
+
+            subreddits = author.subscription.subreddits.map( (subreddit : models.data.SubscriptionSubreddit) => 
+            {
+                return subreddit.name;
+            } )
+        }
+        else
+        {
+            if (state.authorState.subreddit != null)
+            subreddits = [state.authorState.subreddit];
+        }
+
+
+        let {posts, after} = await api.reddit.posts.getPosts(author.author.name, null, redditAuth, count, ...subreddits)
+        
+        dispatch({
+            type: actions.types.authors.POSTS_ADDED,
+            payload: { 
+                author: author.author.name,
+                posts: posts,
+                after: after,
+                end: after == null,
+                replace: true  
+            }  as actions.types.authors.POSTS_ADDED
+        });
+
+    });
+}
+
+//Respects after
 export function fetchMorePosts( authors : models.data.AuthorEntry[], count : number )
 {
     return WrapWithHandler( async function (dispatch : Dispatch, getState : GetState)
@@ -189,7 +234,8 @@ export function fetchMorePosts( authors : models.data.AuthorEntry[], count : num
                             author: author.author.name,
                             posts: posts,
                             after: after,
-                            end: after == null
+                            end: after == null,
+                            replace: false
                         }  as actions.types.authors.POSTS_ADDED
                     });
 

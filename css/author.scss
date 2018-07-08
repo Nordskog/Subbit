@@ -190,6 +190,24 @@
     cursor: pointer;
 }
 
+.loadingPostsIndicator //Display subreddits button, but rotating
+{
+    height:var( --small-icon-size );
+    width:var( --small-icon-size );
+    margin-right: var( --tiny-gap );
+    fill: $subscribed-highlight-color;
+
+    -webkit-animation:spin 2s linear infinite;
+    -moz-animation:spin 2s linear infinite;
+    animation:spin 2s linear infinite;
+
+    cursor: pointer;
+}
+
+@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+
 .subscriptionsContainer
 {
     //Offset by width normally consumed by the score column

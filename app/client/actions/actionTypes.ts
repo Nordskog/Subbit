@@ -28,8 +28,9 @@ export namespace authors
         posts: models.reddit.Post[];
         after?: string;
         end: boolean;
-
+        replace: boolean;
     }
+
 };
 
 export namespace authentication

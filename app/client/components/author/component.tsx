@@ -14,6 +14,7 @@ import * as components from '~/client/components'
 import config from 'root/config'
 import expand_caret from 'assets/images/expand_caret.svg'
 import collapse_caret from 'assets/images/collapse_caret.svg'
+import loading_caret from 'assets/images/loading_caret.svg'
 
 import * as transitions from 'react-transition-group'
 
@@ -30,20 +31,25 @@ interface Props
     author: models.data.AuthorEntry;
     solo : boolean;
     subreddit: string;
+    filter: models.AuthorFilter;
     postDisplay: models.PostDisplay;
     authenticated: boolean;
     subscribe(author: string, subreddits : string[] ): void;
     unsubscribe(sub: models.data.Subscription): void;
     addSubscriptionSubreddit(subscription : number, subreddit : string ): void;
     removeSubscriptionSubreddit(subscription : number, subreddit : string): void;
+    fetchPosts(author : models.data.AuthorEntry, count : number): void;
     fetchMorePosts(author : models.data.AuthorEntry, count : number): void;
     searchSubreddits( name : string) : Promise< string[] >;
     goToSubscriptions(): void;
 }
 interface State
 {
+    subscriptionsModified: boolean;   //Set to false on subs opened, checke on return to posts
+    awaitingPosts: boolean;           //Returning from subscriptions, do not display until new props arrive
     postsExpanded: boolean;
     subredditsExpanded: boolean;
+    prevProps : Props;  //Sigh.
 }
 
 export default class AuthorCell extends React.Component<Props, State>
@@ -54,12 +60,10 @@ export default class AuthorCell extends React.Component<Props, State>
     constructor(props)
     {
         super(props);
-        this.state = { postsExpanded : false, subredditsExpanded: false};
+        this.state = { postsExpanded : false, subredditsExpanded: false, subscriptionsModified: false, awaitingPosts : false, prevProps: props};
 
         this.handleSubscribeClick = this.handleSubscribeClick.bind(this);
         this.handleUnsubscribeClick = this.handleUnsubscribeClick.bind(this);
-        this.expandSubreddits = this.expandSubreddits.bind(this);
-        this.collapseSubreddits = this.collapseSubreddits.bind(this);
 
         this.handleAddSubredditClick = this.handleAddSubredditClick.bind(this);
         this.handleRemoveSubredditClick = this.handleRemoveSubredditClick.bind(this);
@@ -69,7 +73,8 @@ export default class AuthorCell extends React.Component<Props, State>
         if (nextProps.author === this.props.author && 
             this.state.postsExpanded == newState.postsExpanded &&
             this.state.subredditsExpanded == newState.subredditsExpanded &&
-            this.props.postDisplay == nextProps.postDisplay
+            this.props.postDisplay == nextProps.postDisplay &&
+            this.state.awaitingPosts == newState.awaitingPosts
         )
         {
             return false;
@@ -78,14 +83,28 @@ export default class AuthorCell extends React.Component<Props, State>
         return true;
     }
 
+    //React devs are retarded and changed this to also be called when state changes,
+    //so we have to store a copy of props and compare it to prev to tell if it was actually props that changed.
+
     static getDerivedStateFromProps( nextProps : Props, prevState : State) : State
     {
-        if ( nextProps.author.subscription == null || ( nextProps.author.subscription.subscribed != null && !nextProps.author.subscription.subscribed ) )
+        //Props unchanged, it was just the state that changed.
+        if (nextProps == prevState.prevProps)
+            return null;
+
+        //If managing subscriptions and subscription was removed, or subscriptions were modified
+        //and we returned to posts, but are awaiting updated posts.
+        if ( ( ( prevState.subredditsExpanded && 
+             ( nextProps.author.subscription.subscribed != null && !nextProps.author.subscription.subscribed ) )
+             ||
+             ( prevState.awaitingPosts )
+            ) )
         {
-            return {  ...prevState, subredditsExpanded: false };
+
+            return {  ...prevState, subredditsExpanded: false, awaitingPosts: false, subscriptionsModified: false, prevProps : nextProps };
         }
 
-        return null;
+        return { ...prevState, prevProps: nextProps };
     }
 
     renderNoPostsMessage()
@@ -227,6 +246,7 @@ export default class AuthorCell extends React.Component<Props, State>
                     { 
                         if (item.highlighted)
                         {
+                            this.setState( { subscriptionsModified: true } );
                             this.props.removeSubscriptionSubreddit(this.props.author.subscription.id, item.name);
                         }
                         else
@@ -237,6 +257,7 @@ export default class AuthorCell extends React.Component<Props, State>
                                 return false;
                             }
 
+                            this.setState( { subscriptionsModified: true } );
                             this.props.addSubscriptionSubreddit(this.props.author.subscription.id, item.name);
                         }
                     }
@@ -368,14 +389,63 @@ export default class AuthorCell extends React.Component<Props, State>
     {
         if ( this.isSubscribed() )
         {
-            return <components.transitions.FadeHorizontalResize key={'show_subreddits_button'}>
-                        <div className={styles.displaySubredditsButtonContainer} onClick={ () => {  this.state.subredditsExpanded ? this.collapseSubreddits() : this.expandSubreddits() } } >
-                            <svg className={styles.displaySubredditsButton} >
-                                <use xlinkHref={ this.state.subredditsExpanded ? collapse_caret : expand_caret}></use>
-                            </svg>
-                        </div>
-                    </components.transitions.FadeHorizontalResize>
+            console.log("Awaiting posts?:",this.state.awaitingPosts);
+
+            if (this.state.awaitingPosts)
+            //if (true)
+            {
+                return <components.transitions.FadeHorizontalResize key={'awaiting_posts_indicator'}>
+                            <div className={styles.displaySubredditsButtonContainer} >
+                                <svg className={styles.loadingPostsIndicator} >
+                                    <use xlinkHref={ loading_caret}></use>
+                                </svg>
+                            </div>
+                        </components.transitions.FadeHorizontalResize>
+            }
+            else
+            {
+                return <components.transitions.FadeHorizontalResize key={'show_subreddits_button'}>
+                            <div className={styles.displaySubredditsButtonContainer} onClick={ () => { this.handleManageSubscriptionsClick() } } >
+                                <svg className={styles.displaySubredditsButton} >
+                                    <use xlinkHref={ this.state.subredditsExpanded ? collapse_caret : expand_caret}></use>
+                                </svg>
+                            </div>
+                        </components.transitions.FadeHorizontalResize>
+            }
         }
+    }
+
+    handleManageSubscriptionsClick()
+    {
+        //Waiting to return to posts view after making changes, do nothing.
+        if (this.state.awaitingPosts)
+        {
+            return;
+        }
+
+        //Collapse
+        if (this.state.subredditsExpanded)
+        {
+            //Request updated posts if we are viewing subscriptions and have made changes.
+            //Set posts awaiting to prevent return until new posts have been loaded.
+            if (this.state.subscriptionsModified && this.props.filter == models.AuthorFilter.SUBSCRIPTIONS)
+            {
+                this.props.fetchPosts(this.props.author, config.client.postFetchCount);
+                console.log("Setting stat thing");
+                this.setState( { subredditsExpanded: true, subscriptionsModified: false, awaitingPosts: true } );
+            }
+            else
+            {
+                this.setState( { subredditsExpanded: false, subscriptionsModified: false } );
+            }        
+        }
+        else //Expand
+        {
+            //Reset modified bool to false
+            this.setState( { subredditsExpanded: true, subscriptionsModified: false } );
+        }
+
+        
     }
 
     getUnsubscribeButton( partialStar : boolean)
@@ -447,14 +517,4 @@ export default class AuthorCell extends React.Component<Props, State>
         this.props.removeSubscriptionSubreddit(this.props.author.subscription.id, subreddit);
     }
 
-    expandSubreddits()
-    {
-        //Update post details
-        this.setState( { subredditsExpanded: true } );
-    }
-
-    collapseSubreddits()
-    {
-        this.setState( { subredditsExpanded: false } );
-    }
 }
