@@ -163,7 +163,7 @@ function clearState()
     socketOpen = false;
     if ( ws != null)
     {
-        if ( ws.readyState != ws.CLOSED || ws.readyState != ws.CLOSING )
+        if ( ws.readyState != ws.CLOSED && ws.readyState != ws.CLOSING )
             ws.close();
         ws = null;
     }
@@ -174,7 +174,7 @@ function clearState()
 export function disconnect()
 {
     //Calling disconnect means we want this to stay closed
-    wantToBeOpen = true;
+    wantToBeOpen = false;
 
     if (ws != null)
     {
