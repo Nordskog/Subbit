@@ -94,11 +94,10 @@ export default class AuthorCell extends React.Component<Props, State>
 
         //If managing subscriptions and subscription was removed, or subscriptions were modified
         //and we returned to posts, but are awaiting updated posts.
-        if ( ( ( prevState.subredditsExpanded && 
-             ( nextProps.author.subscription.subscribed != null && !nextProps.author.subscription.subscribed ) )
+        if  (( ( prevState.subredditsExpanded && ( nextProps.author.subscription.subscribed != null && !nextProps.author.subscription.subscribed ) )
              ||
              ( prevState.awaitingPosts )
-            ) )
+            ))
         {
 
             return {  ...prevState, subredditsExpanded: false, awaitingPosts: false, subscriptionsModified: false, prevProps : nextProps };
@@ -166,13 +165,33 @@ export default class AuthorCell extends React.Component<Props, State>
 
             <transitions.TransitionGroup component={'div'}>
                 {this.getSubscribedSubreddits()}
-                <div/>
+                {this.getTransitionGroupWorkaround()}
                 {this.renderPosts()}
+                {this.renderAwaitingCover()}
+                
             </transitions.TransitionGroup>
 
             </div>
 
         </div>
+    }
+
+    getTransitionGroupWorkaround()
+    {
+        //Transition groups are bugged in certain situations. This fixes it, for some reason.
+        return <div/>;
+    }
+
+    renderAwaitingCover()
+    {
+        if (this.state.awaitingPosts)
+        {
+            return  <components.transitions.Fade key={'awaiting_cover'}>
+            <div className={styles.authorWaitingCover} />
+
+           </components.transitions.Fade>
+        }
+
     }
 
     getSubredditLink()

@@ -47,6 +47,18 @@
     background: $card-background;
     border-radius: var( --insignificant-gap );
     border-top-left-radius: var( --small-gap );
+    position: relative; //So we can absolute-position a ivew inside
+}
+
+.authorWaitingCover //Covers contents to prevent interaction while awaiting updated data
+{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 100%;
+    background: $card-background;
+    opacity: 0.5;
 }
 
 .noPostsContainer
@@ -196,6 +208,7 @@
     width:var( --small-icon-size );
     margin-right: var( --tiny-gap );
     fill: $subscribed-highlight-color;
+    z-index: 1; //We cover the entire layout when displaying this, but want this to be fully visible
 
     -webkit-animation:spin 2s linear infinite;
     -moz-animation:spin 2s linear infinite;
