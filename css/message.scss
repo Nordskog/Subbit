@@ -84,7 +84,8 @@
 {
     max-width:var( --small-card-max-width );
     width: 100%;
-    padding: var( --large-gap );
+    padding-top: var( --large-gap );
+    padding-bottom: var( --large-gap );
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -95,7 +96,7 @@
     box-sizing: border-box;
 }
 
-.loginContainerInner
+.loginContainerOuter
 {
     display: flex;
     flex-direction: column;
