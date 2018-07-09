@@ -368,7 +368,7 @@ export default class AuthorCell extends React.Component<Props, State>
     getSubscribeButton()
     {
         //Heh
-        let butt : JSX.Element = <div className={styles.subscriptionButtonContainer} onClick={this.handleSubscribeClick} >
+        let butt : JSX.Element = <div key={"subscribe_button"} className={styles.subscriptionButtonContainer} onClick={this.handleSubscribeClick} >
                         <svg className={styles.subscribeButton} >
                             <use xlinkHref={subscribeButton}></use>
                         </svg>
@@ -388,7 +388,7 @@ export default class AuthorCell extends React.Component<Props, State>
     getSubscribeSubredditButton()
     {
         //Heh
-        let butt : JSX.Element =    <div className={styles.subscriptionButtonContainer} onClick={ () => this.handleAddSubredditClick(this.props.subreddit)} style={ { position:"relative" } } >
+        let butt : JSX.Element =    <div key={"subscribe_subreddit_button"} className={styles.subscriptionButtonContainer} onClick={ () => this.handleAddSubredditClick(this.props.subreddit)} style={ { position:"relative" } } >
                                         <svg className={styles.unsubscribeButton} style={ { position:"absolute" } } >
                                             <use xlinkHref={subscribeSubredditButton}></use>
                                         </svg>
@@ -408,24 +408,39 @@ export default class AuthorCell extends React.Component<Props, State>
     {
         if ( this.isSubscribed() )
         {
-
+            //Note that all components have the same outer key, but the inner key is different.
+            //This is because chrome will not render svgs with dynamic hrefs.
+            //We still want transitions to treat them all the same, so we give the container the same key,
+            //and make react treat them as different instances by changing the inner key.
             if (this.state.awaitingPosts)
-            //if (true)
             {
-                return <components.transitions.FadeHorizontalResize key={'awaiting_posts_indicator'}>
+                return <components.transitions.FadeHorizontalResize key={'show_subreddits_button'}>
                             <div className={styles.displaySubredditsButtonContainer} >
-                                <svg className={styles.loadingPostsIndicator} >
+                                <svg key={"awaiting_posts"} className={styles.loadingPostsIndicator} >
                                     <use xlinkHref={ loading_caret}></use>
                                 </svg>
                             </div>
                         </components.transitions.FadeHorizontalResize>
             }
-            else
+            else 
             {
+                let icon;
+                let key;
+                if (this.state.subredditsExpanded)
+                {
+                    icon = collapse_caret;
+                    key = "collapse_posts"
+                }
+                else
+                {
+                    icon = expand_caret;
+                    key = "expand_posts"
+                }
+                
                 return <components.transitions.FadeHorizontalResize key={'show_subreddits_button'}>
-                            <div className={styles.displaySubredditsButtonContainer} onClick={ () => { this.handleManageSubscriptionsClick() } } >
-                                <svg className={styles.displaySubredditsButton} >
-                                    <use xlinkHref={ this.state.subredditsExpanded ? collapse_caret : expand_caret}></use>
+                            <div  className={styles.displaySubredditsButtonContainer} onClick={ () => { this.handleManageSubscriptionsClick() } } >
+                                <svg key={key} className={styles.displaySubredditsButton} >
+                                    <use xlinkHref={ icon }></use>
                                 </svg>
                             </div>
                         </components.transitions.FadeHorizontalResize>
@@ -469,21 +484,25 @@ export default class AuthorCell extends React.Component<Props, State>
     {
         //Function remains the same, but apperance is slightly different
         //depending on whether the subscription is all subreddits or only one.
-        let svgName = subscribeButton;
+        let icon = subscribeButton;
+        let key = "unsubscribe_subscription_button";
         if (partialStar)
         {
-            svgName = subscribedPartialButton;
+            icon = subscribedPartialButton;
+            key = "unsubscribe_partial_subscription_button";
         }
         
+        //The key has to go on the svg rather than the outer element for chrome to treat everything as a new element.
+        //I don't know why.
         let butt : JSX.Element = <div className={styles.subscriptionButtonContainer} onClick={this.handleUnsubscribeClick} >
-                    <svg className={styles.unsubscribeButton} >
-                        <use xlinkHref={svgName}></use>
-                    </svg>
-                </div>
+                                    <svg key={key} className={styles.unsubscribeButton} >
+                                        <use xlinkHref={icon}></use>
+                                    </svg>
+                                </div>
                 
         let text : string = "unsubscribe"
 
-        return <components.tools.InfoPopup
+        return <components.tools.InfoPopup 
                     trigger={butt}
                     text={text} />
 
