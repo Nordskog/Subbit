@@ -1,7 +1,25 @@
 import * as Winston from 'winston';
 
+const LogLevels = {
+  levels: {
+    error: 0,
+    warning: 1,
+    access: 2,
+    info: 3,
+    debug: 4
+  },
+  colors: {
+    error: 'red',
+    warning: 'orange',
+    access: 'green',
+    info: 'blue',
+    debug: 'cyan'
+  }
+};
+
 const logger = Winston.createLogger({
-    format: Winston.format.json(),
+    levels: LogLevels.levels,
+    format: Winston.format.combine(  Winston.format.simple(), Winston.format.timestamp() ),
     transports: [
       //
       // - Write to all logs with level `info` and below to `combined.log` 
@@ -9,13 +27,18 @@ const logger = Winston.createLogger({
       //
       //new Winston.transports.File({ filename: 'error.log', level: 'error' }),
       //new Winston.transports.File({ filename: 'combined.log' })
-      new Winston.transports.Console( { format: Winston.format.simple() } )
+      new Winston.transports.Console( {  } )
     ]
   });
 
   export function I( message : any)
   {
     logger.info(message);
+  }
+
+  export function A( message : any)
+  {
+    logger.log('access', message);
   }
 
   export function E( message : any)

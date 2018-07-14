@@ -20,6 +20,9 @@ import * as redditAuth from '~/backend/authentication/redditAuth'
 import * as endpointCommons from './endpointCommons'
 import { AuthorizationException } from '~/common/exceptions';
 import { Scope } from '~/backend/authentication/generation';
+import * as Log from '~/common/log';
+
+import serverConfig from 'root/server_config'
 
 import * as stats from '~/backend/stats'
 
@@ -31,6 +34,8 @@ require('isomorphic-fetch');
 router.get('/api/authorize_remote', (req: WetlandRequest, res: Express.Response) =>
 {
     let sessionLogin : boolean = req.query.session == 'true';
+
+    Log.A(`Forwading client to reddit login from ${ tools.http.getReqIp( req, serverConfig.server.reverseProxy )}`);
 
     //Login via reddit
     let url = authentication.redditAuth.generateRedditLoginUrl(sessionLogin ? models.auth.LoginType.SESSION : models.auth.LoginType.PERMANENT);
@@ -47,6 +52,8 @@ router.get('/api/authorize_refresh', async (req: WetlandRequest, res: Express.Re
     {
         let user : Entities.User = await authentication.verification.getAuthorizedUser(manager, token, { populate: 'auth' }, Scope.REDDIT);
 
+        Log.A(`Authorize refresh for user ${user.username} from ${ tools.http.getReqIp( req, serverConfig.server.reverseProxy )}`);
+
         //The client side will refresh the token if it will expire within 5min.
         //Return stored token if valid for longer than 5min.
         if (user.auth.expiry < new Date( Date.now() + ( 1000 * 60 * 5 ) ))
@@ -55,6 +62,7 @@ router.get('/api/authorize_refresh', async (req: WetlandRequest, res: Express.Re
             let result = await api.reddit.auth.authenticatedWithRefreshToken( user.auth.refresh_token, redditAuth.getHttpBasicAuthHeader() );
             if (result == null || result.access_token == null)
             {
+                Log.A(`Authorize refresh failure for ${user.username} from ${ tools.http.getReqIp( req, serverConfig.server.reverseProxy )}`);
                 throw new AuthorizationException("Reddit refused token refresh. Please try logging out and back in");
             }
     
@@ -74,7 +82,7 @@ router.get('/api/authorize_refresh', async (req: WetlandRequest, res: Express.Re
     }
     catch (err)
     {
-        endpointCommons.handleException(err, res);
+        endpointCommons.handleException(err, req, res, token);
     } 
 
 });
@@ -113,11 +121,15 @@ router.post('/api/authorize_local', async (req: WetlandRequest, res: Express.Res
                     res.json( userInfo );
     
                     stats.add(stats.StatsCategoryType.SUCCESSFUL_LOGINS);
+
+                    Log.A(`Successful login for user ${user.username} from ${ tools.http.getReqIp( req, serverConfig.server.reverseProxy )}`);
     
                     return;
                 }
                 catch ( err )
                 {
+                    Log.A(`Failed login attempt from ${ tools.http.getReqIp( req, serverConfig.server.reverseProxy )}`);
+
                     stats.add(stats.StatsCategoryType.FAILED_LOGINS);
                     throw err;
                 }
@@ -126,6 +138,8 @@ router.post('/api/authorize_local', async (req: WetlandRequest, res: Express.Res
             case serverActions.auth.UNAUTHORIZE_ALL_DEVICES:
             {
                 let user : Entities.User = await authentication.verification.getAuthorizedUser(manager, token, null, Scope.LOGOUT);
+
+                Log.A(`User ${user.username} logging out on all devices from ${ tools.http.getReqIp( req, serverConfig.server.reverseProxy )}`);
 
                 //Just needs to be different, really.
                 user.generation = Math.floor(  (Date.now() / 1000) );
@@ -139,7 +153,7 @@ router.post('/api/authorize_local', async (req: WetlandRequest, res: Express.Res
     }
     catch (err)
     {
-        endpointCommons.handleException(err, res);
+        endpointCommons.handleException(err, req, res, token);
     }
 });
 

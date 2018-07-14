@@ -7,17 +7,15 @@ import * as Entities from '~/backend/entity';
 import * as models from '~/common/models';
 import * as authentication from '~/backend/authentication';
 
-import * as Wetland from 'wetland';
-
-import * as serverActions from '~/backend/actions'
-
-import * as entityActions from '~/backend/entityActions'
-
 import * as endpointCommons from './endpointCommons'
 import { EndpointException } from '~/common/exceptions';
 import { Scope } from '~/backend/authentication/generation';
 
 import * as stats from '~/backend/stats'
+
+import * as Log from '~/common/log';
+import * as tools from '~/common/tools'
+import serverConfig from 'root/server_config'
 
 const express = require('express');
 const router = express.Router();
@@ -33,6 +31,8 @@ router.get('/api/user/last_visit', async (req: WetlandRequest, res: Response) =>
         if (token)
         {
                     let user : Entities.User = await authentication.verification.getAuthorizedUser(manager, token);
+
+                    Log.A(`User ${user.username} updated last visit from ${ tools.http.getReqIp( req, serverConfig.server.reverseProxy )}`);
 
                     stats.add(stats.StatsCategoryType.USER_PAGE_LOADS);
 
@@ -56,7 +56,7 @@ router.get('/api/user/last_visit', async (req: WetlandRequest, res: Response) =>
     }
     catch (err)
     {
-        endpointCommons.handleException(err, res);
+        endpointCommons.handleException(err, req, res, token);
     }
 
 });
@@ -73,13 +73,20 @@ router.get('/api/user/settings', async (req: WetlandRequest, res: Response) =>
         if (token)
         {
             let user : Entities.User = await authentication.verification.getAuthorizedUser(manager, token, { populate: "settings" }, Scope.SETTINGS);
+
+            Log.A(`User ${user.username} requested user settings ${ tools.http.getReqIp( req, serverConfig.server.reverseProxy )}`);
+            
             res.json( Entities.UserSettings.formatModel(user.settings) );
             return;
+        }
+        else
+        {
+            throw new EndpointException(403, `User must be logged in`);
         }
     }
     catch (err)
     {
-        endpointCommons.handleException(err, res);
+        endpointCommons.handleException(err, req, res, token);
     }
 
 });
@@ -106,7 +113,7 @@ router.post('/api/user', async (req: WetlandRequest, res: Response) =>
     }
     catch (err)
     {
-        endpointCommons.handleException(err, res);
+        endpointCommons.handleException(err, req, res, token);
     }
 });
 

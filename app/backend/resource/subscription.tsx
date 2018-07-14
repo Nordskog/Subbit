@@ -16,6 +16,9 @@ import * as entityActions from '~/backend/entityActions'
 import * as endpointCommons from './endpointCommons'
 import { EndpointException } from '~/common/exceptions';
 
+import * as Log from '~/common/log';
+import serverConfig from 'root/server_config';
+import * as tools from '~/common/tools';
 
 const express = require('express');
 const router = express.Router();
@@ -30,6 +33,8 @@ router.get('/api/subscription', async (req: WetlandRequest, res: Response) =>
     {
         let user = await authentication.verification.getAuthorizedUser(manager, token, {}, authentication.generation.Scope.SUBSCRIPTIONS);
         
+        Log.A(`User ${user.username} requested subscriptions from ${ tools.http.getReqIp( req, serverConfig.server.reverseProxy )}`);
+
         //Just grabbing the user and populating everything we need generates terrible, complicated with a binding for each 
         //sub. Short of doing a raw query this is generally the best approach.
         let qb : Wetland.QueryBuilder<Entities.Subscription> = RFY.wetland.getManager()
@@ -53,7 +58,7 @@ router.get('/api/subscription', async (req: WetlandRequest, res: Response) =>
     }
     catch (err)
     {
-        endpointCommons.handleException(err, res);
+        endpointCommons.handleException(err, req, res, token);
     }
 });
 
@@ -72,8 +77,9 @@ router.post('/api/subscription', async (req: WetlandRequest, res: Response) =>
         {
             case serverActions.subscription.ADD_SUBSCRIPTION:
             {
-                let payload : serverActions.subscription.ADD_SUBSCRIPTION = rawReq.payload;
+                Log.A(`User ${user.username} added subscription ${JSON.stringify(rawReq.payload)} from ${ tools.http.getReqIp( req, serverConfig.server.reverseProxy )}`);
 
+                let payload : serverActions.subscription.ADD_SUBSCRIPTION = rawReq.payload;
                 let sub : Entities.Subscription = await entityActions.subscriptions.getNewSubscription( manager, user, payload.author, ...payload.subreddits );
 
                 await manager.flush();
@@ -83,6 +89,8 @@ router.post('/api/subscription', async (req: WetlandRequest, res: Response) =>
             }
             case serverActions.subscription.ADD_SUBSCRIPTION_SUBREDDIT:
             {
+                Log.A(`User ${user.username} added subscription subreddit ${JSON.stringify(rawReq.payload)} from ${ tools.http.getReqIp( req, serverConfig.server.reverseProxy )}`);
+
                 let payload : serverActions.subscription.ADD_SUBSCRIPTION_SUBREDDIT = rawReq.payload;
                 let sub : Entities.Subscription = await entityActions.subscriptions.getSubscription(manager, payload.id, user);
                 if (sub == null)
@@ -99,6 +107,8 @@ router.post('/api/subscription', async (req: WetlandRequest, res: Response) =>
             }
             case serverActions.subscription.REMOVE_SUBSCRIPTION_SUBREDDIT:
             {
+                Log.A(`User ${user.username} removed subscription subreddit ${JSON.stringify(rawReq.payload)} from ${ tools.http.getReqIp( req, serverConfig.server.reverseProxy )}`);
+
                 let payload : serverActions.subscription.REMOVE_SUBSCRIPTION_SUBREDDIT = rawReq.payload;
                 let sub : Entities.Subscription = await entityActions.subscriptions.getSubscription(manager, payload.id, user);
                 if (sub == null)
@@ -115,6 +125,8 @@ router.post('/api/subscription', async (req: WetlandRequest, res: Response) =>
 
             case serverActions.subscription.REMOVE_SUBSCRIPTION:
             {
+                Log.A(`User ${user.username} removed subscription ${JSON.stringify(rawReq.payload)} from ${ tools.http.getReqIp( req, serverConfig.server.reverseProxy )}`);
+
                 let payload : serverActions.subscription.REMOVE_SUBSCRIPTION = rawReq.payload;
                 let sub : Entities.Subscription = await entityActions.subscriptions.getSubscription(manager, payload.id, user);
                 if (sub == null)
@@ -138,7 +150,7 @@ router.post('/api/subscription', async (req: WetlandRequest, res: Response) =>
     }
     catch (err)
     {
-        endpointCommons.handleException(err, res);
+        endpointCommons.handleException(err, req, res, token);
     }
 });
 

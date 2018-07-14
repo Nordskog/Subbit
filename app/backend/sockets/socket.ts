@@ -1,14 +1,13 @@
 import * as WebSocket from 'ws'; 
 import * as Http from 'http'
 import * as handler from './handler'
+import * as tools from '~/common/tools'
+import serverConfig from 'root/server_config'
 import { handleException } from '~/backend/sockets/errors';
+import * as Log from '~/common/log';
+import { WsSocket } from './models';
 
 let server : WebSocket.Server = null;
-
-interface WsSocket extends WebSocket
-{
-    isAlive : boolean;
-}
 
 function init(httpServer : Http.Server)
 {
@@ -52,6 +51,9 @@ function init(httpServer : Http.Server)
 
     server.on('connection', (ws : WsSocket, req : Http.IncomingMessage ) => 
     {
+        ws.ip = tools.http.getReqIp(req, serverConfig.server.reverseProxy );
+        Log.A(`Websocket connection from ${ws.ip}`);
+
         //Keep track of stale connections
         ws.isAlive = true;
 

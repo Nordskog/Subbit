@@ -51,6 +51,8 @@ export function connect( access_token : string )
 
     ws.onopen = ( ev : MessageEvent ) => 
     {
+        
+        
         socketOpen = true;
         keepAlive.startPingPong();
         processAwaitingOpen();

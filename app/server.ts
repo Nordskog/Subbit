@@ -146,7 +146,7 @@ async function setupMain()
         {
             managerSocket.handleUpgrade(request, socket, head, function done(ws) 
             {
-                managerSocket.emit('connection', ws);
+                managerSocket.emit('connection', ws, request);
             });
         } 
         //else

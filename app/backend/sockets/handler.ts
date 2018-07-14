@@ -8,13 +8,15 @@ import * as statsTrackers from '~/backend/stats/trackers'
 import * as socketSecurity from './security'
 import * as Wetland from 'wetland';
 import * as RFY from '~/backend/rfy'
+import * as Log from '~/common/log';
 import { Scope } from '~/backend/authentication/generation';
 import { SocketException } from '~/common/exceptions';
 import { handleException } from '~/backend/sockets/errors';
+import { WsSocket } from './models';
 
 
 
-export async function handleSocketMessage( ws : WebSocket, message : WebSocket.Data )
+export async function handleSocketMessage( ws : WsSocket, message : WebSocket.Data )
 {
     let rawReq : models.Action< any > = JSON.parse(<string>message);
 
@@ -36,10 +38,16 @@ export async function handleSocketMessage( ws : WebSocket, message : WebSocket.D
 
         case actionTypes.auth.AUTHENTICATE:
         {
+
+            Log.A(`Websocket attempting authentication from ${ws.ip}`);
             let manager : Wetland.Scope = RFY.wetland.getManager();
 
             let payload : actionTypes.auth.AUTHENTICATE = rawReq.payload;
             let scopes : Scope[] = await authentication.verification.getAuthenticatedScopes(manager, payload.access_token);
+
+            let accessTokenContent = await authentication.verification.getDecodedTokenWithoutVerifying(payload.access_token);
+
+            Log.A(`Websocket authentication successful for ${accessTokenContent.sub}`);
 
             socketSecurity.add(ws, ...scopes);
 
