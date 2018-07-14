@@ -32,7 +32,7 @@ router.get('/api/user/last_visit', async (req: WetlandRequest, res: Response) =>
         {
                     let user : Entities.User = await authentication.verification.getAuthorizedUser(manager, token);
 
-                    Log.A(`User ${user.username} updated last visit from ${ tools.http.getReqIp( req, serverConfig.server.reverseProxy )}`);
+                    Log.A('Update last visit', user.username, tools.http.getReqIp( req, serverConfig.server.reverseProxy ) );
 
                     stats.add(stats.StatsCategoryType.USER_PAGE_LOADS);
 
@@ -74,8 +74,8 @@ router.get('/api/user/settings', async (req: WetlandRequest, res: Response) =>
         {
             let user : Entities.User = await authentication.verification.getAuthorizedUser(manager, token, { populate: "settings" }, Scope.SETTINGS);
 
-            Log.A(`User ${user.username} requested user settings ${ tools.http.getReqIp( req, serverConfig.server.reverseProxy )}`);
-            
+            Log.A('List user settings', user.username, tools.http.getReqIp( req, serverConfig.server.reverseProxy ) );
+
             res.json( Entities.UserSettings.formatModel(user.settings) );
             return;
         }

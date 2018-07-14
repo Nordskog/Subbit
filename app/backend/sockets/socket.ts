@@ -52,7 +52,7 @@ function init(httpServer : Http.Server)
     server.on('connection', (ws : WsSocket, req : Http.IncomingMessage ) => 
     {
         ws.ip = tools.http.getReqIp(req, serverConfig.server.reverseProxy );
-        Log.A(`Websocket connection from ${ws.ip}`);
+        Log.A(`Websocket connection`, null, ws.ip);
 
         //Keep track of stale connections
         ws.isAlive = true;

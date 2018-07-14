@@ -13,6 +13,7 @@ import { Scope } from '~/backend/authentication/generation';
 import { SocketException } from '~/common/exceptions';
 import { handleException } from '~/backend/sockets/errors';
 import { WsSocket } from './models';
+import { user } from '~/client/actions';
 
 
 
@@ -38,8 +39,6 @@ export async function handleSocketMessage( ws : WsSocket, message : WebSocket.Da
 
         case actionTypes.auth.AUTHENTICATE:
         {
-
-            Log.A(`Websocket attempting authentication from ${ws.ip}`);
             let manager : Wetland.Scope = RFY.wetland.getManager();
 
             let payload : actionTypes.auth.AUTHENTICATE = rawReq.payload;
@@ -47,7 +46,7 @@ export async function handleSocketMessage( ws : WsSocket, message : WebSocket.Da
 
             let accessTokenContent = await authentication.verification.getDecodedTokenWithoutVerifying(payload.access_token);
 
-            Log.A(`Websocket authentication successful for ${accessTokenContent.sub}`);
+            Log.A(`Websocket authentication success`, accessTokenContent.sub, ws.ip);
 
             socketSecurity.add(ws, ...scopes);
 

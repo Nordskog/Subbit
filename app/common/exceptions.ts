@@ -1,4 +1,5 @@
 const isNode = require('detect-node');
+import { Severity } from '~/common/log'
 
 export class Exception extends Error
 {
@@ -48,11 +49,15 @@ export class EndpointException extends Exception
     //Optional http code, if error is likely to make it to an endpoint
     code : number = null;
 
-    constructor( code : number, message : string)
+    //Optional severity level for backend logging.
+    severity : Severity = Severity.info;
+
+    constructor( code : number, message : string, severity : Severity = Severity.info)
     {
         super(message);
         this.name = "EndpointException";
         this.code = code;
+        this.severity = severity;
     }
 
     toString()

@@ -13,6 +13,8 @@ import * as models from '~/common/models'
 import * as RFY from '~/backend/rfy'
 import { AuthorizationException } from '~/common/exceptions';
 
+import * as Log from '~/common/log';
+
 const activeAuthStates: Map<string, AuthRequestState> = new Map<string, AuthRequestState>();
 let clientAuthentication : models.auth.RedditAuth = {access_token : "", expiry: 0};
 
@@ -166,6 +168,8 @@ export async function createOrUpdateUserFromRedditToken( manager : Wetland.Scope
 
     if (user == null)
     {
+        Log.A('New user', user.username, null );
+
         //Init settings
         let userSettings = new Entities.UserSettings;
         let generation = Math.floor( Date.now() / 1000 );
