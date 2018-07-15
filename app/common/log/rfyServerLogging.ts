@@ -1,4 +1,5 @@
 import * as Winston from 'winston';
+import * as WinstonDailyRotateFile from 'winston-daily-rotate-file';
 import { Severity } from './models';
 import serverConfig from 'root/server_config';
 import * as Path from 'path';
@@ -93,18 +94,24 @@ function initFileLogs() : boolean
   {
     createLogFolder( serverConfig.logging.logDirectoryPath );
 
-    logger.add( new Winston.transports.File( 
+    logger.add( new WinstonDailyRotateFile( 
     {  
       level:Severity.access,
       format: filterInclude(Severity.access),
-      filename: Path.join( serverConfig.logging.logDirectoryPath, 'access.log') 
+      filename: Path.join( serverConfig.logging.logDirectoryPath, 'access_%DATE%.log'),
+      datePattern: 'YYYY-MM-DD',  //1 log file per day
+      maxSize: '20m',
+      maxFiles: '14d'
     }));
   
   
-    logger.add( new Winston.transports.File( 
+    logger.add( new WinstonDailyRotateFile( 
     {  
       level:Severity.info,
-      filename: Path.join( serverConfig.logging.logDirectoryPath, 'log.log') 
+      filename: Path.join( serverConfig.logging.logDirectoryPath, 'log_%DATE%.log'),
+      datePattern: 'YYYY-MM-DD',  //1 log file per day
+      maxSize: '20m',
+      maxFiles: '14d'
     }));
 
     return true;

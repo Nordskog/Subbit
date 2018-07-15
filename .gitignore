@@ -12,6 +12,7 @@ buildClient/
 .bin/
 obj/
 css/*scss.d.ts
+logs/
 
 config.ts
 server_config.ts
