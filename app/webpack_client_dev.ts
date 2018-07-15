@@ -39,7 +39,14 @@ const config = {
         (
             /rfyServerLogging.ts/,
             'rfyClientLogging.ts'
-        )
+        ),
+        new Webpack.NormalModuleReplacementPlugin(   //Replace nodejs log library with console output on client
+            /rfyEnvServer.ts/,
+            'rfyEnvClient.ts'
+        ),
+        new Webpack.DefinePlugin({
+            "RFY_VERSION": JSON.stringify( process.env.npm_package_version)
+          })
 
     ]
 }

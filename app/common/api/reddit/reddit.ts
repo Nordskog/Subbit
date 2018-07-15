@@ -126,8 +126,6 @@ export function getRedditFetchOptions( method : string, auth? : models.auth.Redd
         options = {
             method: method,
             headers: { "Authorization" : 'bearer ' + auth.access_token,
-            //'user-agent': config.name,
-            //'Content-Type': 'application/json'
             }
         };
     }
@@ -136,10 +134,20 @@ export function getRedditFetchOptions( method : string, auth? : models.auth.Redd
         options = {
             method: method,
             headers: {
-            //'user-agent': config.name,
-            //'Content-Type': 'application/json'
             }
         };
+    }
+
+    //Cors will be rejected if userAgent present in header, so don't do that on client.
+    if (tools.env.isServer())
+    {
+        options = {
+            ...options,
+            headers: {
+                ...options.headers,
+                'User-Agent': tools.env.getUseragent(),
+            }
+        }
     }
 
     return options;

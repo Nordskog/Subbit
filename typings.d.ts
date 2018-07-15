@@ -13,3 +13,6 @@ declare module 'victory'
         fixLabelOverlap? : boolean;
     }
 }
+
+
+declare var RFY_VERSION: string;

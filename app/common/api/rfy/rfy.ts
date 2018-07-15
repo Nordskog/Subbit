@@ -92,7 +92,10 @@ export function getBackendFetchOptions(method: string, access_token: string)
     {
         config = {
             method: method,
-            headers: {  'Content-Type': 'application/json', 'access_token': access_token }
+            headers: {  'Content-Type': 'application/json', 
+                        'access_token': access_token ,
+                        'User-Agent': tools.env.getUseragent(),
+        }
 
         }
     }
@@ -100,7 +103,9 @@ export function getBackendFetchOptions(method: string, access_token: string)
     {
         config = {
             method: method,
-            headers: { 'Content-Type': 'application/json' },
+            headers: {  'Content-Type': 'application/json',
+                        'User-Agent': tools.env.getUseragent(),
+                    },
         }
     }
 

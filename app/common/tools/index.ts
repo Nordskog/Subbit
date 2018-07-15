@@ -8,9 +8,11 @@ export import reddit = require('./reddit');
 export {default as FetchQueue, RateLimitInfo as RateLimitInfo} from './FetchQueue'
 export import css = require('./css');
 export import string = require('./string');
+export import env = require('./env');
 export import http = require('~/common/tools/http');
 
 export function removeNullChars(str : string)
 {
     return str.replace('\u0000', '');
 }
+
