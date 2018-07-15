@@ -49,6 +49,7 @@ a.genericButton:hover
     margin: auto;
     padding: 0px;
     padding-left: var( --small-gap);
+    z-index: 1;
 
     height: calc( var( --header-height ) - (var( --small-gap ) * 2) );
     width:  calc( var( --header-height ) - (var( --small-gap ) * 2) );

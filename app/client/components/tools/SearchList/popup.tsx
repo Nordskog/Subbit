@@ -71,7 +71,7 @@ export default class popup extends React.Component<Props, State >
             'height': '100vh',
             'background': '#00000080',
             'animation': animationStyles.fadeIn+" 0.25s",
-            'zIndex': 1  //Necessary when you have relative-position views elsewhere, and to hide other popup triggers
+            'zIndex': 2  //Necessary when you have relative-position views elsewhere, and to hide other popup triggers
         }
 
 
