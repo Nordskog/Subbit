@@ -37,10 +37,23 @@ const config =
         issuer: "https://example.com",
     },
 
+    /////////////////////////////
+    // General serving config
+    /////////////////////////////
+
     server:
     {
-        //Server address is configured in config.ts
-        port: 8080
+        //This is the port the actual server will run on.
+        //The address and port the client will use to access it is configured in config.ts
+        port: 8080,
+        reverseProxy: false //Whether the server will be running behind a reverse proxy
+    },
+
+    logging:
+    {
+        //Where logs will be stored.
+        //If undefined everything will be dumped into the console instead.
+        logDirectoryPath: './logs/'
     }
 
 }

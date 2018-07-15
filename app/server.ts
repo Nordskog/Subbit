@@ -40,6 +40,12 @@ import clientConfigDev from './webpack_client_dev'
 
 async function setupMain()
 {
+    ////////////////
+    // Logging
+    /////////////////
+
+    Log.init();
+
     /////////////////
     // Database
     /////////////////
@@ -62,12 +68,7 @@ async function setupMain()
     /////////////////////
     // Express backend
     /////////////////////
-
-
-
-
     var app: Express.Express = Express();
-
 
     // Middleware
     app.use(bodyParser.json());
@@ -83,8 +84,6 @@ async function setupMain()
     // Serving webpack output
     //////////////
     const DEV = process.env.NODE_ENV === 'development'
-
-
 
     const publicPath = clientConfig.output.publicPath;
     const outputPath = clientConfig.output.path;

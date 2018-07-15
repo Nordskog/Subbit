@@ -33,3 +33,8 @@ export function L( severity : Severity, message : any, meta : Object = {})
 {
   console.log( severity, message, meta);
 }
+
+export function init()
+{
+  //Do nothing on client.
+}

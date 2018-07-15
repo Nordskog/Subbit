@@ -52,7 +52,7 @@ export function handleError(dispatch : ReduxTypes.Dispatch, err : Error )
         else
         {
             //Simplify for user consumption
-            toast( ToastType.ERROR, 10000, err.toSimpleString());
+            toast( ToastType.ERROR, 10000, err.message);
 
             Log.E(err);
         }

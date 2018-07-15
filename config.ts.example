@@ -18,15 +18,20 @@
     },
 
 
-    ///////////////////////////////////////////////
-    // Reddit API settings 
-    // See server_config.ts for id and secret
-    /////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+    // External address. 
+    // Server-side specifics are found in server_config.ts
+    //////////////////////////////////////////////////////////////////////////
     server:
     {
-        //Port is configured in server_config.ts
-        //Whether they should be the same depends on your setup.
+        //This is only for external access, ie the client.
+        //The port the actual server will run on is configured in server_config.ts
+        //SSL is not handled, let a reverse proxy handly that.
+
+        //External address for the server, including port if not running on 80/433
         server_address: "http://127.0.0.1:8080",
+
+        //Same as above, with websocket protocol
         websocket_address: "ws://127.0.0.1:8080"
 
         // append "/authenticate" for reddit redirect url:

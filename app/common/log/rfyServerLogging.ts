@@ -1,5 +1,8 @@
 import * as Winston from 'winston';
 import { Severity } from './models';
+import serverConfig from 'root/server_config';
+import * as Path from 'path';
+import * as FS from 'fs';
 
 
 
@@ -7,9 +10,9 @@ const LogLevels = {
   levels: {
     error: 0,
     warning: 1,
-    access: 2,
-    info: 3,
-    debug: 4
+    info: 2,
+    access: 3,
+    debug: 4,
   },
   colors: {
     error: 'red',
@@ -20,19 +23,100 @@ const LogLevels = {
   }
 };
 
-const logger = Winston.createLogger({
-  levels: LogLevels.levels,
-  format: Winston.format.combine( Winston.format.json(), Winston.format.timestamp() ),
-  transports: [
-    //
-    // - Write to all logs with level `info` and below to `combined.log` 
-    // - Write all logs error (and below) to `error.log`.
-    //
-    //new Winston.transports.File({ filename: 'error.log', level: 'error' }),
-    //new Winston.transports.File({ filename: 'combined.log' })
-    new Winston.transports.Console( { format: Winston.format.combine( Winston.format.json(), Winston.format.timestamp() ) } )
-  ]
-});
+///////////////////////////////////////////////////
+// Convenience functions for filtering log output
+///////////////////////////////////////////////////
+
+function filterInclude(level) 
+{
+  return Winston.format( (info) =>
+  {
+    if (info.level === level)
+      return info;
+    return false;
+  })();
+}
+
+function filterExclude(level) 
+{
+  return Winston.format( (info) =>
+  {
+    if (info.level !== level)
+      return info;
+    return false;
+  })();
+}
+
+let logger : Winston.Logger = null;
+
+export function init()
+{
+  logger = Winston.createLogger({
+    levels: LogLevels.levels,
+    format: Winston.format.combine( Winston.format.json(), Winston.format.timestamp() ),
+    transports: [
+        //All added dynamically.
+    ]
+  });
+
+  if( process.env.NODE_ENV === 'development' )
+  {
+    initFileLogs();
+    initConsoleLog();
+  }
+  else
+  {
+    //Init file logs, fallback to console if not configured.
+    if ( !initFileLogs() )
+    {
+      initConsoleLog();
+    }
+  }
+
+}
+
+function createLogFolder( folder : string)
+{
+  if (folder != null)
+  {
+    if ( !FS.existsSync( serverConfig.logging.logDirectoryPath ) ) 
+    {
+      // Create the directory if it does not exist
+      FS.mkdirSync( serverConfig.logging.logDirectoryPath );
+    }
+  }
+}
+
+function initFileLogs() : boolean
+{
+  if (serverConfig.logging.logDirectoryPath != null)
+  {
+    createLogFolder( serverConfig.logging.logDirectoryPath );
+
+    logger.add( new Winston.transports.File( 
+    {  
+      level:Severity.access,
+      format: filterInclude(Severity.access),
+      filename: Path.join( serverConfig.logging.logDirectoryPath, 'access.log') 
+    }));
+  
+  
+    logger.add( new Winston.transports.File( 
+    {  
+      level:Severity.info,
+      filename: Path.join( serverConfig.logging.logDirectoryPath, 'log.log') 
+    }));
+
+    return true;
+  }
+  
+  return false;
+}
+
+function initConsoleLog()
+{
+  logger.add( new Winston.transports.Console( { level: Severity.debug, format: Winston.format.combine( Winston.format.json(), Winston.format.timestamp() ) } ) );
+}
 
 //In addition to the existing "level" and "message", the following metadata may be included:
 //ip
