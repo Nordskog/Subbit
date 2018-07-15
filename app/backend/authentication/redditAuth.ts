@@ -106,7 +106,11 @@ export function confirmAuthState(identifier: string) : models.auth.LoginType
 
 export function getHttpBasicAuthHeader()
 {
-    return { "Authorization" : 'Basic '+ base64.encode(serverConfig.reddit.redditId + ":" + serverConfig.reddit.redditSecret), "Content-Type" : "application/x-www-form-urlencoded;charset=UTF-8" };
+    return { 
+                "Authorization" : 'Basic '+ base64.encode(serverConfig.reddit.redditId + ":" + serverConfig.reddit.redditSecret), 
+                "Content-Type" : "application/x-www-form-urlencoded;charset=UTF-8",
+                'User-Agent' : tools.env.getUseragent()
+            };
 }
 
 export function generateRedditLoginUrl( loginType : models.auth.LoginType )
