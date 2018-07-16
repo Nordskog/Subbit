@@ -1,3 +1,5 @@
+import * as fs from 'fs';
+
 const config = 
 {
     /////////////////////////////////
@@ -44,9 +46,10 @@ const config =
     server:
     {
         //This is the port the actual server will run on.
-        //The address and port the client will use to access it is configured in config.ts
+        //The address and port the client will use to access it is configured in config
         port: 8080,
-        reverseProxy: false //Whether the server will be running behind a reverse proxy
+        reverseProxy: false, //Whether the server will be running behind a reverse proxy
+        userAgent:  `SubbitServer_${process.env.npm_package_version}`,    //Used when making server-side requests to reddit
     },
 
     logging:

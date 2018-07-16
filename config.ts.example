@@ -1,4 +1,6 @@
-﻿const config = 
+﻿import * as envTools from '~/common/tools/env';
+
+const config = 
 {
     ////////////////////////////////////////////////
     // General client settings
@@ -10,7 +12,7 @@
         postExpandCount: 10,     //Number of posts to expand by every time more posts button is hit
         postFetchCount: 36,      //How many posts to fetch in each request
         authorDisplayCount: 10,  //How many authors to display on one page (subscriptions always displays all)
-        userAgent:  "Subbit",
+        userAgent:  `Subbit_${envTools.getVersion()}`,    //Defined from process.env.npm_package_version in webpack config
         siteName: "Subbit",
         aboutMessage: "Let Roughy on Reddit or in #HFY on Freenode know of any problems",
         contactUrl: "mailto:example@exmaple.com",
