@@ -45,7 +45,8 @@ export function handleError(dispatch : ReduxTypes.Dispatch, err : Error )
             dispatch(actions.authentication.logoutUserAction());
 
             //Simplify for user consumption
-            toast( ToastType.ERROR, 10000, err.message);
+            toast
+            ( ToastType.ERROR, 10000, err.message);
 
             Log.I(err.toString());
         }
@@ -57,13 +58,9 @@ export function handleError(dispatch : ReduxTypes.Dispatch, err : Error )
             Log.E(err);
         }
     }
-    else if ( err instanceof Exception )
-    {
-        toast( ToastType.ERROR, 10000, err.message );
-        Log.E(err);
-    }
     else
     {
+        toast( ToastType.ERROR, 10000, err.message );
         Log.E(err);
     }
 }

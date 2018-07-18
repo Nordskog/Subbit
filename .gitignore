@@ -20,3 +20,4 @@ jwtRS256.key
 jwtRS256.key.pub
 
 !/migrations/*
+!/css/postcss.config.js

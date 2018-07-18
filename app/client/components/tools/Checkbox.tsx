@@ -1,7 +1,8 @@
 import * as React from 'react';
 import * as siteStyles from 'css/site.scss'
 
-import checkmark from 'assets/images/checkmark.svg'
+import SVGInline from "react-svg-inline"
+import * as checkmark from 'assets/images/checkmark.svg'
 
 interface Props
 {
@@ -37,9 +38,7 @@ export default class Checkbox extends React.Component<Props, State>
     public render()
     {
         return  <div className={siteStyles.checkboxContainer}>
-                    <svg className={this.state.checked ? siteStyles.checkBoxChecked : siteStyles.checkBox} >
-                      <use xlinkHref={checkmark}></use>
-                    </svg>
+                    <SVGInline className={this.state.checked ? siteStyles.checkBoxChecked : siteStyles.checkBox} svg={checkmark}/>
                     <input type="checkbox" onChange={ () => this.handleClick() }/>
                 </div>
     }

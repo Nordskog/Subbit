@@ -120,10 +120,30 @@
     margin-left:var( --tiny-gap );
 }
 
-
-.subscriptionButton {
+.subscriptionButtonContainer
+{
     height: var( --card-line-height );
     width: var( --card-line-height );
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    
+}
+
+.subscriptionButtonOverlapContainer
+{
+    position: relative;
+    height: var( --star-size);
+    width: var( --star-size );
+}
+
+.subscriptionButton {
+    height: var( --star-size);
+    width: var( --star-size );
+    //margin-top: 0px;    //I don't understand how bit this centers it, like margin:auto should.
+
     //pointer-events: none;   //Otherwise click does not propagate to parent
     cursor: pointer;
 }
@@ -134,12 +154,7 @@
     stroke: $background-text-color;
     fill: transparent;
     stroke-width: var( --stroke-width );
-}
-
-.subscriptionButtonContainer
-{
-    height: var( --card-line-height );
-    width: var( --card-line-height );
+    
 }
 
 .unsubscribeButton

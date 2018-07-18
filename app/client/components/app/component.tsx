@@ -24,12 +24,15 @@ export default class app extends React.Component<Props,any>
     {
       return <div>
                 <Toastify.ToastContainer/>
-                <components.header/>
-                <div className={styles.contentOuterContainer}>
-                    <div className={styles.contentContainer}>
-                        {this.getContent()}
+                <div className={styles.siteContainer}>
+                    <components.header/>
+                    <div className={styles.contentOuterContainer}>
+                        <div className={styles.contentContainer}>
+                            {this.getContent()}
+                        </div>
                     </div>
                 </div>
+
                     
              </div>
     }
@@ -67,8 +70,6 @@ export default class app extends React.Component<Props,any>
         return this.getAuthors();
 
     }
-
-
 
     getAuthors()
     {

@@ -1,17 +1,14 @@
 import * as React from 'react';
 
 
-import * as models from '~/common/models';
 
-import * as tools from '~/common/tools'
 
 import * as siteStyles from 'css/site.scss'
 import * as styles from 'css/subredditList.scss'
 import * as components from '~/client/components'
 
-import expand_caret from 'assets/images/expand_caret.svg'
-import collapse_caret from 'assets/images/collapse_caret.svg'
-import subscribeButton from 'assets/images/subscribe_button.svg'
+import SVGInline from "react-svg-inline"
+import * as subscribeButton from 'assets/images/subscribe_button.svg'
 
 import * as transitions from 'react-transition-group'
 
@@ -353,9 +350,7 @@ export default class RedditsCell extends React.Component<Props, State>
         }
 
         return <div className={ styles.indicatorContainer }>
-                    <svg className={ style } >
-                        <use xlinkHref={subscribeButton}></use>
-                    </svg>
+                    <SVGInline className={style} svg={subscribeButton}/>
                 </div>
     }
 

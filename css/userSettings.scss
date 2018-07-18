@@ -47,12 +47,14 @@ a.genericButton:hover
     @extend %button;
     background: transparent;
     margin: auto;
+    margin-left: 0px;
+    margin-right: 0px;
     padding: 0px;
     padding-left: var( --small-gap);
     z-index: 1;
 
-    height: calc( var( --header-height ) - (var( --small-gap ) * 2) );
-    width:  calc( var( --header-height ) - (var( --small-gap ) * 2) );
+    height: var( --header-menu-button-height );
+    width:  var(--header-menu-button-height );
 }
 
 .button:hover 
@@ -127,8 +129,8 @@ a.genericButton:hover
 {
     .button
     {
-        height: calc( var( --header-height ) - (var( --tiny-gap ) * 2 ) );
-        width:  calc( var( --header-height ) - (var( --tiny-gap ) * 2 ) );
+        height: var( --header-menu-button-height );
+        width:  var(--header-menu-button-height );
     }
 
     .popupContainer

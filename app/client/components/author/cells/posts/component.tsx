@@ -9,9 +9,9 @@ import * as cells from './cells'
 
 import * as authorStyles from 'css/author.scss'
 
-
-import expand_caret from 'assets/images/expand_caret.svg'
-import collapse_caret from 'assets/images/collapse_caret.svg'
+import SVGInline from "react-svg-inline"
+import * as expand_caret from 'assets/images/expand_caret.svg'
+import * as collapse_caret from 'assets/images/collapse_caret.svg'
 
 import * as components from '~/client/components'
 
@@ -159,9 +159,7 @@ export default class Posts extends React.Component<Props, State>
         return <components.transitions.FadeVerticalResize key={'_expandButton'}>
                 <div className={authorStyles.morePostsContainer}  onClick={ () => this.expandPosts() } > 
                         <div className={authorStyles.morePostsInnerContainer}>
-                            <svg className={authorStyles.morePostsButton} >
-                                <use xlinkHref={expand_caret}></use>
-                            </svg>
+                            <SVGInline className={authorStyles.morePostsButton} svg={expand_caret}/>
                         </div>
 
                         <span>{this.state.loading ? 'Loading...' : 'More posts'}</span>
@@ -177,9 +175,7 @@ export default class Posts extends React.Component<Props, State>
         return  <components.transitions.FadeVerticalResize key={'collapse_button_container'}>
                     <div className={authorStyles.morePostsContainer} key={"_collapsebutton"} onClick={ () => this.collapsePosts() } >
                         <div className={authorStyles.morePostsInnerContainer}> 
-                            <svg className={authorStyles.morePostsButton} >
-                                <use xlinkHref={collapse_caret}></use>
-                            </svg>
+                            <SVGInline className={authorStyles.morePostsButton} svg={collapse_caret}/>
                         </div>
                     </div>
                 </components.transitions.FadeVerticalResize>

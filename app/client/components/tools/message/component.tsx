@@ -3,13 +3,12 @@ import * as models from '~/common/models'
 import * as siteStyles from 'css/site.scss'
 import * as styles from 'css/message.scss'
 
-import ReactSVG from 'react-svg'
-import loading_done = require('assets/animations/loading_done.svg')
-
-import subscribeButton from 'assets/images/subscribe_button.svg'
-import subscribeSubredditButton from 'assets/images/subscribe_subreddit_button.svg'
-import subscribedPartialButton from 'assets/images/subscribed_partial_button.svg'
-import expand_caret from 'assets/images/expand_caret.svg'
+import SVGInline from "react-svg-inline"
+import * as loading_done from 'assets/animations/loading_done.svg' //TODO think about fancy svgs
+import * as subscribeButton from 'assets/images/subscribe_button.svg'
+import * as subscribeSubredditButton from 'assets/images/subscribe_subreddit_button.svg'
+import * as subscribedPartialButton from 'assets/images/subscribed_partial_button.svg'
+import * as expand_caret from 'assets/images/expand_caret.svg'
 
 import * as components from '~/client/components'
 
@@ -81,9 +80,7 @@ export default class MessageComponent extends React.Component<Props,State>
   {
       //Heh
       let element = <div className={authorStyles.subscriptionButtonContainer}>
-                      <svg className={authorStyles.subscribeButton} >
-                          <use xlinkHref={subscribeButton}></use>
-                      </svg>
+                      <SVGInline className={authorStyles.subscribeButton} svg={subscribeButton}/>
                   </div>
 
       return <div className={styles.corner}>
@@ -94,14 +91,16 @@ export default class MessageComponent extends React.Component<Props,State>
   getSubscribeSubredditButton()
   {
       //Heh
-      let element =  <div className={authorStyles.subscriptionButtonContainer} style={ { position:"relative" } } >
-                  <svg className={authorStyles.unsubscribeButton} style={ { position:"absolute" } } >
-                      <use xlinkHref={subscribeSubredditButton}></use>
-                  </svg>
-                  <svg className={authorStyles.subscribeButton} style={ { position:"absolute" } } >
-                      <use xlinkHref={subscribeButton}></use>
-                  </svg>
-              </div>
+      let element : JSX.Element = <div key={"subscribe_subreddit_button"} className={authorStyles.subscriptionButtonContainer} style={ { position:"relative" } } >
+                                    <div className={authorStyles.subscriptionButtonOverlapContainer}>
+                                        <div className={authorStyles.subscriptionButton} style={ { position:"absolute" } }>
+                                            <SVGInline  className={authorStyles.unsubscribeButton} svg={subscribeSubredditButton}/>
+                                        </div>
+                                        <div className={authorStyles.subscriptionButton} style={ { position:"absolute" } }>
+                                            <SVGInline  className={authorStyles.subscribeButton} svg={subscribeButton}/>
+                                        </div>
+                                    </div>
+                                </div>
 
       return <div className={styles.corner}>
       {element}
@@ -113,10 +112,8 @@ export default class MessageComponent extends React.Component<Props,State>
   getExpandCaret( hidden : boolean)
   {
     let element =  <div className={ classConcat( authorStyles.displaySubredditsButtonContainer, styles.caret, hidden ? styles.hidden : null ) }>
-              <svg className={authorStyles.displaySubredditsButton} >
-                  <use xlinkHref={ expand_caret}></use>
-              </svg>
-          </div>
+                    <SVGInline className={authorStyles.displaySubredditsButton} svg={expand_caret}/>
+                  </div>
 
     return element;
   }
@@ -124,10 +121,8 @@ export default class MessageComponent extends React.Component<Props,State>
   getExpandExample()
   {
       let element =  <div className={ classConcat( authorStyles.subscriptionButtonContainer, styles.hidden ) } >
-                  <svg className={authorStyles.unsubscribeButton} >
-                      <use xlinkHref={subscribeButton}></use>
-                  </svg>
-              </div>
+                        <SVGInline className={authorStyles.unsubscribeButton} svg={subscribeButton}/>
+                      </div>
 
       return <div className={styles.corner}>
               {element}
@@ -160,10 +155,8 @@ export default class MessageComponent extends React.Component<Props,State>
       }
       
       let element =  <div className={authorStyles.subscriptionButtonContainer} >
-                  <svg className={authorStyles.unsubscribeButton} >
-                      <use xlinkHref={svgName}></use>
-                  </svg>
-              </div>
+                      <SVGInline className={authorStyles.unsubscribeButton} svg={svgName}/>
+                    </div>
 
       return <div className={styles.corner}>
               {element}
@@ -181,9 +174,7 @@ export default class MessageComponent extends React.Component<Props,State>
                 <div className={styles.spacer}/>
                 <div className={styles.spanRow}>
                   <span>Go</span>
-                  <svg className={authorStyles.unsubscribeButton} >
-                      <use xlinkHref={subscribeButton}></use>
-                  </svg>
+                  <SVGInline className={authorStyles.unsubscribeButton} svg={subscribeButton}/>
                   <span>your favorite authors!</span>
 
                 </div>
@@ -209,9 +200,7 @@ export default class MessageComponent extends React.Component<Props,State>
   getNoSubscriptionsMessage( authenticated : boolean )
   {
     return <div className={styles.container}>
-              <ReactSVG className={siteStyles.loadingImage}
-              path={loading_done}
-              evalScripts={"never"} />
+              <SVGInline  className={siteStyles.loadingImage} svg={loading_done}/>
               <div className={styles.title}>
                 <span>Welcome to {config.client.siteName}!</span>
               </div>
@@ -270,9 +259,8 @@ export default class MessageComponent extends React.Component<Props,State>
   getAboutMessage()
   {
     return <div className={styles.container}>
-              <ReactSVG className={siteStyles.loadingImage}
-              path={loading_done}
-              evalScripts={"never"} />
+    
+            <SVGInline  className={siteStyles.loadingImage} svg={loading_done}/>
               <div className={styles.title}>
                 <span>Welcome to {config.client.siteName}!</span>
               </div>

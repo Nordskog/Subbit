@@ -1,0 +1,34 @@
+{
+  "compilerOptions": 
+  {
+    "module": "commonjs",
+    "target": "es5",
+    "lib": [ "es6", "dom" ],
+    "sourceMap": true,
+    "rootDir": ".",
+    "baseUrl": ".",
+    "typeRoots": [ "types" ],
+    "jsx": "react",
+    "paths": {
+
+      "~/*": [ "./app/*" ],
+      "css/*": [ "./css/*" ],
+      "assets/*": [ "./assets/*" ],
+      "root/*": [ "./*" ]
+    },
+
+    "declaration": false,
+    "noImplicitAny": false,
+    "noLib": false,
+    "suppressImplicitAnyIndexErrors": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "downlevelIteration": true
+
+  },
+  "exclude": [
+    "node_modules"
+  ]
+
+
+}

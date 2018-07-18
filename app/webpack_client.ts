@@ -18,13 +18,13 @@ const config = {
     context: basePath,
     resolve: {
         extensions: [ '.ts', '.tsx', '.js', '.css', '.scss'],
-        plugins: [new TsconfigPathsPlugin({ configFile: "tsconfig.json" })]
+        plugins: [new TsconfigPathsPlugin({ configFile: "webpack_tsconfig.json" })]
 
     },
     entry: {
         main: ['./client/index.tsx'],
         appStyles: [
-
+            '../css/popup.scss',
             '../css/stats.scss',
             '../css/optionDropdown.scss',
             '../css/message.scss',
@@ -41,6 +41,7 @@ const config = {
             '../css/confirmationPopup.scss',
             'react-toastify/dist/ReactToastify.css'
         ],
+        
         vendor: [
             'react',
             'react-dom',
@@ -51,8 +52,10 @@ const config = {
             'redux-thunk',
             'react-redux',
             'react-toastify',
-            'react-svg'
+            'react-svg',
+            'gsap'
         ]
+        
     },
     output: {
         filename: '[name].js',
@@ -63,11 +66,21 @@ const config = {
         rules: [
 
             {
+                //gsap doesn't get transpiled, so use babel for that
+                test: /\.js(x?)$/,
+                include: /gsap/,
+                loader: "babel-loader",
+                options: {
+                    presets: ["@babel/preset-env"]  //I don't understand babel configs
+                }
+            },
+            {
                 test: /\.tsx?$/,
                 exclude: /node_modules/,
                 loader: 'awesome-typescript-loader',
                 options: {
                     useBabel: false,
+                    configFileName : 'webpack_tsconfig.json'
                 },
             },
             {
@@ -82,17 +95,26 @@ const config = {
                     use: 
                     [
 
-                    {
-                        loader: 'typings-for-css-modules-loader',
-                        options: {
-                            modules: true,
-                            localIdentName: '[name]-[local]',
-                            namedExport: true
-                        }
-                    },
-                    {
-                        loader: 'sass-loader'
-                    },
+
+                        {
+                            loader: 'typings-for-css-modules-loader',
+                            options: {
+                                modules: true,
+                                localIdentName: '[name]-[local]',
+                                namedExport: true
+                            }
+                        },
+                        
+                        
+                        {
+                            loader: 'postcss-loader',
+                            options: {
+                                
+                            }
+                        },
+                        {
+                            loader: 'sass-loader'
+                        },
                     ]
                 }))             
             },
@@ -103,15 +125,15 @@ const config = {
                     use: 
                     [
 
-                    {
-                        loader: 'css-loader'
-                    },
+                {
+                    loader: 'css-loader'
+                }
                     ]
                 }))
              
             },
-            // Loading glyphicons => https://github.com/gowravshekar/bootstrap-webpack
-            // Using here url-loader and file-loader
+
+
             {
                 test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
                 loader: 'url-loader?limit=10000&mimetype=application/font-woff'
@@ -125,33 +147,36 @@ const config = {
                 loader: 'file-loader'
             },
             
-
             {
-                //Static svgs can be bundled
+
+                //SVGs loaded inline because compatibility (I'm looking at you, IE)
                 test: /\.svg$/,
                 exclude: [/node_modules/, /animations/],
                 use: [
                     { 
-                        loader: 'svg-sprite-loader',
-                        options: { extract: true, esModule: true }
+                        loader: 'svg-inline-loader',
+
+                        //Everything is styled by css
+                        options: { removeTags: true }
                     }
               ]
             },
-            
-            {
-                //file loader necessary for animated svgs,
-                //and anything with bundled styles.
-                test: /\.(svg)$/,
-                exclude: [/node_modules/, /images/],
-                use: [
+
+           {
+
+            //Animted svgs are fancy and should use their own styles
+            test: /\.(svg)$/,
+            exclude: [/node_modules/, /images/],
+            use: [
                     {
-                        loader: 'file-loader',
+                        loader: 'svg-inline-loader',
                         options: {
                             name: '[name].[ext]',
                         }
                     },
                 ]
-            },            
+            },    
+ 
         ],
     },
     plugins: [

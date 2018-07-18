@@ -1,8 +1,6 @@
 ﻿import * as React from 'react';
 
-import subscribeButton from 'assets/images/subscribe_button.svg'
-import subscribeSubredditButton from 'assets/images/subscribe_subreddit_button.svg'
-import subscribedPartialButton from 'assets/images/subscribed_partial_button.svg'
+
 
 import * as models from '~/common/models';
 
@@ -12,9 +10,14 @@ import * as styles from 'css/author.scss'
 import * as components from '~/client/components'
 
 import config from 'root/config'
-import expand_caret from 'assets/images/expand_caret.svg'
-import collapse_caret from 'assets/images/collapse_caret.svg'
-import loading_caret from 'assets/images/loading_caret.svg'
+
+import SVGInline from "react-svg-inline"
+import * as subscribeButton from 'assets/images/subscribe_button.svg'
+import * as subscribeSubredditButton from 'assets/images/subscribe_subreddit_button.svg'
+import * as subscribedPartialButton from 'assets/images/subscribed_partial_button.svg'
+import * as expand_caret from 'assets/images/expand_caret.svg'
+import * as collapse_caret from 'assets/images/collapse_caret.svg'
+import * as loading_caret from 'assets/images/loading_caret.svg'
 
 import * as transitions from 'react-transition-group'
 
@@ -369,18 +372,21 @@ export default class AuthorCell extends React.Component<Props, State>
     {
         //Heh
         let butt : JSX.Element = <div key={"subscribe_button"} className={styles.subscriptionButtonContainer} onClick={this.handleSubscribeClick} >
-                        <svg className={styles.subscribeButton} >
-                            <use xlinkHref={subscribeButton}></use>
-                        </svg>
-                    </div>
+                                    <div className={styles.subscribeButton} >
+                                        <SVGInline svg={subscribeButton}/>
+                                    </div>
+                                </div>
 
         let text : string = "subscribe";
         if (this.props.subreddit != null)
             text = "subscribe in r/"+this.props.subreddit;
 
+            
         return <components.tools.InfoPopup
                     trigger={butt}
                     text={text} />
+                    
+                   return butt;
 
        
     }
@@ -388,21 +394,56 @@ export default class AuthorCell extends React.Component<Props, State>
     getSubscribeSubredditButton()
     {
         //Heh
-        let butt : JSX.Element =    <div key={"subscribe_subreddit_button"} className={styles.subscriptionButtonContainer} onClick={ () => this.handleAddSubredditClick(this.props.subreddit)} style={ { position:"relative" } } >
-                                        <svg className={styles.unsubscribeButton} style={ { position:"absolute" } } >
-                                            <use xlinkHref={subscribeSubredditButton}></use>
-                                        </svg>
-                                        <svg className={styles.subscribeButton} style={ { position:"absolute" } } >
-                                            <use xlinkHref={subscribeButton}></use>
-                                        </svg>
+        let butt : JSX.Element = <div key={"subscribe_subreddit_button"} className={styles.subscriptionButtonContainer} style={ { position:"relative" } } >
+                                    <div className={styles.subscriptionButtonOverlapContainer}>
+                                        <div className={styles.subscriptionButton} style={ { position:"absolute" } }>
+                                            <SVGInline  className={styles.unsubscribeButton} svg={subscribeSubredditButton}/>
+                                        </div>
+                                        <div className={styles.subscriptionButton} style={ { position:"absolute" } }>
+                                            <SVGInline  className={styles.subscribeButton} svg={subscribeButton}/>
+                                        </div>
                                     </div>
+                                </div>
 
         let text : string = "subscribe in r/"+this.props.subreddit;
 
+            
         return <components.tools.InfoPopup
                     trigger={butt}
                     text={text} />
+                    
+                   return butt;
     }
+
+    getUnsubscribeButton( partialStar : boolean)
+    {
+        //Function remains the same, but apperance is slightly different
+        //depending on whether the subscription is all subreddits or only one.
+        let icon = subscribeButton;
+        let key = "unsubscribe_subscription_button";
+        if (partialStar)
+        {
+            icon = subscribedPartialButton;
+            key = "unsubscribe_partial_subscription_button";
+        }
+        
+        //The key has to go on the svg rather than the outer element for chrome to treat everything as a new element.
+        //I don't know why.
+        let butt : JSX.Element = <div className={styles.subscriptionButtonContainer} onClick={this.handleUnsubscribeClick} >
+                                    <SVGInline className={styles.unsubscribeButton} key={key} svg={icon}/>
+                                </div>
+                
+        let text : string = "unsubscribe"
+
+            
+        return <components.tools.InfoPopup
+                    trigger={butt}
+                    text={text} />
+                    
+                   return butt;
+
+    }
+
 
     getShowSubredditsButton()
     {
@@ -416,9 +457,7 @@ export default class AuthorCell extends React.Component<Props, State>
             {
                 return <components.transitions.FadeHorizontalResize key={'show_subreddits_button'}>
                             <div className={styles.displaySubredditsButtonContainer} >
-                                <svg key={"awaiting_posts"} className={styles.loadingPostsIndicator} >
-                                    <use xlinkHref={ loading_caret}></use>
-                                </svg>
+                                <SVGInline key={"awaiting_posts"} className={styles.loadingPostsIndicator} svg={loading_caret}/>
                             </div>
                         </components.transitions.FadeHorizontalResize>
             }
@@ -439,9 +478,7 @@ export default class AuthorCell extends React.Component<Props, State>
                 
                 return <components.transitions.FadeHorizontalResize key={'show_subreddits_button'}>
                             <div  className={styles.displaySubredditsButtonContainer} onClick={ () => { this.handleManageSubscriptionsClick() } } >
-                                <svg key={key} className={styles.displaySubredditsButton} >
-                                    <use xlinkHref={ icon }></use>
-                                </svg>
+                                <SVGInline key={key} className={styles.displaySubredditsButton} svg={icon}/>
                             </div>
                         </components.transitions.FadeHorizontalResize>
             }
@@ -480,33 +517,7 @@ export default class AuthorCell extends React.Component<Props, State>
         
     }
 
-    getUnsubscribeButton( partialStar : boolean)
-    {
-        //Function remains the same, but apperance is slightly different
-        //depending on whether the subscription is all subreddits or only one.
-        let icon = subscribeButton;
-        let key = "unsubscribe_subscription_button";
-        if (partialStar)
-        {
-            icon = subscribedPartialButton;
-            key = "unsubscribe_partial_subscription_button";
-        }
-        
-        //The key has to go on the svg rather than the outer element for chrome to treat everything as a new element.
-        //I don't know why.
-        let butt : JSX.Element = <div className={styles.subscriptionButtonContainer} onClick={this.handleUnsubscribeClick} >
-                                    <svg key={key} className={styles.unsubscribeButton} >
-                                        <use xlinkHref={icon}></use>
-                                    </svg>
-                                </div>
-                
-        let text : string = "unsubscribe"
 
-        return <components.tools.InfoPopup 
-                    trigger={butt}
-                    text={text} />
-
-    }
 
     handleSubscribeClick()
     {

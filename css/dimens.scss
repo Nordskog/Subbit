@@ -95,6 +95,10 @@ $font-x-large: 5;
 
     --loading-icon-size: 100px;
 
+    --site-min-width: 800px;
+
+    --loading-bar-width: 200px;
+
     /////////////////////
     // Header
     ////////////////////
@@ -106,6 +110,10 @@ $font-x-large: 5;
 
     --header-button-underline-height: -3px;
     --header-sub-button-height: 30px;
+
+    --header-menu-button-height:40px;
+
+    --star-size: 25px;
 
     ////////////////////////
     // card
@@ -119,14 +127,16 @@ $font-x-large: 5;
 
 
     --card-image-height: 35px;
+    --card-image-width: 50px;   // height * 1.4
 
     --card-small-image-height: 20px; //Must match title font height
+    --card-small-image-width: 30px; //height * 1.4. 
 
     ////////////////////////// 
     // Post
     //////////////////////////
 
-    --post-spacing: 0px;
+    --post-spacing: 3px;
 
     ////////////////////////// 
     // subreddit dropdown
@@ -172,7 +182,14 @@ $font-x-large: 5;
         --large-gap: 40px;
 
         --card-image-height: 80px;
+        --card-image-width: 112px;   // height * 1.4
+
         --card-small-image-height: 45px; //Must match title font height
+        --card-small-image-width: 68px; //height * 1.5. 
+
+
+        --star-size: 45px;
+
         --card-line-height: 80px;
 
         --small-card-max-width: 100%;
@@ -181,6 +198,9 @@ $font-x-large: 5;
         --score-width: 70px;
 
         --header-height: 80px;
+
+        --header-menu-button-height:60px;
+
         --upper-header-height: 70px;    //Mobile only
 
         --logo-size: 100px;

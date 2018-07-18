@@ -4,14 +4,14 @@ import * as models from '~/common/models';
 
 import * as siteStyles from 'css/site.scss'
 
-import ReactSVG from 'react-svg'
+import SVGInline from "react-svg-inline"
 
 
 //File-loader
-import loading_animation = require('assets/animations/loading_animation.svg')
-import loading_done = require('assets/animations/loading_done.svg')
-import loading_error = require('assets/animations/loading_error.svg')
-import loading_end = require('assets/animations/loading_end.svg')
+import * as loading_animation from 'assets/animations/loading_animation.svg';
+import * as loading_done from 'assets/animations/loading_done.svg';
+import * as loading_error from 'assets/animations/loading_error.svg';
+import * as loading_end from 'assets/animations/loading_end.svg';
 
 interface Props
 {
@@ -39,13 +39,13 @@ export default class LoadingIndicator extends React.Component<Props, State>
     getImage()
     {
 
-        let image : string = null;
+        let image : any = null;
         switch(this.props.status)
         {
             case  models.LoadingStatus.ERROR:
             case models.LoadingStatus.EMPTY:
             {
-                image = loading_error as string;
+                image = loading_error;
                 break;
             }
             case models.LoadingStatus.END:
@@ -65,11 +65,10 @@ export default class LoadingIndicator extends React.Component<Props, State>
             }
         }
 
-        return <ReactSVG className={siteStyles.loadingImage}
-                path={image}
-                evalScripts={"never"}
-        />    
+        return <SVGInline className={siteStyles.loadingImage} svg={image}/>
+    
     }
+
 
     render()
     {

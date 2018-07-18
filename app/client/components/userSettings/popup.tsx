@@ -1,9 +1,7 @@
 import * as React from 'react';
-import * as models from '~/common/models'
 import * as components from '~/client/components'
 
 import Component from './container';
-import { ToggleItem } from '~/client/components/tools';
 
 import Popup from "reactjs-popup";
 import * as transitions from 'react-transition-group'
@@ -11,7 +9,8 @@ import * as transitions from 'react-transition-group'
 import * as styles from 'css/userSettings.scss'
 import * as animationStyles from 'css/animations.scss';
 
-import settings_icon from 'assets/images/settings_icon.svg'
+import SVGInline from "react-svg-inline"
+import * as settings_icon from 'assets/images/settings_icon.svg'
 
 interface Props
 {
@@ -66,15 +65,13 @@ export default class popup extends React.Component<Props, null>
    
        let overlayStyle =
        {
-           'height': '100vh', 
+           //'height': '100vh', 
            'background': '#00000080',
            'animation': animationStyles.fadeIn+" 0.25s",
            'zIndex': 2  //Necessary when you have relative-position views elsewhere, and to hide other popup triggers
        }
 
-        let trigger =   <svg className={styles.button} >
-                            <use xlinkHref={settings_icon}></use>
-                        </svg>;
+        let trigger =   <SVGInline className={styles.button} svg={settings_icon}/>;
 
         return <Popup   trigger={ trigger } 
                         contentStyle={style} 

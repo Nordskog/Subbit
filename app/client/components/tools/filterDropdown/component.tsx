@@ -8,8 +8,8 @@ import * as models from '~/common/models';
 import * as tools from '~/common/tools'
 import * as urls from '~/common/urls'
 
-import expand_caret from 'assets/images/expand_caret.svg'
-import collapse_caret from 'assets/images/collapse_caret.svg'
+import SVGInline from "react-svg-inline"
+import * as expand_caret from 'assets/images/expand_caret.svg'
 
 import * as components from '~/client/components'
 
@@ -128,8 +128,6 @@ export default class FilterDropdown extends React.Component<Props, State>
 
     getExpandCaret()
     {
-        return  <svg className={styles.expandButton} >
-                    <use xlinkHref={expand_caret}></use>
-                </svg>
+        return  <SVGInline className={styles.expandButton} svg={expand_caret}/>
     }
 }

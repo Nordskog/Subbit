@@ -6,10 +6,11 @@ import * as tools from '~/common/tools'
 import * as urls from '~/common/urls'
 import * as styles from 'css/post.scss'
 
-import vote from 'assets/images/vote.svg'
+import * as vote from 'assets/images/vote.svg'
 import { PostDisplay } from '~/common/models';
 import { NavLink } from 'redux-first-router-link';
 import { classConcat } from '~/common/tools/css';
+import SVGInline from "react-svg-inline"
 
 const danger_flairs : Set<string> = new Set<string>();
 danger_flairs.add("nsfw");
@@ -249,9 +250,9 @@ export default class PostCell extends React.Component<Props, null>
         }
 
        return   <div className={styles.postReadContainer} >
-                    <svg className={style} >
-                        <use xlinkHref={vote}></use>
-                    </svg>
+                    <div className={style}>
+                        <SVGInline svg={vote}/>
+                    </div>     
                 </div>
        
 

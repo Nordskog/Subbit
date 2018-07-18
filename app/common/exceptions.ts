@@ -1,5 +1,8 @@
-const isNode = require('detect-node');
+import { isServer } from '~/common/tools/env'
 import { Severity } from '~/common/log'
+
+//The Object.setPrototypeOf stuff is an es5 requirement when extending base classes.
+//https://github.com/Microsoft/TypeScript-wiki/blob/master/Breaking-Changes.md#extending-built-ins-like-error-array-and-map-may-no-longer-work
 
 export class Exception extends Error
 {
@@ -13,21 +16,9 @@ export class Exception extends Error
     constructor( message : string)
     {
         super(message);
+        Object.setPrototypeOf(this, Exception.prototype);
         this.name = "Exception";
         this.message = message;
-
-        //The corrent Error.captureStackTrace() doesn't work in firefox these days.
-        //This at least gives us something to work with.
-        //Just extending error we don't seem to actually get a stack trace.
-        if (isNode)
-        {
-            //Make sure the stack trace is actually correct.
-            Error.captureStackTrace(this, this.constructor );
-        }
-        else 
-        {
-            this.stack = ( new Error(message) ).stack; 
-        }
     }
 
     //Append a stack to this error's stack.
@@ -55,6 +46,7 @@ export class EndpointException extends Exception
     constructor( code : number, message : string, severity : Severity = Severity.info)
     {
         super(message);
+        Object.setPrototypeOf(this, EndpointException.prototype);
         this.name = "EndpointException";
         this.code = code;
         this.severity = severity;
@@ -74,7 +66,8 @@ export class CancelledException extends Exception
 {
     constructor( message : string)
     {
-        super(message)
+        super(message);
+        Object.setPrototypeOf(this, CancelledException.prototype);
         this.name = "CancelledException";
     }
 
@@ -89,6 +82,7 @@ export class SocketException extends Exception
     constructor( message : string)
     {
         super(message)
+        Object.setPrototypeOf(this, SocketException.prototype);
         this.name = "SocketException";
     }
 
@@ -104,6 +98,7 @@ export class AuthorizationException extends Exception
     constructor( message : string)
     {
         super(message)
+        Object.setPrototypeOf(this, AuthorizationException.prototype);
         this.name = "AuthorizationException";
     }
 
@@ -120,6 +115,7 @@ export class AuthorizationInvalidException extends Exception
     constructor( message : string)
     {
         super(message)
+        Object.setPrototypeOf(this, AuthorizationInvalidException.prototype);
         this.name = "AuthorizationInvalidException";
     }
 
@@ -139,6 +135,7 @@ export class NetworkException extends Exception
     constructor( code : number, message : string, url : string, res? : Response)
     {
         super( message );
+        Object.setPrototypeOf(this, NetworkException.prototype);
         this.name = "NetworkException";
         this.url = url;
         this.code = code;

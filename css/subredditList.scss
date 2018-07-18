@@ -136,18 +136,25 @@
     border-radius: 0px;
 }
 
+
 .indicatorContainer
 {
-    width: auto;
+    height: var( --card-line-height );
+    width: var( --card-line-height );
+
     display: flex;
-    flex-direction: column;
     justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    
 }
+
+
 
 .subscriptionIndicator {
     //List lines should basically match cards
-    height: var( --card-line-height );
-    width: var( --card-line-height );
+    height: var( --star-size );
+    width: var( --star-size );
 
     cursor: pointer;
 }

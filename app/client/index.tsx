@@ -1,4 +1,10 @@
-﻿
+﻿//Polyfills
+import "promise/polyfill"
+import 'core-js/es6/object';
+import 'core-js/es6/array';
+import * as polyfills from './polyfills';
+polyfills.fill();
+
 
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
@@ -9,6 +15,7 @@ import * as Store from '~/client/store'
 import * as setup from './setup'
 
 import * as Log from '~/common/log';
+
 
 //Sets up a toast callback
 setup.setupClientStuff();

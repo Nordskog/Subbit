@@ -19,6 +19,7 @@ export default class LoadingProgress extends React.Component<Props,State> {
 
   getProgress() : number
   {
+
     if (this.props.loadingCount != null && this.props.loadingProgress != null)
     {
       //let progress =  Math.floor( (this.props.loadingProgress / this.props.loadingCount * 100) );

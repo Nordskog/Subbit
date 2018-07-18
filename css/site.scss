@@ -2,6 +2,13 @@
 @import 'dimens';
 @import 'common';
 
+
+html {
+    min-width: var(--site-min-width);
+}
+
+
+
 body {
     color: #eeeeee;
     background: $body-background;
@@ -12,9 +19,15 @@ body {
 
     //absolute background
     z-index: -10;
-
-    //width: 100%;
+    
     box-sizing: border-box;
+}
+
+.siteContainer
+{
+
+    display: flex;
+    flex-direction: column;
 }
 
 html, body
@@ -154,7 +167,7 @@ input[type=text]:hover::placeholder
 {
     margin: var( --small-gap );
     height: var( --small-gap );
-    width: calc( var( --loading-icon-size ) * 2.0 );
+    width: var( --loading-bar-width );
     display:flex;
 }
 

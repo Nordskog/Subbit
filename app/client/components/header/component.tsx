@@ -15,7 +15,9 @@ import * as transitions from 'react-transition-group'
 
 import * as actions from '~/client/actions'
 
-import subbit_logo from 'assets/images/subbit_logo.svg'
+import SVGInline from "react-svg-inline"
+
+import * as subbit_logo from 'assets/images/subbit_logo.svg'
 
 import MediaQuery from 'react-responsive'
 import { getTimeRangeDisplayString, getFilterDisplayString } from '~/common/tools/string';
@@ -170,12 +172,10 @@ export default class HeaderComponent extends React.Component<Props, null>
 
     getLogo()
     {
-        return <NavLink    className={ styles.logoContainer }
-                    to={ { type: actions.types.Route.HOME, payload: {  } as actions.types.Route.HOME } }>
-                    <svg className={styles.logo} >
-                        <use xlinkHref={subbit_logo}></use>
-                    </svg>
-        </NavLink>
+       return   <NavLink    className={ styles.logoContainer }
+                     to={ { type: actions.types.Route.HOME, payload: {  } as actions.types.Route.HOME } }>
+                    <SVGInline className={styles.logo} svg={subbit_logo}/>
+                </NavLink>
     }
 
     getButtonStyleIfFilterMatch(filter : string)

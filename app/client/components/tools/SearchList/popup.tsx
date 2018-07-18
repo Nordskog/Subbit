@@ -68,7 +68,7 @@ export default class popup extends React.Component<Props, State >
     
         let overlayStyle =
         {
-            'height': '100vh',
+            //'height': '100vh',
             'background': '#00000080',
             'animation': animationStyles.fadeIn+" 0.25s",
             'zIndex': 2  //Necessary when you have relative-position views elsewhere, and to hide other popup triggers

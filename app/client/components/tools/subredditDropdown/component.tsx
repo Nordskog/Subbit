@@ -1,15 +1,10 @@
 import * as React from 'react';
-import { NavLink} from 'redux-first-router-link'
-import Link from 'redux-first-router-link'
-
 
 import * as models from '~/common/models';
 
-import * as tools from '~/common/tools'
-import * as urls from '~/common/urls'
+import SVGInline from "react-svg-inline"
 
-import expand_caret from 'assets/images/expand_caret.svg'
-import collapse_caret from 'assets/images/collapse_caret.svg'
+import * as expand_caret from 'assets/images/expand_caret.svg'
 
 import * as components from '~/client/components'
 
@@ -210,9 +205,8 @@ export default class SubredditDropdown extends React.Component<Props, State>
 
     getExpandCaret()
     {
-        return  <svg className={styles.expandButton} >
-                    <use xlinkHref={expand_caret}></use>
-                </svg>
+        return  <SVGInline className={styles.expandButton} svg={expand_caret}/>
+    
     }
 
 

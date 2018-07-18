@@ -10,7 +10,6 @@
     background: $card-background;
     height: auto;
     min-height: var( --header-height );
-    max-width: 100%;
     box-sizing: border-box;
     border-radius: var( --insignificant-gap );
 }
@@ -40,12 +39,11 @@
 .logo
 {
     position:absolute;
+    top: -20%;
     stroke: transparent;
     fill: #fff;
     height:var( --logo-size );
     width:var( --logo-size );
-    margin-top: auto;
-    margin-bottom:auto;
     margin-left: var( --tiny-gap );
     z-index: 1;
 
@@ -58,7 +56,6 @@
     width:var( --header-height );
     margin-right: var( --tiny-gap );
     overflow: visible;
-    display:flex;
     align-items: center;
 }
 
@@ -164,7 +161,7 @@ a.sortButton
 .headerLeft
 {
     float:left;
-    width:fit-content;
+    //width:fit-content;
     display: flex;
     flex-direction: row
 }
