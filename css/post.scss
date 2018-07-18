@@ -164,6 +164,12 @@
     fill: transparent;
     stroke: transparent;
     stroke-width:var( --stroke-width );
+
+    //Inline svg weirdness
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .upvote
@@ -274,8 +280,8 @@
 
     .postReadContainer
     {
-    width:var( --tiny-icon-size );
-    margin-left: calc( -(var(--small-gap)));
+        width:var( --tiny-icon-size );
+        margin-left: calc( -(var(--small-gap)));
     }
 
     .tinyImageContainer

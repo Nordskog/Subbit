@@ -250,9 +250,7 @@ export default class PostCell extends React.Component<Props, null>
         }
 
        return   <div className={styles.postReadContainer} >
-                    <div className={style}>
-                        <SVGInline svg={vote}/>
-                    </div>     
+                        <SVGInline className={style} svg={vote}/>
                 </div>
        
 
