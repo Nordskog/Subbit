@@ -8,6 +8,7 @@ import { Dispatch, GetState } from '~/client/actions/tools/types';
 import { Post } from '~/common/models/reddit';
 import { postedDate } from 'css/main.scss';
 import { NetworkException } from '~/common/exceptions';
+import * as Log from '~/common/log'
 
 
 export async function getAuthors( dispatch : Dispatch, getState : GetState )
@@ -34,6 +35,8 @@ export async function getAuthors( dispatch : Dispatch, getState : GetState )
     else if (state.authorState.filter == models.AuthorFilter.SUBSCRIPTIONS)
     {
         let subscriptions = state.userState.subscriptions;
+
+        
 
         //Filter by subreddit if present
         //Slow? Yes. Could put a hashmap in the state, but even with a few hundred subscriptions
@@ -123,7 +126,6 @@ export async function getAuthors( dispatch : Dispatch, getState : GetState )
 export function populateAuthorSubscriptions( authors : models.data.AuthorEntry[], getState : GetState )
 {
     let subscriptions : models.data.Subscription[] = (<State> getState()).userState.subscriptions;
-    //let subMap : Map<string, models.data.Subscription> = new Map<string, models.data.Subscription>();
 
     let subMap : Map<string, models.data.Subscription> = new Map( subscriptions.map( 
         ( sub: models.data.Subscription ): [string, models.data.Subscription] => [sub.author, sub] ) );
@@ -149,6 +151,8 @@ export function updateLoadingProgress (count : number, progress : number, dispat
 
 export async function poulateInitialPosts(authors : models.data.AuthorEntry[], count : number, dispatch : Dispatch, getState : GetState)
 {
+        
+
         let state: State = getState();
 
         let redditAuth = await actions.directActions.authentication.retrieveAndUpdateRedditAuth( dispatch, state);
@@ -164,7 +168,11 @@ export async function poulateInitialPosts(authors : models.data.AuthorEntry[], c
             {
                 //Well that shouldn't happen
                 if (author.subscription == null)
+                {
+                    Log.W("Attempted to populate posts for subscribed author with no subscription: ", author.author.name);
                     return;
+                }
+                   
 
                 subreddits = author.subscription.subreddits.map( (subreddit : models.data.SubscriptionSubreddit) => 
                 {
