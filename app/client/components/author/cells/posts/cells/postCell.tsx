@@ -81,9 +81,11 @@ export default class PostCell extends React.Component<Props, null>
                 this.getLink
                 (
                     true,
-                    this.getDateCol(),
-                    this.getSubreddit(),
-                    this.getComments()
+                    <div className={styles.infoContainer}>
+                        {this.getDateCol()}
+                        {this.getSubreddit()}
+                        {this.getComments()}
+                    </div>
                 )
             }
             </div>
@@ -105,8 +107,9 @@ export default class PostCell extends React.Component<Props, null>
                     <div className={styles.post}>
                         { this.getFlairsAndStuff() }
                         <a className={styles.postLink} href={this.props.post.url}>
-                            {this.props.post.title}{this.getTitleLinebreakFix()}
+                            {this.props.post.title}
                         </a>
+                        <span className={styles.postLinkRightMargin}/>
                         {inlineElements}
                         </div> 
                  </div> 

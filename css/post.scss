@@ -28,23 +28,28 @@
     flex-direction: row;
 }
 
+
 .postLink
 {
     margin-right: var( --tiny-gap );
     display: contents;
 }
 
+//Link is ignoring margin, add span instead
+.postLinkRightMargin
+{
+    margin-right: var( --tiny-gap );
+}
+
 .titleAndInfoSeparator
 {
-    display: flex;
-    flex-direction: column;
+    //Doesn't do anything else though
+    margin: 0px;
 }
 
 .infoContainer
 {
-    flex: 1;
-    display: flex;
-    flex-direction: row;
+    display: inline-block;
 }
 
 .postColumn {
@@ -63,12 +68,14 @@
 {
     font-weight: bold;
     margin-right: var( --tiny-gap );
+
 }
 
 //Needs to be shifted slightly to align with larger title text
 .topImage
 {
-    margin-top: 3px;
+    //Actually not used at all anymore
+    margin-top: 0px;
 }
 
 .topPostContainer a:link,
@@ -81,30 +88,28 @@
 
 .postedDate 
 {
-    white-space:nowrap;
+    display: inline-block;
     color: $hidden-text-color;
     font-weight: normal;
     text-align: center;
-    flex-shrink: 0;
+    margin-right: var( --insignificant-gap );
 }
 
 .subreddit
 {
-    white-space:nowrap;
+    display: inline-block;
     color: $hidden-text-color;
     font-weight: normal;
     text-align: center;
-    flex-shrink: 0;
+    margin-right: var( --insignificant-gap );
 }
 
 .comments
 {
+    display: inline-block;
     color: $hidden-text-color;
     font-weight: normal;
-    margin-left: var( --tiny-gap );
     text-align: center;
-    flex-shrink: 0;
-    white-space:nowrap;
 }
 
 .comments a:link,
@@ -238,6 +243,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    //margin: 0px;
 }
 
 

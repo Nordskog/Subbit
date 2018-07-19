@@ -145,7 +145,7 @@ export default class Posts extends React.Component<Props, State>
         this.props.grabMorePosts();
     }
 
-    
+ 
 
     ///////////////////////
     // Elements 
