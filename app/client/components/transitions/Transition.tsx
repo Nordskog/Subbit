@@ -19,6 +19,8 @@ interface Props
     duration?: number;
     appear?: boolean;
     className? : string;
+    style? : {};
+    onClick? : any;
 }
 
 interface State
@@ -36,10 +38,18 @@ interface State
 {
     container : HTMLDivElement;
     
+    static defaultProps = {
+        style : {  overflow: 'hidden' },
+        delay: 0,
+        appear: false,
+        duration: 0.3
+
+    }
+
     constructor( props : Props)
     {
         super(props);
-        this.state = { delay: props.delay || 0, duration: props.duration || 0.3, appear: this.props.appear || false };
+        this.state = { delay: props.delay, duration: props.duration, appear: this.props.appear };
 
     }
 
@@ -90,7 +100,7 @@ interface State
 
     render()
     {
-        return  <div ref={c => this.container = c} className={this.props.className} style={ { overflow: 'hidden' } }>
+        return  <div ref={c => this.container = c} onClick={this.props.onClick} className={this.props.className} style={ this.props.style }>
                     {this.props.children}
                 </div>
     }

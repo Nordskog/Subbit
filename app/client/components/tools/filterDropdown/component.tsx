@@ -120,7 +120,8 @@ export default class FilterDropdown extends React.Component<Props, State>
         return <components.tools.SearchList.popup
                                 trigger={ trigger }
                                 items={[filters]} 
-                                position={"bottom right"}
+                                position={components.tools.Popup.Position.BOTTOM}
+                                alignment={components.tools.Popup.Alignment.BEGINNING}
                                 modal={this.props.modal}
         />
     

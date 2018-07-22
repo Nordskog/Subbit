@@ -382,19 +382,16 @@ export default class AuthorCell extends React.Component<Props, State>
             text = "subscribe in r/"+this.props.subreddit;
 
             
+            
         return <components.tools.InfoPopup
                     trigger={butt}
-                    text={text} />
-                    
-                   return butt;
-
-       
+                    text={text} /> 
     }
 
     getSubscribeSubredditButton()
     {
         //Heh
-        let butt : JSX.Element = <div key={"subscribe_subreddit_button"} className={styles.subscriptionButtonContainer} style={ { position:"relative" } } >
+        let butt : JSX.Element = <div key={"subscribe_subreddit_button"} className={styles.subscriptionButtonContainer} onClick={ () => this.handleAddSubredditClick(this.props.subreddit)} style={ { position:"relative" } } >
                                     <div className={styles.subscriptionButtonOverlapContainer}>
                                         <div className={styles.subscriptionButton} style={ { position:"absolute" } }>
                                             <SVGInline  className={styles.unsubscribeButton} svg={subscribeSubredditButton}/>
@@ -407,12 +404,9 @@ export default class AuthorCell extends React.Component<Props, State>
 
         let text : string = "subscribe in r/"+this.props.subreddit;
 
-            
         return <components.tools.InfoPopup
                     trigger={butt}
                     text={text} />
-                    
-                   return butt;
     }
 
     getUnsubscribeButton( partialStar : boolean)
@@ -436,12 +430,10 @@ export default class AuthorCell extends React.Component<Props, State>
         let text : string = "unsubscribe"
 
             
+
         return <components.tools.InfoPopup
                     trigger={butt}
                     text={text} />
-                    
-                   return butt;
-
     }
 
 

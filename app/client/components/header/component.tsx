@@ -120,27 +120,30 @@ export default class HeaderComponent extends React.Component<Props, null>
                             <div className={styles.headerColumn}>
                                 <div className={styles.headerRow}>
                                     {this.getLogo()}
-                                    <components.animations.AutoWidth>
-                                        <components.tools.SubredditDropdown/>
-                                    </components.animations.AutoWidth>
+                                    <div className={styles.mobileScrollContainerOuter}>
+                                        <div className={styles.mobileScrollContainer}>
+                                            <components.animations.AutoWidth>
+                                                <components.tools.SubredditDropdown/>
+                                            </components.animations.AutoWidth>
 
-                                    <components.animations.AutoWidth>
-                                        <components.tools.FilterDropdown
-                                            modal={true}
-                                        />
-                                    </components.animations.AutoWidth>
+                                            <components.animations.AutoWidth>
+                                                <components.tools.FilterDropdown
+                                                    modal={true}
+                                                />
+                                            </components.animations.AutoWidth>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
 
                          <div className={styles.headerRight}>
                             {this.getSettingsPanel(true)}
-                            {this.getRightCorner()}
                         </div>
 
 
                         <div className={styles.headerClear} />
-                        <div className={styles.mobileHeaderBackground}/>
                     </div>
 
                     <transitions.TransitionGroup component="div">

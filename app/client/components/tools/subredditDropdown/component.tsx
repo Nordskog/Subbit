@@ -187,14 +187,20 @@ export default class SubredditDropdown extends React.Component<Props, State>
                     return <components.tools.SearchList.popup
                     modal={true}
                     trigger={ trigger }
-                    items={searches} />
+                    items={searches}
+                    position={components.tools.Popup.Position.BOTTOM}
+                    alignment={components.tools.Popup.Alignment.BEGINNING}
+                    />
                 }
                 else
                 {
                     return <components.tools.SearchList.popup
                     modal={false}
                     trigger={ trigger }
-                    items={searches} />
+                    items={searches}
+                    position={components.tools.Popup.Position.BOTTOM}
+                    alignment={components.tools.Popup.Alignment.BEGINNING}
+                    />
                 }
             } 
         }

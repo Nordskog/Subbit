@@ -15,7 +15,7 @@ import * as gsap from 'gsap'
 import Transition from './Transition';
 
 
- export default class ScrollWrap extends Transition
+ export default class Fade extends Transition
 {
     come(container : HTMLDivElement, callback)
     {

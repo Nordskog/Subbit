@@ -12,6 +12,8 @@
     min-height: var( --header-height );
     box-sizing: border-box;
     border-radius: var( --insignificant-gap );
+
+    
 }
 
 .mobileHeaderBackground
@@ -38,11 +40,11 @@
 
 .logo
 {
-    position:absolute;
-    top: -20%;
+    //position:absolute;
+    //top: -20%;
     stroke: transparent;
     fill: #fff;
-    height:var( --logo-size );
+    //height:var( --logo-size );
     width:var( --logo-size );
     margin-left: var( --tiny-gap );
     z-index: 1;
@@ -51,11 +53,14 @@
 
 .logoContainer
 {
-    position:relative;
-    height:auto;
-    width:var( --header-height );
+    //position:relative;
+    height:var( --header-height );
+    //width:var( --header-height );
     margin-right: var( --tiny-gap );
     overflow: visible;
+    align-items: center;
+    display: flex;
+    justify-content: center;
     align-items: center;
 }
 
@@ -161,9 +166,25 @@ a.sortButton
 .headerLeft
 {
     float:left;
+    max-width: 100%;
     //width:fit-content;
     display: flex;
-    flex-direction: row
+    flex-direction: row;
+
+}
+
+.mobileScrollContainerOuter
+{
+    overflow-x: scroll;
+}
+
+.mobileScrollContainer
+{
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    overflow: visible;
 }
 
 .headerLeftDoubleHeight
@@ -187,7 +208,7 @@ a.sortButton
 
 .headerColumn
 {
-    width:fit-content;
+    max-width: 100%;
     display: flex;
     flex-direction: column;
     overflow: visible;
@@ -196,7 +217,7 @@ a.sortButton
 .headerRight
 {
     height: var( --header-height );
-    position: relative;
+    //position: relative;
     float:right;
     display: flex;
     flex-direction: row;
@@ -249,13 +270,15 @@ a.sortButton
 
 @media only screen and (max-width: 1100px)
 {
+    
     .header {
-        background: transparent;
-        position: relative;
+        //background: transparent;
+        //position: relative;
         height: var(--header-height);
         //margin-top: var(--small-gap);
         
     }
+    
 
     .headerRight
     {

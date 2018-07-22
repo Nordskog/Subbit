@@ -1,4 +1,5 @@
 export function classConcat( ...clazz : string[] )
 {
-    return clazz.join(' ');
+    let filtered = clazz.filter( (str) => str != null );
+    return filtered.join(' ');
 }

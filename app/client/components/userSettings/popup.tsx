@@ -3,7 +3,6 @@ import * as components from '~/client/components'
 
 import Component from './container';
 
-import Popup from "reactjs-popup";
 import * as transitions from 'react-transition-group'
 
 import * as styles from 'css/userSettings.scss'
@@ -22,79 +21,43 @@ export default class popup extends React.Component<Props, null>
 
     public render()
     {
-        /*
-        let style = 
-        {
-            'width': 'auto',
-            'border': '0px',
-            'padding': '0px',
-            'background':'transparent'
-        }
-
-        let overlayStyle =
-        {
-            'background': '#00000080',
-            'animation': animationStyles.fadeIn+" 0.5s"
-        }
-        */
-
-       let style = null;
-       if (this.props.mobile)
-       {
-           style = 
-           { 
-               'maxHeight': '100%',
-               'width': '100%',
-               'marginTop': "75px",   //match --header-height to match header
-               'border': '0px',
-               'padding': '0px',
-               'background': 'transparent',
-           }
-       }
-       else
-       {
-           style =
-           {
-               'width': 'auto',
-               'border': '0px',
-               'padding': '0px',
-               'background': 'transparent'
-           }
-       }
-   
-   
-       let overlayStyle =
-       {
-           //'height': '100vh', 
-           'background': '#00000080',
-           'animation': animationStyles.fadeIn+" 0.25s",
-           'zIndex': 2  //Necessary when you have relative-position views elsewhere, and to hide other popup triggers
-       }
-
         let trigger =   <SVGInline className={styles.button} svg={settings_icon}/>;
 
-        return <Popup   trigger={ trigger } 
-                        contentStyle={style} 
-                        position="bottom right" closeOnDocumentClick
-                        arrow={false}
-                        overlayStyle={overlayStyle}
-                        modal={this.props.mobile}
-                        lockScroll={ this.props.mobile}
-                                            >
-                    {
-                        close => 
-                        {
-                                return <transitions.TransitionGroup >
-                                        <components.transitions.Fade key={'userSettingsPopup'} appear={true}>
-                                            <div className={styles.popupContainer}>
-                                                <Component 
-                                                    close={close}
-                                                />
-                                            </div>
-                                        </components.transitions.Fade>
-                                        </transitions.TransitionGroup>
-                        }
-                    }
-                </Popup>
+        
+        //On mobile the menu button may jump down below the menu bar,
+        //so instead of relying on the position parameter, we will hardcode
+        //the offset from the top of the screen.
+        let position = components.tools.Popup.Position.BOTTOM;
+        let clazz = null;
+
+        if (this.props.mobile)
+        {
+            position = null;
+            clazz = styles.mobilePopupPositioner;
+        }
+
+        return <components.tools.Popup.Component
+            trigger={trigger}
+            modal={false}  
+            fullscreen={this.props.mobile}
+            position={position}
+            contentClass={clazz}
+            alignment={ components.tools.Popup.Alignment.END }>
+            {
+                close => 
+                {
+                        return <transitions.TransitionGroup >
+                                <components.transitions.Fade key={'userSettingsPopup'} appear={true}>
+                                    <div className={styles.popupContainer}>
+                                        <Component 
+                                            close={close}
+                                        />
+                                    </div>
+                                </components.transitions.Fade>
+                                </transitions.TransitionGroup>
+                }
+            }
+      </components.tools.Popup.Component>
+
     }
 };

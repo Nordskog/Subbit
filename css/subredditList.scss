@@ -9,8 +9,6 @@
     flex-direction: column;
     justify-content: space-evenly;
     margin-left:0px;
-    overflow-y:auto;
-    max-height: calc( 100vh - 100px );
 }
 
 .subscriptionSubredditContainer
@@ -38,7 +36,6 @@
 {
     padding-top: var( --small-gap);
     padding-bottom: var( --small-gap);
-    overflow-y: auto;
 }
 
 .subscriptionSubredditInnerContainer
@@ -123,8 +120,6 @@
 .modalPopupContainer
 {
     @extend .popupContainer;
-    max-height: calc( 100vh - 100px );
-
     border-left: 2px solid transparent;
     border-right: 2px solid transparent;
 }

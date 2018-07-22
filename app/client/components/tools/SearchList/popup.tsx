@@ -1,8 +1,6 @@
 import * as React from 'react';
 
 
-import Popup from "reactjs-popup";
-
 import * as styles from 'css/subredditList.scss'
 import * as animationStyles from 'css/animations.scss'
 
@@ -18,7 +16,10 @@ interface Props
 {
     trigger : JSX.Element;
     items: components.tools.SearchList.SearchItem[] | components.tools.SearchList.SearchItem;
-    position?: string;
+    position?: components.tools.Popup.Position;
+    alignment?: components.tools.Popup.Alignment;
+    overlayClass? : string;
+    contentClass? : string;
     modal?: boolean;
 }
 
@@ -41,70 +42,32 @@ export default class popup extends React.Component<Props, State >
     {
         let modal = this.props.modal != null ? this.props.modal : false;
 
-        let style = null;
-        if (modal)
-        {
-            style = 
+        return <components.tools.Popup.Component
+            trigger={this.props.trigger}
+            modal={false}  
+            fullscreen={modal}
+            position={ this.props.position}
+            alignment={ this.props.alignment }
+            overlayClass={this.props.overlayClass}
+            contentClass={this.props.contentClass}
+            >
+  
             {
-                'maxHeight': '100%',
-                'width': '100%',
-                'marginTop': "100px",   //match --header-height + --tiny-gap + 5px ) to match header
-                'border': '0px',
-                'padding': '0px',
-                'background': 'transparent',
+                close => 
+                {
+                    return <transitions.TransitionGroup >
+                    <components.transitions.Fade key={'subreddit_popup'} appear={true}>
+                        <div className={modal ? styles.modalPopupContainer : styles.popupContainer}>
+                            <components.tools.SearchList.component
+                                items={this.props.items} 
+                                onClick={ ( item) => { close(); return true; } }
+                                onAltClick={ ( item) =>  { close(); return true; } }
+                            />
+                        </div>
+                    </components.transitions.Fade>
+                 </transitions.TransitionGroup>
+                }
             }
-        }
-        else
-        {
-            style =
-            {
-                'width': 'auto',
-                'border': '0px',
-                'padding': '0px',
-                'background': 'transparent'
-            }
-        }
-    
-    
-        let overlayStyle =
-        {
-            //'height': '100vh',
-            'background': '#00000080',
-            'animation': animationStyles.fadeIn+" 0.25s",
-            'zIndex': 2  //Necessary when you have relative-position views elsewhere, and to hide other popup triggers
-        }
-
-
-        let position = "bottom left";
-        if (this.props.position != null)
-        {
-            position = this.props.position;
-        }
-
-            return <Popup   trigger={ this.props.trigger } 
-                            contentStyle={style} 
-                            position={position} closeOnDocumentClick
-                            arrow={false}
-                            overlayStyle={overlayStyle}
-                            modal={ modal }
-                            lockScroll={ modal}
-                                                >
-                        {
-                            close => 
-                            {
-                                 return <transitions.TransitionGroup >
-                                            <components.transitions.Fade key={'subreddit_popup'} appear={true}>
-                                                <div className={modal ? styles.modalPopupContainer : styles.popupContainer}>
-                                                    <components.tools.SearchList.component
-                                                        items={this.props.items} 
-                                                        onClick={ ( item) => close() }
-                                                        onAltClick={ ( item) => close() }
-                                                    />
-                                                </div>
-                                            </components.transitions.Fade>
-                                         </transitions.TransitionGroup>
-                            }
-                        }
-                    </Popup>
+        </components.tools.Popup.Component>
     }
 };

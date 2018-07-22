@@ -1,15 +1,8 @@
 import * as React from 'react';
 
 
-import Popup from "reactjs-popup";
-
 import * as styles from 'css/confirmationPopup.scss'
-
-import * as component from '~/client/components/'
-import * as models from '~/common/models';
-
-import expand_caret from 'assets/images/expand_caret.svg'
-import collapse_caret from 'assets/images/collapse_caret.svg'
+import * as components from '~/client/components/'
 
 interface Props 
 {
@@ -79,16 +72,9 @@ export default class confirmationPopup extends React.Component<Props, State >
 
     public render()
     {
-        let style = 
-        {
-            'width': '250px',
-            'border': '0px',
-            'background':'transparent'
-        }
-
-            return <Popup   trigger={ this.props.trigger } 
-                            contentStyle={style} 
-                            position="top center" closeOnDocumentClick modal>
+            return <components.tools.Popup.Component 
+                            trigger={ this.props.trigger } 
+                            modal={true} >
                         {
                             close => 
                             {
@@ -104,6 +90,6 @@ export default class confirmationPopup extends React.Component<Props, State >
                         }
 
 
-                    </Popup>
+                    </components.tools.Popup.Component >
     }
 };
