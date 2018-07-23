@@ -10,6 +10,7 @@ import * as cells from './cells'
 
 import * as Victory from 'victory';
 
+
 import theme from './theme';
 
 //Warning: Failed prop type: Invalid prop `domain` supplied to `VictoryArea`.
@@ -17,7 +18,7 @@ import theme from './theme';
 
 export interface StatsChartItem
 {
-  data : { x: Date, y: number}[];
+  data : { x: number, y: number}[];
   category: StatsCategoryType;
   timeRange : StatsTimeRange;
   limit : number; //Unix time duration

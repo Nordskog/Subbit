@@ -71,11 +71,11 @@ export default class StatsComponent extends React.Component<Props,State>
     let chartObject = this.getChartObject(update.category, update.timeRange);
     if (chartObject != null)
     {
-      chartObject.data.push( { x: new Date(update.data.end * 1000 ), y: update.data.value } );
+      chartObject.data.push( { x: update.data.end * 1000, y: update.data.value } );
 
       //Server-side we keep a backlog of 360 or so points of data.
       //When displaying them here, about half of that range seems decent.
-      let limit = new Date(  ( ( Date.now() / 1000 ) - (chartObject.limit / 2) ) * 1000 );
+      let limit = ( ( Date.now() / 1000 ) - (chartObject.limit / 2) ) * 1000;
 
       for ( let i = 0; i < chartObject.data.length; i++)
       {
@@ -105,7 +105,7 @@ export default class StatsComponent extends React.Component<Props,State>
     {
       chartObject.data = history.data.map( ( entry : StatsDataEntry ) => 
       {
-          return { x: new Date(entry.end * 1000 ), y: entry.value };
+          return { x: entry.end * 1000 , y: entry.value };
       });
 
       chartObject.limit = history.limit;
