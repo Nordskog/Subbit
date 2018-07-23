@@ -1,5 +1,4 @@
-﻿import * as _ from 'lodash';
-import * as jwt from 'jsonwebtoken';
+﻿import * as jwt from 'jsonwebtoken';
 
 import serverConfig from 'root/server_config'
 import * as models from '~/common/models'  

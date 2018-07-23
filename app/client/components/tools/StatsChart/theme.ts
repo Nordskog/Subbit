@@ -1,4 +1,4 @@
-import { assign } from "lodash";
+
 
 // *
 // * Colors
@@ -51,7 +51,9 @@ const baseLabelStyles = {
   strokeWidth: 0
 };
 
-const centeredLabelStyles = assign({ textAnchor: "middle" }, baseLabelStyles);
+const centeredLabelStyles = { ...baseLabelStyles,
+                                textAnchor: "middle" 
+                            };
 // *
 // * Strokes
 // *
@@ -60,15 +62,18 @@ const strokeLinecap = "round";
 const strokeLinejoin = "round";
 
 export default {
-  area: assign({
+  area: (
+    {
+      ...baseProps,
     style: {
       data: {
         fill: grey900
       },
       labels: centeredLabelStyles
     }
-  }, baseProps),
-  axis: assign({
+  }),
+  axis: ({
+    ...baseProps,
     style: {
       axis: {
         fill: "transparent",
@@ -77,7 +82,8 @@ export default {
         strokeLinecap,
         strokeLinejoin
       },
-      axisLabel: assign({}, centeredLabelStyles, {
+      axisLabel: ({
+        ...centeredLabelStyles,
         padding,
         stroke: "transparent"
       }),
@@ -97,12 +103,14 @@ export default {
         strokeLinecap,
         strokeLinejoin
       },
-      tickLabels: assign({}, baseLabelStyles, {
+      tickLabels: ({
+        ...baseLabelStyles,
         fill: blueGrey700
       })
     }
-  }, baseProps),
-  bar: assign({
+  }),
+  bar: ({
+    ...baseProps,
     style: {
       data: {
         fill: blueGrey700,
@@ -111,8 +119,9 @@ export default {
       },
       labels: baseLabelStyles
     }
-  }, baseProps),
-  boxplot: assign({
+  }),
+  boxplot: ({
+    ...baseProps,
     style: {
       max: { padding, stroke: blueGrey700, strokeWidth: 1 },
       maxLabels: baseLabelStyles,
@@ -126,8 +135,9 @@ export default {
       q3Labels: baseLabelStyles
     },
     boxWidth: 20
-  }, baseProps),
-  candlestick: assign({
+  }),
+  candlestick: ({
+    ...baseProps,
     style: {
       data: {
         stroke: blueGrey700
@@ -138,9 +148,10 @@ export default {
       positive: "#ffffff",
       negative: blueGrey700
     }
-  }, baseProps),
+  }),
   chart: baseProps,
-  errorbar: assign({
+  errorbar: ({
+    ...baseProps,
     borderWidth: 8,
     style: {
       data: {
@@ -151,10 +162,11 @@ export default {
       },
       labels: centeredLabelStyles
     }
-  }, baseProps),
-  group: assign({
+  }),
+  group: ({
+    ...baseProps,
     colorScale: colors
-  }, baseProps),
+  }),
   legend: {
     colorScale: colors,
     gutter: 10,
@@ -165,10 +177,11 @@ export default {
         type: "circle"
       },
       labels: baseLabelStyles,
-      title: assign({}, baseLabelStyles, { padding: 5 })
+      title: ({ ...baseLabelStyles, padding: 5 })
     }
   },
-  line: assign({
+  line: ({
+    ...baseProps,
     style: {
       data: {
         fill: "transparent",
@@ -178,8 +191,9 @@ export default {
       },
       labels: centeredLabelStyles
     }
-  }, baseProps),
-  pie: assign({
+  }),
+  pie: ({
+    ...baseProps,
     colorScale: colors,
     style: {
       data: {
@@ -187,10 +201,11 @@ export default {
         stroke: blueGrey50,
         strokeWidth: 1
       },
-      labels: assign({}, baseLabelStyles, { padding: 20 })
+      labels: ({ ...baseLabelStyles, padding: 20 })
     }
-  }, baseProps),
-  scatter: assign({
+  }),
+  scatter: ({
+    ...baseProps,
     style: {
       data: {
         fill: blueGrey700,
@@ -200,12 +215,13 @@ export default {
       },
       labels: centeredLabelStyles
     }
-  }, baseProps),
-  stack: assign({
+  }),
+  stack: ({
+    ...baseProps,
     colorScale: colors
-  }, baseProps),
+  }),
   tooltip: {
-    style: assign({}, centeredLabelStyles, { padding: 5, pointerEvents: "none" }),
+    style: ( { ...centeredLabelStyles, padding: 5, pointerEvents: "none" }),
     flyoutStyle: {
       stroke: grey900,
       strokeWidth: 1,
@@ -215,14 +231,15 @@ export default {
     cornerRadius: 5,
     pointerLength: 10
   },
-  voronoi: assign({
+  voronoi: ({
+    ...baseProps,
     style: {
       data: {
         fill: "transparent",
         stroke: "transparent",
         strokeWidth: 0
       },
-      labels: assign({}, centeredLabelStyles, { padding: 5, pointerEvents: "none" }),
+      labels: ( { ...centeredLabelStyles, padding: 5, pointerEvents: "none" }),
       flyout: {
         stroke: grey900,
         strokeWidth: 1,
@@ -230,5 +247,5 @@ export default {
         pointerEvents: "none"
       }
     }
-  }, baseProps)
+  })
 };
