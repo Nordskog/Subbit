@@ -2,3 +2,4 @@ export import authentication = require('./authentication');
 export import authors = require('./authors');
 export import page = require('./page');
 export import user = require('./user');
+export import session = require('./session');

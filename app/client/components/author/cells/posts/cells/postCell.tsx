@@ -81,7 +81,7 @@ export default class PostCell extends React.Component<Props, null>
                 this.getLink
                 (
                     true,
-                    <div className={styles.infoContainer}>
+                    <div key={"info_container"} className={styles.infoContainer}>
                         {this.getDateCol()}
                         {this.getSubreddit()}
                         {this.getComments()}
@@ -235,7 +235,7 @@ export default class PostCell extends React.Component<Props, null>
 
     getScoreCol()
     {   
-        return <div className={this.props.isTopPost ?  styles.topScoreContainer  :  styles.scoreContainer } >
+        return <div className={this.props.isTopPost ?  styles.topScoreContainer  :  styles.scoreContainer } key={"score_col"} >
                     <span> {tools.number.numberTo4CharDisplayString(this.props.post.score)} </span>
                 </div>
     }

@@ -17,6 +17,16 @@ import * as setup from './setup'
 
 import * as Log from '~/common/log';
 
+import * as routeActions from '~/client/actions/routes'
+import * as sessionActions from '~/client/actions/direct/session'
+
+
+// Last fetched authors are retained in sessionStorage and reloaded
+// so the page can be rendered instantly. Clear if navigation type is not TYPE_BACK_FORWARD
+if (performance.navigation.type != PerformanceNavigation.TYPE_BACK_FORWARD)
+{
+    sessionActions.clear();
+}
 
 //Sets up a toast callback
 setup.setupClientStuff();
@@ -25,15 +35,31 @@ setup.setupClientStuff();
 // Render app
 ///////////////////
 
-const render = App => {
-  const root = document.getElementById('root')
+async function awaitStore(store, thunk, initialDispatch)
+{
+    if (thunk != null)
+    {
 
-  ReactDOM.hydrate(
-        <Provider store={Store.getStore()}>
+        //The route thunk is always called, and is thus called again by us here.
+        //if we await it. May be a bug. Thunks will not execute until this is called.
+        routeActions.notifyReady();
+        await thunk(store);
+    }
+    
+    return store;
+}
+
+async function render(App)
+{
+    const root = document.getElementById('root')
+    const {store, thunk, initialDispatch } = Store.getStore();
+
+    ReactDOM.hydrate(
+        <Provider store={await awaitStore(store, thunk, initialDispatch)}>
             <App />
         </Provider>,
     root
-  )
+    )
 }
 
 render(components.app);
@@ -48,6 +74,7 @@ if (module.hot && process.env.NODE_ENV === 'development')
     Log.I("Hot!");
     module.hot.accept(components.app, () =>
     {
+        console.log("Hot reloading");
         render(components.app)
     })
 }

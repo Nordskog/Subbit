@@ -27,5 +27,5 @@ const FilterDropdown = connect(
        mapDispatchToProps,
 )(component);
 
-export default FilterDropdown;
+export default FilterDropdown as any;
 

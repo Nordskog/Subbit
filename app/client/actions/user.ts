@@ -5,19 +5,26 @@ import { WrapWithHandler } from "~/client/actions/tools/error";
 import { Dispatch, GetState } from "~/client/actions/tools/types";
 
 
-export function getAndUpdateLastVisit()
+export function getAndUpdateLastVisit( loadFromSession : boolean = false)
 {
     return WrapWithHandler( async function (dispatch : Dispatch, getState : GetState)
     {
-        let state: State = getState();
+        let lastVisit : number;
+        if (loadFromSession)
+            actions.directActions.session.loadLastVisit();
+
+        if (lastVisit == null)
+        {
+            let state: State = getState();
+            let token: string = tools.store.getAccessToken(state);
     
-        let token: string = tools.store.getAccessToken(state);
-
-        //No user, no tracking visit
-        if (token == null)
-            return;
-
-        let lastVisit : number = await api.rfy.user.getAndUpdateLastVisit(token);
+            //No user, no tracking visit
+            if (token == null)
+                return;
+    
+            lastVisit = await api.rfy.user.getAndUpdateLastVisit(token);
+            actions.directActions.session.saveLastVisit(lastVisit);
+        }
 
         dispatch({
             type: actions.types.user.LAST_VISIT_UPDATED,

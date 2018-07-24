@@ -14,14 +14,19 @@ import { AuthorEntry } from '~/common/models/data';
 interface Props 
 {
     authors: models.data.AuthorEntry[];
-    filter: string;
+    filter: models.AuthorFilter;
     lastVisit: number;
+
+}
+
+interface State
+{
 
 }
 
 
 
-export default class AuthorsComponent extends React.Component<Props, {} >
+export default class AuthorsComponent extends React.Component<Props, State >
 {
     shouldRenderLastVisitBar()
     {

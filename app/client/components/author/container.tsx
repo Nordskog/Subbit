@@ -32,12 +32,8 @@ function mapDispatchToProps(dispatch: Dispatch) : object
     };
 }
 
-
-const author =
-    connect(
-                mapStateToProps,
-                mapDispatchToProps,
-    )
-        (component);
-
-export default author;
+export default connect(
+            mapStateToProps,
+            mapDispatchToProps,
+)
+    (component) as any; //I give up

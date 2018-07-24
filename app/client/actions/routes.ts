@@ -12,17 +12,31 @@ import { Dispatch, GetState } from '~/client/actions/tools/types';
 
 let firstLoad : boolean = true;
 
-//Awaiting and calling actions without dispatching is for SSR support
+//Route thunks are called multiple times if we await thunk on client side.
+//Might be bug, bug unintended call happens before we await the thunk.
+//Do not execute any thunks until this has been called.
+let awaited : boolean = false;
+export function notifyReady()
+{
+    awaited = true;
+}
 
 export function authorsRoutes()
 {
     return WrapWithHandler( async (dispatch : Dispatch, getState : GetState ) =>
     {
-        actionTools.title.updateTitle(getState);
-        actions.directActions.page.clearPage(true, dispatch);
-        actions.directActions.authentication.loadAuthentication(dispatch, getState);
-        await firstLoadDuties(dispatch, getState);
-        await actions.authors.fetchAuthorsAction(false)(dispatch, getState);
+        if (awaited)
+        {
+            let isFirstLoad : boolean = firstLoad;
+
+            actionTools.title.updateTitle(getState);
+            if (!isFirstLoad)
+                actions.directActions.page.clearPage(true, dispatch);
+            actions.directActions.authentication.loadAuthentication(dispatch, getState);
+            await firstLoadDuties(dispatch, getState);
+            actions.authors.fetchAuthorsAction(false, isFirstLoad)(dispatch, getState); 
+        }
+
     });
 }
 
@@ -30,10 +44,14 @@ export function statsRoute()
 {
     return WrapWithHandler( async (dispatch : Dispatch, getState : GetState ) =>
     {
-        actionTools.title.updateTitle(getState);
-        actions.directActions.page.clearPage(true, dispatch);
-        actions.directActions.authentication.loadAuthentication(dispatch, getState);
-        await firstLoadDuties(dispatch, getState);
+        if (awaited)
+        {
+            actionTools.title.updateTitle(getState);
+            actions.directActions.page.clearPage(true, dispatch);
+            actions.directActions.authentication.loadAuthentication(dispatch, getState);
+            await firstLoadDuties(dispatch, getState);
+        }
+
     });
 }
 
@@ -41,10 +59,14 @@ export function aboutRoute()
 {
     return WrapWithHandler( async (dispatch : Dispatch, getState : GetState ) =>
     {
-        actionTools.title.updateTitle(getState);
-        actions.directActions.page.clearPage(true, dispatch);
-        actions.directActions.authentication.loadAuthentication(dispatch, getState);
-        await firstLoadDuties(dispatch, getState);
+        if (awaited)
+        {
+            actionTools.title.updateTitle(getState);
+            actions.directActions.page.clearPage(true, dispatch);
+            actions.directActions.authentication.loadAuthentication(dispatch, getState);
+            await firstLoadDuties(dispatch, getState);
+        }
+
     });
 }
 
@@ -52,31 +74,33 @@ export function authorizeRoute()
 {
     return WrapWithHandler( async (dispatch : Dispatch, getState : GetState ) =>
     {
-        actionTools.title.updateTitle(getState);
-        let { error, code,  state} = getState().location.query;
-        if (error)
+        if (awaited)
         {
-            dispatch(
+            actionTools.title.updateTitle(getState);
+            let { error, code,  state} = getState().location.query;
+            if (error)
             {
-                type: actions.types.page.LOADING_STATE_CHANGED,
-                payload: 
-                { 
-                    status: LoadingStatus.ERROR,
-
-                }  as actions.types.page.LOADING_STATE_CHANGED
-            });
-
-            throw new AuthorizationException(error);
+                dispatch(
+                {
+                    type: actions.types.page.LOADING_STATE_CHANGED,
+                    payload: 
+                    { 
+                        status: LoadingStatus.ERROR,
+    
+                    }  as actions.types.page.LOADING_STATE_CHANGED
+                });
+    
+                throw new AuthorizationException(error);
+            }
+            else
+            {
+                await actions.authentication.authenticatedWithRedditCode(code,state)(dispatch, getState);
+                dispatch(
+                    { 
+                        type: actions.types.Route.FILTER, payload: { filter: AuthorFilter.SUBSCRIPTIONS } as actions.types.Route.FILTER } 
+                    );
+            }
         }
-        else
-        {
-            await actions.authentication.authenticatedWithRedditCode(code,state)(dispatch, getState);
-            dispatch(
-                { 
-                    type: actions.types.Route.FILTER, payload: { filter: AuthorFilter.SUBSCRIPTIONS } as actions.types.Route.FILTER } 
-                );
-        }
-
     });
 }
 
@@ -87,11 +111,15 @@ async function firstLoadDuties(dispatch : Dispatch, getState : GetState)
     {
         firstLoad = false;
          await Promise.all( [
-                                actions.subscription.fetchSubscriptions()(dispatch, getState),
-                                actions.user.getAndUpdateLastVisit()(dispatch, getState),
+                                actions.subscription.fetchSubscriptions(true)(dispatch, getState),
+                                actions.user.getAndUpdateLastVisit(true)(dispatch, getState),
                                 actions.user.getLocalSettings()(dispatch, getState)
                                 //actions.user.getRemoteSettings()(dispatch, getState)  //Currently unused, so let's skip this call
                             ]);
+
+        return true;
     }
+
+    return false;
 }
 

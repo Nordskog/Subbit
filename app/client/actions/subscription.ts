@@ -8,20 +8,27 @@ import { State } from '~/client/store';
 import { WrapWithHandler } from '~/client/actions/tools/error';
 import { Dispatch, GetState } from '~/client/actions/tools/types';
 
-export function fetchSubscriptions()
+export function fetchSubscriptions( loadFromSession : boolean = false)
 {
     return WrapWithHandler( async function (dispatch : Dispatch, getState : GetState)
     {
-        let state: State = getState();
+        let subscriptions : models.data.Subscription[];
+        
+        if (loadFromSession)
+            subscriptions = actions.directActions.session.loadSubscriptions();
 
-        let filter: string = state.authorState.filter;
-        let token: string = tools.store.getAccessToken(state);
-
-        //No user, no subscriptions
-        if (token == null)
-            return;
-
-        let subscriptions : models.data.Subscription[] = await api.rfy.subscription.fetchSubscriptions( token);
+        if (subscriptions == null)
+        {
+            let state: State = getState();
+            let token: string = tools.store.getAccessToken(state);
+    
+            //No user, no subscriptions
+            if (token == null)
+                return;
+    
+            subscriptions = await api.rfy.subscription.fetchSubscriptions( token);
+            actions.directActions.session.saveSubscriptions(subscriptions);
+        }
 
         dispatch({
             type: actions.types.subscription.SUBSCRIPTIONS_FETCHED,
@@ -36,7 +43,6 @@ export function subscribeToAuthorAction(author : string, subreddits : string[])
     {
         let state: State = getState();
 
-        let filter: string = state.authorState.filter;
         let user: string = tools.store.getUsername(state);
         let token: string = tools.store.getAccessToken(state);
 

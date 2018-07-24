@@ -3,6 +3,7 @@ import { getDefaultAuthorState } from '~/client/reducers/authorReducer'
 import { getDefaultAuthState } from '~/client/reducers/authStateReducer'
 import { getDefaultUserState } from '~/client/reducers/userReducer'
 import { getDefaultSiteState } from '~/client/reducers/siteStateReducer'
+import * as ReduxFirstRouter from 'redux-first-router';
 
 import * as models from '~/common/models'
 
@@ -28,16 +29,22 @@ export function getDefaultState(userInfo?: models.auth.UserInfo) : State
 
 import configureStore from './configureStore'
 import createHistory from 'history/createBrowserHistory'
+import { Store } from 'redux';
+import { RouteThunk } from 'redux-first-router';
 
-let store = null;
-export function getStore()
+let reduxStore = null;
+export function getStore() : { store: Store<State, any>, thunk: (Store) => Promise<RouteThunk<any>>, initialDispatch: any }
 {   
-    if (store == null)
+    if (reduxStore == null)
     {
         const history = createHistory();
-        store = configureStore(history, ( window as any).REDUX_STATE).store;
+        let { store, thunk, initialDispatch} = configureStore(history, ( window as any).REDUX_STATE, );
+        reduxStore = store;
+
+        return { store: store, thunk: thunk, initialDispatch: initialDispatch };
     }
-    return store;
+
+    return { store: reduxStore, thunk: null, initialDispatch: null };
 }
 
 

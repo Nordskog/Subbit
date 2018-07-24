@@ -12,6 +12,7 @@ import { CancellationError } from 'bluebird';
 import { CancelledException, NetworkException, Exception } from '~/common/exceptions';
 import { Dispatch, GetState } from '~/client/actions/tools/types';
 import { WrapWithHandler } from '~/client/actions/tools/error';
+import author from '~/client/components/author/container';
 
 export function changeSubreddit( subreddit : string)
 {
@@ -68,32 +69,48 @@ export function viewAuthor( author: string, subreddit? : string)
     }
 }
 
-export function fetchAuthorsAction ( appendResults: boolean = false)
+export function fetchAuthorsAction ( appendResults: boolean = false, loadFromSession : boolean = false )
 {
     return WrapWithHandler( async function (dispatch : Dispatch, getState : GetState)
     {
         try
         {
-            dispatch
-            ({ 
-                    type: actions.types.page.LOADING_STATE_CHANGED,
-                    payload: 
-                    { 
-                        status: LoadingStatus.LOADING, 
-                    } as actions.types.page.LOADING_STATE_CHANGED
-            });
+            let  authorEntries : models.data.AuthorEntry[];
+            let after : string;
 
-            let { authorEntries, after} = await actions.directActions.authors.getAuthors(dispatch, getState);
+            if (loadFromSession)
+            {
+                authorEntries = actions.directActions.session.loadAuthors();
+                after = actions.directActions.session.loadAfter();
+            }
 
-            dispatch({
-                type: actions.types.authors.FETCH_AUTHORS_COMPLETED,
-                payload: { authors: authorEntries,
-                           end: after == null,
-                           append: appendResults,
-                           after: after
-                }  as actions.types.authors.FETCH_AUTHORS_COMPLETED
-            });
-
+            if (authorEntries == null)
+            {
+                dispatch
+                ({ 
+                        type: actions.types.page.LOADING_STATE_CHANGED,
+                        payload: 
+                        { 
+                            status: LoadingStatus.LOADING, 
+                        } as actions.types.page.LOADING_STATE_CHANGED
+                });
+    
+                let authorData = await actions.directActions.authors.getAuthors(dispatch, getState);
+                authorEntries = authorData.authorEntries;
+                after = authorData.after;
+    
+                //Save to session storage so we can display without reloading
+                {
+                        if (appendResults)
+                        {
+                        actions.directActions.session.saveAuthors( getState().authorState.authors.concat(authorEntries), after);
+                        }
+                        else
+                        {
+                        actions.directActions.session.saveAuthors(authorEntries, after);
+                        }
+                }
+            }
 
             dispatch({
                 type: actions.types.page.LOADING_STATE_CHANGED,
@@ -102,6 +119,16 @@ export function fetchAuthorsAction ( appendResults: boolean = false)
                     status: after == null ? LoadingStatus.END : LoadingStatus.DONE,
 
                 }  as actions.types.page.LOADING_STATE_CHANGED
+            });
+
+            //Dispatch newly loaded authors
+            dispatch({
+                type: actions.types.authors.FETCH_AUTHORS_COMPLETED,
+                payload: { authors: authorEntries,
+                           end: after == null,
+                           append: appendResults,
+                           after: after
+                }  as actions.types.authors.FETCH_AUTHORS_COMPLETED
             });
 
 

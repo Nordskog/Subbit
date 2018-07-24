@@ -4,7 +4,6 @@ let basePath = __dirname;
 let HtmlWebpackPlugin = require('html-webpack-plugin');
 import * as Webpack from 'webpack';
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
-const SpriteLoaderPlugin = require('svg-sprite-loader/plugin');
 const StatsPlugin = require('stats-webpack-plugin')
 
 
@@ -23,7 +22,6 @@ const config = {
         new Webpack.HotModuleReplacementPlugin(),
         new Webpack.NoEmitOnErrorsPlugin(),
         new StatsPlugin('stats.json'),
-        new SpriteLoaderPlugin(),
         new Webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify('development'),
             'process.env.IS_CLIENT' : true

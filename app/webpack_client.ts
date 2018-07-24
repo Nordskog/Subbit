@@ -5,11 +5,9 @@ let basePath = __dirname;
 let HtmlWebpackPlugin = require('html-webpack-plugin');
 import * as Webpack from 'webpack';
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
-const SpriteLoaderPlugin = require('svg-sprite-loader/plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const StatsPlugin = require('stats-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
-
 
 const config = {
     name: 'client',
@@ -52,9 +50,9 @@ const config = {
             'redux-thunk',
             'react-redux',
             'react-toastify',
-            'react-svg',
             'gsap'
         ]
+        
         
     },
     output: {
@@ -182,7 +180,6 @@ const config = {
     plugins: [
         new Webpack.NoEmitOnErrorsPlugin(),
         //new StatsPlugin('stats.json'),
-        new SpriteLoaderPlugin(),
         new Webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify('production'),
         }),
