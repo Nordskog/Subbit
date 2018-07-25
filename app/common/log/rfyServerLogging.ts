@@ -1,5 +1,5 @@
 import * as Winston from 'winston';
-import * as WinstonDailyRotateFile from 'winston-daily-rotate-file';
+import WinstonDailyRotateFile from 'winston-daily-rotate-file';
 import { Severity } from './models';
 import serverConfig from 'root/server_config';
 import * as Path from 'path';

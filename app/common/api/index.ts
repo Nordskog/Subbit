@@ -1,5 +1,12 @@
-export import rfy = require('./rfy');
-export import reddit = require('./reddit');
+import * as rfy from './rfy';
+import * as reddit from './reddit'
+
+export
+{   
+    rfy,
+    reddit
+}
+
 
 export function cancelAll()
 {

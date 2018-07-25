@@ -1,11 +1,16 @@
-export import authentication = require('./authentication');
-export import authors = require('./authors');
-export import subscription = require('./subscription');
-export import routes = require('./routes');
-export import posts = require('./posts');
-export import user = require('./user');
+import * as authentication from './authentication'
+import * as authors from './authors'
+import * as subscription from './subscription'
+import * as routes from './routes'
+import * as posts from './posts'
+import * as user from './user'
 
-export import directActions = require('./direct');
-export import statelessActions = require('./stateless');
+import * as directActions from './direct'
+import * as statelessActions from './stateless'
 
-export import types = require('./actionTypes');
+import * as types from './actionTypes'
+
+export 
+{
+    authentication, authors, subscription, routes, posts, user, directActions, statelessActions, types
+}

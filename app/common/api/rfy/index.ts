@@ -1,5 +1,10 @@
 export * from './rfy';
 
-export import authentication = require('./authentication');
-export import subscription = require('./subscription');
-export import user = require('./user');
+import * as authentication from './authentication'
+import * as subscription from './subscription'
+import * as user from './user'
+
+export 
+{
+    authentication, subscription, user
+}

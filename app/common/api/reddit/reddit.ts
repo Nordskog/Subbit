@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import * as tools from '~/common/tools'
 
-import * as fetch from 'isomorphic-fetch';
+import fetch from 'isomorphic-fetch';
 
 import * as models from '~/common/models';
 

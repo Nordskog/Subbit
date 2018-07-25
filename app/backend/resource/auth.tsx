@@ -78,7 +78,7 @@ router.get('/api/authorize_refresh', async (req: WetlandRequest, res: Express.Re
         let existingAccessToken : models.auth.AccessToken = await authentication.verification.getDecodedTokenWithoutVerifying(token);
         let userInfo : models.auth.UserInfo = authentication.generation.generateUserInfo(user, existingAccessToken.loginType);
 
-        res.json( userInfo.redditAuth );
+        res.json( userInfo.redditAuth );    //TODO we only return the reddit auth? Why generate userinfo? I'm confused
         return;
     }
     catch (err)

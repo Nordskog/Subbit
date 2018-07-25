@@ -1,5 +1,10 @@
-export import authentication = require('./authentication');
-export import authors = require('./authors');
-export import page = require('./page');
-export import user = require('./user');
-export import session = require('./session');
+import * as authentication from './authentication'
+import * as authors from './authors'
+import * as page from './page'
+import * as user from './user'
+import * as session from './session'
+
+export 
+{
+    authentication, authors, page, user, session
+}

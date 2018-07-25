@@ -1,2 +1,7 @@
-export import subreddits = require('./subreddits');
-export import posts = require('./posts');
+import * as subreddits from './subreddits'
+import * as posts from './posts'
+
+export 
+{
+    subreddits, posts
+}

@@ -1,1 +1,6 @@
-export import author = require('./author');
+import * as author from './author'
+
+export 
+{
+    author
+}

@@ -6,7 +6,6 @@ import * as Webpack from 'webpack';
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const StatsPlugin = require('stats-webpack-plugin')
 
-
 import prodConfig from './webpack_client'
 
 const config = {
@@ -43,7 +42,7 @@ const config = {
             'rfyEnvClient.ts'
         ),
         new Webpack.DefinePlugin({
-            "RFY_VERSION": JSON.stringify( process.env.npm_package_version)
+            "process.env.npm_package_version": JSON.stringify( process.env.npm_package_version)
           })
 
     ]

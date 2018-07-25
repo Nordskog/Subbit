@@ -1,16 +1,6 @@
-import * as React from 'react';
-
-
-import * as models from '~/common/models';
-
-import * as tools from '~/common/tools'
-import * as urls from '~/common/urls'
-
-import * as api from '~/common/api'
-
-import * as siteStyles from 'css/site.scss'
-
-import * as gsap from 'gsap'
+import TimelineLite from 'gsap/TimelineLite'; 
+import TweenLite from 'gsap/TweenLite'; 
+import 'gsap/CSSPlugin';
 
 
 import Transition from './Transition';
@@ -21,7 +11,7 @@ import Transition from './Transition';
     come(container : HTMLDivElement, callback)
     {
         let height : number = container.clientHeight;
-        let timeline = new gsap.TimelineMax();
+        let timeline = new TimelineLite();
 
 
         timeline.delay(this.state.delay);
@@ -46,7 +36,7 @@ import Transition from './Transition';
     {
         
         let height : number = container.clientHeight;
-        gsap.TweenMax.fromTo(container, this.state.duration, 
+        TweenLite.fromTo(container, this.state.duration, 
             {
                  height: height,
                  opacity: 1

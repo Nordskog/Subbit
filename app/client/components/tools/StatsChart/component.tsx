@@ -8,10 +8,14 @@ import * as styles from 'css/stats.scss'
 
 import * as cells from './cells'
 
-import * as Victory from 'victory';
+//For tree shaking purposes
+//import { VictoryChart, VictoryVoronoiContainer, VictoryAxis, VictoryArea  } from 'victory';
+import { VictoryChart } from 'victory-chart';
+import { VictoryVoronoiContainer } from 'victory-voronoi-container';
+import { VictoryAxis } from 'victory-axis';
+import { VictoryArea } from 'victory-area';
 
-
-import theme from './theme';
+import theme from './theme'
 
 //Warning: Failed prop type: Invalid prop `domain` supplied to `VictoryArea`.
 //See https://github.com/FormidableLabs/victory/issues/659
@@ -96,18 +100,18 @@ export default class StatsChartComponent extends React.Component<Props,State>
     {this.props.title}
     </div>
     
-    <Victory.VictoryChart 
+    <VictoryChart 
               scale={ {x: "time", y: "linear"}}
               theme={theme as any}
               padding={ { top:0, bottom: 10, left: 80, right: 20 }}
               height={100}
               width={350}
               containerComponent={
-                <Victory.VictoryVoronoiContainer labelComponent={<cells.StatsChartTooltip height={height} width={width} formatTooltip={this.props.formatTooltip} /> }  voronoiDimension="x" labels={(d) =>  d }/>
+                <VictoryVoronoiContainer labelComponent={<cells.StatsChartTooltip height={height} width={width} formatTooltip={this.props.formatTooltip} /> }  voronoiDimension="x" labels={(d) =>  d }/>
               }
               >
 
-                <Victory.VictoryAxis
+                <VictoryAxis
                   style={{
                     axisLabel: {fontSize: labelSize, padding: 30},
                     tickLabels: {fontSize: labelSize, padding: 5}
@@ -115,7 +119,7 @@ export default class StatsChartComponent extends React.Component<Props,State>
                   tickCount={3}
                   />
 
-                <Victory.VictoryAxis
+                <VictoryAxis
 
                   dependentAxis={true}
                   style={{
@@ -129,12 +133,12 @@ export default class StatsChartComponent extends React.Component<Props,State>
                   />
 
                   
-                  <Victory.VictoryArea
+                  <VictoryArea
                         data={this.getData()}
                         style={{ data: { stroke: "#c43a31", fill: "#70201a" }}}
                     />
 
-            </Victory.VictoryChart>
+            </VictoryChart>
 
             </div>
   }

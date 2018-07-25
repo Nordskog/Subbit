@@ -1,15 +1,25 @@
-export import store = require('./store');
-export import time = require('./time');
-export import url = require('./url');
-export import number = require('./number');
-export import jwt = require('./jwt');
-export import query = require('./query');
-export import reddit = require('./reddit');
+import * as store from './store'
+import * as time from './time'
+import * as url from './url'
+import * as number from './number'
+import * as jwt from './jwt'
+import * as query from './query'
+import * as reddit from './reddit'
+import * as css from './css'
+import * as string from './string'
+import * as env from './env'
+import * as http from '~/common/tools/http'
+
+export 
+{
+    store, time, url, number, jwt, query, reddit, css, string, env, http
+}
+
+
+
+
+
 export {default as FetchQueue, RateLimitInfo as RateLimitInfo} from './FetchQueue'
-export import css = require('./css');
-export import string = require('./string');
-export import env = require('./env');
-export import http = require('~/common/tools/http');
 
 export function removeNullChars(str : string)
 {

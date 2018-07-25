@@ -1,5 +1,6 @@
 import * as React from 'react';
-import * as gsap from 'gsap'
+import TimelineLite from 'gsap/TimelineLite'; import 'gsap/CSSPlugin';
+
 
 interface Props
 {
@@ -17,7 +18,7 @@ interface State
 {
     container : HTMLDivElement;
     prevHeight : number;
-    timeline : gsap.TimelineMax;
+    timeline : TimelineLite;
     
     constructor( props : Props)
     {
@@ -47,7 +48,7 @@ interface State
                     }
                     else
                     {
-                        this.timeline = new gsap.TimelineMax();
+                        this.timeline = new TimelineLite();
                         this.timeline.fromTo(this.container, this.state.duration, 
                             { 
                                 height: this.prevHeight

@@ -1,4 +1,9 @@
-export import subscriptions = require('./subscriptions');
-export import user = require('./user');
-export import authors = require('./authors');
-export import stats = require('./stats');
+import * as subscriptions from './subscriptions'
+import * as user from './user'
+import * as authors from './authors'
+import * as stats from './stats'
+
+export 
+{
+    subscriptions, user, authors, stats
+}

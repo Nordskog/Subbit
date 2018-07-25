@@ -1,6 +1,11 @@
-export import stats = require('./stats');
-export import errors = require('./errors');
-export import auth = require('./auth');
+import * as stats from './stats'
+import * as errors from './errors'
+import * as auth from './auth'
+
+export 
+{
+    stats, errors, auth
+}
 
 import * as keepAlive from '~/client/websocket/keepAlive'
 

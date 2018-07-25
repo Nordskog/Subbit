@@ -7,17 +7,12 @@ import * as models from '~/common/models'
 import { State } from '~/client/store';
 import { WrapWithHandler } from '~/client/actions/tools/error';
 import { Dispatch, GetState } from '~/client/actions/tools/types';
-import { decodeTokensToUserInfo } from '~/common/tools/jwt';
 
 export function authenticatedWithRedditCode(code : string, state : string)
 {
     return WrapWithHandler( async (dispatch : Dispatch, getState : GetState) =>
     {
         let userInfo : models.auth.UserInfo = await api.rfy.authentication.authenticate(code,state);
-
-        //Both id_token and the access_token are in string form.
-        //We need the former.
-        userInfo = decodeTokensToUserInfo(userInfo.id_token.raw, userInfo.access_token, userInfo.redditAuth);
 
         actions.directActions.authentication.saveAuthentication(userInfo);
 

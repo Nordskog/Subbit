@@ -1,6 +1,11 @@
-export import urls = require('./urls');
-export import api = require('./api');
-export import tools = require('./tools');
-export import models = require('./models');
-export import exceptions = require('./exceptions');
-export import log = require('./log');
+import * as urls from './urls'
+import * as api from './api'
+import * as tools from './tools'
+import * as models from './models'
+import * as exceptions from './exceptions'
+import * as log from './log'
+
+export 
+{
+    urls, api, tools, models, exceptions, log
+}

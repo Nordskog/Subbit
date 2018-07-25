@@ -3,7 +3,7 @@ export { scrollEndDetector as scrollEndDetector } from './scrollEndDetector'
 export { SubredditDropdown as SubredditDropdown } from './subredditDropdown'
 export { confirmationPopup as confirmationPopup } from './confirmationPopup'
 export { Toggle as Toggle, ToggleItem as ToggleItem } from './toggle'
-export import SearchList = require('./SearchList');
+
 export { default as CountdownToast } from './CountdownToast';
 export {default as LoadingIcon } from './LoadingIcon'
 export { LoadingProgress, LoadingProgressTest } from './LoadingProgress'
@@ -13,6 +13,14 @@ export { Message, MessageType} from './message';
 export { FilterDropdown } from './filterDropdown'
 export { ConfirmationDropdown } from './ConfirmationDropdown'
 export { OptionDropdown } from './optionDropdown'
-export import StatsChart = require('./StatsChart');
+
 export { default as Checkbox } from './Checkbox';
-export import Popup = require('./popup');
+
+import * as SearchList from './SearchList'
+import * as StatsChart from './StatsChart'
+import * as Popup from './popup'
+
+export 
+{
+    StatsChart, Popup, SearchList
+}

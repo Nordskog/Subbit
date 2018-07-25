@@ -1,3 +1,8 @@
-export import generation = require('./generation');
-export import verification = require('./verification');
-export import redditAuth = require('./redditAuth');
+import * as generation from './generation'
+import * as verification from './verification'
+import * as redditAuth from './redditAuth'
+
+export 
+{
+    generation, verification, redditAuth
+}

@@ -55,7 +55,7 @@ export function saveAuthentication( userInfo : models.auth.UserInfo)
     if (userInfo.id_token.loginType == LoginType.SESSION)
         storage = sessionStorage;
 
-    storage.setItem('id_token', userInfo.id_token.raw);
+    storage.setItem('id_token', JSON.stringify(userInfo.id_token) );
     storage.setItem('access_token', userInfo.access_token);
     storage.setItem('reddit_auth', JSON.stringify(userInfo.redditAuth ) );
 }
@@ -95,7 +95,7 @@ export function loadAuthentication(dispatch : Dispatch, getState : GetState)
         //If still null then we don't have any stored credentials
         if (id_token_raw != null && access_token != null && reddit_auth_json != null)
         {
-            let userInfo : models.auth.UserInfo = tools.jwt.decodeTokensToUserInfo(id_token_raw, access_token, JSON.parse(reddit_auth_json ) );
+            let userInfo : models.auth.UserInfo = tools.jwt.combineUserInfo(JSON.parse(id_token_raw), access_token, JSON.parse(reddit_auth_json ) );
             
             dispatch({
                 type: actions.types.authentication.LOGIN_SUCCESS,

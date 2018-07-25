@@ -1,9 +1,14 @@
-export import auth = require('./auth');
-export import data = require('./data');
-export import state = require('./state');
-export import stats = require('./stats');
-export import reddit = require('./reddit');
+import * as auth from './auth';
+import * as data from './data';
+import * as state from './state';
+import * as stats from './stats';
+import * as reddit from './reddit';
 export * from './Action';
+
+export
+{
+    auth, data, state, stats, reddit
+}
 
 export enum AuthorFilter
 {

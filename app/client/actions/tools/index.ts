@@ -1,3 +1,8 @@
-export import error = require('./error');
-export import types = require('./types');
-export import title = require('./title');
+import * as error from './error'
+import * as types from './types'
+import * as title from './title'
+
+export 
+{
+    error, types, title
+}

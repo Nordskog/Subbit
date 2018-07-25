@@ -16,16 +16,21 @@ export enum Scope
     STATS = 'STATS'
 };
 
-export function createIdToken(user: Entities.User, loginType : models.auth.LoginType)
+export function createIdToken(user: Entities.User, loginType : models.auth.LoginType) : models.auth.IdToken
 {
     //id token info is only used to toggle visibility of ui elements; don't never really trust it.
-    return jwt.sign(
-        {
-            username: user.username,
-            admin_access: user.admin_access,
-            stats_access: user.stats_access,
-            loginType: loginType 
-        } as models.auth.IdToken, serverConfig.token.privateKey, { expiresIn: '1 year' });
+    let token : models.auth.IdToken = {
+        username: user.username,
+        admin_access: user.admin_access,
+        stats_access: user.stats_access,
+        loginType: loginType 
+    };
+
+    let token_raw = jwt.sign( token, serverConfig.token.privateKey, { expiresIn: '1 year' });
+    token.raw = token_raw;
+
+    return token;
+
 }
 
 export function createAccessToken(user : Entities.User, loginType : models.auth.LoginType)
@@ -92,11 +97,11 @@ function genJti()
 
 export function generateUserInfo( user : Entities.User, loginType : models.auth.LoginType)
 {
-    let id_token : string = createIdToken(user, loginType);
+    let id_token : models.auth.IdToken = createIdToken(user, loginType);
     let access_token : string = createAccessToken(user, loginType);
 
     let userInfo: models.auth.UserInfo = {
-        id_token: { raw:  id_token },
+        id_token: id_token,
         access_token: access_token,
         redditAuth : {
             access_token : user.auth.access_token,

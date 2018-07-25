@@ -6,8 +6,9 @@ let HtmlWebpackPlugin = require('html-webpack-plugin');
 import * as Webpack from 'webpack';
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
-const StatsPlugin = require('stats-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+//const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 
 const config = {
     name: 'client',
@@ -39,21 +40,7 @@ const config = {
             '../css/confirmationPopup.scss',
             'react-toastify/dist/ReactToastify.css'
         ],
-        
-        vendor: [
-            'react',
-            'react-dom',
-            'redux',
-            'redux-first-router',
-            'redux-first-router-link',
-            'history/createBrowserHistory',
-            'redux-thunk',
-            'react-redux',
-            'react-toastify',
-            'gsap'
-        ]
-        
-        
+    
     },
     output: {
         filename: '[name].js',
@@ -62,16 +49,6 @@ const config = {
     },
     module: {
         rules: [
-
-            {
-                //gsap doesn't get transpiled, so use babel for that
-                test: /\.js(x?)$/,
-                include: /gsap/,
-                loader: "babel-loader",
-                options: {
-                    presets: ["@babel/preset-env"]  //I don't understand babel configs
-                }
-            },
             {
                 test: /\.tsx?$/,
                 exclude: /node_modules/,
@@ -179,7 +156,6 @@ const config = {
     },
     plugins: [
         new Webpack.NoEmitOnErrorsPlugin(),
-        //new StatsPlugin('stats.json'),
         new Webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify('production'),
         }),
@@ -190,7 +166,6 @@ const config = {
             filename: "index.html",
             inject: "body"
         }),
-        new UglifyJsPlugin(), //Default config is pretty good
         new Webpack.NormalModuleReplacementPlugin(   //Replace nodejs log library with console output on client
             /rfyServerLogging.ts/,
             'rfyClientLogging.ts'
@@ -199,9 +174,20 @@ const config = {
             /rfyEnvServer.ts/,
             'rfyEnvClient.ts'
         ),
+        //Merge Victory's ten-million lodash distros
+        new LodashModuleReplacementPlugin({
+            currying: true,
+            flattening: true,
+            paths: true,
+            placeholders: true,
+            shorthands: true
+          }),
         new Webpack.DefinePlugin({
-            "RFY_VERSION": JSON.stringify( process.env.npm_package_version)
-          })
+            "process.env.npm_package_version": JSON.stringify( process.env.npm_package_version)
+          }),
+        new UglifyJsPlugin(
+        ), //Default config is pretty good
+        //new BundleAnalyzerPlugin()
     ]
 };
 

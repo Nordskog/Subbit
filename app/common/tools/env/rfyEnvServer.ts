@@ -9,8 +9,3 @@ export function getUseragent()
 {
     return serverConfig.server.userAgent;
 }
-
-export function getVersion()
-{
-    return JSON.stringify(process.env.npm_package_version);
-}

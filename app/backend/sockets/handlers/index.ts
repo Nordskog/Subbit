@@ -1,1 +1,6 @@
-export import stats = require('./stats');
+import * as stats from './stats'
+
+export
+{
+    stats
+}

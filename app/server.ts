@@ -7,6 +7,7 @@ require('module-alias').addAlias("css", __dirname + "/../css");
 require('module-alias').addAlias("root", __dirname + "/../");
 
 
+
 let debug = require('debug');
 let path = require('path');
 
@@ -16,9 +17,9 @@ import * as setup from '~/setup'
 
 import * as RFY from '~/backend/rfy';
 
-import * as webpack from 'webpack'
+import Webpack from 'webpack'
 
-import * as Express from 'express';
+import Express from 'express';
 
 import * as stats from '~/backend/stats'
 
@@ -92,7 +93,7 @@ async function setupMain()
     {
         Log.I("Server configuration: DEV");
 
-        const clientCompiler = webpack(<any>clientConfigDev);
+        const clientCompiler = Webpack(<any>clientConfigDev);
 
         app.use(webpackDevMiddleware(clientCompiler, { publicPath }))
         app.use(webpackHotMiddleware(clientCompiler))

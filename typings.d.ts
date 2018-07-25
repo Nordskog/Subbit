@@ -5,7 +5,7 @@ declare module '*.svg';
 declare module 'victory'
 {
     export class VictoryVoronoiContainer extends React.Component<any, any> {}
-    export class VictoryTooltip extends React.Component<any, any> {}
+    //export class VictoryTooltip extends React.Component<any, any> {}
 
 
     export interface VictoryAxisProps
