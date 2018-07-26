@@ -3,6 +3,7 @@ import * as urls from '~/common/urls'
 import * as tools from '~/common/tools'
 import { NetworkException, Exception } from '~/common/exceptions';
 import { exceptions } from '~/common';
+import config from 'root/config'
 
 
 export async function getRequest<T>(url : string, parameters? : any, access_token?: string) : Promise<T>
@@ -27,7 +28,8 @@ export async function getRequest<T>(url : string, parameters? : any, access_toke
             throw err;
         else
         {
-            let exception = new NetworkException(null, err.message, url);
+            //Browser does not provide any useful information.
+            let exception = new NetworkException(null, "Could not contact "+config.client.siteName+" server", url);
             exceptions.appendStack(exception, stacktrace);
             throw exception;
         }
@@ -68,7 +70,8 @@ export async function postRequest<T, A>(url : string, request : models.Action<A>
             throw err;
         else
         {
-            let exception = new NetworkException(null, err.message, url);
+            //Browser does not provide any useful information.
+            let exception = new NetworkException(null, "Could not contact "+config.client.siteName+" server", url);
             exceptions.appendStack(exception, stacktrace);
             throw exception;
         }

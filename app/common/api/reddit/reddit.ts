@@ -56,7 +56,9 @@ export async function getRequest<T>(url : string, parameters? : any, auth?: mode
             throw err;
         else
         {
-            let exception = new NetworkException(null, err.message, url);
+            //Especially when working work cors, the browser does not provide
+            //any useful information in this case.
+            let exception = new NetworkException(null, "Could not access Reddit", url);
             exceptions.appendStack(exception, stacktrace);
             throw exception;
         }
@@ -101,7 +103,9 @@ export async function postRequest<T, A>(url : string, request : models.Action<A>
             throw err;
         else
         {
-            let exception = new NetworkException(null, err.message, url);
+            //Especially when working work cors, the browser does not provide
+            //any useful information in this case.
+            let exception = new NetworkException(null, "Could not access Reddit", url);
             exceptions.appendStack(exception, stacktrace);
             throw exception;
         }
