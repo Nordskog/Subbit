@@ -10,8 +10,10 @@ export function getAndUpdateLastVisit( loadFromSession : boolean = false)
     return WrapWithHandler( async function (dispatch : Dispatch, getState : GetState)
     {
         let lastVisit : number;
-        if (loadFromSession)
-            actions.directActions.session.loadLastVisit();
+        if (loadFromSession != null)
+        {
+            lastVisit = actions.directActions.session.loadLastVisit();
+        }
 
         if (lastVisit == null)
         {
