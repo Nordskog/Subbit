@@ -7,6 +7,7 @@ import * as tools from '~/common/tools'
 import { State } from '~/client/store';
 import { WrapWithHandler } from '~/client/actions/tools/error';
 import { Dispatch, GetState } from '~/client/actions/tools/types';
+import { Subscription } from '~/common/models/data';
 
 export function fetchSubscriptions( loadFromSession : boolean = false)
 {
@@ -46,8 +47,19 @@ export function subscribeToAuthorAction(author : string, subreddits : string[])
         let user: string = tools.store.getUsername(state);
         let token: string = tools.store.getAccessToken(state);
 
-        let subscription : models.data.Subscription = await api.rfy.subscription.subscribe(user, author, token, subreddits);
+        //Dispatch dummy subscription to immediately update ui
+        //When we receive a reply with a sub id from the server we dispatch another update
+        //and the ui will display the manage subscribed subreddits button.
+        {
+            let dummySubscription : Subscription = getDummySubscription(author, null, null, ...subreddits);
+            dispatch({
+                type: actions.types.subscription.SUBSCRIPTION_ADDED,
+                payload: dummySubscription as actions.types.subscription.SUBSCRIPTION_ADDED
+            });
+        }
 
+        //Await actual response from server and dispatch when received
+        let subscription : models.data.Subscription = await api.rfy.subscription.subscribe(user, author, token, subreddits);
         dispatch({
             type: actions.types.subscription.SUBSCRIPTION_ADDED,
             payload: subscription as actions.types.subscription.SUBSCRIPTION_ADDED
@@ -62,7 +74,8 @@ export function unsubscribeFromAuthor(subscription: models.data.Subscription)
         let state: State = getState();
         let token: string = tools.store.getAccessToken(state);
 
-        let success : boolean = await api.rfy.subscription.unsubscribe(subscription.id, token);
+        //No point in awaiting this
+        api.rfy.subscription.unsubscribe(subscription.id, token);
 
         dispatch({
             type: actions.types.subscription.SUBSCRIPTION_REMOVED,
@@ -71,7 +84,7 @@ export function unsubscribeFromAuthor(subscription: models.data.Subscription)
     });
 }
 
-export function addSubredditToSubscriptionAction(subscription_id : number, subreddit_name : string)
+export function addSubredditToSubscriptionAction(existingSubscription : Subscription, subreddit_name : string)
 {
     return WrapWithHandler( async function (dispatch : Dispatch, getState : GetState)
     {
@@ -81,16 +94,22 @@ export function addSubredditToSubscriptionAction(subscription_id : number, subre
         let user: string = tools.store.getUsername(state);
         let token: string = tools.store.getAccessToken(state);
 
-        let subscription : models.data.Subscription = await api.rfy.subscription.addSubreddit(subscription_id, subreddit_name, token);
+        //Dispatch dummy subscription to immediately update ui
+        //This will not be updated later
+        {
+            let dummySubscription : Subscription = getDummySubscription(null, existingSubscription, null, subreddit_name);
+            dispatch({
+                type: actions.types.subscription.SUBSCRIPTION_CHANGED,
+                payload: dummySubscription as actions.types.subscription.SUBSCRIPTION_CHANGED
+            });
+        }
 
-        dispatch({
-            type: actions.types.subscription.SUBSCRIPTION_CHANGED,
-            payload: subscription as actions.types.subscription.SUBSCRIPTION_CHANGED
-        });
+        let subscription : models.data.Subscription = await api.rfy.subscription.addSubreddit(existingSubscription.id, subreddit_name, token);
+
     });
 }
 
-export function removeSubredditFromSubscriptionAction(subscription_id : number, subreddit_name : string)
+export function removeSubredditFromSubscriptionAction(existingSubscription : Subscription, subreddit_name : string)
 {
     return WrapWithHandler(  async function (dispatch : Dispatch, getState : GetState)
     {
@@ -100,14 +119,61 @@ export function removeSubredditFromSubscriptionAction(subscription_id : number, 
         let user: string = tools.store.getUsername(state);
         let token: string = tools.store.getAccessToken(state);
 
-        let subscription : models.data.Subscription = await api.rfy.subscription.removeSubreddit(subscription_id, subreddit_name, token);
-  
-        dispatch({
-            type: actions.types.subscription.SUBSCRIPTION_CHANGED,
-            payload: subscription as actions.types.subscription.SUBSCRIPTION_CHANGED
-        });
-        
+        //Dispatch dummy subscription to immediately update ui
+        //This will not be updated later
+        {
+            let dummySubscription : Subscription = getDummySubscription(null, existingSubscription, subreddit_name );
+            dispatch({
+                type: actions.types.subscription.SUBSCRIPTION_CHANGED,
+                payload: dummySubscription as actions.types.subscription.SUBSCRIPTION_CHANGED
+            });
+        }
+
+        let subscription : models.data.Subscription = await api.rfy.subscription.removeSubreddit(existingSubscription.id, subreddit_name, token);
     });
 }
 
 
+//////////////////////
+// Utility
+///////////////////////
+
+function getDummySubscription( author : string, existingSubscription : Subscription,  removeSubreddit : string, ...newSubreddits : string[])
+{
+    let id = null;
+    let user = null;
+
+    if (existingSubscription != null)
+    {
+        id = existingSubscription.id;
+        user = existingSubscription.user;
+        author = existingSubscription.author;
+
+        for (let subSubreddit of existingSubscription.subreddits)
+        {
+            newSubreddits.push( subSubreddit.name );
+        }
+    }
+
+    if (removeSubreddit != null )
+    {
+        newSubreddits = existingSubscription.subreddits
+        .filter( (subsub) => subsub.name.toLowerCase() != removeSubreddit.toLowerCase() )
+        .map( subsub => subsub.name );
+    }
+
+    return {
+        author: author,
+        subscribed: true,
+        id: id,
+        user: user,
+        subreddits: newSubreddits.map( name => 
+            {
+                return {
+                    id: null,
+                    name: name,
+                    subscribed: true
+                }
+            })
+    }
+}

@@ -5,6 +5,7 @@ import { State } from '~/client/store'
 import * as actions from '~/client/actions'
 import * as models from '~/common/models'
 import { Dispatch } from '~/client/actions/tools/types';
+import { Subscription } from '~/common/models/data';
 
 function mapStateToProps(state: State )
 {
@@ -26,8 +27,8 @@ function mapDispatchToProps(dispatch: Dispatch) : object
                 unsubscribe: (sub: models.data.Subscription) => { dispatch(actions.subscription.unsubscribeFromAuthor(sub)) },
                 fetchPosts: (author : models.data.AuthorEntry, count : number) => { dispatch(actions.authors.fetchPosts( author, count)) },
                 fetchMorePosts: (author : models.data.AuthorEntry, count : number) => { dispatch(actions.authors.fetchMorePosts( [author], count)) },
-                addSubscriptionSubreddit: (subscription : number, subreddit : string) => { dispatch(actions.subscription.addSubredditToSubscriptionAction(subscription, subreddit)) },
-                removeSubscriptionSubreddit: (subscription : number, subreddit : string) => { dispatch(actions.subscription.removeSubredditFromSubscriptionAction(subscription, subreddit)) },
+                addSubscriptionSubreddit: (subscription : Subscription, subreddit : string) => { dispatch(actions.subscription.addSubredditToSubscriptionAction(subscription, subreddit)) },
+                removeSubscriptionSubreddit: (subscription : Subscription, subreddit : string) => { dispatch(actions.subscription.removeSubredditFromSubscriptionAction(subscription, subreddit)) },
                 goToSubscriptions: () => { dispatch(actions.authors.changeFilter(models.AuthorFilter.SUBSCRIPTIONS)) },
     };
 }

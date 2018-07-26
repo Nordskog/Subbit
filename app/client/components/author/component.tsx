@@ -28,6 +28,12 @@ import SubscriptionSubreddit from '~/common/models/data/SubscriptionSubreddit';
 
 
 import * as actions from '~/client/actions'
+import { Subscription } from '~/common/models/data';
+
+enum SubscriptionState
+{
+    UNSUBSCRIBED, SUBSCRIBED_ALL, SUBSCRIBED_PARTIAL, SUBSCRIBED_NOT_SUBREDDIT
+}
 
 interface Props
 {
@@ -39,8 +45,8 @@ interface Props
     authenticated: boolean;
     subscribe(author: string, subreddits : string[] ): void;
     unsubscribe(sub: models.data.Subscription): void;
-    addSubscriptionSubreddit(subscription : number, subreddit : string ): void;
-    removeSubscriptionSubreddit(subscription : number, subreddit : string): void;
+    addSubscriptionSubreddit(subscription : Subscription, subreddit : string ): void;
+    removeSubscriptionSubreddit(subscription : Subscription, subreddit : string): void;
     fetchPosts(author : models.data.AuthorEntry, count : number): void;
     fetchMorePosts(author : models.data.AuthorEntry, count : number): void;
     searchSubreddits( name : string) : Promise< string[] >;
@@ -63,7 +69,7 @@ export default class AuthorCell extends React.Component<Props, State>
     constructor(props)
     {
         super(props);
-        this.state = { postsExpanded : false, subredditsExpanded: false, subscriptionsModified: false, awaitingPosts : false, prevProps: props};
+        this.state = { postsExpanded : false, subredditsExpanded: false, subscriptionsModified: false, awaitingPosts : false, prevProps: props };
 
         this.handleSubscribeClick = this.handleSubscribeClick.bind(this);
         this.handleUnsubscribeClick = this.handleUnsubscribeClick.bind(this);
@@ -156,7 +162,7 @@ export default class AuthorCell extends React.Component<Props, State>
 
     render()
     {
-        return <div className={ this.isSubscribed() ? styles.subscribedAuthor : styles.author} key = { this.props.author.author.name } ref={ (c) => {this.container = c}} >
+        return <div className={ this.isSubscribed(this.props.author.subscription) ? styles.subscribedAuthor : styles.author} key = { this.props.author.author.name } ref={ (c) => {this.container = c}} >
             <transitions.TransitionGroup component={'div'} className={styles.authorHeader}>
                 {this.getButton()}
                 {this.getShowSubredditsButton()}
@@ -245,7 +251,7 @@ export default class AuthorCell extends React.Component<Props, State>
 
     getSubscribedSubreddits()
     {
-        if ( this.isSubscribed() && this.state.subredditsExpanded)
+        if ( this.isSubscribed(this.props.author.subscription) && this.state.subredditsExpanded)
         {
             let subSearch : components.tools.SearchList.SearchItem = {
                 items: this.props.author.subscription.subreddits.map(
@@ -269,7 +275,7 @@ export default class AuthorCell extends React.Component<Props, State>
                         if (item.highlighted)
                         {
                             this.setState( { subscriptionsModified: true } );
-                            this.props.removeSubscriptionSubreddit(this.props.author.subscription.id, item.name);
+                            this.props.removeSubscriptionSubreddit(this.props.author.subscription, item.name);
                         }
                         else
                         {
@@ -280,7 +286,7 @@ export default class AuthorCell extends React.Component<Props, State>
                             }
 
                             this.setState( { subscriptionsModified: true } );
-                            this.props.addSubscriptionSubreddit(this.props.author.subscription.id, item.name);
+                            this.props.addSubscriptionSubreddit(this.props.author.subscription, item.name);
                         }
                     }
             }
@@ -299,19 +305,19 @@ export default class AuthorCell extends React.Component<Props, State>
         return null;
     }
 
-    isSubscribed() : boolean
+    isSubscribed( sub : Subscription ) : boolean
     {
-       return (this.props.author.subscription != null && ( this.props.author.subscription.subscribed == null || this.props.author.subscription.subscribed )   )
+       return (sub != null && ( sub.subscribed == null || sub.subscribed )   )
     }
 
-    isSubscribedInSubreddit() : boolean 
+    isSubscribedInSubreddit( sub : Subscription ) : boolean 
     {
         //If we are subscribed to the user, but not in the currently selected subreddit
-        if ( this.isSubscribed() && this.props.subreddit != null )
+        if ( this.isSubscribed( sub ) && this.props.subreddit != null )
         {
-            for ( let i = 0; i < this.props.author.subscription.subreddits.length; i++)
+            for ( let i = 0; i < sub.subreddits.length; i++)
             {
-                if (this.props.author.subscription.subreddits[i].name.toLowerCase() == this.props.subreddit.toLowerCase())
+                if (sub.subreddits[i].name.toLowerCase() == this.props.subreddit.toLowerCase())
                 {
                     return true;
                 }
@@ -323,11 +329,11 @@ export default class AuthorCell extends React.Component<Props, State>
         return true;
     }
 
-    isSubscribedAll() : boolean 
+    isSubscribedAll( sub : Subscription ) : boolean 
     {
-        if (this.isSubscribed())
+        if ( this.isSubscribed( sub ) )
         {
-            if (this.props.author.subscription.subreddits.length < 1)
+            if (sub.subreddits.length < 1)
             {
                 return true;
             }
@@ -337,34 +343,49 @@ export default class AuthorCell extends React.Component<Props, State>
 
     }
 
-    getButton()
+    getSubscriptionState( sub : Subscription) : SubscriptionState
     {
-        if (this.isSubscribed())
+        if (this.isSubscribed(sub))
         {
-            if (this.isSubscribedAll())
+            if (this.isSubscribedAll(sub))
             {
             
                 //Full star, click unsubscribes all
-                return this.getUnsubscribeButton(false);
+                return SubscriptionState.SUBSCRIBED_ALL;
             }
             else
             {
-                if (this.isSubscribedInSubreddit())
+                if (this.isSubscribedInSubreddit(sub))
                 {
                     //Display full star with hole? Click unsubscribes all
-                    
-                    return this.getUnsubscribeButton(true);
+                    return SubscriptionState.SUBSCRIBED_PARTIAL;
                 }
                 else
                 {
-                    return this.getSubscribeSubredditButton();
+                    return SubscriptionState.SUBSCRIBED_NOT_SUBREDDIT;
                 }
             }
-
         }
         else
         {
-            return this.getSubscribeButton();
+            return SubscriptionState.UNSUBSCRIBED;
+        }
+    }
+
+    getButton()
+    {
+        let subState : SubscriptionState = this.getSubscriptionState( this.props.author.subscription );
+
+        switch(subState)
+        {
+            case SubscriptionState.UNSUBSCRIBED:
+                return this.getSubscribeButton();
+            case SubscriptionState.SUBSCRIBED_ALL:
+                return this.getUnsubscribeButton(false);
+            case SubscriptionState.SUBSCRIBED_PARTIAL:
+                return this.getUnsubscribeButton(true);
+            case SubscriptionState.SUBSCRIBED_NOT_SUBREDDIT:
+                return this.getSubscribeSubredditButton();
         }
     }
 
@@ -439,12 +460,22 @@ export default class AuthorCell extends React.Component<Props, State>
 
     getShowSubredditsButton()
     {
-        if ( this.isSubscribed() )
+        let subState : SubscriptionState = this.getSubscriptionState( this.props.author.subscription );
+        let visible = subState != SubscriptionState.UNSUBSCRIBED;
+        if (visible)
+        {
+            //Do not display if temporary subscription ( present but no id )
+            if (this.props.author.subscription.id == null)
+                visible = false;
+        }
+
+        if ( visible )
         {
             //Note that all components have the same outer key, but the inner key is different.
             //This is because chrome will not render svgs with dynamic hrefs.
             //We still want transitions to treat them all the same, so we give the container the same key,
             //and make react treat them as different instances by changing the inner key.
+            //Later: SVGs are now inlined so this probably doesn't matter.
             if (this.state.awaitingPosts)
             {
                 return <components.transitions.FadeHorizontalResize key={'show_subreddits_button'}>
@@ -477,10 +508,14 @@ export default class AuthorCell extends React.Component<Props, State>
         }
     }
 
+    ////////////////////////////
+    // Star click handlers
+    ////////////////////////////
+
     handleManageSubscriptionsClick()
     {
-        //Waiting to return to posts view after making changes, do nothing.
-        if (this.state.awaitingPosts)
+        //Waiting for posts or sub info from server.
+        if (this.state.awaitingPosts ) 
         {
             return;
         }
@@ -505,8 +540,6 @@ export default class AuthorCell extends React.Component<Props, State>
             //Reset modified bool to false
             this.setState( { subredditsExpanded: true, subscriptionsModified: false } );
         }
-
-        
     }
 
 
@@ -539,21 +572,22 @@ export default class AuthorCell extends React.Component<Props, State>
         this.props.subscribe(this.props.author.author.name, subreddits); 
     }
 
-
-
     handleUnsubscribeClick()
     {
+        //Subscription is temporary while await response from server, cannot be mofidied yet.
+        if (this.props.author.subscription.id == null)
+            return;
+
         this.props.unsubscribe(this.props.author.subscription);
     }
 
     handleAddSubredditClick(subreddit : string)
     {
-        this.props.addSubscriptionSubreddit(this.props.author.subscription.id, subreddit);
+        this.props.addSubscriptionSubreddit(this.props.author.subscription, subreddit);
     }
 
     handleRemoveSubredditClick(subreddit : string)
     {
-        this.props.removeSubscriptionSubreddit(this.props.author.subscription.id, subreddit);
+        this.props.removeSubscriptionSubreddit(this.props.author.subscription, subreddit);
     }
-
 }
