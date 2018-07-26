@@ -112,3 +112,28 @@ export function getPostSearchUrl( searchTerm : string, subreddit : string, oauth
 
     return { baseUrl: url, params: params };
 }
+
+//We will be storing posts in session storage,
+//so get rid of any data we don't actually use.
+export function filterPostContent( post : models.reddit.Post )
+{
+    return {
+        author : post.author,
+        author_flair_text: post.author_flair_text,
+        created_utc	: post.created_utc,
+        id : post.id,
+        is_self	: post.is_self,
+        link_flair_text : post.link_flair_text,
+        num_comments : post.num_comments,
+        over_18	: post.over_18,
+        permalink : post.permalink,
+        score : post.score,
+        spoiler	: post.spoiler,
+        stickied : post.stickied,
+        subreddit : post.subreddit,
+        thumbnail : post.thumbnail,
+        title : post.title,
+        url : post.url,
+        likes : post.likes,
+    }
+}

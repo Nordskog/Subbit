@@ -43,7 +43,7 @@ export async function getAuthors( seedWithPost : boolean, subreddit? : string, f
         //Workaround is to include it here, and just erase later if we get a proper post list.
         if (seedWithPost)
         {
-            entry.posts.push(post.data);
+            entry.posts.push( apiTools.filterPostContent( post.data ) );
         }
         return entry;
     });
@@ -83,6 +83,9 @@ export async function getPosts(author: string, after : string, auth : models.aut
 
     //Filter stickied posts for now. TODO: think about stickies
     posts = posts.filter( ( post : models.reddit.Post ) => { return !post.stickied } );
+
+    //And remove any data we don't want, as we'll be storing this in session storage.
+    posts = posts.map( post => apiTools.filterPostContent(post));
 
     return { posts: posts,  after: result.data.after };
 
