@@ -18,15 +18,6 @@ import * as setup from './setup'
 import * as Log from '~/common/log';
 
 import * as routeActions from '~/client/actions/routes'
-import * as sessionActions from '~/client/actions/direct/session'
-
-
-// Last fetched authors are retained in sessionStorage and reloaded
-// so the page can be rendered instantly. Clear if navigation type is not TYPE_BACK_FORWARD
-if (performance.navigation.type != PerformanceNavigation.TYPE_BACK_FORWARD)
-{
-    sessionActions.clear();
-}
 
 //Sets up a toast callback
 setup.setupClientStuff();

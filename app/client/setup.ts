@@ -1,6 +1,7 @@
 import * as api from "~/common/api";
 import * as toast from "~/client/toast";
 import * as tools from '~/common/tools'
+import * as sessionActions from '~/client/actions/direct/session'
 
 
 
@@ -32,8 +33,31 @@ function handleRateLimitedCallback(  info : tools.RateLimitInfo )
     toast.countdownToast( toast.ToastType.ERROR, resetTime * 1000, resetTime,  "Reddit rate limit exceeded", "Reset in", "seconds")
 }
 
+function evaluateSessionState()
+{
+    // Last fetched authors are retained in sessionStorage and reloaded
+    // so the page can be rendered instantly. Clear if navigation type is not TYPE_BACK_FORWARD
+    if (performance.navigation.type != PerformanceNavigation.TYPE_BACK_FORWARD)
+    {
+        sessionActions.clear();
+    }
+}
+
+function registerUnloadCallbacks()
+{
+    //Any requests in progress when the user leaves the page will produce errors that
+    //the browser will not allow us to detech as such. Any ongoing requests must be manually cancelled first.
+    window.addEventListener( "beforeunload", ( event : BeforeUnloadEvent ) => 
+    {
+        api.cancelAll();
+    });
+}
+
 export function setupClientStuff()
 {
+    evaluateSessionState();
     api.reddit.registerRatelimitCallbacks(handleRatelimitCallback, handleRateLimitedCallback);
+    registerUnloadCallbacks();
+
 }
 
