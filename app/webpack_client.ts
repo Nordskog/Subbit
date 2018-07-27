@@ -60,8 +60,8 @@ const config = {
             },
             {
                 test: /\.(gif|jpg|png)$/,
-                include: path.join(basePath, "./assets/images"),
-                loader: 'url-loader?limit=100000'
+                include: /images/,
+                loader: 'file-loader'
             },
             {
                 test:/\.(scss)$/,

@@ -12,17 +12,20 @@ import { NavLink } from 'redux-first-router-link';
 import { classConcat } from '~/common/tools/css';
 import SVGInline from "react-svg-inline"
 
+import defaultThumbnail from 'assets/images/thumbnail_default.png';
+import selfThumbnail from 'assets/images/thumbnail_self.png';
+import nsfwThubmnail from 'assets/images/thumbnail_nsfw.png';
+
 const danger_flairs : Set<string> = new Set<string>();
 danger_flairs.add("nsfw");
 danger_flairs.add("nsfl");
 danger_flairs.add("spoiler");
 
-const defaultThumbnails : Map<string, string> = new Map<string, string>();
-defaultThumbnails.set("self","https://www.reddit.com/static/self_default2.png");
-defaultThumbnails.set("default","https://www.reddit.com/static/self_default2.png"); //On purpose
-defaultThumbnails.set("nsfw","https://www.reddit.com/static/nsfw2.png");
-defaultThumbnails.set("spoiler","https://www.reddit.com/static/self_default2.png");
-const defaultThumbnail = "https://www.reddit.com/static/self_default2.png"
+const defaultThumbnails : Map<string, any> = new Map<string, any>();
+defaultThumbnails.set("self",selfThumbnail);
+defaultThumbnails.set("default",defaultThumbnail);
+defaultThumbnails.set("nsfw",nsfwThubmnail);
+defaultThumbnails.set("spoiler",defaultThumbnail);
 
 interface Props
 {
