@@ -45,7 +45,8 @@ const config = {
     output: {
         filename: '[name].js',
         path: path.join(basePath, '../buildClient'),
-        publicPath: '/static/'
+        publicPath: '/static/',
+        chunkFilename: '[name].[id].js'
     },
     module: {
         rules: [

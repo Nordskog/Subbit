@@ -1,7 +1,7 @@
 ﻿import * as React from 'react';
 import * as components from '~/client/components';
 
-import { Stats } from '~/client/components/stats'
+import AsyncStats from '~/client/components/stats/async'
 
 import * as Toastify from 'react-toastify'
 import * as models from '~/common/models'
@@ -16,8 +16,7 @@ interface Props
     subscriptionCount: number;
     filter: models.AuthorFilter;
 }
-   
-
+ 
 export default class app extends React.Component<Props,any>
 {
     render()
@@ -81,7 +80,7 @@ export default class app extends React.Component<Props,any>
 
     getStats()
     {
-        return <Stats
+        return <AsyncStats
         />
     }
 

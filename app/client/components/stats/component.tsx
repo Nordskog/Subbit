@@ -5,6 +5,7 @@ import * as components from '~/client/components'
 import * as socket from '~/client/websocket'
 import { StatsHistory, StatsUpdate, StatsTimeRange, StatsCategoryType, StatsDataEntry } from '~/common/models/stats';
 import { StatsChartItem } from '~/client/components/tools/StatsChart';
+import StatsChart from '~/client/components/tools/StatsChart/component'
 import { time } from '~/common/tools';
 
 import * as styles from 'css/stats.scss'
@@ -247,7 +248,7 @@ export default class StatsComponent extends React.Component<Props,State>
   {
     this.registerChart(category, timeRange);
 
-    return <components.tools.StatsChart.StatsChartComponent
+    return <StatsChart
                 item={this.getChartObject(category, timeRange)}
                 title={title}
                 formatTooltip={( value ) => this.formatTooltip(value, category)}
