@@ -74,11 +74,11 @@ router.get('/api/authorize_refresh', async (req: WetlandRequest, res: Express.Re
             //Existing token still valid for at least 5min, return that.
         }
 
-        //Reusing existing login type on refresh
-        let existingAccessToken : models.auth.AccessToken = await authentication.verification.getDecodedTokenWithoutVerifying(token);
-        let userInfo : models.auth.UserInfo = authentication.generation.generateUserInfo(user, existingAccessToken.loginType);
-
-        res.json( userInfo.redditAuth );    //TODO we only return the reddit auth? Why generate userinfo? I'm confused
+        res.json(
+        {
+            access_token : user.auth.access_token,
+            expiry : tools.time.dateToUnix(user.auth.expiry)
+        } as models.auth.RedditAuth );   
         return;
     }
     catch (err)

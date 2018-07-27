@@ -56,18 +56,15 @@ export function createAccessToken(user : Entities.User, loginType : models.auth.
         loginType: loginType
     };
 
-    //Expiry is whatever, but as long as the user does a refresh 
-    //within the limit (which will happen when they refresh the reddit token hourly)
-    //it can be used indefinitely, or until the user invalidates the entire token generation.
-    //
-    let expiry = '2 hours'
+
+    let expiry = '12 hours'
     switch(loginType)
     {
         case models.auth.LoginType.PERMANENT:  
-            expiry = '30 days'; //Turns out '1 month' is not a valid value
+            expiry = '180 days'; 
             break;
         case models.auth.LoginType.SESSION:
-            expiry = '2 hours'  
+            expiry = '12 hours'  
     }
 
     let options : jwt.SignOptions = {
