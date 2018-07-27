@@ -70,12 +70,6 @@ export default class AuthorCell extends React.Component<Props, State>
     {
         super(props);
         this.state = { postsExpanded : false, subredditsExpanded: false, subscriptionsModified: false, awaitingPosts : false, prevProps: props };
-
-        this.handleSubscribeClick = this.handleSubscribeClick.bind(this);
-        this.handleUnsubscribeClick = this.handleUnsubscribeClick.bind(this);
-
-        this.handleAddSubredditClick = this.handleAddSubredditClick.bind(this);
-        this.handleRemoveSubredditClick = this.handleRemoveSubredditClick.bind(this);
     }
     shouldComponentUpdate(nextProps : Readonly<Props>, newState : State, nextContext) : boolean
     {
@@ -392,7 +386,7 @@ export default class AuthorCell extends React.Component<Props, State>
     getSubscribeButton()
     {
         //Heh
-        let butt : JSX.Element = <div key={"subscribe_button"} className={styles.subscriptionButtonContainer} onClick={this.handleSubscribeClick} >
+        let butt : JSX.Element = <div key={"subscribe_button"} className={styles.subscriptionButtonContainer} onClick={ () => this.handleSubscribeClick()} >
                                     <div className={styles.subscribeButton} >
                                         <SVGInline svg={subscribeButton}/>
                                     </div>
@@ -444,7 +438,7 @@ export default class AuthorCell extends React.Component<Props, State>
         
         //The key has to go on the svg rather than the outer element for chrome to treat everything as a new element.
         //I don't know why.
-        let butt : JSX.Element = <div className={styles.subscriptionButtonContainer} onClick={this.handleUnsubscribeClick} >
+        let butt : JSX.Element = <div className={styles.subscriptionButtonContainer} onClick={ () => this.handleUnsubscribeClick()} >
                                     <SVGInline className={styles.unsubscribeButton} key={key} svg={icon}/>
                                 </div>
                 
@@ -462,12 +456,7 @@ export default class AuthorCell extends React.Component<Props, State>
     {
         let subState : SubscriptionState = this.getSubscriptionState( this.props.author.subscription );
         let visible = subState != SubscriptionState.UNSUBSCRIBED;
-        if (visible)
-        {
-            //Do not display if temporary subscription ( present but no id )
-            if (this.props.author.subscription.id == null)
-                visible = false;
-        }
+        let temporary = visible && this.props.author.subscription.id == null;  //Sub created but haven't received reply from server yet. Disable click.
 
         if ( visible )
         {
@@ -500,7 +489,7 @@ export default class AuthorCell extends React.Component<Props, State>
                 }
                 
                 return <components.transitions.FadeHorizontalResize key={'show_subreddits_button'}>
-                            <div  className={styles.displaySubredditsButtonContainer} onClick={ () => { this.handleManageSubscriptionsClick() } } >
+                            <div  className={styles.displaySubredditsButtonContainer} onClick={ temporary ? null : () => { this.handleManageSubscriptionsClick() } } >
                                 <SVGInline key={key} className={styles.displaySubredditsButton} svg={icon}/>
                             </div>
                         </components.transitions.FadeHorizontalResize>
@@ -579,15 +568,26 @@ export default class AuthorCell extends React.Component<Props, State>
             return;
 
         this.props.unsubscribe(this.props.author.subscription);
+
+        //Close subreddits panel if open
+        if (this.state.subredditsExpanded)
+        {
+            //Will not fetch posts.
+            this.setState( { subredditsExpanded: false, subscriptionsModified: false } );
+        }
     }
 
+    //This is used when clicking the star.
+    //Adding/removing in the manage subreddits panel calls props function directly.
     handleAddSubredditClick(subreddit : string)
     {
         this.props.addSubscriptionSubreddit(this.props.author.subscription, subreddit);
+        //Close subreddits panel if open
+        if (this.state.subredditsExpanded)
+        {
+            //Will not fetch posts.
+            this.setState( { subredditsExpanded: false, subscriptionsModified: false } );
+        }
     }
 
-    handleRemoveSubredditClick(subreddit : string)
-    {
-        this.props.removeSubscriptionSubreddit(this.props.author.subscription, subreddit);
-    }
 }
