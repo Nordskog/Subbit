@@ -75,6 +75,7 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
         }
         case actions.types.subscription.SUBSCRIPTION_CHANGED:
         case actions.types.subscription.SUBSCRIPTION_ADDED:
+        case actions.types.subscription.TEMPORARY_SUBSCRIPTION_ADDED:
             {
                 action = action as models.Action< actions.types.subscription.SUBSCRIPTION_ADDED >;
 

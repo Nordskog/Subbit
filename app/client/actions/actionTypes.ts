@@ -57,10 +57,11 @@ export namespace authentication
 
 export namespace subscription
 {
-    export const SUBSCRIPTIONS_FETCHED     : string = 'SUBSCRIPTIONS_FETCHED';
-    export const SUBSCRIPTION_ADDED     : string = 'SUBSCRIPTION_ADDED';
-    export const SUBSCRIPTION_REMOVED   : string = 'SUBSCRIPTION_REMOVED';
-    export const SUBSCRIPTION_CHANGED   : string = 'SUBSCRIPTION_CHANGED';
+    export const SUBSCRIPTIONS_FETCHED          : string = 'SUBSCRIPTIONS_FETCHED';
+    export const SUBSCRIPTION_ADDED             : string = 'SUBSCRIPTION_ADDED';
+    export const SUBSCRIPTION_REMOVED           : string = 'SUBSCRIPTION_REMOVED';
+    export const SUBSCRIPTION_CHANGED           : string = 'SUBSCRIPTION_CHANGED';
+    export const TEMPORARY_SUBSCRIPTION_ADDED   : string = 'TEMPORARY_SUBSCRIPTION_ADDED';
 
     export type SUBSCRIPTIONS_FETCHED = models.data.Subscription[];
 
@@ -71,6 +72,11 @@ export namespace subscription
     }
 
     export interface SUBSCRIPTION_CHANGED extends SUBSCRIPTION_ADDED
+    {   
+
+    }
+
+    export interface TEMPORARY_SUBSCRIPTION_ADDED extends SUBSCRIPTION_ADDED
     {   
 
     }

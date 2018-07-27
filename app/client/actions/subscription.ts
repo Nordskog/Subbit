@@ -53,8 +53,8 @@ export function subscribeToAuthorAction(author : string, subreddits : string[])
         {
             let dummySubscription : Subscription = getDummySubscription(author, null, null, ...subreddits);
             dispatch({
-                type: actions.types.subscription.SUBSCRIPTION_ADDED,
-                payload: dummySubscription as actions.types.subscription.SUBSCRIPTION_ADDED
+                type: actions.types.subscription.TEMPORARY_SUBSCRIPTION_ADDED,  //Temporary, so added to author but not list of subscriptions
+                payload: dummySubscription as actions.types.subscription.TEMPORARY_SUBSCRIPTION_ADDED
             });
         }
 
