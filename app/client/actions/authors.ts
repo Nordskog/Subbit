@@ -82,6 +82,12 @@ export function fetchAuthorsAction ( appendResults: boolean = false, loadFromSes
             {
                 authorEntries = actions.directActions.session.loadAuthors();
                 after = actions.directActions.session.loadAfter();
+
+                if (authorEntries != null)
+                {
+                     //Add to authority, since this is normally handled by the direct getAuthors() action.
+                    authorEntries.forEach( ( author : models.data.AuthorEntry ) => { authority.author.updateAuthority(author.author) } );
+                }
             }
 
             if (authorEntries == null)
@@ -98,7 +104,7 @@ export function fetchAuthorsAction ( appendResults: boolean = false, loadFromSes
                 let authorData = await actions.directActions.authors.getAuthors(dispatch, getState);
                 authorEntries = authorData.authorEntries;
                 after = authorData.after;
-    
+
                 //Save to session storage so we can display without reloading
                 {
                         if (appendResults)

@@ -85,11 +85,8 @@ export async function getAuthors( dispatch : Dispatch, getState : GetState )
         after = res.after;
     }
 
-    let returnedAuthorCount = authors.length;
-
     //Remove and any existing authors, then update authority with new
     authors = authors.filter( (author : models.data.Author) => { return !authority.author.authorityContains(author) } )
-
     authors.forEach( ( author : models.data.Author ) => { authority.author.updateAuthority(author) } );
 
     let authorEntries : models.data.AuthorEntry[] = authors.map( ( author : models.data.Author ) => 
