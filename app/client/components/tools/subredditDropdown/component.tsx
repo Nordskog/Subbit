@@ -111,6 +111,7 @@ export default class SubredditDropdown extends React.Component<Props, State>
             addToDisplayList : false,
             items: this.state.subreddits,
             search: async ( name : string ) => { return ( await this.props.searchSubreddit(name) ).map( name => { return { name: name, object: name } }  ) },
+            enterBeforeSearchResult: ( name : string ) => { return  { name: name.trim(), object: name.trim() } },
             prefix: "r/",
             searchPlaceholder: "Subreddit",
             onClick: ( item : components.tools.SearchList.ListItem) => { this.props.changeSubreddit(item.object); return true; }

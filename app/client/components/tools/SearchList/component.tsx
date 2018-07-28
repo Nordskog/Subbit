@@ -32,6 +32,7 @@ export interface SearchItem
 {
     items: ListItem[];
     search?( name : string) : SearchResult[] | Promise<SearchResult[]>;
+    enterBeforeSearchResult?( name : string) : SearchResult ;
     searchPlaceholder? : string;
     onClick( item : ListItem ) : boolean | undefined;
     onAltClick?( item : ListItem ) : void;
@@ -62,6 +63,9 @@ interface State
 
 export default class RedditsCell extends React.Component<Props, State>
 {
+    lastInput : string = null;
+    lastSearchTrigger : number = null;
+    awaitingSearch : boolean = false;
     inputTimeout = null;
     container : HTMLDivElement;
 
@@ -182,20 +186,54 @@ export default class RedditsCell extends React.Component<Props, State>
         this.setState( { ...this.state, selectedItem: index } );
     }
 
-    handleEnter(keyCode : number)
+    async handleEnter(keyCode : number)
     {
-        if (keyCode == 13 && this.state.searchedItems.length > 0)
+        if (keyCode == 13)
         {
-            let item : SearchItem = this.getSelectedItem();
-            let listItem = this.state.searchedItems[0];
+            if ( this.awaitingSearch && this.lastInput != null )
+            {
+                //Search in progress, enter selects inptut text
+                let item : SearchItem = this.getSelectedItem();
 
-            this.handleClick(item, listItem);
+                if (item.enterBeforeSearchResult != null)
+                {
+                    let searchResult : SearchResult = await item.enterBeforeSearchResult(this.lastInput);
+                    if (searchResult != null )
+                    {
+                        let listItem = {
+                            name: searchResult.name,
+                            alt: searchResult.alt,
+                            object: searchResult.object,
+                            highlighted: item.highlightMap.has( searchResult.name.toLowerCase() )
+                        }
+
+                        this.cancelSearchRequest();
+                        this.handleClick(item, listItem, true);
+                       
+                    }
+                    
+                }
+
+            }
+            else if ( this.state.searching && this.state.searchedItems.length > 0 )
+            {
+                //Search finished, enter selects top item
+                let item : SearchItem = this.getSelectedItem();
+                let listItem = this.state.searchedItems[0];
+
+                this.handleClick(item, listItem, true);
+            }
         }
     }
 
     //Wait a bit after input end before sending request
     handleInput( item : SearchItem, input : string)
     {
+        //Any existing search requests will compare time to this and return.
+        this.lastSearchTrigger = Date.now();
+
+        this.lastInput = input;
+
         if (this.inputTimeout != null)
         {
             clearTimeout( this.inputTimeout );
@@ -204,24 +242,29 @@ export default class RedditsCell extends React.Component<Props, State>
 
         if (item.delaySearch)
         {
+            this.awaitingSearch = true;
+
             this.inputTimeout = setTimeout(() => {
 
                 this.inputTimeout = null;
     
                 if (input.length < 1)
                 {
+                    this.awaitingSearch = false;
                     this.setState(
                         {
                         ...this.state,
                         searchedItems: [],
-                        searching: false
+                        searching: false,
                         }
                     );
                 }
                 else
                 {
-                    this.search( item, input );
+                    if (this.awaitingSearch)
+                        this.search( item, input );
                 }
+
     
                 
             }, 500);
@@ -234,7 +277,7 @@ export default class RedditsCell extends React.Component<Props, State>
                     {
                     ...this.state,
                     searchedItems: [],
-                    searching: false
+                    searching: false,
                     }
                 );
             }
@@ -246,9 +289,27 @@ export default class RedditsCell extends React.Component<Props, State>
         }
     }
 
+    cancelSearchRequest()
+    {
+        this.awaitingSearch = false;
+    }
+
     async search( item : SearchItem, name : string)
     {
+        this.awaitingSearch = true;
+        
+        //Keep track of time request was sent so we only
+        //act on requests that were fired last.
+        //This is also updated when the user starts typing again.
+        let startTime = Date.now();
+        this.lastSearchTrigger = startTime;
+
         let searchResult : SearchResult[] = await item.search(name);
+
+        if (startTime < this.lastSearchTrigger || !this.awaitingSearch )
+            return;
+
+        this.awaitingSearch = false;
 
         this.setState( {
             ...this.state,
@@ -288,7 +349,7 @@ export default class RedditsCell extends React.Component<Props, State>
  
     getListItem(listItem : ListItem, searchItem : SearchItem)
     {
-        return <div className={ styles.subscriptionSubredditContainer } key={listItem.name}  onClick={ () => this.handleClick(searchItem, listItem)}  >
+        return <div className={ styles.subscriptionSubredditContainer } key={listItem.name}  onClick={ () => this.handleClick(searchItem, listItem, this.state.searching)}  >
                     <div className={ styles.subscriptionSubredditInnerContainer } >
                         {this.getIndicator(listItem)}
                         <div className={ styles.subscriptionSubreddit }>
@@ -356,7 +417,6 @@ export default class RedditsCell extends React.Component<Props, State>
 
     handleAltClick( event : React.MouseEvent<HTMLDivElement>, searchItem: SearchItem, listItem : ListItem)
     {
-
         if (this.props.onAltClick != null || searchItem.onAltClick != null)
         {
             event.stopPropagation();
@@ -374,8 +434,13 @@ export default class RedditsCell extends React.Component<Props, State>
 
     }
 
-    handleClick( searchItem: SearchItem, listItem : ListItem )
+    handleClick( searchItem: SearchItem, listItem : ListItem, itemIsSearchResult : boolean )
     {
+        this.cancelSearchRequest();
+
+        ////////////////////////////
+        // Deal with callbacks
+        ////////////////////////////
 
         if (this.props.onClick != null)
         {
@@ -399,34 +464,50 @@ export default class RedditsCell extends React.Component<Props, State>
             }    
         }
 
-        //un-highlight in display list
-        if (listItem.highlighted)
+        ///////////////////////////
+        // Update or add to list
+        //////////////////////////
+
+        //Get existing item in list if present
+        let existingListItem = this.findInDisplay(listItem.name);
+
+        if (existingListItem != null)
         {
             if (searchItem.toggleHighlight)
-                this.findInDisplay(listItem.name).highlighted = false;
+            {
+                existingListItem.highlighted = !listItem.highlighted;
+            }
         }
         else
         {
-           
-            if (this.state.searching)
+            if (itemIsSearchResult)
             {
-                //Add to display list if it doesn't already exist
-                if (searchItem.toggleHighlight)
-                    listItem.highlighted = true;
                 if (searchItem.addToDisplayList)
+                {
+                    listItem.highlighted = true;
                     searchItem.items.unshift(listItem);
+                }
+            }
+        }
+
+        ///////////////////////////////
+        // Update highlight map
+        ///////////////////////////////
+
+        if (searchItem.toggleHighlight)
+        {
+            if (listItem.highlighted)
+            {
+                searchItem.highlightMap.delete( listItem.name.toLowerCase());
             }
             else
             {
-                 //Highligh in displayList
-                 if (searchItem.toggleHighlight)
-                     this.findInDisplay(listItem.name).highlighted = true;
+                searchItem.highlightMap.add( listItem.name.toLowerCase());
             }
         }
 
         //This cause a state update, which we do not ignore
-        this.setState( { ...this.state, searching: false } );
-
+        this.setState( { searching: false } );
     }
 
     endSearch()
@@ -436,7 +517,6 @@ export default class RedditsCell extends React.Component<Props, State>
 
     findInDisplay( name : string)
     {
-
         return this.getSelectedItem().items.find( ( subreddit : ListItem ) => { return subreddit.name.toLowerCase() == name.toLowerCase() } );
     }
 }

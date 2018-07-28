@@ -258,6 +258,7 @@ export default class AuthorCell extends React.Component<Props, State>
                     }
                 ),
                 search: async ( name : string ) => { return ( await this.props.searchSubreddits(name) ).map( name => { return { name: name } }  ) },
+                enterBeforeSearchResult: ( name : string ) => { return  { name: name.trim() } },
                 prefix: "r/",
                 searchPlaceholder: "Subreddit",
                 emptyMessage: 'Subscribed in all subreddits',
