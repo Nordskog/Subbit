@@ -211,7 +211,7 @@ export default class HeaderComponent extends React.Component<Props, null>
             return null;
 
         let elements = [
-            <div className={styles.topTimeMobileSpacer}/>,
+            <div key="topTimeMobileSpacer" className={styles.topTimeMobileSpacer}/>,
             this.getTopTimePanel( PostTimeRange.HOUR),
             this.getTopTimePanel( PostTimeRange.DAY),
             this.getTopTimePanel( PostTimeRange.WEEK),
@@ -231,7 +231,7 @@ export default class HeaderComponent extends React.Component<Props, null>
     getTopTimePanel( time : PostTimeRange)
     {
 
-        return <NavLink    className={ this.props.time == time ? styles.sortButtonActiveSub : styles.sortButtonSub }
+        return <NavLink key={time.toString()}   className={ this.props.time == time ? styles.sortButtonActiveSub : styles.sortButtonSub }
                             to={ this.getTopLink(time) }>
                             {getTimeRangeDisplayString(time)}
                 </NavLink>
