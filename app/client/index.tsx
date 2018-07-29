@@ -18,6 +18,7 @@ import * as setup from './setup'
 import * as Log from '~/common/log';
 
 import * as routeActions from '~/client/actions/routes'
+import * as historyActions from '~/client/actions/direct/history'
 
 //Sets up a toast callback
 setup.setupClientStuff();
@@ -43,7 +44,9 @@ async function awaitStore(store, thunk, initialDispatch)
 async function render(App)
 {
     const root = document.getElementById('root')
-    const {store, thunk, initialDispatch } = Store.getStore();
+    const {store, thunk, initialDispatch, history} = Store.getStore();
+    historyActions.setHistory(history);
+
 
     ReactDOM.hydrate(
         <Provider store={await awaitStore(store, thunk, initialDispatch)}>

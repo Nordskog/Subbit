@@ -69,7 +69,7 @@ export function viewAuthor( author: string, subreddit? : string)
     }
 }
 
-export function fetchAuthorsAction ( appendResults: boolean = false, loadFromSession : boolean = false )
+export function fetchAuthorsAction ( appendResults: boolean = false, loadFromSession : boolean = false, loadFromHistory : boolean = false)
 {
     return WrapWithHandler( async function (dispatch : Dispatch, getState : GetState)
     {
@@ -78,18 +78,51 @@ export function fetchAuthorsAction ( appendResults: boolean = false, loadFromSes
             let  authorEntries : models.data.AuthorEntry[];
             let after : string;
 
-            if (loadFromSession)
-            {
-                authorEntries = actions.directActions.session.loadAuthors();
-                after = actions.directActions.session.loadAfter();
+            //////////////////////////////////////////////
+            // Load from history or session if present
+            //////////////////////////////////////////////
 
-                if (authorEntries != null)
+            {
+                //////////////////////
+                // History
+                //////////////////////
+                if (loadFromHistory)
                 {
-                     //Add to authority, since this is normally handled by the direct getAuthors() action.
-                    authorEntries.forEach( ( author : models.data.AuthorEntry ) => { authority.author.updateAuthority(author.author) } );
+                    authorEntries = actions.directActions.history.loadAuthors();
+                    after = actions.directActions.history.loadAfter();
+
+                    //Save this to session
+                    if (authorEntries != null)
+                        actions.directActions.session.saveAuthors(authorEntries, after);
+                    
+                }
+
+                //////////////////////////
+                // Session
+                //////////////////////////
+                if (authorEntries == null && loadFromSession)
+                {
+                    authorEntries = actions.directActions.session.loadAuthors();
+                    after = actions.directActions.session.loadAfter();
+
+                    //Save this to history
+                    if (authorEntries != null)
+                    {
+                        actions.directActions.history.saveAuthors( authorEntries, after );
+                    }
                 }
             }
 
+            //getAuthors() normally handles adding to authority, but do it here manually if loading from storage.
+            if (authorEntries != null)
+            {
+                authorEntries.forEach( ( author : models.data.AuthorEntry ) => { authority.author.updateAuthority(author.author) } );
+            }
+
+            //////////////////////////////////
+            // Fetch from reddit if still null
+            //////////////////////////////////
+        
             if (authorEntries == null)
             {
                 dispatch
@@ -109,11 +142,13 @@ export function fetchAuthorsAction ( appendResults: boolean = false, loadFromSes
                 {
                         if (appendResults)
                         {
-                        actions.directActions.session.saveAuthors( getState().authorState.authors.concat(authorEntries), after);
+                            actions.directActions.session.saveAuthors( getState().authorState.authors.concat(authorEntries), after);
+                            actions.directActions.history.saveAuthors( getState().authorState.authors.concat(authorEntries), after );
                         }
                         else
                         {
-                        actions.directActions.session.saveAuthors(authorEntries, after);
+                            actions.directActions.session.saveAuthors(authorEntries, after);
+                            actions.directActions.history.saveAuthors( authorEntries, after );
                         }
                 }
             }

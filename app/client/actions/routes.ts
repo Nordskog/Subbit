@@ -9,6 +9,7 @@ import { WrapWithHandler } from '~/client/actions/tools/error';
 import { AuthorizationException } from '~/common/exceptions';
 import { AuthorFilter, LoadingStatus } from '~/common/models';
 import { Dispatch, GetState } from '~/client/actions/tools/types';
+import { History } from 'history';
 
 let firstLoad : boolean = true;
 
@@ -34,7 +35,7 @@ export function authorsRoutes()
                 actions.directActions.page.clearPage(true, dispatch);
             actions.directActions.authentication.loadAuthentication(dispatch, getState);
             await firstLoadDuties(dispatch, getState);
-            actions.authors.fetchAuthorsAction(false, isFirstLoad)(dispatch, getState); 
+            actions.authors.fetchAuthorsAction(false, isFirstLoad, true)(dispatch, getState); 
         }
 
     });
@@ -77,7 +78,7 @@ export function authorizeRoute()
         if (awaited)
         {
             actionTools.title.updateTitle(getState);
-            let { error, code,  state} = getState().location.query;
+            let { error, code,  state} = getState().location.query as any;
             if (error)
             {
                 dispatch(

@@ -11,7 +11,7 @@ export interface State
 {
     authorState: models.state.AuthorsState;
     authState: models.auth.AuthState;
-    location;
+    location: ReduxFirstRouter.Location;
     userState: models.state.User;
     siteState: models.state.SiteState;
 };
@@ -29,22 +29,22 @@ export function getDefaultState(userInfo?: models.auth.UserInfo) : State
 
 import configureStore from './configureStore'
 import createHistory from 'history/createBrowserHistory'
+import { History } from 'history'
 import { Store } from 'redux';
 import { RouteThunk } from 'redux-first-router';
 
 let reduxStore = null;
-export function getStore() : { store: Store<State, any>, thunk: (Store) => Promise<RouteThunk<any>>, initialDispatch: any }
+let history : History = null;
+export function getStore() : { store: Store<State, any>, thunk: (Store) => Promise<RouteThunk<any>>, initialDispatch: any, history: History }
 {   
     if (reduxStore == null)
     {
-        const history = createHistory();
+        history = createHistory();
         let { store, thunk, initialDispatch} = configureStore(history, ( window as any).REDUX_STATE, );
         reduxStore = store;
 
-        return { store: store, thunk: thunk, initialDispatch: initialDispatch };
+        return { store: store, thunk: thunk, initialDispatch: initialDispatch, history: history };
     }
 
-    return { store: reduxStore, thunk: null, initialDispatch: null };
+    return { store: reduxStore, thunk: null, initialDispatch: null, history: history };
 }
-
-
