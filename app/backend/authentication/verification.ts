@@ -67,6 +67,11 @@ export async function getAuthenticatedScopes( manager : Wetland.Scope, access_to
     let decodedToken : AccessToken = await decodeToken(access_token_raw);
     let user : Entities.User = await getUserFromToken(manager, decodedToken, {});
 
+    if (user.generation != decodedToken.generation)
+    {
+        throw new AuthorizationInvalidException("Token generation has been invalidated");
+    }
+
     //Base scope from 
     let scopes : Scope[] = decodedToken.scope.split(' ') as Scope[];
 
