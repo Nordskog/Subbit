@@ -39,13 +39,22 @@ import serverConfig from 'root/server_config'
 import clientConfig from './webpack_client'
 import clientConfigDev from './webpack_client_dev'
 
+import * as cluster from 'cluster'
+import { Action } from '~/common/models';
+
+import * as clusterActions from '~/backend/cluster/'
+
+const DEV = process.env.NODE_ENV === 'development'
+
 async function setupMain()
 {
+
+
     ////////////////
     // Logging
     /////////////////
 
-    Log.init();
+    Log.init(true, DEV);
 
     /////////////////
     // Database
@@ -53,10 +62,65 @@ async function setupMain()
 
     await RFY.initDatabase();
 
+    /////////////////
+    // Stuff
+    /////////////////
+
+    Log.I("Starting master "+process.pid);
+
+    if (DEV)
+        Log.I("Server configuration: DEV");
+    else
+        Log.I("Server configuration: PROD");
+    
     ///////////////////
     // Stats tracking
     ///////////////////
+
     await setup.stats.setup();
+
+    //////////////////////
+    // Websocket
+    //////////////////////
+
+    //Because there's a lot of back-and-forth, websocket stuff
+    //is all handled on master.
+    let managerSocket : WebSocket.Server = socket.getServer();
+
+    //////////////////
+    // Fork slaves
+    //////////////////
+
+    let cpus = require('os').cpus().length;
+    if (DEV)
+    {
+        //Limit to single core when dev
+        cpus = 1;
+    }
+
+    Log.I(`Will spawn ${cpus} slaves`)
+
+    clusterActions.spawnSlaves(managerSocket, cpus)
+
+
+}
+
+async function setupSlave()
+{
+
+    ////////////////
+    // Logging
+    /////////////////
+
+    Log.init(false);
+
+    Log.I(`Starting slave #${cluster.worker.id} at ${process.pid}`);
+
+    /////////////////
+    // Database
+    /////////////////
+
+    await RFY.initDatabase();
 
     ////////////////
     //Hot reload
@@ -84,15 +148,11 @@ async function setupMain()
     //////////////
     // Serving webpack output
     //////////////
-    const DEV = process.env.NODE_ENV === 'development'
-
     const publicPath = clientConfig.output.publicPath;
     const outputPath = clientConfig.output.path;
 
     if (DEV)
     {
-        Log.I("Server configuration: DEV");
-
         const clientCompiler = Webpack(<any>clientConfigDev);
 
         app.use(webpackDevMiddleware(clientCompiler, { publicPath }))
@@ -102,8 +162,6 @@ async function setupMain()
     }
     else
     {
-        Log.I("Server configuration: PROD");
-
         //All static resources
         app.use(publicPath, Express.static(outputPath));
 
@@ -137,42 +195,50 @@ async function setupMain()
     // WebSocket
     ///////////////////////////////
 
-    let managerSocket : WebSocket.Server = socket.getServer(httpServer);
-
     //Handle separate websockets for manager / client
-    httpServer.on('upgrade', (request : Http.IncomingMessage, socket : Net.Socket, head : Buffer) => {
-
-        //if (request.url === '/api/socket/manager') 
-        {
-            managerSocket.handleUpgrade(request, socket, head, function done(ws) 
-            {
-                managerSocket.emit('connection', ws, request);
-            });
-        } 
-        //else
-        {
-        //socket.destroy();
+    httpServer.on('upgrade', (request : Http.IncomingMessage, socket : Net.Socket, head : Buffer) => 
+    {
+        //Hand to master so we don't have to deal with a lot of IPC routing.
+        //Only pass the data we actually need, since the objects contain 
+        //circular references and can't be stringified directly.
+        let action : Action<clusterActions.actionTypes.websocket.UPGRADE_CONNECTION> = {
+            type: clusterActions.actionTypes.websocket.UPGRADE_CONNECTION,
+            payload: {
+                request: { 
+                    headers: request.headers, 
+                    method: request.method, 
+                    url: request.url, 
+                    
+                    connection: {
+                        remoteAddress: request.connection.remoteAddress
+                    } as any
+                },
+            }
         }
+
+        socket.pause();
+        process.send( action, socket );
     });
 
     /////////////////////////////////////////////////////////
     // Fire up server
     ////////////////////////////////////////////////////
 
-
     app.set('port', serverConfig.server.port);
 
     httpServer.listen(app.get('port'), function () {
         debug('Server listening on port ' + httpServer.address().port);
     });
-
-
-    /*
-    app.listen(serverConfig.server.port, function () {
-        debug('Server listening on port ' + app.get('port'));
-    });
-    */
 }
 
-setupMain();
+if (cluster.isMaster)
+{
+    setupMain();
+}
+else
+{
+    setupSlave();
+}
+
+
 

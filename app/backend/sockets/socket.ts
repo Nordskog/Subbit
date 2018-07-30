@@ -9,7 +9,7 @@ import { WsSocket } from './models';
 
 let server : WebSocket.Server = null;
 
-function init(httpServer : Http.Server)
+function init()
 {
     
     ////////////////////////
@@ -88,11 +88,11 @@ function init(httpServer : Http.Server)
     });
 }
 
-export function getServer( httpServer : Http.Server )
+export function getServer()
 {
     if (server == null)
     {
-        init(httpServer);
+        init();
     }
 
     return server;

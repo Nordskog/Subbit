@@ -68,7 +68,7 @@ if (module.hot && process.env.NODE_ENV === 'development')
     Log.I("Hot!");
     module.hot.accept(components.app, () =>
     {
-        console.log("Hot reloading");
+        Log.I("Hot reloading");
         render(components.app)
     })
 }
