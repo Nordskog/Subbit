@@ -66,4 +66,9 @@ export class SlaveLogger implements LoggerInterface
       SlaveLogger.log( severity, message, meta);
     }
 
+    setExitOnUncaughtException( exitOnError : boolean )
+    {
+      //Does nothing
+    }
+
 }

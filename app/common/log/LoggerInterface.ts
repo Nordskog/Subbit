@@ -8,4 +8,6 @@ export default interface LoggerInterface
     W( message : any, meta : Object) : void;
     L( severity : Severity, message : any, meta : Object) : void;
 
+    setExitOnUncaughtException( exitOnError : boolean ) : void;
+
 }

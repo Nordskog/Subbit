@@ -47,3 +47,11 @@ export function init( isMaster : boolean = false, isDev : boolean = false)
     logger = new SlaveLogger();
   }
 }
+
+export function setExitOnUncaughtException( exitOnError : boolean )
+{
+  if (logger != null)
+  {
+    logger.setExitOnUncaughtException(exitOnError);
+  }
+}

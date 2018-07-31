@@ -38,3 +38,8 @@ export function init()
 {
   //Do nothing on client.
 }
+
+export function setExitOnUncaughtException( exitOnError : boolean )
+{
+  //Do nothing on client
+}

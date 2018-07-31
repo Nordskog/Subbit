@@ -99,7 +99,7 @@ export class WinstonLogger implements LoggerInterface
             WinstonLogger.createLogFolder( serverConfig.logging.logDirectoryPath );
         
             this.logger.add( new WinstonDailyRotateFile( 
-            {  
+            { 
                 level:Severity.access,
                 format: WinstonLogger.filterInclude(Severity.access),
                 filename: Path.join( serverConfig.logging.logDirectoryPath, 'access_%DATE%.log'),
@@ -107,7 +107,7 @@ export class WinstonLogger implements LoggerInterface
                 maxSize: '20m',
                 maxFiles: '14d'
             }));
-        
+    
         
             this.logger.add( new WinstonDailyRotateFile( 
             {  
@@ -116,7 +116,17 @@ export class WinstonLogger implements LoggerInterface
                 datePattern: 'YYYY-MM-DD',  //1 log file per day
                 maxSize: '20m',
                 maxFiles: '14d'
-                }));
+            }));
+
+            this.logger.add( new WinstonDailyRotateFile( 
+            {  
+                handleExceptions: true,
+                level:Severity.warning,
+                filename: Path.join( serverConfig.logging.logDirectoryPath, 'error_%DATE%.log'),
+                datePattern: 'YYYY-MM-DD',  //1 log file per day
+                maxSize: '20m',
+                maxFiles: '14d'
+            }));
             
                 return true;
         }
@@ -129,6 +139,7 @@ export class WinstonLogger implements LoggerInterface
         this.logger.add( 
             new Winston.transports.Console( 
                 { 
+                    handleExceptions: true,
                     level: Severity.debug, 
                     format: Winston.format.combine( Winston.format.json(), Winston.format.timestamp() ) 
                 }
@@ -179,4 +190,11 @@ export class WinstonLogger implements LoggerInterface
         this.logger.log( severity, message, meta);
     }
 
+    setExitOnUncaughtException( exitOnError : boolean )
+    {
+        if (this.logger != null)
+        {
+            this.logger.exitOnError = exitOnError;
+        }
+    }
 }

@@ -98,11 +98,9 @@ async function setupMain()
         cpus = 1;
     }
 
-    Log.I(`Will spawn ${cpus} slaves`)
+    Log.I(`Will spawn ${cpus} slaves`);
 
-    clusterActions.spawnSlaves(managerSocket, cpus)
-
-
+    clusterActions.spawnSlaves(managerSocket, cpus);
 }
 
 async function setupSlave()
