@@ -1,81 +1,3 @@
-//////////////////////
-// Gloal
-///////////////////////
-
-$insignificant-gap: 3px;
-$tiny-gap: 5px;
-$small-gap: 10px;
-$medium-gap: 15px;
-$large-gap: 20px;
-
-$stroke-width: 10px;
-
-$small-icon-size: 20px;
-
-$loading-icon-size: 100px;
-
-/////////////////////
-// Header
-////////////////////
-
-$header-height: 50px;
-$logo-size: 70px;
-$header-separator-size: 10px;
-
-$header-button-underline-height: -3px;
-$header-sub-button-height: 30px;
-
-////////////////////////
-// card
-////////////////////////
-
-$small-card-max-width: 420px;
-$large-card-max-width: 1200px;
-
-$score-width: 40px;
-$card-line-height: 40px;
-
-
-$card-image-height: 35px;
-
-$card-small-image-height: 20px; //Must match title font height
-$card-small-image-width: 30px;
-
-////////////////////////// 
-// Post
-//////////////////////////
-
-$post-spacing: 0px;
-
-////////////////////////// 
-// subreddit dropdown
-//////////////////////////
-
-$dropdown-menu-min-width: 400px;
-
-////////////////////////
-// Message 
-////////////////////////
-
-$message-top-margin: 30px;
-$message-card-corner-width: 70px;
-$message-card-corner-height: 40px;
-
-///////////////////////////////////////////////////
-// I guess font-size keywords are useless now
-//////////////////////////////////////////////////////
-
-$font-small: 0.8rem;
-$font-medium: 3;
-$font-large: 4;
-$font-x-large: 5;
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
-// CSS variables of the above values, since we cannot define media queries with scss variables
-// The above variables are still used as fallbacks.
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
 :root
 {
     //////////////////////
@@ -95,7 +17,7 @@ $font-x-large: 5;
 
     --loading-icon-size: 100px;
 
-    --site-min-width: 920px;
+    --site-min-width: 850px;
 
     --loading-bar-width: 200px;
 
@@ -168,7 +90,9 @@ $font-x-large: 5;
     --font-xx-large: 2rem;
 }
 
-@media only screen and (max-width: 1100px)
+
+//Mobile portrait
+@media only screen and (max-width: 1100px ) and ( max-aspect-ratio: 4/3 )
 {
    :root
    {
@@ -187,24 +111,15 @@ $font-x-large: 5;
         --card-small-image-height: 45px; //Must match title font height
         --card-small-image-width: 68px; //height * 1.5. 
 
-
         --star-size: 45px;
-
         --card-line-height: 80px;
-
         --small-card-max-width: 100%;
         --large-card-max-width: 100%;
-
         --score-width: 70px;
-
         --header-height: 80px;
-
         --header-menu-button-height:60px;
-
         --upper-header-height: 70px;    //Mobile only
-
         --logo-size: 100px;
-
         --tiny-icon-size: 20px;
         --small-icon-size: 40px;
 
@@ -212,10 +127,47 @@ $font-x-large: 5;
         --message-top-margin: 30px;
         --message-card-corner-width: 140px;
         --message-card-corner-height: 80px;
-
-
-
         --header-button-underline-height: -6px;
         --header-sub-button-height: 80px;
+   }
+}
+
+//Mobile landscape. Basically everything above divided by 2.
+@media only screen and (max-width: 1100px ) and ( min-aspect-ratio: 4/3 )
+{
+   :root
+   {
+        font-size: 15px;
+        --post-spacing: 5px;
+
+        --insignificant-gap: 2.5px;
+        --tiny-gap: 7.5px;
+        --small-gap: 12.5px;
+        --medium-gap: 17.5px;
+        --large-gap: 20px;
+
+        --card-image-height: 40px;
+        --card-image-width: 56px;   // height * 1.4
+
+        --card-small-image-height: 22.5px; //Must match title font height
+        --card-small-image-width: 34px; //height * 1.5. 
+
+        --star-size: 22.5px;
+        --card-line-height: 40px;
+
+        --score-width: 35px;
+        --header-height: 40px;
+        --header-menu-button-height:30px;
+        --upper-header-height: 35px;    //Mobile only
+        --logo-size: 50px;
+        --tiny-icon-size: 10px;
+        --small-icon-size: 20px;
+
+
+        --message-top-margin: 15px;
+        --message-card-corner-width: 70px;
+        --message-card-corner-height: 50px;
+        --header-button-underline-height: -3px;
+        --header-sub-button-height: 40px;
    }
 }
