@@ -196,7 +196,7 @@ export async function confirmSubreddit( name : string )
 
         if (casedName == null)
         {
-            Log.I(`User attempted to subscribe to subreddit that does not exist: ${name}`);
+            Log.W(`User attempted to subscribe to subreddit that does not exist: ${name}`);
             manager.remove(subreddit);
         }
         else if ( casedName != name )
@@ -204,6 +204,11 @@ export async function confirmSubreddit( name : string )
             //Subreddit exists but casing is wrong. Correct!
             Log.I(`User provided wrong subreddit case for: ${name}, corrected to: ${casedName}`);
             subreddit.name = casedName;
+        }
+        else
+        {
+            //No need to flush.
+            return;
         }
 
         await manager.flush();
