@@ -12,6 +12,7 @@ import * as styles from "css/redditlist.scss"
 import { Post } from '~/common/models/reddit';
 
 import MediaQuery from 'react-responsive'
+import { tools } from '~/common';
 
 interface Props
 {
@@ -111,7 +112,15 @@ export default class SubredditDropdown extends React.Component<Props, State>
             addToDisplayList : false,
             items: this.state.subreddits,
             search: async ( name : string ) => { return ( await this.props.searchSubreddit(name) ).map( name => { return { name: name, object: name } }  ) },
-            enterBeforeSearchResult: ( name : string ) => { return  { name: name.trim(), object: name.trim() } },
+            enterBeforeSearchResult: ( name : string ) => 
+            {
+                name = tools.string.sanitizeAlphaNumericDashUnderscore(name);
+
+                return { 
+                     name: name.trim(), 
+                     object: name.trim() 
+                } 
+            },
             prefix: "r/",
             searchPlaceholder: "Subreddit",
             onClick: ( item : components.tools.SearchList.ListItem) => { this.props.changeSubreddit(item.object); return true; }
@@ -136,7 +145,11 @@ export default class SubredditDropdown extends React.Component<Props, State>
                 }
             ),
             
-            search: ( name : string ) => { return [{name: name, alt: this.props.subreddit != null ? `in r/${this.props.subreddit}` : null}] },   //Can't search for users :(
+            search: ( name : string ) => 
+            { 
+                name = tools.string.sanitizeAlphaNumericDashUnderscore(name);
+                return [{name: name, alt: this.props.subreddit != null ? `in r/${this.props.subreddit}` : null}] 
+            },   //Can't search for users :(
             prefix: "",
             searchPlaceholder: "Author",
             displayHighlight: true,

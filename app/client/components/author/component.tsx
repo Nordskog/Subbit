@@ -22,7 +22,7 @@ import * as loading_caret from 'assets/images/loading_caret.svg'
 import * as transitions from 'react-transition-group'
 
 import { NavLink} from 'redux-first-router-link'
-import { urls } from '~/common';
+import { urls, tools } from '~/common';
 import * as  Toast from '~/client/toast';
 import SubscriptionSubreddit from '~/common/models/data/SubscriptionSubreddit';
 
@@ -258,7 +258,13 @@ export default class AuthorCell extends React.Component<Props, State>
                     }
                 ),
                 search: async ( name : string ) => { return ( await this.props.searchSubreddits(name) ).map( name => { return { name: name } }  ) },
-                enterBeforeSearchResult: ( name : string ) => { return  { name: name.trim() } },
+                enterBeforeSearchResult: ( name : string ) => 
+                { 
+                    name = tools.string.sanitizeAlphaNumericDashUnderscore(name);
+                    return  { 
+                        name: name.trim() 
+                    } 
+                },
                 prefix: "r/",
                 searchPlaceholder: "Subreddit",
                 emptyMessage: 'Subscribed in all subreddits',

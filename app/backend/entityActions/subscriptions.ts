@@ -4,6 +4,16 @@ import { EndpointException, Exception } from '~/common/exceptions';
 import * as api from '~/common/api';
 import * as RFY from '~/backend/rfy'
 import * as Log from '~/common/log';
+import * as tools from '~/common/tools'
+
+
+function throwIfIllegalCharacters( str : string)
+{
+    if ( !tools.string.confirmAlphaNumericDashUnderscore( str ) )
+    {
+        throw new EndpointException(400, `Input contained illegal characters: ${str}`);
+    }
+}
 
 //None of these methods will flush the manager
 
@@ -16,7 +26,7 @@ export async function getSubscription(manager : Wetland.Scope, subscription_id :
     {
         if (user.id != sub.user.id)
         {
-            throw new Error("Attempted to get subscription belonging to different user");
+            throw new EndpointException( 403, "Attempted to get subscription belonging to different user");
         }
 
         sub.user = user;
@@ -27,8 +37,18 @@ export async function getSubscription(manager : Wetland.Scope, subscription_id :
 
 export async function getNewSubscription( manager : Wetland.Scope,  user : Entities.User, author_name : string, ...subreddit_names : string[]  ) : Promise<Entities.Subscription>
 {
+    throwIfIllegalCharacters(author_name);
+    /*
+    for (let subreddit_name of subreddit_names)
+    {
+        throwIfIllegalCharacters(author_name);
+    }
+    */
+    
+
     let sub : Entities.Subscription;
     let author : Entities.Author = await manager.getRepository(Entities.Author).findOne({ name_lower: author_name.toLowerCase() }, { });
+    
     if (author == null)
     {
         //Author doesn't exist, sub also doesn't exist.
@@ -43,7 +63,7 @@ export async function getNewSubscription( manager : Wetland.Scope,  user : Entit
 
         if (sub != null)
         {
-            throw new Error("User already subscribed to author");
+            throw new EndpointException(400, "User already subscribed to author");
         }
     }
 
@@ -81,9 +101,14 @@ export async function addSubredditToSubscription( manager : Wetland.Scope, sub :
         throw new EndpointException(400, "Reached max number of subscribed subreddits for author")
     }
 
+    //Confirm valid subreddit names (characters, no if it exists)
     //Convert to lowercase, remove duplicates
     let nameSet : Map<string, string> = new Map<string, string>();
-    subreddit_names.forEach( name => nameSet.set(name.toLowerCase(), name) );
+    subreddit_names.forEach( ( name : string ) => 
+    { 
+        throwIfIllegalCharacters(name);
+        nameSet.set(name.toLowerCase(), name) } 
+    );
 
     //Remove any subreddits we are already subscribed to from set
     sub.subreddits.forEach( ( subreddit : Entities.Subreddit ) =>  nameSet.delete(subreddit.name_lower ) );
@@ -126,6 +151,7 @@ export async function addSubredditToSubscription( manager : Wetland.Scope, sub :
 
 export async function removeSubredditFromSubscription( manager : Wetland.Scope, sub : Entities.Subscription, subreddit_name : string )
 {
+    throwIfIllegalCharacters(subreddit_name);
     let subreddit : Entities.Subreddit = await manager.getRepository(Entities.Subreddit).findOne({ name_lower: subreddit_name.toLowerCase() }, { })
     sub.subreddits.remove(subreddit);
 }
@@ -149,8 +175,11 @@ export async function getCount(manager : Wetland.Scope)
 //A user may attempt to subscribe to a subreddit that does not exist.
 //They may also provide the subreddit name with incorrect casing.
 //Confirm new subreddits with reddit and update/delete accordingly.
+//this one does FLUSH!
 export async function confirmSubreddit( name : string )
 {
+
+    
     let casedName = await api.reddit.subreddits.getNameIfExists(name);
 
     if ( casedName == null || casedName != name)

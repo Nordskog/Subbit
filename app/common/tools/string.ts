@@ -39,3 +39,16 @@ export function getTimeRangeDisplayString( range : PostTimeRange )
             return "all";
     }
 }
+
+export function sanitizeAlphaNumericDashUnderscore( str : string)
+{
+    //Remove any illegal characters
+    return str.replace(/[^\w\d\-_]/gi, '');
+}
+
+export function confirmAlphaNumericDashUnderscore( str : string)
+{
+    //Returns true if the input string only contains alphanumerical characters and underscore and dash.
+    //These should be the only characters valid on reddit.
+    return /^(?:\w|\d|[-_])+$/.test(str)
+}
