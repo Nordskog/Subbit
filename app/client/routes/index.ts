@@ -10,6 +10,7 @@ export const routesMap : RoutesMap<any, any> = {
     STATS: { path: '/stats', thunk: actions.routes.statsRoute() },   
 
     ABOUT: { path: '/about', thunk: actions.routes.aboutRoute() }, 
+    PRIVACY: { path: '/privacy', thunk: actions.routes.aboutRoute() }, 
 
     //Author
     HOME: { path: '/', thunk: actions.routes.authorsRoutes() }, 

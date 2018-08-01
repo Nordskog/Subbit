@@ -12,9 +12,9 @@ const config =
         postExpandCount: 10,     //Number of posts to expand by every time more posts button is hit
         postFetchCount: 36,      //How many posts to fetch in each request
         authorDisplayCount: 10,  //How many authors to display on one page (subscriptions always displays all)
-        userAgent:  `Subbit_${envTools.getVersion()}`,    //Defined from process.env.npm_package_version in webpack config
+        userAgent:  "Subbit_"+process.env.npm_package_version,    //Replaced by webpack config for client
         siteName: "Subbit",
-        aboutMessage: "Let Roughy on Reddit or in #HFY on Freenode know of any problems",
+        aboutMessage: "Problems? Roughy can help.\nHit him up on Reddit or in #Subbit on Snoonet",
         contactUrl: "mailto:example@exmaple.com",
         sourceCodeUrl: "https://github.com/Nordskog/Subbit"
     },

@@ -50,6 +50,13 @@ export default class app extends React.Component<Props,any>
                     />
         }
 
+        if (this.props.siteMode == models.SiteMode.PRIVACY)
+        {
+            return <components.tools.Message 
+                        message={MessageType.PRIVACY}
+                    />
+        }
+
         if (this.props.filter == models.AuthorFilter.SUBSCRIPTIONS  )
         {
             if ( !this.props.authenticated)

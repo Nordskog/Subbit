@@ -131,6 +131,7 @@ export namespace Route
     export const AUTHENTICATE   : string = "AUTHENTICATE";
     export const STATS          : string = "STATS";
     export const ABOUT          : string = "ABOUT";
+    export const PRIVACY        : string = "PRIVACY";
 
     export interface ABOUT 
     {
@@ -143,6 +144,11 @@ export namespace Route
     };
 
     export interface HOME 
+    {
+
+    };
+
+    export interface PRIVACY 
     {
 
     };

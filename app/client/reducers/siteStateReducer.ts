@@ -55,6 +55,14 @@ export function siteStateReducer(state = getDefaultSiteState(), action :  models
             }
         }
 
+        case actions.types.Route.PRIVACY:
+        {
+            return {
+                ...state,
+                mode: models.SiteMode.PRIVACY
+            }
+        }
+
         case actions.types.Route.ABOUT:
         {
             return {

@@ -17,11 +17,14 @@ import { classConcat } from '~/common/tools/css';
 import * as authorStyles from 'css/author.scss'
 import { urls } from '~/common';
 
+import * as actions from '~/client/actions'
+import { NavLink} from 'redux-first-router-link'
+
 import config from 'root/config'
 
 export enum MessageType 
 {
-  NOT_LOGGED_IN, NO_SUBSCRIPTIONS, ABOUT
+  NOT_LOGGED_IN, NO_SUBSCRIPTIONS, ABOUT, PRIVACY
 }
 
 interface Props
@@ -61,6 +64,11 @@ export default class MessageComponent extends React.Component<Props,State>
         case MessageType.ABOUT:
         {
           return this.getAboutMessage();
+        }
+
+        case MessageType.PRIVACY:
+        {
+          return this.getPrivacyMessage();
         }
 
         default:
@@ -178,6 +186,7 @@ export default class MessageComponent extends React.Component<Props,State>
                   <span>your favorite authors!</span>
 
                 </div>
+                
 
 
             </div>
@@ -215,6 +224,10 @@ export default class MessageComponent extends React.Component<Props,State>
               <div className={styles.spacer}/>
 
               {this.getSubscriptionInfo()}
+
+              <div className={styles.spacer}/>
+
+              {this.getBottomLinks()}
 
 
             </div>
@@ -256,8 +269,38 @@ export default class MessageComponent extends React.Component<Props,State>
   /////////////////////////////
 
 
+  getBottomLinks( swapPrivacyForAbout : boolean = false)
+  {
+    return  <div className={styles.linkContainer}>
+                {
+                  swapPrivacyForAbout ? 
+                    <NavLink className={ styles.link}
+                    to={ { type: actions.types.Route.ABOUT, payload: { } } as actions.types.Route.ABOUT }>
+                    About
+                    </NavLink>  
+                    :
+                    <NavLink className={ styles.link}
+                    to={ { type: actions.types.Route.PRIVACY, payload: { } } as actions.types.Route.PRIVACY }>
+                    Privacy
+                    </NavLink>  
+                }
+              <a className={styles.link} href={config.client.contactUrl}>Contact</a>
+              <a className={styles.link} href={config.client.sourceCodeUrl}>Source code</a>
+          </div>
+  }
+
   getAboutMessage()
   {
+    //Line breaks in string input is ignored, so I guess we're doing this.
+    let aboutMessageParts : string[] = config.client.aboutMessage.split('\n');
+    let aboutMessageComponents = [];
+    let i = 0;
+    for (let part of aboutMessageParts)
+    {
+      aboutMessageComponents.push( <span key={i}>{part}</span> );
+      i++;
+    }
+
     return <div className={styles.container}>
     
             <SVGInline  className={siteStyles.loadingImage} svg={loading_done}/>
@@ -274,7 +317,7 @@ export default class MessageComponent extends React.Component<Props,State>
               <div className={styles.spacer}/>
 
               <div className={styles.paragraphContainer}>
-                {config.client.aboutMessage}
+                {aboutMessageComponents}
 
               </div>
 
@@ -285,10 +328,37 @@ export default class MessageComponent extends React.Component<Props,State>
               
               <div className={styles.spacer}/>
 
-              <div className={styles.linkContainer}>
-                  <a className={styles.link} href={config.client.contactUrl}>Contact</a>
-                  <a className={styles.link} href={config.client.sourceCodeUrl}>Source code</a>
+              {this.getBottomLinks()}
+
+
+            </div>
+  }
+
+  getPrivacyMessage()
+  {
+    return <div className={styles.container}>
+    
+            <SVGInline  className={siteStyles.loadingImage} svg={loading_done}/>
+              <div className={styles.title}>
+                <span>Privacy Policy</span>
               </div>
+
+              <div className={styles.paragraphContainer}>
+                <span className={styles.paragraphTitle}>What information do we collect?</span>
+                <div className={styles.spacer}/>
+                <span className={styles.leftAlign}>Your Reddit username will be stored permanently to identify your account on this site.</span>
+                <span className={styles.leftAlign}>Your IP address will be included in short-term access logs for diagnostics purposes.</span>
+                <div className={styles.spacer}/>
+                <div className={styles.spacer}/>
+                <span className={styles.paragraphTitle}>What information will we access from your Reddit account?</span>
+                <div className={styles.spacer}/>
+                <span className={styles.leftAlign}>Apart from querying your username, your Reddit account will only be used to list submissions.</span>
+                <span className={styles.leftAlign}>The latter is only performed client-side in the browser, and the information never passes through any external servers.</span>
+              </div>
+
+              <div className={styles.spacer}/>
+
+              {this.getBottomLinks(true)}
 
 
             </div>
