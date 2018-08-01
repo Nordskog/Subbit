@@ -28,6 +28,7 @@
     "html-webpack-plugin": "^2.30.1",
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.17.10",
+    "mysql": "^2.16.0",
     "pg": "^7.4.3",
     "postcss-scss": "^1.0.6",
     "promise": "^8.0.1",

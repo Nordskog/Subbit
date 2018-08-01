@@ -65,13 +65,13 @@ export async function handleCommand( command : Command, args : string[])
 
                 case Command.ROLE:
                 {
-                    let enabled : boolean = args[2] as any;
-                    if (enabled == null)
+                    if ( args[2] == null)
                     {
                         console.log("Expected 'true' or 'false' parameters following role, got",args[2]);
                         break;
                     }
 
+                    let enabled : boolean = args[2] == 'true';
                     let role : CliUserRole = args[1] as any;
 
                     switch(role)
