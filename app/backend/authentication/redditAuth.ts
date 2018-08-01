@@ -172,7 +172,7 @@ export async function createOrUpdateUserFromRedditToken( manager : Wetland.Scope
 
     if (user == null)
     {
-        Log.A('New user', user.username, null );
+        Log.A('New user', username, null );
 
         //Init settings
         let userSettings = new Entities.UserSettings;
