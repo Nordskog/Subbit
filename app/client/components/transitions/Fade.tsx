@@ -11,7 +11,6 @@ import Transition from './Transition';
 {
     come(container : HTMLDivElement, callback)
     {
-        let height : number = container.clientHeight;
         let timeline = new TimelineLite();
 
 
@@ -33,8 +32,6 @@ import Transition from './Transition';
 
     go(container : HTMLDivElement, callback)
     {
-
-           let height : number = container.clientHeight;
            TweenLite.fromTo(container, this.state.duration, 
                {
                     opacity: 1

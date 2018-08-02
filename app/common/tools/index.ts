@@ -9,10 +9,11 @@ import * as css from './css'
 import * as string from './string'
 import * as env from './env'
 import * as http from '~/common/tools/http'
+import * as component from './component'
 
 export 
 {
-    store, time, url, number, jwt, query, reddit, css, string, env, http
+    store, time, url, number, jwt, query, reddit, css, string, env, http, component
 }
 
 

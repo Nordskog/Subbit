@@ -4,6 +4,7 @@ import 'gsap/CSSPlugin';
 
 
 import Transition from './Transition';
+import { tools } from '~/common';
 
 
  export default class FadeVerticalResize extends Transition
@@ -12,6 +13,11 @@ import Transition from './Transition';
     {
         let height : number = container.clientHeight;
         let width : number = container.clientWidth;
+
+        let {verticalPadding, horizontalPadding} = tools.component.getPadding(container);
+        width -= horizontalPadding;
+        height -= verticalPadding;
+
         let timeline = new TimelineLite();
 
 
@@ -40,6 +46,10 @@ import Transition from './Transition';
         
         let height : number = container.clientHeight;
         let width : number = container.clientWidth;
+        let {verticalPadding, horizontalPadding} = tools.component.getPadding(container);
+        width -= horizontalPadding;
+        height -= verticalPadding;
+
         TweenLite.fromTo(container, this.state.duration, 
             {
                 width: width,

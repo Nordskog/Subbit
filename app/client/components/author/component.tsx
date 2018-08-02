@@ -112,7 +112,7 @@ export default class AuthorCell extends React.Component<Props, State>
     renderNoPostsMessage()
     {
         return  <components.transitions.FadeVerticalResize key={'no_posts_container'} className={styles.noPostsContainer}>
-                    No posts here
+                    <div className={styles.noPostsContainerInner}>No posts here</div>
                 </components.transitions.FadeVerticalResize>
     }
 

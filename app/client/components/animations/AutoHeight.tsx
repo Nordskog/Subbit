@@ -1,5 +1,6 @@
 import * as React from 'react';
 import TimelineLite from 'gsap/TimelineLite'; import 'gsap/CSSPlugin';
+import { tools } from '~/common';
 
 
 interface Props
@@ -37,7 +38,10 @@ interface State
 
         if ( this.prevHeight != height)
         {
-        
+            //Client size includes padding, but it is added to the height we set. Remove from animated value to compensate.
+            let {verticalPadding, horizontalPadding} = tools.component.getPadding(this.container);
+            height -= verticalPadding;
+
             if ( this.prevHeight != null)
             {
                     if (this.timeline != null)

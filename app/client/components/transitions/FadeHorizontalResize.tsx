@@ -3,6 +3,7 @@ import TweenLite from 'gsap/TweenLite';
 import 'gsap/CSSPlugin';
 
 import Transition from './Transition';
+import { tools } from '~/common';
 
 
  export default class FadeHorizontalResize extends Transition
@@ -10,6 +11,8 @@ import Transition from './Transition';
     come(container : HTMLDivElement, callback)
     {
         let width : number = container.clientWidth;
+        let {verticalPadding, horizontalPadding} = tools.component.getPadding(container);
+        width -= horizontalPadding;
         let timeline = new TimelineLite();
 
 
@@ -34,6 +37,8 @@ import Transition from './Transition';
     go(container : HTMLDivElement, callback)
     {
         let width : number = container.clientWidth;
+        let {verticalPadding, horizontalPadding} = tools.component.getPadding(container);
+        width -= horizontalPadding;
         TweenLite.fromTo(container, this.state.duration, 
             {
                 width: width,

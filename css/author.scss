@@ -67,6 +67,11 @@
     margin: auto;
     font-weight: bold;
     margin-left: var( --score-width);
+}
+
+.noPostsContainerInner
+{
+    //Padding moved to inner so parent's transition doesn't jump on component removed
     padding-bottom: var( --small-gap )
 }
 
