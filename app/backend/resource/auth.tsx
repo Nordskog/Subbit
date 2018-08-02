@@ -18,7 +18,7 @@ import * as serverActions from '~/backend/actions'
 import * as redditAuth from '~/backend/authentication/redditAuth'
 
 import * as endpointCommons from './endpointCommons'
-import { AuthorizationException } from '~/common/exceptions';
+import { AuthorizationException, EndpointException } from '~/common/exceptions';
 import { Scope } from '~/backend/authentication/generation';
 import * as Log from '~/common/log';
 
@@ -108,6 +108,12 @@ router.post('/api/authorize_local', async (req: WetlandRequest, res: Express.Res
                     //Will throw if invalid
                     let loginType = authentication.redditAuth.confirmAuthState(payload.state);
     
+                    //From what I've seen the code is alphanumerical + undscore and dash. Sanitize here.
+                    if ( !tools.string.confirmAlphaNumericDashUnderscore(payload.code) )
+                    {
+                        throw new AuthorizationException( `Code from reddit should be alphanumerical, got: ${payload.code}`);
+                    }
+
                     let result = await api.reddit.auth.authenticateWithCode(payload.code, urls.RFY_AUTHORIZE_REDIRECT, authentication.redditAuth.getHttpBasicAuthHeader() );
                     if (result == null || result.access_token == null)
                     {
