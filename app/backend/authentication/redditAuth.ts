@@ -14,6 +14,9 @@ import * as RFY from '~/backend/rfy'
 import { AuthorizationException } from '~/common/exceptions';
 
 import * as Log from '~/common/log';
+import { LoginType } from '~/common/models/auth';
+import * as clusterActions from '~/backend/cluster';
+
 
 const activeAuthStates: Map<string, AuthRequestState> = new Map<string, AuthRequestState>();
 let clientAuthentication : models.auth.RedditAuth = {access_token : "", expiry: 0};
@@ -22,7 +25,7 @@ interface AuthRequestState
 {
     loginType: models.auth.LoginType;
     identifier: string;
-    expiresAt: Date;
+    expiresAt: number;
 }
 
 //Requests or updates app-only token
@@ -70,13 +73,33 @@ export function getAuthState( loginType : models.auth.LoginType) : string
 
     let state = {
         identifier: identifier,
-        expiresAt: new Date( Date.now() + ( 1000 * 60 * 5) ), //Valid for 5min
+        expiresAt: Date.now() + ( 1000 * 60 * 5), //Valid for 5min
         loginType: loginType
     }
 
     activeAuthStates.set(identifier, state);
 
+    //Notify other workers
+    clusterActions.broadcastAuthState(state.identifier, state.expiresAt, state.loginType)
+
     return identifier;
+}
+
+//Other worker handledinitial requests
+export function addAuthState( identifier, expiresAt : number, loginType: LoginType)
+{
+    let state = {
+        identifier: identifier,
+        expiresAt: Date.now() + ( 1000 * 60 * 5), //Valid for 5min
+        loginType: loginType
+    }
+    activeAuthStates.set(identifier, state);
+}
+
+//Other worker handledinitial requests
+export function removeAuthState( identifier : string )
+{
+    activeAuthStates.delete(identifier);
 }
 
 //Throws if invalid
@@ -86,15 +109,17 @@ export function confirmAuthState(identifier: string) : models.auth.LoginType
     if (req)
     {
         //Valid for 5min
-        if ( req.expiresAt > new Date() )
+        if ( req.expiresAt > Date.now() )
         {
             activeAuthStates.delete(identifier);
+            clusterActions.broadcastAuthStateRemoval(identifier);
 
             return req.loginType;
         }   
         else
         {
             activeAuthStates.delete(identifier);
+            clusterActions.broadcastAuthStateRemoval(identifier);
             throw new AuthorizationException("Log in attempted with expired state");
         }
     }

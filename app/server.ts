@@ -196,26 +196,34 @@ async function setupSlave()
     //Handle separate websockets for manager / client
     httpServer.on('upgrade', (request : Http.IncomingMessage, socket : Net.Socket, head : Buffer) => 
     {
-        //Hand to master so we don't have to deal with a lot of IPC routing.
-        //Only pass the data we actually need, since the objects contain 
-        //circular references and can't be stringified directly.
-        let action : Action<clusterActions.actionTypes.websocket.UPGRADE_CONNECTION> = {
-            type: clusterActions.actionTypes.websocket.UPGRADE_CONNECTION,
-            payload: {
-                request: { 
-                    headers: request.headers, 
-                    method: request.method, 
-                    url: request.url, 
-                    
-                    connection: {
-                        remoteAddress: request.connection.remoteAddress
-                    } as any
-                },
+        clusterActions.UpgradeConnection(request, socket);
+    });
+
+    //////////////////////////////
+    // Messages from master
+    //////////////////////////////
+
+    process.on( 'message', ( message : Action<any>, handle : Net.Socket | Net.Server  ) => 
+    {            
+        if (message != null)
+        {
+            switch(message.type)
+            {
+                case clusterActions.actionTypes.auth.ADD_AUTH_STATE:
+                {
+                    let payload : clusterActions.actionTypes.auth.ADD_AUTH_STATE = message.payload;
+                    clusterActions.receiveAuthState(payload.identifier, payload.expiresAt, payload.loginType, payload.sourceWorker );
+                    break;
+                }
+
+                case clusterActions.actionTypes.auth.REMOVE_AUTH_STATE:
+                {
+                    let payload : clusterActions.actionTypes.auth.REMOVE_AUTH_STATE = message.payload;
+                    clusterActions.receiveAuthStateRemoval(payload.identifier, payload.sourceWorker );
+                    break;
+                }
             }
         }
-
-        socket.pause();
-        process.send( action, socket );
     });
 
     /////////////////////////////////////////////////////////

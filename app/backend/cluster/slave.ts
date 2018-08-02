@@ -1,10 +1,10 @@
 import * as WebSocket from 'ws'
-import * as clusterActionTypes from '~/backend/cluster/actionTypes'
 import * as cluster from 'cluster'
 import * as Http from 'http';
 import * as Net from 'net';
 import { Action } from '~/common/models';
 import * as Log from '~/common/log';
+import * as clusterActions from '~/backend/cluster/'
 
 let lastDeath : number = 0;
 
@@ -43,9 +43,9 @@ function forkSlave( managerSocket : WebSocket.Server )
         {
             switch(message.type)
             {
-                case clusterActionTypes.websocket.UPGRADE_CONNECTION:
+                case clusterActions.actionTypes.websocket.UPGRADE_CONNECTION:
                 {
-                    let payload : clusterActionTypes.websocket.UPGRADE_CONNECTION = message.payload;
+                    let payload : clusterActions.actionTypes.websocket.UPGRADE_CONNECTION = message.payload;
                     handle = handle as Net.Socket;
                     handle.resume();
 
@@ -56,10 +56,24 @@ function forkSlave( managerSocket : WebSocket.Server )
                     break;
                 }
 
-                case clusterActionTypes.log.LOG:
+                case clusterActions.actionTypes.log.LOG:
                 {
-                    let payload : clusterActionTypes.log.LOG = message.payload;
+                    let payload : clusterActions.actionTypes.log.LOG = message.payload;
                     Log.L(payload.severity, payload.msg, payload.meta)
+                    break;
+                }
+
+                case clusterActions.actionTypes.auth.ADD_AUTH_STATE:
+                {
+                    let payload : clusterActions.actionTypes.auth.ADD_AUTH_STATE = message.payload;
+                    clusterActions.broadcastAuthState(payload.identifier, payload.expiresAt, payload.loginType, payload.sourceWorker );
+                    break;
+                }
+
+                case clusterActions.actionTypes.auth.REMOVE_AUTH_STATE:
+                {
+                    let payload : clusterActions.actionTypes.auth.REMOVE_AUTH_STATE = message.payload;
+                    clusterActions.broadcastAuthStateRemoval(payload.identifier, payload.sourceWorker );
                     break;
                 }
             }
