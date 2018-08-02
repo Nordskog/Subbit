@@ -6,6 +6,8 @@ import { Exception } from '~/common/exceptions';
 import StatsCategory from './StatsCategory'
 import * as entityActions from '~/backend/entityActions';
 import * as helpers from '~/backend/stats/helpers';
+import * as cluster from 'cluster'
+import * as clusterActions from '~/backend/cluster'
 
 //////////////////////////////////
 // Lists all our stats trackers
@@ -46,14 +48,23 @@ export function getTracker( category : StatsCategoryType)
 }
 
 export function add( category : StatsCategoryType, value? : number)
-{   let cat : StatsCategory = getTracker(category);
-    if (cat == null)
+{  
+    //Stats is handled entirely by master
+    if (cluster.isWorker)
     {
-        //Not tracking this category
+        clusterActions.addStatsEntry(category, value);
     }
     else
     {
-        getTracker(category).add(value);
+        let cat : StatsCategory = getTracker(category);
+        if (cat == null)
+        {
+            //Not tracking this category
+        }
+        else
+        {
+            getTracker(category).add(value);
+        }
     }
 }
 

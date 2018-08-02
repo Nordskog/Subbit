@@ -2,6 +2,7 @@ import * as Http from 'http';
 import * as Net from 'net';
 import { Severity } from '~/common/log';
 import { models } from '~/common';
+import { StatsCategoryType } from '~/common/models/stats';
 
 export namespace websocket
 {
@@ -27,6 +28,18 @@ export namespace log
        severity: Severity;
        msg : any;
        meta: Object;
+    }
+
+}
+
+export namespace stats
+{
+    export const ADD_STATS               : string =  'ADD_STATS';
+    
+    export interface ADD_STATS
+    {
+       category: StatsCategoryType;
+       value? : number;
     }
 
 }

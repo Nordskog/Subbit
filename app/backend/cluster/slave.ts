@@ -5,6 +5,7 @@ import * as Net from 'net';
 import { Action } from '~/common/models';
 import * as Log from '~/common/log';
 import * as clusterActions from '~/backend/cluster/'
+import * as stats from '~/backend/stats'
 
 let lastDeath : number = 0;
 
@@ -74,6 +75,13 @@ function forkSlave( managerSocket : WebSocket.Server )
                 {
                     let payload : clusterActions.actionTypes.auth.REMOVE_AUTH_STATE = message.payload;
                     clusterActions.broadcastAuthStateRemoval(payload.identifier, payload.sourceWorker );
+                    break;
+                }
+
+                case clusterActions.actionTypes.stats.ADD_STATS:
+                {
+                    let payload : clusterActions.actionTypes.stats.ADD_STATS = message.payload;
+                    stats.add(payload.category, payload.value);
                     break;
                 }
             }

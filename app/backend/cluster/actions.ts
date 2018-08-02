@@ -5,7 +5,24 @@ import { Action } from '~/common/models/Action';
 import * as actionTypes from '~/backend/cluster/actionTypes'
 import { LoginType } from '~/common/models/auth';
 import * as redditAuth from '~/backend/authentication/redditAuth';
+import { StatsCategoryType } from '~/common/models/stats';
 
+export function addStatsEntry( category : StatsCategoryType, value: number )
+{
+    if (cluster.isMaster)
+        return;
+
+    let action : Action<actionTypes.stats.ADD_STATS> = {
+        type: actionTypes.stats.ADD_STATS,
+        payload: {
+                category: category,
+                value: value,
+            },
+        }
+
+    process.send(action);
+
+}
 
 export function broadcastAuthState( identifier : string, expiresAt: number, loginType: LoginType, sourceWorker? : number )
 {
