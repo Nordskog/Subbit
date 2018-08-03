@@ -227,7 +227,7 @@ export default class MessageComponent extends React.Component<Props,State>
 
               <div className={styles.spacer}/>
 
-              {this.getBottomLinks()}
+              {this.getBottomLinks( false, true)}
 
 
             </div>
@@ -268,22 +268,41 @@ export default class MessageComponent extends React.Component<Props,State>
   // About
   /////////////////////////////
 
-
-  getBottomLinks( swapPrivacyForAbout : boolean = false)
+  getBottomLinks( swapPrivacyForAbout : boolean = false, showAbout : boolean = false)
   {
+
+    let getLink = ( to, text) => {
+
+      return <NavLink key={text} className={ styles.link}
+      to={ to }>
+      {text}
+      </NavLink> 
+    }
+
+    let optionals = [];
+
+    if (showAbout)
+    {
+      optionals = [
+        getLink( { type: actions.types.Route.ABOUT, payload: { } } as actions.types.Route.ABOUT, "about"),
+        getLink( { type: actions.types.Route.PRIVACY, payload: { } } as actions.types.Route.PRIVACY, "privacy")
+      ];
+    }
+    else if (swapPrivacyForAbout)
+    {
+      optionals = [
+        getLink( { type: actions.types.Route.ABOUT, payload: { } } as actions.types.Route.ABOUT, "about"),
+      ];
+    }
+    else
+    {
+      optionals = [
+        getLink( { type: actions.types.Route.PRIVACY, payload: { } } as actions.types.Route.PRIVACY, "privacy")
+      ];
+    }
+
     return  <div className={styles.linkContainer}>
-                {
-                  swapPrivacyForAbout ? 
-                    <NavLink className={ styles.link}
-                    to={ { type: actions.types.Route.ABOUT, payload: { } } as actions.types.Route.ABOUT }>
-                    About
-                    </NavLink>  
-                    :
-                    <NavLink className={ styles.link}
-                    to={ { type: actions.types.Route.PRIVACY, payload: { } } as actions.types.Route.PRIVACY }>
-                    Privacy
-                    </NavLink>  
-                }
+                { optionals }
               <a className={styles.link} href={config.client.contactUrl}>Contact</a>
               <a className={styles.link} href={config.client.sourceCodeUrl}>Source code</a>
           </div>
