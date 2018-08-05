@@ -1,5 +1,6 @@
 ﻿import { Request, Response } from 'express';
-import { WetlandRequest } from '~/backend/rfy';
+
+import * as Express from 'express';
 
 import * as RFY from '~/backend/rfy';
 import * as Entities from '~/backend/entity';
@@ -21,10 +22,9 @@ import * as Log from '~/common/log';
 import serverConfig from 'root/server_config';
 import * as tools from '~/common/tools';
 
-const express = require('express');
-const router = express.Router();
+const router = Express.Router();
 
-router.get('/api/subscription', async (req: WetlandRequest, res: Response) =>
+router.get('/api/subscription', async (req: Request, res: Response) =>
 {
 
     let manager = RFY.wetland.getManager();
@@ -63,7 +63,7 @@ router.get('/api/subscription', async (req: WetlandRequest, res: Response) =>
     }
 });
 
-router.post('/api/subscription', async (req: WetlandRequest, res: Response) =>
+router.post('/api/subscription', async (req: Request, res: Response) =>
 {   
     let manager = RFY.wetland.getManager();
     let token : string  = req.headers.access_token as string;
@@ -155,4 +155,4 @@ router.post('/api/subscription', async (req: WetlandRequest, res: Response) =>
     }
 });
 
-module.exports = router;
+export default router;

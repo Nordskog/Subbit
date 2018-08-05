@@ -6,14 +6,11 @@ require('module-alias').addAlias("~", __dirname + "/");
 require('module-alias').addAlias("css", __dirname + "/../css");
 require('module-alias').addAlias("root", __dirname + "/../");
 
-
-
 let debug = require('debug');
 let path = require('path');
 
 //More stuff should probably be moved into separate modulesl 
 import * as setup from '~/setup'
-
 
 import * as RFY from '~/backend/rfy';
 
@@ -31,8 +28,7 @@ import * as WebSocket from 'ws'
 
 import * as Log from '~/common/log';
 
-const bodyParser = require('body-parser');
-const expressWetland = require('express-wetland');
+import bodyParser from 'body-parser';
 
 import serverConfig from 'root/server_config'
 
@@ -44,12 +40,17 @@ import { Action } from '~/common/models';
 
 import * as clusterActions from '~/backend/cluster/'
 
+import os from 'os';
+
+import * as routers from '~/backend/resource';
+
+import webpackDevMiddleware from 'webpack-dev-middleware';
+import webpackHotMiddleware from 'webpack-hot-middleware';
+
 const DEV = process.env.NODE_ENV === 'development'
 
 async function setupMain()
 {
-
-
     ////////////////
     // Logging
     /////////////////
@@ -91,7 +92,7 @@ async function setupMain()
     // Fork slaves
     //////////////////
 
-    let cpus = require('os').cpus().length;
+    let cpus = os.cpus().length;
     if (DEV)
     {
         //Limit to single core when dev
@@ -119,15 +120,6 @@ async function setupSlave()
     /////////////////
 
     await RFY.initDatabase();
-
-    ////////////////
-    //Hot reload
-    ////////////////
-
-    const webpackDevMiddleware = require('webpack-dev-middleware')
-    const webpackHotMiddleware =  require('webpack-hot-middleware')
-    const webpackHotServerMiddleware =  require('webpack-hot-server-middleware')
-
     /////////////////////
     // Express backend
     /////////////////////
@@ -136,12 +128,11 @@ async function setupSlave()
     // Middleware
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));
-    app.use(expressWetland(RFY.wetland));
 
     // Resources for api
-    app.use(require('~/backend/resource/auth'));
-    app.use(require('~/backend/resource/subscription'));
-    app.use(require('~/backend/resource/user'));
+    app.use(routers.authRouter);
+    app.use(routers.subscriptionRouter);
+    app.use(routers.userRouter);
 
     //////////////
     // Serving webpack output

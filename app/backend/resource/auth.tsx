@@ -1,7 +1,7 @@
-﻿import * as Express from 'express';
+﻿
+import { Request, Response } from 'express';
+import * as Express from 'express';
 import * as Entities from '~/backend/entity';
-
-import { WetlandRequest } from '~/backend/rfy';
 
 import * as Wetland from 'wetland';
 import * as RFY from '~/backend/rfy';
@@ -26,12 +26,11 @@ import serverConfig from 'root/server_config'
 
 import * as stats from '~/backend/stats'
 
-const express = require('express');
-const router = express.Router();
+const router = Express.Router();
 
 require('isomorphic-fetch');
 
-router.get('/api/authorize_remote', (req: WetlandRequest, res: Express.Response) =>
+router.get('/api/authorize_remote', (req: Request, res: Response) =>
 {
     let sessionLogin : boolean = req.query.session == 'true';
 
@@ -42,7 +41,7 @@ router.get('/api/authorize_remote', (req: WetlandRequest, res: Express.Response)
     res.redirect(url); 
 });
 
-router.get('/api/authorize_refresh', async (req: WetlandRequest, res: Express.Response) =>
+router.get('/api/authorize_refresh', async (req: Request, res: Response) =>
 {
     let token : string = req.headers.access_token as string;
 
@@ -89,7 +88,7 @@ router.get('/api/authorize_refresh', async (req: WetlandRequest, res: Express.Re
 });
 
 
-router.post('/api/authorize_local', async (req: WetlandRequest, res: Express.Response) =>
+router.post('/api/authorize_local', async (req: Request, res: Response) =>
 {
     let token : string = req.headers.access_token as string;
     let action : models.Action<any> = req.body;
@@ -164,4 +163,4 @@ router.post('/api/authorize_local', async (req: WetlandRequest, res: Express.Res
     }
 });
 
-module.exports = router;
+export default router;

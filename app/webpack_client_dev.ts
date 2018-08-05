@@ -1,10 +1,10 @@
 ﻿let path = require('path');
 let basePath = __dirname;
 
-let HtmlWebpackPlugin = require('html-webpack-plugin');
+let HtmlWebpackPlugin = require('html-webpack-plugin'); //Something wrong with webpack typings
 import * as Webpack from 'webpack';
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
-const StatsPlugin = require('stats-webpack-plugin')
+import ExtractTextPlugin from "extract-text-webpack-plugin";
+import StatsPlugin from 'stats-webpack-plugin';
 
 import prodConfig from './webpack_client'
 

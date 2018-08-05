@@ -2,13 +2,13 @@
 let path = require('path');
 let basePath = __dirname;
 
-let HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');   //Something wrong with webpack typings
 import * as Webpack from 'webpack';
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
-const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
-//const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
+import ExtractTextPlugin from "extract-text-webpack-plugin";
+import TsconfigPathsPlugin  from 'tsconfig-paths-webpack-plugin';
+import UglifyJsPlugin from 'uglifyjs-webpack-plugin';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+import LodashModuleReplacementPlugin from 'lodash-webpack-plugin';
 
 const config = {
     name: 'client',

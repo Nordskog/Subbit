@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
-import { WetlandRequest } from '~/backend/rfy';
+
+import * as Express from 'express';
 
 import * as RFY from '~/backend/rfy';
 import * as Entities from '~/backend/entity';
@@ -17,11 +18,10 @@ import * as Log from '~/common/log';
 import * as tools from '~/common/tools'
 import serverConfig from 'root/server_config'
 
-const express = require('express');
-const router = express.Router();
+const router = Express.Router();
 
 //Set current 
-router.get('/api/user/last_visit', async (req: WetlandRequest, res: Response) =>
+router.get('/api/user/last_visit', async (req: Request, res: Response) =>
 {
     let manager = RFY.wetland.getManager();
     let token : string  = req.headers.access_token as string;
@@ -63,7 +63,7 @@ router.get('/api/user/last_visit', async (req: WetlandRequest, res: Response) =>
 
 //There are currently no settings stored server side
 //But if there were any, this is where you'd get them.
-router.get('/api/user/settings', async (req: WetlandRequest, res: Response) =>
+router.get('/api/user/settings', async (req: Request, res: Response) =>
 {
     let manager = RFY.wetland.getManager();
     let token : string  = req.headers.access_token as string;
@@ -92,7 +92,7 @@ router.get('/api/user/settings', async (req: WetlandRequest, res: Response) =>
 });
 
 
-router.post('/api/user', async (req: WetlandRequest, res: Response) =>
+router.post('/api/user', async (req: Request, res: Response) =>
 {   
     let manager = RFY.wetland.getManager();
     let token : string  = req.headers.access_token as string;
@@ -118,4 +118,4 @@ router.post('/api/user', async (req: WetlandRequest, res: Response) =>
 });
 
 
-module.exports = router;
+export default router;

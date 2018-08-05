@@ -1,5 +1,4 @@
 ﻿import { Wetland, EntityCtor, Entity, EntityRepository, Migrator } from 'wetland';
-import { Request, Response } from 'express';
 import * as Knex from 'knex';
 
 import * as Log from '~/common/log';
@@ -39,9 +38,4 @@ export function getRepository<T extends Entity>(entity: string) : EntityReposito
 {
     let manager = wetland.getManager();
     return manager.getRepository(manager.getEntity(entity) as EntityCtor<T>);
-}
-
-export interface WetlandRequest extends Request
-{
-    wetland: Wetland;
 }
