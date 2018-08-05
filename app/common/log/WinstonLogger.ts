@@ -101,7 +101,7 @@ export class WinstonLogger implements LoggerInterface
             this.logger.add( new WinstonDailyRotateFile( 
             { 
                 level:Severity.access,
-                format: WinstonLogger.filterInclude(Severity.access),
+                format: Winston.format.combine( Winston.format.json(), Winston.format.timestamp(), WinstonLogger.filterInclude(Severity.access) ),
                 filename: Path.join( serverConfig.logging.logDirectoryPath, 'access_%DATE%.log'),
                 datePattern: 'YYYY-MM-DD',  //1 log file per day
                 maxSize: '20m',
@@ -112,6 +112,7 @@ export class WinstonLogger implements LoggerInterface
             this.logger.add( new WinstonDailyRotateFile( 
             {  
                 level:Severity.info,
+                format: Winston.format.combine( Winston.format.json(), Winston.format.timestamp() ),
                 filename: Path.join( serverConfig.logging.logDirectoryPath, 'log_%DATE%.log'),
                 datePattern: 'YYYY-MM-DD',  //1 log file per day
                 maxSize: '20m',
@@ -122,6 +123,7 @@ export class WinstonLogger implements LoggerInterface
             {  
                 handleExceptions: true,
                 level:Severity.warning,
+                format: Winston.format.combine( Winston.format.json(), Winston.format.timestamp() ),
                 filename: Path.join( serverConfig.logging.logDirectoryPath, 'error_%DATE%.log'),
                 datePattern: 'YYYY-MM-DD',  //1 log file per day
                 maxSize: '20m',
