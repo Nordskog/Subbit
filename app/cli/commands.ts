@@ -9,6 +9,7 @@ export enum Command
 {
     USER = 'user',
     ROLE = 'role',
+    HELP = 'help'
 }
 
 export enum CliUserRole
@@ -104,9 +105,24 @@ export async function handleCommand( command : Command, args : string[])
             break;
         }
 
+        case Command.HELP:
+        {
+            console.log("Available commands:");
+            console.log("");
+            console.log("user [USERNAME]                        print user info");
+            console.log("role [USERNAME] [ROLE] [ENABLED]       toggle user role");
+            console.log("");
+            console.log("Valid arguments: ");
+            console.log("");
+            console.log("ENABLED:   true or false");
+            console.log("ROLE:      admin or stats");
+            console.log("USERNAME:  Case-sensitive username");
+            break;
+        }
+
         default:
         {
-            console.log("Unknown command");
+            console.log("Unknown command, run cli help for help");
         }
     }
 

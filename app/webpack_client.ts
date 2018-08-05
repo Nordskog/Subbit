@@ -7,7 +7,7 @@ import * as Webpack from 'webpack';
 import ExtractTextPlugin from "extract-text-webpack-plugin";
 import TsconfigPathsPlugin  from 'tsconfig-paths-webpack-plugin';
 import UglifyJsPlugin from 'uglifyjs-webpack-plugin';
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+//import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import LodashModuleReplacementPlugin from 'lodash-webpack-plugin';
 
 const config = {
@@ -188,7 +188,7 @@ const config = {
           }),
         new UglifyJsPlugin(
         ), //Default config is pretty good
-        //new BundleAnalyzerPlugin()
+        //new BundleAnalyzerPlugin()    //Enable me when you want stats
     ]
 };
 
