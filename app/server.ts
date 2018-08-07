@@ -162,10 +162,6 @@ async function setupSlave()
         //Anything else gets app container
         app.get('/*', function(req, res)
         {
-            //Anything that hits this counts as a pageload I guess
-            //Note that this will be omitted when running in dev mode
-            //as it doesn't have a separate path.
-            stats.add(stats.StatsCategoryType.PAGE_LOADS);
             res.sendFile( path.join(outputPath, "index.html") );
         });
 

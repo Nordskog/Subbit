@@ -19,12 +19,10 @@ export function getAndUpdateLastVisit( loadFromSession : boolean = false)
         {
             let state: State = getState();
             let token: string = tools.store.getAccessToken(state);
-    
-            //No user, no tracking visit
-            if (token == null)
-                return;
-    
+            
+            //Call even if there is no token so we can keep track of total page loads.
             lastVisit = await api.rfy.user.getAndUpdateLastVisit(token);
+
             actions.directActions.session.saveLastVisit(lastVisit);
         }
 

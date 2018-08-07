@@ -26,6 +26,7 @@ router.get('/api/user/last_visit', async (req: Request, res: Response) =>
     let manager = RFY.wetland.getManager();
     let token : string  = req.headers.access_token as string;
 
+    stats.add(stats.StatsCategoryType.PAGE_LOADS);
     try
     {
         if (token)
@@ -51,7 +52,10 @@ router.get('/api/user/last_visit', async (req: Request, res: Response) =>
         }
         else
         {
-            res.json(0);
+            Log.A('Update last visit', null, tools.http.getReqIp( req, serverConfig.server.reverseProxy ) );
+
+            //We don't keep track, so return current time.
+            res.json( Date.now() / 1000 );
         }
     }
     catch (err)
