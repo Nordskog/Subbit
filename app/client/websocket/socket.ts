@@ -42,7 +42,7 @@ export function connect( access_token : string )
     lastAccessToken = access_token; //Keep around incase we need to reconnect
     transmitCredentials(access_token);
 
-    ws = new WebSocket( config.server.websocket_address );
+    ws = new WebSocket( `${config.server.websocket_address}/api/socket` );
 
     ws.onmessage = ( ev : MessageEvent ) => 
     {

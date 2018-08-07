@@ -187,7 +187,10 @@ async function setupSlave()
     //Handle separate websockets for manager / client
     httpServer.on('upgrade', (request : Http.IncomingMessage, socket : Net.Socket, head : Buffer) => 
     {
-        clusterActions.UpgradeConnection(request, socket);
+        if (request.url === '/api/socket')
+        {
+            clusterActions.UpgradeConnection(request, socket);
+        }
     });
 
     //////////////////////////////
