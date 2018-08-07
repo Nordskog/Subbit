@@ -1,8 +1,6 @@
 ﻿import * as Wetland from 'wetland';
 
-import * as models from '~/common/models'
-
-import StatsEntry from './Statsentry'
+import StatsEntry from './StatsEntry'
 
 export default class StatsInterval extends Wetland.Entity
 {

@@ -5,8 +5,6 @@ import * as authority from '~/client/authority'
 import * as actions from '~/client/actions'
 import config from 'root/config'
 import { Dispatch, GetState } from '~/client/actions/tools/types';
-import { Post } from '~/common/models/reddit';
-import { postedDate } from 'css/main.scss';
 import { NetworkException } from '~/common/exceptions';
 import * as Log from '~/common/log'
 
