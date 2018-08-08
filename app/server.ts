@@ -55,17 +55,11 @@ async function setupMain()
     // Logging
     /////////////////
 
-    Log.init(true, DEV);
+    await setup.log.setup( DEV );
 
-    /////////////////
-    // Database
-    /////////////////
-
-    await RFY.initDatabase();
-
-    /////////////////
-    // Stuff
-    /////////////////
+    ////////////////////
+    // We're alive!
+    ////////////////////
 
     Log.I("Starting master "+process.pid);
 
@@ -73,11 +67,12 @@ async function setupMain()
         Log.I("Server configuration: DEV");
     else
         Log.I("Server configuration: PROD");
-    
-    ///////////////////
-    // Stats tracking
-    ///////////////////
 
+    ///////////////////////////////////////
+    //Database, stats
+    ///////////////////////////////////////
+
+    await setup.database.setup();
     await setup.stats.setup();
 
     //////////////////////
@@ -111,15 +106,17 @@ async function setupSlave()
     // Logging
     /////////////////
 
-    Log.init(false);
+    await setup.log.setup();
 
     Log.I(`Starting slave #${cluster.worker.id} at ${process.pid}`);
 
-    /////////////////
-    // Database
-    /////////////////
+    ///////////////////////////////////////
+    //Database, stats, reddit auth
+    ///////////////////////////////////////
 
-    await RFY.initDatabase();
+    await setup.database.setup();
+    await setup.auth.setup();
+
     /////////////////////
     // Express backend
     /////////////////////

@@ -196,7 +196,7 @@ export function fetchAuthorsAction ( appendResults: boolean = false, loadFromSes
     });
 }
 
-//Ignores after
+//Ignores after, and replaces any existing posts.
 export function fetchPosts( author : models.data.AuthorEntry, count : number )
 {
     return WrapWithHandler( async function (dispatch : Dispatch, getState : GetState)

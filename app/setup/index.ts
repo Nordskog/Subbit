@@ -1,6 +1,9 @@
-import * as stats from './stats'
+import * as stats from './stats';
+import * as log from './log';
+import * as auth from './auth';
+import * as database from './database';
 
 export 
 {
-    stats
+    stats, log, auth, database
 }

@@ -3,6 +3,7 @@ import * as Wetland  from 'wetland';
 import * as entityActions from '~/backend/entityActions'
 import * as stats from '~/backend/stats'
 import { StatsCategoryType, StatsTimeRange } from '~/backend/stats'
+import * as cluster from 'cluster'
 
 import * as os from 'os';
 
@@ -23,6 +24,10 @@ let StatsCategoryTypeEnums : StatsCategoryType[] = [
 
 export async function setup()
 {
+    //Only perform on master
+    if (cluster.isWorker)
+        return;
+
     /////////////////////////
     // Setup all trackers
     /////////////////////////

@@ -69,11 +69,13 @@ export function getAppSecret() : string
 
 export function getAuthState( loginType : models.auth.LoginType) : string
 {
-    let identifier: string = Math.floor(Math.random() * 10000000).toString();
+    let identifier: string = `${Math.floor(Math.random() * 10000000).toString()}_${Date.now()}`;
+
+    console.log("New identifier:",identifier);
 
     let state = {
         identifier: identifier,
-        expiresAt: Date.now() + ( 1000 * 60 * 5), //Valid for 5min
+        expiresAt: Date.now() + ( 1000 * 60 * 1), //Valid for 1min
         loginType: loginType
     }
 
@@ -90,7 +92,7 @@ export function addAuthState( identifier, expiresAt : number, loginType: LoginTy
 {
     let state = {
         identifier: identifier,
-        expiresAt: Date.now() + ( 1000 * 60 * 5), //Valid for 5min
+        expiresAt: Date.now() + ( 1000 * 60 * 1), //Valid for 1min
         loginType: loginType
     }
     activeAuthStates.set(identifier, state);
@@ -100,6 +102,18 @@ export function addAuthState( identifier, expiresAt : number, loginType: LoginTy
 export function removeAuthState( identifier : string )
 {
     activeAuthStates.delete(identifier);
+}
+
+//Get rid of old auth states
+export function pruneOldAuthStates()
+{
+    for ( let [identifier, state] of activeAuthStates )
+    {
+        if ( state.expiresAt < Date.now() )
+        {
+            activeAuthStates.delete(identifier);
+        }
+    }
 }
 
 //Throws if invalid
