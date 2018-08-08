@@ -83,39 +83,26 @@ export function fetchAuthorsAction ( appendResults: boolean = false, loadFromSes
             //////////////////////////////////////////////
 
             {
-                //////////////////////
-                // History
-                //////////////////////
                 if (loadFromHistory)
                 {
                     authorEntries = actions.directActions.history.loadAuthors();
                     after = actions.directActions.history.loadAfter();
-
-                    //Save this to session
-                    if (authorEntries != null)
-                        actions.directActions.session.saveAuthors(authorEntries, after);
-                    
                 }
 
-                //////////////////////////
-                // Session
-                //////////////////////////
                 if (authorEntries == null && loadFromSession)
                 {
                     authorEntries = actions.directActions.session.loadAuthors();
                     after = actions.directActions.session.loadAfter();
-
-                    //Save this to history
-                    if (authorEntries != null)
-                    {
-                        actions.directActions.history.saveAuthors( authorEntries, after );
-                    }
                 }
             }
 
-            //getAuthors() normally handles adding to authority, but do it here manually if loading from storage.
+
             if (authorEntries != null)
             {
+                //Especially if we're dealing with history, subscriptions inserted into authors list might not match actual subscriptions
+                actions.directActions.authors.populateAuthorSubscriptions(authorEntries, getState);
+
+                //getAuthors() normally handles adding to authority, but do it here manually if loading from storage.
                 authorEntries.forEach( ( author : models.data.AuthorEntry ) => { authority.author.updateAuthority(author.author) } );
             }
 
@@ -137,20 +124,6 @@ export function fetchAuthorsAction ( appendResults: boolean = false, loadFromSes
                 let authorData = await actions.directActions.authors.getAuthors(dispatch, getState);
                 authorEntries = authorData.authorEntries;
                 after = authorData.after;
-
-                //Save to session storage so we can display without reloading
-                {
-                        if (appendResults)
-                        {
-                            actions.directActions.session.saveAuthors( getState().authorState.authors.concat(authorEntries), after);
-                            actions.directActions.history.saveAuthors( getState().authorState.authors.concat(authorEntries), after );
-                        }
-                        else
-                        {
-                            actions.directActions.session.saveAuthors(authorEntries, after);
-                            actions.directActions.history.saveAuthors( authorEntries, after );
-                        }
-                }
             }
 
             dispatch({
@@ -214,6 +187,11 @@ export function fetchAuthorsAction ( appendResults: boolean = false, loadFromSes
                 
             }
         }
+
+        //Dispatches are synchronous, so state should be updated when we reach this.
+        actions.directActions.session.saveAuthors(getState);
+        actions.directActions.history.saveAuthors(getState);
+
     });
 }
 

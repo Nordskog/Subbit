@@ -16,7 +16,10 @@ export function fetchSubscriptions( loadFromSession : boolean = false)
         let subscriptions : models.data.Subscription[];
         
         if (loadFromSession)
+        {
             subscriptions = actions.directActions.session.loadSubscriptions();
+        }
+
 
         if (subscriptions == null)
         {
@@ -28,13 +31,15 @@ export function fetchSubscriptions( loadFromSession : boolean = false)
                 return;
     
             subscriptions = await api.rfy.subscription.fetchSubscriptions( token);
-            actions.directActions.session.saveSubscriptions(subscriptions);
         }
 
         dispatch({
             type: actions.types.subscription.SUBSCRIPTIONS_FETCHED,
             payload: subscriptions as actions.types.subscription.SUBSCRIPTIONS_FETCHED
         });
+
+        //Dispatches should by synchronous, so state should be updated when we reach this.
+        actions.directActions.session.saveSubscriptions(getState);
     });
 }
 
@@ -64,6 +69,9 @@ export function subscribeToAuthorAction(author : string, subreddits : string[])
             type: actions.types.subscription.SUBSCRIPTION_ADDED,
             payload: subscription as actions.types.subscription.SUBSCRIPTION_ADDED
         });
+
+        //Dispatches should by synchronous, so state should be updated when we reach this.
+        actions.directActions.session.saveSubscriptions(getState);
     });
 }
 
@@ -81,6 +89,9 @@ export function unsubscribeFromAuthor(subscription: models.data.Subscription)
             type: actions.types.subscription.SUBSCRIPTION_REMOVED,
             payload: subscription as actions.types.subscription.SUBSCRIPTION_REMOVED
         });
+
+        //Dispatches should by synchronous, so state should be updated when we reach this.
+        actions.directActions.session.saveSubscriptions(getState);
     });
 }
 
@@ -104,7 +115,10 @@ export function addSubredditToSubscriptionAction(existingSubscription : Subscrip
             });
         }
 
-        let subscription : models.data.Subscription = await api.rfy.subscription.addSubreddit(existingSubscription.id, subreddit_name, token);
+        //Dispatches should by synchronous, so state should be updated when we reach this.
+        actions.directActions.session.saveSubscriptions(getState);
+
+        await api.rfy.subscription.addSubreddit(existingSubscription.id, subreddit_name, token);
 
     });
 }
@@ -129,7 +143,11 @@ export function removeSubredditFromSubscriptionAction(existingSubscription : Sub
             });
         }
 
-        let subscription : models.data.Subscription = await api.rfy.subscription.removeSubreddit(existingSubscription.id, subreddit_name, token);
+        //Dispatches should by synchronous, so state should be updated when we reach this.
+        actions.directActions.session.saveSubscriptions(getState);
+
+        await api.rfy.subscription.removeSubreddit(existingSubscription.id, subreddit_name, token);
+        
     });
 }
 

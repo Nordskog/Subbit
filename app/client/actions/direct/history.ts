@@ -1,5 +1,7 @@
 import { History } from 'history';
 import { AuthorEntry } from '~/common/models/data';
+import { GetState } from '~/client/actions/tools/types';
+import { State } from '~/client/store';
 
 let history : History;
 export function setHistory( historyIn : History )
@@ -7,8 +9,12 @@ export function setHistory( historyIn : History )
     history = historyIn;
 }
 
-export function saveAuthors(  authors : AuthorEntry[], after : string)
+export async function saveAuthors( getState : GetState )
 {
+    let state : State = getState();
+    let authors : AuthorEntry[] = state.authorState.authors;
+    let after = state.authorState.after;
+
     let newState = { ...history.location.state, authors: authors.slice(), after: after };
     history.replace( { ... history.location, state: newState} );
 }

@@ -33,7 +33,7 @@ import { History } from 'history'
 import { Store } from 'redux';
 import { RouteThunk } from 'redux-first-router';
 
-let reduxStore = null;
+let reduxStore : Store<State, any> = null;
 let history : History = null;
 export function getStore() : { store: Store<State, any>, thunk: (Store) => Promise<RouteThunk<any>>, initialDispatch: any, history: History }
 {   

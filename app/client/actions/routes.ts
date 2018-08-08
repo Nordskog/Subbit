@@ -35,7 +35,7 @@ export function authorsRoutes()
                 actions.directActions.page.clearPage(true, dispatch);
             actions.directActions.authentication.loadAuthentication(dispatch, getState);
             await firstLoadDuties(dispatch, getState);
-            actions.authors.fetchAuthorsAction(false, isFirstLoad, true)(dispatch, getState); 
+            actions.authors.fetchAuthorsAction(false, isFirstLoad, true)(dispatch, getState).then( () => { restoreScroll(isFirstLoad) } ); 
         }
 
     });
@@ -122,5 +122,29 @@ async function firstLoadDuties(dispatch : Dispatch, getState : GetState)
     }
 
     return false;
+}
+
+//On first load, after authors fetched
+async function restoreScroll( shouldScroll : boolean )
+{
+    //The first time you enter a new route, then follow a link and hit back, the page is almost
+    //always completely reloaded, so we don't get any scroll restoration.  Subsequent follow-link-and-backs work fine.
+    //Scroll is stored in session before page unload, and restore here if window scroll is 0. 
+    //Must be called with setTimeout(), as otherwise it's called too early to have any affect.
+    if ( shouldScroll )
+    {
+        let scroll : number = actions.directActions.session.loadScroll();
+
+        if (scroll != null && scroll > 0 && window.scrollY == 0)
+        {
+            setTimeout(() => 
+            {
+                window.scrollTo( { top: scroll, behavior: "instant" } );
+
+            }, 1);
+
+        }
+    }
+
 }
 

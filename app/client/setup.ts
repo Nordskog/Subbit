@@ -3,8 +3,6 @@ import * as toast from "~/client/toast";
 import * as tools from '~/common/tools'
 import * as sessionActions from '~/client/actions/direct/session'
 
-
-
 /////////////////////////////////////////////////////
 // Register callbacks to display ratelimit toasts
 /////////////////////////////////////////////////////
@@ -45,11 +43,18 @@ function evaluateSessionState()
 
 function registerUnloadCallbacks()
 {
-    //Any requests in progress when the user leaves the page will produce errors that
-    //the browser will not allow us to detech as such. Any ongoing requests must be manually cancelled first.
+
     window.addEventListener( "beforeunload", ( event : BeforeUnloadEvent ) => 
     {
+        //Any requests in progress when the user leaves the page will produce errors that
+        //the browser will not allow us to detect as such. Any ongoing requests must be manually cancelled first.
         api.cancelAll();
+
+        //So scroll restoration works fine in pretty much every scenario, with the exception of the
+        //the first time the user follows a link and hits back after navigating to a new route.
+        //This also happens to be the most common one by far.
+        //This is only a problem when the page has been unloaded, so let session handle it.
+        sessionActions.saveScroll(window.scrollY);
     });
 }
 
@@ -58,6 +63,6 @@ export function setupClientStuff()
     evaluateSessionState();
     api.reddit.registerRatelimitCallbacks(handleRatelimitCallback, handleRateLimitedCallback);
     registerUnloadCallbacks();
-
+    
 }
 
