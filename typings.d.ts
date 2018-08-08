@@ -2,6 +2,7 @@
 //The former outputs a module, the other just the filepath.
 declare module '*.svg';
 declare module '*.png';
+declare module '*.scss';
 
 declare module 'victory'
 {
