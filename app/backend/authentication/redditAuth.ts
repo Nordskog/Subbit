@@ -170,7 +170,7 @@ export async function createOrUpdateUserFromRedditToken( manager : Wetland.Scope
 
     //No user provided, fetch username from reddit
     let username;
-    if(!user)
+    if( user == null)
     {
         //Most of the api uses the client-side models, which expects a unix time instead of a date
         let redditAuth : models.auth.RedditAuth = {
@@ -188,7 +188,7 @@ export async function createOrUpdateUserFromRedditToken( manager : Wetland.Scope
         username = user.username;
     }
 
-    if ( username == null)
+    if ( username === null)
     {
         throw new AuthorizationException("Could not retrieve username from reddit");
     }

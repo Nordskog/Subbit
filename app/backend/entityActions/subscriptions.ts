@@ -38,13 +38,6 @@ export async function getSubscription(manager : Wetland.Scope, subscription_id :
 export async function getNewSubscription( manager : Wetland.Scope,  user : Entities.User, author_name : string, ...subreddit_names : string[]  ) : Promise<Entities.Subscription>
 {
     throwIfIllegalCharacters(author_name);
-    /*
-    for (let subreddit_name of subreddit_names)
-    {
-        throwIfIllegalCharacters(author_name);
-    }
-    */
-    
 
     let sub : Entities.Subscription;
     let author : Entities.Author = await manager.getRepository(Entities.Author).findOne({ name_lower: author_name.toLowerCase() }, { });
@@ -182,7 +175,7 @@ export async function confirmSubreddit( name : string )
     
     let casedName = await api.reddit.subreddits.getNameIfExists(name);
 
-    if ( casedName == null || casedName != name)
+    if ( casedName === null || casedName !== name)
     {
 
         let manager : Wetland.Scope =  RFY.wetland.getManager();
@@ -194,7 +187,7 @@ export async function confirmSubreddit( name : string )
             return;
         }
 
-        if (casedName == null)
+        if (casedName === null)
         {
             Log.W(`User attempted to subscribe to subreddit that does not exist: ${name}`);
             manager.remove(subreddit);
