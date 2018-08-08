@@ -132,6 +132,8 @@ router.post('/api/subscription', async (req: Request, res: Response) =>
                 let sub : Entities.Subscription = await entityActions.subscriptions.getSubscription(manager, payload.id, user);
                 if (sub == null)
                 {
+                    //Likely browsing in multiple tabs with subs out of sync.
+                    //Warning will be displayed to user, and sub removed locally. 
                     throw new EndpointException(400, "Subscription with id "+payload.id+" does not exist", Severity.warning);
                 }
 

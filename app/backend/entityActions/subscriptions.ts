@@ -56,7 +56,10 @@ export async function getNewSubscription( manager : Wetland.Scope,  user : Entit
 
         if (sub != null)
         {
-            throw new EndpointException(400, "User already subscribed to author");
+            //User may have multiple tabs open and subscribe in one but not the other.
+            //Act as if everything is okay and just update with new subreddits.
+            //Existing sub may have subreddits listed. They will be kept.
+            Log.I(`User already subscribed to author: ${author_name}`);
         }
     }
 
@@ -145,8 +148,10 @@ export async function addSubredditToSubscription( manager : Wetland.Scope, sub :
 export async function removeSubredditFromSubscription( manager : Wetland.Scope, sub : Entities.Subscription, subreddit_name : string )
 {
     throwIfIllegalCharacters(subreddit_name);
-    let subreddit : Entities.Subreddit = await manager.getRepository(Entities.Subreddit).findOne({ name_lower: subreddit_name.toLowerCase() }, { })
-    sub.subreddits.remove(subreddit);
+    let subreddit : Entities.Subreddit = await manager.getRepository(Entities.Subreddit).findOne({ name_lower: subreddit_name.toLowerCase() }, { });
+
+    if ( subreddit != null)
+        sub.subreddits.remove(subreddit);
 }
 
 export async function getCount(manager : Wetland.Scope)
