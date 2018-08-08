@@ -475,11 +475,18 @@ export default class RedditsCell extends React.Component<Props, State>
         {
             if (searchItem.toggleHighlight)
             {
-                existingListItem.highlighted = !listItem.highlighted;
+                existingListItem.highlighted = !existingListItem.highlighted;
+                listItem.highlighted = existingListItem.highlighted;
             }
         }
         else
         {
+            if (searchItem.toggleHighlight)
+            {
+                //New item means toggle on
+                listItem.highlighted = true;
+            }
+            
             if (itemIsSearchResult)
             {
                 if (searchItem.addToDisplayList)
@@ -490,13 +497,15 @@ export default class RedditsCell extends React.Component<Props, State>
             }
         }
 
+
         ///////////////////////////////
         // Update highlight map
         ///////////////////////////////
 
         if (searchItem.toggleHighlight)
         {
-            if (listItem.highlighted)
+
+            if (!listItem.highlighted)
             {
                 searchItem.highlightMap.delete( listItem.name.toLowerCase());
             }
