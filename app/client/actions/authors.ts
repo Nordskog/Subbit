@@ -13,6 +13,7 @@ import { CancelledException, NetworkException, Exception } from '~/common/except
 import { Dispatch, GetState } from '~/client/actions/tools/types';
 import { WrapWithHandler } from '~/client/actions/tools/error';
 import author from '~/client/components/author/container';
+import { Post } from '~/common/models/reddit';
 
 export function changeSubreddit( subreddit : string)
 {
@@ -222,20 +223,45 @@ export function fetchPosts( author : models.data.AuthorEntry, count : number )
             subreddits = [state.authorState.subreddit];
         }
 
+        try 
+        {
+            let {posts, after} = await api.reddit.posts.getPosts(author.author.name, null, redditAuth, count, ...subreddits)
 
-        let {posts, after} = await api.reddit.posts.getPosts(author.author.name, null, redditAuth, count, ...subreddits)
-        
-        dispatch({
-            type: actions.types.authors.POSTS_ADDED,
-            payload: { 
-                author: author.author.name,
-                posts: posts,
-                after: after,
-                end: after == null,
-                replace: true  
-            }  as actions.types.authors.POSTS_ADDED
-        });
+            dispatch({
+                type: actions.types.authors.POSTS_ADDED,
+                payload: { 
+                    author: author.author.name,
+                    posts: posts,
+                    after: after,
+                    end: after == null,
+                    replace: true  
+                }  as actions.types.authors.POSTS_ADDED
+            });
 
+        }
+        catch( err )
+        {
+            //Return existing values when things go south, since the author will
+            //stuck in an awaiting-updated-posts state until it receives new props.
+            let posts : Post[] = author.author.posts;
+            let after : string = author.after;
+
+            //Dispatch whatever we started with and rethrow.
+            dispatch({
+                type: actions.types.authors.POSTS_ADDED,
+                payload: { 
+                    author: author.author.name,
+                    posts: posts,
+                    after: after,
+                    end: after == null,
+                    replace: true  
+                }  as actions.types.authors.POSTS_ADDED
+            });
+
+            throw(err);
+        }
+
+    
     });
 }
 
