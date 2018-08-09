@@ -4,6 +4,7 @@ import * as components from '~/client/components'
 import { ToggleItem } from '~/client/components/tools';
 import * as urls from '~/common/urls'
 import * as actions from '~/client/actions'
+import MediaQuery from 'react-responsive'
 
 import { NavLink} from 'redux-first-router-link'
 
@@ -98,17 +99,23 @@ export default class UserSettingsComponent extends React.Component<Props, State>
     {
         if (!this.props.authenticated)
         {
-           return <div className={styles.loginContainer}>
-                 <a href={urls.getClientLoginUrl(!this.state.rememberMe)} className={styles.loginButton}>Login</a>
-                 <div className={styles.rememberMeCenterer} onClick={ () => this.setRememberMe( !this.state.rememberMe ) } >
-                    <div className={styles.rememberMeContainer} >
-                        <components.tools.Checkbox checked={this.state.rememberMe} callback={ (checked) => this.setRememberMe(checked) } />
-                        <span className={styles.rememberMeText}> Remember me</span> 
-                    </div>
-                </div>
-
-            </div>
-
+            return <MediaQuery query="screen and (max-width: 1100px)">
+                    {
+                        (matches : boolean) => 
+                        {
+                            return <div className={styles.loginContainer}>
+                                        <a href={urls.getClientLoginUrl(!this.state.rememberMe, matches)} className={styles.loginButton}>Login</a>
+                                        <div className={styles.rememberMeCenterer} onClick={ () => this.setRememberMe( !this.state.rememberMe ) } >
+                                            <div className={styles.rememberMeContainer} >
+                                                <components.tools.Checkbox checked={this.state.rememberMe} callback={ (checked) => this.setRememberMe(checked) } />
+                                                <span className={styles.rememberMeText}> Remember me</span> 
+                                            </div>
+                                        </div>
+                
+                                    </div>
+                        } 
+                    }
+                    </MediaQuery>
         }
     }
 

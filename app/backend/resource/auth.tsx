@@ -32,12 +32,14 @@ require('isomorphic-fetch');
 
 router.get('/api/authorize_remote', (req: Request, res: Response) =>
 {
-    let sessionLogin : boolean = req.query.session == 'true';
+    let sessionLogin : boolean = req.query.session === 'true';
+    let compactLogin : boolean = req.query.compact === 'true';
 
     Log.A('Reddit login redirect', null, tools.http.getReqIp( req, serverConfig.server.reverseProxy ) );
 
     //Login via reddit
-    let url = authentication.redditAuth.generateRedditLoginUrl(sessionLogin ? models.auth.LoginType.SESSION : models.auth.LoginType.PERMANENT);
+    let url = authentication.redditAuth.generateRedditLoginUrl(sessionLogin ? models.auth.LoginType.SESSION : models.auth.LoginType.PERMANENT, compactLogin);
+
     res.redirect(url); 
 });
 

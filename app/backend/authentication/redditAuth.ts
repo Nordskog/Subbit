@@ -152,9 +152,9 @@ export function getHttpBasicAuthHeader()
             };
 }
 
-export function generateRedditLoginUrl( loginType : models.auth.LoginType )
+export function generateRedditLoginUrl( loginType : models.auth.LoginType, compactLogin : boolean )
 {
-    return tools.url.appendUrlParameters(urls.REDDIT_AUTH_URL,
+    return tools.url.appendUrlParameters( compactLogin ? urls.REDDIT_AUTH_URL_COMPACT : urls.REDDIT_AUTH_URL,
         {
             client_id: authentication.redditAuth.getAppId(),
             response_type: "code",

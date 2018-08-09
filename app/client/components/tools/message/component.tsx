@@ -12,6 +12,8 @@ import * as expand_caret from 'assets/images/expand_caret.svg'
 
 import * as components from '~/client/components'
 
+import MediaQuery from 'react-responsive'
+
 import { classConcat } from '~/common/tools/css';
 
 import * as authorStyles from 'css/author.scss'
@@ -193,16 +195,22 @@ export default class MessageComponent extends React.Component<Props,State>
     }
     else
     {
-      return <div className={styles.loginContainer}>
-                <div className={styles.loginContainerOuter}>
-                <span>Papers, please.</span>
-                <div className={styles.loginContainer}>
-                  <a href={urls.getClientLoginUrl(!this.state.rememberMe)} className={ classConcat( siteStyles.button, styles.loginButton)}>Login with Reddit</a>
-                </div> 
-                {this.getRememberMeCheckbox()}
-                </div>
-            </div>
-      
+      return  <MediaQuery query="screen and (max-width: 1100px)">
+              {
+                  (matches : boolean) => 
+                  {
+                    return <div className={styles.loginContainer}>
+                            <div className={styles.loginContainerOuter}>
+                            <span>Papers, please.</span>
+                            <div className={styles.loginContainer}>
+                              <a href={urls.getClientLoginUrl(!this.state.rememberMe, matches)} className={ classConcat( siteStyles.button, styles.loginButton)}>Login with Reddit</a>
+                            </div> 
+                            {this.getRememberMeCheckbox()}
+                            </div>
+                          </div>
+                    } 
+              }
+              </MediaQuery>
     }
   }
 
