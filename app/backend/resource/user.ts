@@ -38,17 +38,11 @@ router.get('/api/user/last_visit', async (req: Request, res: Response) =>
                     stats.add(stats.StatsCategoryType.USER_PAGE_LOADS);
 
                     let prevDate = ( (<Date>user.last_visit).getTime() / 1000 );
-                    let currentDate = Date.now() / 1000;
 
-                    //Always return last visit
                     res.json( prevDate );
 
-                    //Only update if more than 5min ago
-                    if ( (currentDate - prevDate) > 60 * 5 )
-                    {
-                        user.last_visit = new Date();
-                        await manager.flush();
-                    }        
+                    user.last_visit = new Date();
+                    await manager.flush();           
         }
         else
         {
