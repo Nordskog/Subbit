@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import TimelineLite from 'gsap/TimelineLite'; 
-import TweenLite from 'gsap/TweenLite'; 
-import 'gsap/CSSPlugin';
+import TimelineLite from 'gsap/umd/TimelineLite'; 
+import TweenLite from 'gsap/umd/TweenLite'; 
+import 'gsap/umd/CSSPlugin';
 
 import Transition from './Transition';
 

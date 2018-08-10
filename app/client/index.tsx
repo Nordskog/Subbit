@@ -1,5 +1,5 @@
 ﻿//Polyfills
-import "promise/polyfill"
+import "promise/polyfill";
 import 'core-js/es6/object';
 import 'core-js/es6/array';
 import 'core-js/es6/map';

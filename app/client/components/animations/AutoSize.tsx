@@ -1,5 +1,5 @@
 import * as React from 'react';
-import TimelineLite from 'gsap/TimelineLite'; import 'gsap/CSSPlugin';
+import TimelineLite from 'gsap/umd/TimelineLite'; import 'gsap/umd/CSSPlugin';
 import { tools } from '~/common';
 
 interface Props
