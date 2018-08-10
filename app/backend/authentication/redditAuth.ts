@@ -67,11 +67,15 @@ export function getAppSecret() : string
     return serverConfig.reddit.redditSecret;
 }
 
+export function getGeneration() : string
+{
+    return `${tools.random.getRandomId(16)}${Date.now()}`;
+}
+
 export function getAuthState( loginType : models.auth.LoginType) : string
 {
-    let identifier: string = `${Math.floor(Math.random() * 10000000).toString()}_${Date.now()}`;
-
-    console.log("New identifier:",identifier);
+    //Auth state can use the same id generation I guess
+    let identifier: string = getGeneration();
 
     let state = {
         identifier: identifier,
@@ -215,7 +219,7 @@ export async function createOrUpdateUserFromRedditToken( manager : Wetland.Scope
 
         //Init settings
         let userSettings = new Entities.UserSettings;
-        let generation = Math.floor( Date.now() / 1000 );
+        let generation = getGeneration();
 
         user = populator.assign(Entities.User, { username: username, auth: auth, settings: userSettings, generation }, user, true)
     }

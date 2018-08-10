@@ -7,11 +7,11 @@ import * as Wetland from 'wetland';
 import * as RFY from '~/backend/rfy';
 
 import * as models from '~/common/models';
-import * as actions from '~/client/actions';
 import * as authentication from '~/backend/authentication';
 import * as urls from '~/common/urls'
 import * as tools from '~/common/tools'
 import * as api from '~/common/api'
+import * as entityActions from '~/backend/entityActions'
 
 import * as serverActions from '~/backend/actions'
 
@@ -149,8 +149,7 @@ router.post('/api/authorize_local', async (req: Request, res: Response) =>
 
                 Log.A('Logout on all devices', user.username, tools.http.getReqIp( req, serverConfig.server.reverseProxy ) );
 
-                //Just needs to be different, really.
-                user.generation = Math.floor(  (Date.now() / 1000) );
+                entityActions.auth.nukeGeneration(user);
                 manager.flush();
 
                 res.json(true);

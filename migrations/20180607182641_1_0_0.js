@@ -56,7 +56,7 @@ class Migration {
       table.string('username', 255).notNullable();
       table.timestamp('last_visit').notNullable().defaultTo(builder.knex.raw('CURRENT_TIMESTAMP'));
       table.unique(['username'], 'username_unique');
-      table.integer('generation').unsigned().nullable();
+      table.string('generation', 255).notNullable();
       table.boolean('admin_access').notNullable().defaultTo(false);
       table.boolean('stats_access').notNullable().defaultTo(false);
     });

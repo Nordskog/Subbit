@@ -9,7 +9,7 @@ export default class User extends Wetland.Entity
     public username : string;
     public last_visit : Date;
     
-    public generation : number;     //token generation
+    public generation : string;     //token generation
     public auth : Auth; //Reddit uath
     public subscriptions : Wetland.ArrayCollection<Subscription>;
     public settings : UserSettings;
@@ -32,7 +32,7 @@ export default class User extends Wetland.Entity
 
         mapping.field('generation',
             {
-                type: 'integer',
+                type: 'string',
                 nullable: false
             });
 
