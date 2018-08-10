@@ -17,6 +17,8 @@ import * as Log from '~/common/log';
 import { LoginType } from '~/common/models/auth';
 import * as clusterActions from '~/backend/cluster';
 
+import uuidv4 from 'uuid/v4'
+
 
 const activeAuthStates: Map<string, AuthRequestState> = new Map<string, AuthRequestState>();
 let clientAuthentication : models.auth.RedditAuth = {access_token : "", expiry: 0};
@@ -69,7 +71,7 @@ export function getAppSecret() : string
 
 export function getGeneration() : string
 {
-    return `${tools.random.getRandomId(16)}${Date.now()}`;
+    return `${uuidv4()}${Date.now()}`;
 }
 
 export function getAuthState( loginType : models.auth.LoginType) : string

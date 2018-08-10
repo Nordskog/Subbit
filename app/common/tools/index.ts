@@ -10,11 +10,10 @@ import * as string from './string'
 import * as env from './env'
 import * as http from '~/common/tools/http'
 import * as component from './component'
-import * as random from './random'
 
 export 
 {
-    store, time, url, number, jwt, query, reddit, css, string, env, http, component, random
+    store, time, url, number, jwt, query, reddit, css, string, env, http, component
 }
 
 export {default as FetchQueue, RateLimitInfo as RateLimitInfo} from './FetchQueue'
