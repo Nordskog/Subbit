@@ -2,6 +2,8 @@
 let path = require('path');
 let basePath = __dirname;
 
+import clientConfig from '../config'
+
 const HtmlWebpackPlugin = require('html-webpack-plugin');   //Something wrong with webpack typings
 import * as Webpack from 'webpack';
 import ExtractTextPlugin from "extract-text-webpack-plugin";
@@ -9,6 +11,8 @@ import TsconfigPathsPlugin  from 'tsconfig-paths-webpack-plugin';
 import UglifyJsPlugin from 'uglifyjs-webpack-plugin';
 //import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import LodashModuleReplacementPlugin from 'lodash-webpack-plugin';
+import SitemapPlugin from 'sitemap-webpack-plugin';
+import RobotstxtPlugin from 'robotstxt-webpack-plugin';
 
 const config = {
     name: 'client',
@@ -43,10 +47,10 @@ const config = {
     
     },
     output: {
-        filename: '[name].js',
-        path: path.join(basePath, '../buildClient'),
-        publicPath: '/static/',
-        chunkFilename: '[name].[id].js'
+        filename: 'static/[name].js',
+        path: path.join(basePath, '../buildClient'), //Most stuff will go in static, root stuff moved to /buildClient
+        publicPath: '/',
+        chunkFilename: 'static/[name].js'
     },
     module: {
         rules: [
@@ -62,7 +66,7 @@ const config = {
             {
                 test: /\.(gif|jpg|png)$/,
                 include: /images/,
-                loader: 'file-loader'
+                loader: 'file-loader?name=static/[name].[ext]'
             },
             {
                 test:/\.(scss)$/,
@@ -119,8 +123,8 @@ const config = {
                 loader: 'url-loader?limit=10000&mimetype=application/octet-stream'
             },
             {
-                test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-                loader: 'file-loader'
+                test:/\.(ico)$/,
+                loader: 'file-loader?name=static/[name].[ext]'
             },
             
             {
@@ -147,7 +151,7 @@ const config = {
                     {
                         loader: 'svg-inline-loader',
                         options: {
-                            name: '[name].[ext]',
+                            name: 'static/[name].[ext]',
                         }
                     },
                 ]
@@ -160,9 +164,8 @@ const config = {
         new Webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify('production'),
         }),
-        new ExtractTextPlugin('main.css', { allChunks: true }),
+        new ExtractTextPlugin('static/main.css', { allChunks: true }),
         new HtmlWebpackPlugin( {
-            favicon: '../assets/images/favicon.ico',
             template: "./index.html",
             filename: "index.html",
             inject: "body"
@@ -188,7 +191,37 @@ const config = {
           }),
         new UglifyJsPlugin(
         ), //Default config is pretty good
-        //new BundleAnalyzerPlugin()    //Enable me when you want stats
+        //new BundleAnalyzerPlugin(),    //Enable me when you want stats
+
+        new SitemapPlugin(clientConfig.server.server_address, [
+            { path: '/best/',           changefreq: 'daily',    priority: 0.8},
+            { path: '/hot/',            changefreq: 'daily',    priority: 0.3},
+            { path: '/top/',            changefreq: 'daily',    priority: 0.3},
+            { path: '/new/',            changefreq: 'daily',    priority: 0.3},
+            { path: '/controversial/',  changefreq: 'daily',    priority: 0.3},
+            { path: '/rising/',         changefreq: 'daily',    priority: 0.3},
+            { path: '/subs/',           changefreq: 'never',    priority: 0.9},
+            { path: '/about/',          changefreq: 'never',    priority: 1.0},
+            { path: '/privacy/',        changefreq: 'never',    priority: 0.3},
+        ],
+        {
+            fileName: 'sitemap.xml'
+        }),
+
+        new RobotstxtPlugin(
+        {
+            policy: [
+                {
+                  userAgent: "*",
+                  disallow: ["/api/", "/stats"],
+                  crawlDelay: 2,
+                }
+              ],
+            sitemap: clientConfig.server.server_address + "/sitemap.xml",
+            host: clientConfig.server.server_address,
+
+            filePath: 'robots.txt'
+        }) 
     ]
 };
 

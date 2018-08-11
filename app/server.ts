@@ -46,6 +46,7 @@ import * as routers from '~/backend/resource';
 
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
+import historyApiFallback from 'connect-history-api-fallback';
 
 const DEV = process.env.NODE_ENV === 'development'
 
@@ -141,34 +142,26 @@ async function setupSlave()
     {
         const clientCompiler = Webpack(<any>clientConfigDev);
 
-        app.use(webpackDevMiddleware(clientCompiler, { publicPath }))
-        app.use(webpackHotMiddleware(clientCompiler))
-
-        app.use('*', Express.static(outputPath))
+        app.use(historyApiFallback( {   verbose: false  }));    //Handles catch-all route
+        app.use(webpackDevMiddleware(clientCompiler, { publicPath: publicPath } ) );
+        app.use(webpackHotMiddleware(clientCompiler));
     }
     else
     {
-        //All static resources
-        app.use(publicPath, Express.static(outputPath));
+        //Index, robots, sitemap, favicon in root.
+        //Static resources in /static
+        app.use(Express.static( outputPath ));
 
-        //Html will fetch favicon from static, but this will still receive requests
-        app.get('/favicon.ico', function(req, res){
-            res.sendFile( path.join(outputPath, "favicon.ico") );
-        });
-
-        //Anything else gets app container
-        app.get('/*', function(req, res)
+        //Catch-all route for app container
+        app.get('*', function(req, res)
         {
             res.sendFile( path.join(outputPath, "index.html") );
         });
-
     }
-
 
     ///////////////////////////////////////////////////////////
     // http to handle express and websockets on same port
     //////////////////////////////////////////////////////////
-
 
     const httpServer : Http.Server = Http.createServer();
     httpServer.on('request', app);
