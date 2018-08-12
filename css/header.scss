@@ -11,7 +11,6 @@
     height: auto;
     min-height: var( --header-height );
     box-sizing: border-box;
-    border-radius: var( --insignificant-gap );
 
     
 }
@@ -26,7 +25,6 @@
 
     //border-bottom-left-radius: var(--small-gap);
     border-radius: var( --insignificant-gap );
-    border-top-left-radius: var(--small-gap);
 
     z-index: -1;
 }
@@ -195,7 +193,8 @@ a.sortButton
     //header is --header-height with overflow visible,
     //so making the left float twice the height makes 
     //the right float appear in the right location.
-    height: calc( var( --header-height ) * 2 )
+    height: var( --header-height );
+    padding-bottom: var( --header-height );
 }
 
 .headerRow
@@ -272,11 +271,13 @@ a.sortButton
 {
     
     .header {
-        //background: transparent;
-        //position: relative;
         height: var(--header-height);
-        //margin-top: var(--small-gap);
         
+    }
+
+    .mobileHeaderContainer
+    {
+        margin-bottom: var(--insignificant-gap);
     }
     
 

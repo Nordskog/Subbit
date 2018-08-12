@@ -42,7 +42,8 @@
 
 .author {
     font-size: var(--font-large);
-    margin: var( --tiny-gap );
+    margin-top: var( --tiny-gap );
+    margin-bottom: var( --tiny-gap );
     padding: var( --small-gap );
     background: $card-background;
     border-radius: var( --insignificant-gap );
@@ -260,10 +261,10 @@
 
     .author
     {
-        margin: var( --insignificant-gap );
-        margin-right: 0px;
-        margin-left: 0px;
+        margin-top: var( --insignificant-gap );
+        margin-bottom: var( --insignificant-gap );
 
+        border-radius: 0px;
         padding-left: var(--tiny-gap);
     }
 

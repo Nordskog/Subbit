@@ -21,7 +21,9 @@ export default class popup extends React.Component<Props, null>
 
     public render()
     {
-        let trigger =   <SVGInline className={styles.button} svg={settings_icon}/>;
+        let trigger =   <div className={styles.headerButtonContainer}>
+                            <SVGInline className={styles.button} svg={settings_icon}/>
+                        </div>;
 
         
         //On mobile the menu button may jump down below the menu bar,

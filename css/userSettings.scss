@@ -50,11 +50,19 @@ a.genericButton:hover
     margin-left: 0px;
     margin-right: 0px;
     padding: 0px;
-    padding-left: var( --small-gap);
+
     z-index: 1;
 
     height: var( --header-menu-button-height );
     width:  var(--header-menu-button-height );
+}
+
+.headerButtonContainer
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: var( --small-gap);
 }
 
 .button:hover 
@@ -123,7 +131,7 @@ a.genericButton:hover
 
 .mobilePopupPositioner
 {
-    top: calc( var(--header-height) + var(--small-gap) );
+    top: calc( var(--header-height) + var(--tiny-gap) );
     left: 0px;
 }
 

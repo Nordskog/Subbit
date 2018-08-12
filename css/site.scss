@@ -20,6 +20,9 @@ body {
 
     //absolute background
     z-index: -10;
+    margin: 8px;
+    margin-left:0px;
+    margin-right:0px;
     
     box-sizing: border-box;
 }
@@ -265,6 +268,11 @@ input[type=checkbox] {
     {
         //Off by a tiny amount!
         margin-left: 10px;
+    }
+
+    body 
+    {
+        margin: 0px;
     }
 
 }
