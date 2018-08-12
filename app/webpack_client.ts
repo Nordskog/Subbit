@@ -13,6 +13,7 @@ import UglifyJsPlugin from 'uglifyjs-webpack-plugin';
 import LodashModuleReplacementPlugin from 'lodash-webpack-plugin';
 import SitemapPlugin from 'sitemap-webpack-plugin';
 import RobotstxtPlugin from 'robotstxt-webpack-plugin';
+import OptimizeCssAssetsPlugin from 'optimize-css-assets-webpack-plugin';
 
 const config = {
     name: 'client',
@@ -75,7 +76,6 @@ const config = {
                     use: 
                     [
 
-
                         {
                             loader: 'typings-for-css-modules-loader',
                             options: {
@@ -84,14 +84,14 @@ const config = {
                                 namedExport: true
                             }
                         },
-                        
-                        
+
                         {
                             loader: 'postcss-loader',
                             options: {
                                 
                             }
-                        },
+                        },     
+
                         {
                             loader: 'sass-loader'
                         },
@@ -165,6 +165,7 @@ const config = {
             'process.env.NODE_ENV': JSON.stringify('production'),
         }),
         new ExtractTextPlugin('static/main.css', { allChunks: true }),
+        new OptimizeCssAssetsPlugin({}),
         new HtmlWebpackPlugin( {
             template: "./index.html",
             filename: "index.html",

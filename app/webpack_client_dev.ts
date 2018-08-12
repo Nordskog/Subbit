@@ -9,6 +9,7 @@ import ExtractTextPlugin from "extract-text-webpack-plugin";
 import StatsPlugin from 'stats-webpack-plugin';
 import SitemapPlugin from 'sitemap-webpack-plugin';
 import RobotstxtPlugin from 'robotstxt-webpack-plugin';
+import OptimizeCssAssetsPlugin from 'optimize-css-assets-webpack-plugin';
 
 import prodConfig from './webpack_client'
 
@@ -30,6 +31,7 @@ const config = {
             'process.env.IS_CLIENT' : true
         }),
         new ExtractTextPlugin('main.css', { allChunks: true }),
+        new OptimizeCssAssetsPlugin({}),
 
         new HtmlWebpackPlugin( {
             template: "./index.html",
