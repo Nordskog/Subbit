@@ -10,7 +10,8 @@
     color: $primary-text-color;
     font-size: var(--font-large);
     font-weight:bold;
-    margin: var( --tiny-gap );
+    margin-top: var( --tiny-gap );
+    margin-bottom: var( --tiny-gap );
     padding: var( --small-gap );
     background: $card-highlighted-background;
     border-radius: var( --tiny-gap );
@@ -270,9 +271,9 @@
 
     .lastVisit
     {
-        margin: var( --insignificant-gap );
-        margin-left: 0px;
-        margin-right: 0px;
+        margin-top: var( --insignificant-gap );
+        margin-bottom: var( --insignificant-gap );
+        border-radius: 0px;
     }
 
     .authorHeader {

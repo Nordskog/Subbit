@@ -11,7 +11,7 @@ import * as authority from '~/client/authority'
 import { CancellationError } from 'bluebird';
 import { CancelledException, NetworkException, Exception } from '~/common/exceptions';
 import { Dispatch, GetState } from '~/client/actions/tools/types';
-import { WrapWithHandler } from '~/client/actions/tools/error';
+import { WrapWithHandler, handleError } from '~/client/actions/tools/error';
 import author from '~/client/components/author/container';
 import { Post } from '~/common/models/reddit';
 
@@ -196,8 +196,19 @@ export function fetchAuthorsAction ( appendResults: boolean = false, loadFromSes
     });
 }
 
-//Ignores after, and replaces any existing posts.
-export function fetchPosts( author : models.data.AuthorEntry, count : number )
+
+export function fetchMorePosts( author : models.data.AuthorEntry, count : number )
+{
+    return fetchPosts(author, count, false);
+}
+
+export function fetchNewPosts( author : models.data.AuthorEntry, count : number )
+{
+    return fetchPosts(author, count, true);
+}
+
+//Respects after
+function fetchPosts( author : models.data.AuthorEntry, count : number, replaceExisting : boolean )
 {
     return WrapWithHandler( async function (dispatch : Dispatch, getState : GetState)
     {
@@ -223,103 +234,32 @@ export function fetchPosts( author : models.data.AuthorEntry, count : number )
             subreddits = [state.authorState.subreddit];
         }
 
-        try 
+        //Init to existing if replacing, empty if getting more
+        let posts = replaceExisting ? author.author.posts : [];
+        let after = replaceExisting ? null : author.after;
+
+        try
         {
-            let {posts, after} = await api.reddit.posts.getPosts(author.author.name, null, redditAuth, count, ...subreddits)
+            //If we are replacing existing posts instead of getting more, after is null.
+            let postData = await api.reddit.posts.getPosts(author.author.name, replaceExisting ? null : author.after, redditAuth, count, ...subreddits);
 
-            dispatch({
-                type: actions.types.authors.POSTS_ADDED,
-                payload: { 
-                    author: author.author.name,
-                    posts: posts,
-                    after: after,
-                    end: after == null,
-                    replace: true  
-                }  as actions.types.authors.POSTS_ADDED
-            });
-
+            posts = postData.posts;
+            after = postData.after;
         }
-        catch( err )
+        catch ( err )
         {
-            //Return existing values when things go south, since the author will
-            //stuck in an awaiting-updated-posts state until it receives new props.
-            let posts : Post[] = author.author.posts;
-            let after : string = author.after;
-
-            //Dispatch whatever we started with and rethrow.
-            dispatch({
-                type: actions.types.authors.POSTS_ADDED,
-                payload: { 
-                    author: author.author.name,
-                    posts: posts,
-                    after: after,
-                    end: after == null,
-                    replace: true  
-                }  as actions.types.authors.POSTS_ADDED
-            });
-
-            throw(err);
+            handleError( dispatch, err );
         }
 
-    
-    });
-}
-
-//Respects after
-export function fetchMorePosts( authors : models.data.AuthorEntry[], count : number )
-{
-    return WrapWithHandler( async function (dispatch : Dispatch, getState : GetState)
-    {
-        let state: State = getState();
-
-        let redditAuth = await actions.directActions.authentication.retrieveAndUpdateRedditAuth( dispatch, state);
-
-        let proms : Promise<void>[] = [];
-        authors.forEach( ( author : models.data.AuthorEntry ) => 
-        {
-
-            let subreddits : string[] = [];
-            if (state.authorState.filter == models.AuthorFilter.SUBSCRIPTIONS)
-            {
-                //Well that shouldn't happen
-                if (author.subscription == null)
-                    return;
-
-                subreddits = author.subscription.subreddits.map( (subreddit : models.data.SubscriptionSubreddit) => 
-                {
-                    return subreddit.name;
-                } )
-            }
-            else
-            {
-                if (state.authorState.subreddit != null)
-                subreddits = [state.authorState.subreddit];
-            }
-
-            let prom = new Promise<void>( (resolve, reject) => 
-            {
-                api.reddit.posts.getPosts(author.author.name, author.after, redditAuth, count, ...subreddits).then( ( {posts, after } ) => 
-                {    
-                    dispatch({
-                        type: actions.types.authors.POSTS_ADDED,
-                        payload: { 
-                            author: author.author.name,
-                            posts: posts,
-                            after: after,
-                            end: after == null,
-                            replace: false
-                        }  as actions.types.authors.POSTS_ADDED
-                    });
-
-                    resolve();
-                });
-            });
-
-            proms.push(prom);
-
+        dispatch({
+            type: actions.types.authors.POSTS_ADDED,
+            payload: { 
+                author: author.author.name,
+                posts: posts,
+                after: after,
+                end: after == null,
+                replace: replaceExisting
+            }  as actions.types.authors.POSTS_ADDED
         });
-
-        //Process any remaining
-        await Promise.all(proms);
     });
 }

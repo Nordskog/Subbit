@@ -136,6 +136,10 @@ export default class Posts extends React.Component<Props, State>
 
     collapsePosts()
     {
+        //Do not allow if loading posts
+        if (this.state.loading)
+            return;
+
         this.props.scrollToAuthorTop();
         this.setState( { postsExpanded: false,  expandedPostCount: 0 } );
     }
