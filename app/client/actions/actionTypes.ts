@@ -7,6 +7,7 @@ export namespace authors
     export const FETCH_AUTHORS_COMPLETED    : string = 'FETCH_AUTHORS_COMPLETED';
     export const POST_DETAILS_UPDATED       : string = 'POST_DETAILS_UPDATED';
     export const SUBREDDIT_CHANGED          : string = 'SUBREDDIT_CHANGED';
+    export const SUBREDDIT_NAME_CHANGED          : string = 'SUBREDDIT_NAME_CHANGED';
     export const POSTS_ADDED                : string = 'POSTS_ADDED';
 
     export interface FETCH_AUTHORS_COMPLETED
@@ -21,6 +22,8 @@ export namespace authors
     export type POST_DETAILS_UPDATED = Set<string>
 
     export type SUBREDDIT_CHANGED = string;
+
+    export type SUBREDDIT_NAME_CHANGED = string;
 
     export interface POSTS_ADDED
     {

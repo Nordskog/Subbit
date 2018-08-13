@@ -126,12 +126,23 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
 
         case actions.types.authors.SUBREDDIT_CHANGED:
         {
-            action = action as models.Action< actions.types.authors.SUBREDDIT_CHANGED >;
+            let payload : actions.types.authors.SUBREDDIT_CHANGED = action.payload;
 
             return {
                 ...state,
-                subreddit: action.payload,
+                subreddit: payload,
                 after: null
+                }
+            
+        }
+
+        case actions.types.authors.SUBREDDIT_NAME_CHANGED:
+        {
+            let payload : actions.types.authors.SUBREDDIT_NAME_CHANGED = action.payload;
+
+            return {
+                ...state,
+                subreddit: payload
                 }
             
         }

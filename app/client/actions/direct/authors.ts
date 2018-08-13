@@ -7,6 +7,8 @@ import config from 'root/config'
 import { Dispatch, GetState } from '~/client/actions/tools/types';
 import { NetworkException } from '~/common/exceptions';
 import * as Log from '~/common/log'
+import { Author, AuthorEntry } from '~/common/models/data';
+import { authRouter } from '~/backend/resource';
 
 
 export async function getAuthors( dispatch : Dispatch, getState : GetState )
@@ -33,9 +35,6 @@ export async function getAuthors( dispatch : Dispatch, getState : GetState )
     else if (state.authorState.filter == models.AuthorFilter.SUBSCRIPTIONS)
     {
         let subscriptions = state.userState.subscriptions;
-
-        
-
         //Filter by subreddit if present
         //Slow? Yes. Could put a hashmap in the state, but even with a few hundred subscriptions
         //this is going to be essentially instant.
@@ -77,11 +76,13 @@ export async function getAuthors( dispatch : Dispatch, getState : GetState )
     }
     else
     {
-        //Subreddit
+        //Subreddit or frontpage
         let res = await api.reddit.posts.getAuthors( true, state.authorState.subreddit, state.authorState.filter, state.authorState.time, state.authorState.after, config.client.authorDisplayCount, redditAuth );
+         
         authors = res.authors;
         after = res.after;
     }
+
 
     //Remove and any existing authors, then update authority with new
     authors = authors.filter( (author : models.data.Author) => { return !authority.author.authorityContains(author) } )
@@ -96,6 +97,8 @@ export async function getAuthors( dispatch : Dispatch, getState : GetState )
             end: true
         }
     } ); 
+
+    ensureSubredditCasingMatch(dispatch, authorEntries, state.authorState.subreddit);
 
     await actions.directActions.authors.populateAuthorSubscriptions(authorEntries, getState);   //Important to do this before getting posts
     await actions.directActions.authors.poulateInitialPosts(authorEntries, config.client.postDisplayCount, dispatch, getState);
@@ -116,6 +119,47 @@ export async function getAuthors( dispatch : Dispatch, getState : GetState )
     }
 
     return { authorEntries : authorEntries, after : after  };
+}
+
+//Checks if subreddit name in state matches that returned by reddit listing, and corrects it if wrong.
+//Usually the result of a user submitting search before waiting for result, or visiting from uncased url
+export function ensureSubredditCasingMatch( dispatch : Dispatch, authors : AuthorEntry[], subredditName : string )
+{
+    if (subredditName == null || authors == null || authors.length < 1)
+        return;
+
+    //Author listing comes from a normal page listing, and will always have a single post populated.
+    for (let author of authors)
+    {
+        if (author.author.posts.length > 0)
+        {
+            let postSubreddit = author.author.posts[0].subreddit;
+
+            console.log("Considering name change from",subredditName,"to",postSubreddit)
+
+            if (author.author.posts[0].subreddit != subredditName)
+            {
+                //They don' match!
+                //But incase of weirdness, make sure they do match if both lower case
+                
+                if ( postSubreddit.toLowerCase() == subredditName.toLowerCase() )
+                {
+                    console.log("Dispatching name change from",subredditName,"to",postSubreddit);
+
+                    //They match, dispatch a correction to use casing from post.
+                    dispatch({
+                        type: actions.types.authors.SUBREDDIT_NAME_CHANGED,
+                        payload: postSubreddit as actions.types.authors.SUBREDDIT_NAME_CHANGED
+                    });
+                }
+            }
+
+            break;
+        }
+    }
+
+    
+
 }
 
 export function populateAuthorSubscriptions( authors : models.data.AuthorEntry[], getState : GetState )

@@ -76,8 +76,10 @@ export function fetchAuthorsAction ( appendResults: boolean = false, loadFromSes
     {
         try
         {
-            let  authorEntries : models.data.AuthorEntry[];
+            let authorEntries : models.data.AuthorEntry[];
             let after : string;
+            
+            let subreddit : string = getState().authorState.subreddit;
 
             //////////////////////////////////////////////
             // Load from history or session if present
@@ -105,6 +107,10 @@ export function fetchAuthorsAction ( appendResults: boolean = false, loadFromSes
 
                 //getAuthors() normally handles adding to authority, but do it here manually if loading from storage.
                 authorEntries.forEach( ( author : models.data.AuthorEntry ) => { authority.author.updateAuthority(author.author) } );
+
+                //Subreddit name will be populated from url, which may well have the wrong casing.
+                //getAuthors() normally takes care of this too.
+                actions.directActions.authors.ensureSubredditCasingMatch(dispatch, authorEntries, subreddit);
             }
 
             //////////////////////////////////
