@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import * as styles from 'css/popup.scss'
+import * as animationStyles from 'css/animations.scss';
 import * as ReactDOM from 'react-dom'
 import { tools } from '~/common';
 
@@ -347,7 +348,7 @@ export default class Popup extends React.Component<Props, State>
 
         if (this.props.fadeIn > 0)
         {
-            animationStyle = { animation: `${styles.fadeIn} ${ this.props.fadeIn }s`  }
+            animationStyle = { animation: `${animationStyles.fadeIn} ${ this.props.fadeIn }s`  }
         }
 
         return animationStyle;

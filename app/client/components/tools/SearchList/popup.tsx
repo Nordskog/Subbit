@@ -55,8 +55,7 @@ export default class popup extends React.Component<Props, State >
             {
                 close => 
                 {
-                    return <transitions.TransitionGroup >
-                    <components.transitions.Fade key={'subreddit_popup'} appear={true}>
+                    return <div >
                         <div className={modal ? styles.modalPopupContainer : styles.popupContainer}>
                             <components.tools.SearchList.component
                                 items={this.props.items} 
@@ -64,8 +63,7 @@ export default class popup extends React.Component<Props, State >
                                 onAltClick={ ( item) =>  { close(); return true; } }
                             />
                         </div>
-                    </components.transitions.Fade>
-                 </transitions.TransitionGroup>
+                 </div>
                 }
             }
         </components.tools.Popup.Component>

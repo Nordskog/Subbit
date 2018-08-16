@@ -30,7 +30,7 @@
 <defs>
     <style>
       .loading_animation_icon-1, .loading_animation_icon-3, .loading_animation_icon-4 {
-        fill: #252525;
+        fill: #141414;
         stroke: #fff;
       }
 

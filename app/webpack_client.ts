@@ -165,7 +165,10 @@ const config = {
             'process.env.NODE_ENV': JSON.stringify('production'),
         }),
         new ExtractTextPlugin('static/main.css', { allChunks: true }),
-        new OptimizeCssAssetsPlugin({}),
+        new OptimizeCssAssetsPlugin(
+        {
+            cssProcessorOptions: { discardUnused: false }
+        }),
         new HtmlWebpackPlugin( {
             template: "./index.html",
             filename: "index.html",

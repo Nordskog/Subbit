@@ -31,7 +31,10 @@ const config = {
             'process.env.IS_CLIENT' : true
         }),
         new ExtractTextPlugin('main.css', { allChunks: true }),
-        new OptimizeCssAssetsPlugin({}),
+        new OptimizeCssAssetsPlugin(
+        {
+            cssProcessorOptions: { discardUnused: false }
+        }),
 
         new HtmlWebpackPlugin( {
             template: "./index.html",

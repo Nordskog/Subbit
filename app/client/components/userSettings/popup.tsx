@@ -48,15 +48,13 @@ export default class popup extends React.Component<Props, null>
             {
                 close => 
                 {
-                        return <transitions.TransitionGroup >
-                                <components.transitions.Fade key={'userSettingsPopup'} appear={true}>
+                        return <div >
                                     <div className={styles.popupContainer}>
                                         <Component 
                                             close={close}
                                         />
                                     </div>
-                                </components.transitions.Fade>
-                                </transitions.TransitionGroup>
+                                </div>
                 }
             }
       </components.tools.Popup.Component>
