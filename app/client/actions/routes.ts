@@ -95,11 +95,18 @@ export function authorizeRoute()
             }
             else
             {
-                await actions.authentication.authenticatedWithRedditCode(code,state)(dispatch, getState);
-                dispatch(
+                //Page will display loading indicator while waiting for reply
+                actions.authentication.authenticatedWithRedditCode(code,state)(dispatch, getState).then( async () => 
+                {
+                    //Perform first load duties here, as otherwise the user will have no subscriptions
+                    //after being forwarded, resulting in the no-subscriptions-page appearing until fetched.
+                    await firstLoadDuties(dispatch, getState);
+
+                    dispatch(
                     { 
                         type: actions.types.Route.FILTER, payload: { filter: AuthorFilter.SUBSCRIPTIONS } as actions.types.Route.FILTER } 
                     );
+                });
             }
         }
     });

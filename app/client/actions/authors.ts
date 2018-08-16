@@ -181,6 +181,10 @@ export function fetchAuthorsAction ( appendResults: boolean = false, loadFromSes
                     {
                         throw new Exception("Reddit: Internal Server Error");
                     }
+                    else if ( error.code == 503)
+                    {
+                        throw new Exception("Reddit: Servers overloaded");
+                    }
                     else
                     {
                         throw(error);

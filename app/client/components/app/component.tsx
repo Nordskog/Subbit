@@ -38,23 +38,20 @@ export default class app extends React.Component<Props,any>
 
     getContent()
     {   
-        if (this.props.siteMode == models.SiteMode.STATS )
-        {
-            return this.getStats();
-        }
 
-        if (this.props.siteMode == models.SiteMode.ABOUT)
+        switch( this.props.siteMode )
         {
-            return <components.tools.Message 
-                        message={MessageType.ABOUT}
-                    />
-        }
+            case models.SiteMode.STATS:
+                return this.getStats();
 
-        if (this.props.siteMode == models.SiteMode.PRIVACY)
-        {
-            return <components.tools.Message 
-                        message={MessageType.PRIVACY}
-                    />
+            case models.SiteMode.ABOUT:
+                return <components.tools.Message message={MessageType.ABOUT} />
+
+            case models.SiteMode.PRIVACY:
+                return <components.tools.Message message={MessageType.PRIVACY} />
+
+            case models.SiteMode.WAITING:
+                return <components.tools.Message message={MessageType.WAITING} />
         }
 
         if (this.props.filter == models.AuthorFilter.SUBSCRIPTIONS  )

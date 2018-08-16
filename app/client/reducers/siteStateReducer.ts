@@ -71,8 +71,15 @@ export function siteStateReducer(state = getDefaultSiteState(), action :  models
             }
         }
 
-        case actions.types.Route.AUTHOR:
         case actions.types.Route.AUTHENTICATE:
+        {
+            return {
+                ...state,
+                mode: models.SiteMode.WAITING
+            }
+        }
+
+        case actions.types.Route.AUTHOR:
         case actions.types.Route.FILTER:
         case actions.types.Route.HOME:
         case actions.types.Route.SUBREDDIT:

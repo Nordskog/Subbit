@@ -9,6 +9,7 @@ import * as subscribeButton from 'assets/images/subscribe_button.svg'
 import * as subscribeSubredditButton from 'assets/images/subscribe_subreddit_button.svg'
 import * as subscribedPartialButton from 'assets/images/subscribed_partial_button.svg'
 import * as expand_caret from 'assets/images/expand_caret.svg'
+import * as loadingAnimation from 'assets/animations/loading_animation.svg'
 
 import * as components from '~/client/components'
 
@@ -26,7 +27,7 @@ import config from 'root/config'
 
 export enum MessageType 
 {
-  NOT_LOGGED_IN, NO_SUBSCRIPTIONS, ABOUT, PRIVACY
+  NOT_LOGGED_IN, NO_SUBSCRIPTIONS, ABOUT, PRIVACY, WAITING
 }
 
 interface Props
@@ -71,6 +72,11 @@ export default class MessageComponent extends React.Component<Props,State>
         case MessageType.PRIVACY:
         {
           return this.getPrivacyMessage();
+        }
+
+        case MessageType.WAITING:
+        {
+          return this.getWaiting();
         }
 
         default:
@@ -389,6 +395,14 @@ export default class MessageComponent extends React.Component<Props,State>
 
 
             </div>
+  }
+
+  getWaiting()
+  {
+    return <div className={styles.container}>
+      <SVGInline  className={siteStyles.loadingImage} svg={loadingAnimation}/>
+    </div>
+
   }
 
 }

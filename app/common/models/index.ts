@@ -49,7 +49,7 @@ export enum LoadingStatus
 
 export enum SiteMode
 {
-    AUTHORS, STATS, ABOUT, PRIVACY
+    AUTHORS, STATS, ABOUT, PRIVACY, WAITING
 }
 
 export type WebsocketReconnectCallback = () => void;
