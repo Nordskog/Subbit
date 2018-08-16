@@ -82,7 +82,7 @@ interface State
 
     render()
     {
-        return  <div ref={c => this.container = c} className={this.props.className}>
+        return  <div ref={c => this.container = c} className={this.props.className} style={ { overflow: 'hidden' } }>
                     {this.props.children}
                 </div>
     }
