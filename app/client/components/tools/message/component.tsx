@@ -208,8 +208,9 @@ export default class MessageComponent extends React.Component<Props,State>
                     return <div className={styles.loginContainer}>
                             <div className={styles.loginContainerOuter}>
                             <span>Papers, please.</span>
-                            <div className={styles.loginContainer}>
-                              <a href={urls.getClientLoginUrl(!this.state.rememberMe, matches)} className={ classConcat( siteStyles.button, styles.loginButton)}>Login with Reddit</a>
+                            <div className={ config.common.loginEnabled ? styles.loginContainer : styles.hiddenLoginContainer}>
+                              <a href={ config.common.loginEnabled ? urls.getClientLoginUrl(!this.state.rememberMe, matches) : "#"} 
+                              className={ classConcat( siteStyles.button, styles.loginButton)}>Login with Reddit</a>
                             </div> 
                             {this.getRememberMeCheckbox()}
                             </div>

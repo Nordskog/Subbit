@@ -92,6 +92,12 @@ a.genericButton:hover
     justify-items: center;
 }
 
+.loginContainerDisabled
+{
+    @extend .loginContainer;
+    opacity: 0.1;
+}
+
 .loginButton
 {
     @extend .genericButton;
@@ -121,7 +127,6 @@ a.genericButton:hover
 
     margin-top: var( --insignificant-gap );
     margin-bottom: var( --insignificant-gap );
-
 }
 
 .rememberMeText

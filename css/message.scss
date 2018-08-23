@@ -96,6 +96,12 @@
     box-sizing: border-box;
 }
 
+.hiddenLoginContainer
+{
+    @extend .loginContainer;
+    opacity: 0.1;
+}
+
 .loginContainerOuter
 {
     display: flex;

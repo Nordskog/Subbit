@@ -22,9 +22,10 @@ import { AuthorizationException, EndpointException } from '~/common/exceptions';
 import { Scope } from '~/backend/authentication/generation';
 import * as Log from '~/common/log';
 
-import serverConfig from 'root/server_config'
+import serverConfig from 'root/server_config';
 
-import * as stats from '~/backend/stats'
+import * as stats from '~/backend/stats';
+import config from 'root/config';
 
 const router = Express.Router();
 
@@ -32,13 +33,19 @@ require('isomorphic-fetch');
 
 router.get('/api/authorize_remote', (req: Request, res: Response) =>
 {
-    let sessionLogin : boolean = req.query.session === 'true';
-    let compactLogin : boolean = req.query.compact === 'true';
+    //Will redirect to home if login is disabled
+    let url : string = config.server.server_address;
 
-    Log.A('Reddit login redirect', null, tools.http.getReqIp( req, serverConfig.server.reverseProxy ) );
-
-    //Login via reddit
-    let url = authentication.redditAuth.generateRedditLoginUrl(sessionLogin ? models.auth.LoginType.SESSION : models.auth.LoginType.PERMANENT, compactLogin);
+    if ( config.common.loginEnabled )
+    {
+        let sessionLogin : boolean = req.query.session === 'true';
+        let compactLogin : boolean = req.query.compact === 'true';
+    
+        Log.A('Reddit login redirect', null, tools.http.getReqIp( req, serverConfig.server.reverseProxy ) );
+    
+        //Login via reddit
+        url = authentication.redditAuth.generateRedditLoginUrl(sessionLogin ? models.auth.LoginType.SESSION : models.auth.LoginType.PERMANENT, compactLogin);
+    }
 
     res.redirect(url); 
 });

@@ -38,6 +38,12 @@ const config =
 
         // append "/authenticate" for reddit redirect url:
         // http://127.0.0.1:8080/authenticate
+    },
+
+    common:
+    {
+        //Disable login so no one can create accounts
+        loginEnabled: true
     }
 }
 

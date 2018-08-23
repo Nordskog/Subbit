@@ -11,6 +11,8 @@ import { NavLink} from 'redux-first-router-link'
 import * as styles from 'css/userSettings.scss'
 import { PostDisplay } from '~/common/models';
 
+import config from 'root/config';
+
 interface Props
 {
     postDisplay : models.PostDisplay;
@@ -103,9 +105,10 @@ export default class UserSettingsComponent extends React.Component<Props, State>
                     {
                         (matches : boolean) => 
                         {
-                            return <div className={styles.loginContainer}>
-                                        <a href={urls.getClientLoginUrl(!this.state.rememberMe, matches)} className={styles.loginButton}>Login</a>
-                                        <div className={styles.rememberMeCenterer} onClick={ () => this.setRememberMe( !this.state.rememberMe ) } >
+                            return <div className={ config.common.loginEnabled ? styles.loginContainer : styles.loginContainerDisabled}>
+                                        <a href={ config.common.loginEnabled ? urls.getClientLoginUrl(!this.state.rememberMe, matches) : "#"} 
+                                        className={ styles.loginButton }>Login</a>
+                                            <div className={styles.rememberMeCenterer} onClick={ () => this.setRememberMe( !this.state.rememberMe ) } >
                                             <div className={styles.rememberMeContainer} >
                                                 <components.tools.Checkbox checked={this.state.rememberMe} callback={ (checked) => this.setRememberMe(checked) } />
                                                 <span className={styles.rememberMeText}> Remember me</span> 
