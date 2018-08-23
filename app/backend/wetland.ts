@@ -1,5 +1,5 @@
-﻿import * as Entities from '~/backend/entity'
-import serverConfig from 'root/server_config'
+﻿import * as Entities from '~/backend/entity';
+import serverConfig from 'root/server_config';
 
 
 const config =
@@ -9,8 +9,8 @@ const config =
         defaultStore: serverConfig.database
     },
 
-    //After switching to node-ts instead of compiling to js first, I have been unable to use the entityPath option
-    //This works just fine though
+    // After switching to node-ts instead of compiling to js first, I have been unable to use the entityPath option
+    // This works just fine though
     entities:   [
                     Entities.Auth, 
                     Entities.Author,

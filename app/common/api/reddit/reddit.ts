@@ -1,15 +1,10 @@
-
-import * as React from 'react';
-
-import * as tools from '~/common/tools'
+import * as tools from '~/common/tools';
 
 import fetch from 'isomorphic-fetch';
 
 import * as models from '~/common/models';
 
-import * as urls from '~/common/urls'
 
-import config from 'root/config';
 import { NetworkException, Exception } from '~/common/exceptions';
 
 import { RateLimitCallback } from '~/common/tools/FetchQueue';
@@ -38,9 +33,9 @@ export async function getRequest<T>(url : string, parameters? : any, auth?: mode
 
     let response : Response;
 
-    //Stack trace in catch-block when using await is useless.
-    //Grab actual stack trace here and append below.
-    //Only necessary when creating a new exception in catch.
+    // Stack trace in catch-block when using await is useless.
+    // Grab actual stack trace here and append below.
+    // Only necessary when creating a new exception in catch.
     let stacktrace = new Error().stack;
 
     try
@@ -56,8 +51,8 @@ export async function getRequest<T>(url : string, parameters? : any, auth?: mode
             throw err;
         else
         {
-            //Especially when working work cors, the browser does not provide
-            //any useful information in this case.
+            // Especially when working work cors, the browser does not provide
+            // any useful information in this case.
             let exception = new NetworkException(null, "Could not access Reddit", url);
             exceptions.appendStack(exception, stacktrace);
             throw exception;
@@ -82,11 +77,11 @@ export async function postRequest<T, A>(url : string, request : models.Action<A>
     options = {
         ...options,
         body: JSON.stringify(request)
-    }
+    };
 
-    //Stack trace in catch-block when using await is useless.
-    //Grab actual stack trace here and append below.
-    //Only necessary when creating a new exception in catch.
+    // Stack trace in catch-block when using await is useless.
+    // Grab actual stack trace here and append below.
+    // Only necessary when creating a new exception in catch.
     let stacktrace = new Error().stack;
 
     let response;
@@ -103,8 +98,8 @@ export async function postRequest<T, A>(url : string, request : models.Action<A>
             throw err;
         else
         {
-            //Especially when working work cors, the browser does not provide
-            //any useful information in this case.
+            // Especially when working work cors, the browser does not provide
+            // any useful information in this case.
             let exception = new NetworkException(null, "Could not access Reddit", url);
             exceptions.appendStack(exception, stacktrace);
             throw exception;
@@ -129,7 +124,7 @@ export function getRedditFetchOptions( method : string, auth? : models.auth.Redd
     {
         options = {
             method: method,
-            headers: { "Authorization" : 'bearer ' + auth.access_token,
+            headers: { Authorization : 'bearer ' + auth.access_token,
             }
         };
     }
@@ -142,7 +137,7 @@ export function getRedditFetchOptions( method : string, auth? : models.auth.Redd
         };
     }
 
-    //Cors will be rejected if userAgent present in header, so don't do that on client.
+    // Cors will be rejected if userAgent present in header, so don't do that on client.
     if (tools.env.isServer())
     {
         options = {
@@ -151,12 +146,12 @@ export function getRedditFetchOptions( method : string, auth? : models.auth.Redd
                 ...options.headers,
                 'User-Agent': tools.env.getUseragent(),
             }
-        }
+        };
     }
 
     return options;
 
-};
+}
 
 
 

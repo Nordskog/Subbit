@@ -1,29 +1,29 @@
 import * as React from 'react';
-import * as models from '~/common/models'
-import * as siteStyles from 'css/site.scss'
-import * as styles from 'css/message.scss'
+import * as models from '~/common/models';
+import * as siteStyles from 'css/site.scss';
+import * as styles from 'css/message.scss';
 
-import SVGInline from "react-svg-inline"
-import * as loading_done from 'assets/animations/loading_done.svg' //TODO think about fancy svgs
-import * as subscribeButton from 'assets/images/subscribe_button.svg'
-import * as subscribeSubredditButton from 'assets/images/subscribe_subreddit_button.svg'
-import * as subscribedPartialButton from 'assets/images/subscribed_partial_button.svg'
-import * as expand_caret from 'assets/images/expand_caret.svg'
-import * as loadingAnimation from 'assets/animations/loading_animation.svg'
+import SVGInline from "react-svg-inline";
+import * as loading_done from 'assets/animations/loading_done.svg'; // TODO think about fancy svgs
+import * as subscribeButton from 'assets/images/subscribe_button.svg';
+import * as subscribeSubredditButton from 'assets/images/subscribe_subreddit_button.svg';
+import * as subscribedPartialButton from 'assets/images/subscribed_partial_button.svg';
+import * as expand_caret from 'assets/images/expand_caret.svg';
+import * as loadingAnimation from 'assets/animations/loading_animation.svg';
 
-import * as components from '~/client/components'
+import * as components from '~/client/components';
 
-import MediaQuery from 'react-responsive'
+import MediaQuery from 'react-responsive';
 
 import { classConcat } from '~/common/tools/css';
 
-import * as authorStyles from 'css/author.scss'
+import * as authorStyles from 'css/author.scss';
 import { urls } from '~/common';
 
-import * as actions from '~/client/actions'
-import { NavLink} from 'redux-first-router-link'
+import * as actions from '~/client/actions';
+import { NavLink } from 'redux-first-router-link';
 
-import config from 'root/config'
+import config from 'root/config';
 
 export enum MessageType 
 {
@@ -32,27 +32,27 @@ export enum MessageType
 
 interface Props
 {
-  message : MessageType;
+  message: MessageType;
 }
 
 interface State 
 {
-  rememberMe : boolean;
+  rememberMe: boolean;
 }
 
-export default class MessageComponent extends React.Component<Props,State> 
+export default class MessageComponent extends React.Component<Props, State> 
 {
 
-  state = { rememberMe : true };
+  public state = { rememberMe : true };
 
-  render() 
+  public render() 
   {
     return this.getMessage();
   }
 
-  getMessage()
+  private getMessage()
   {
-    switch(this.props.message)
+    switch (this.props.message)
     {
         case MessageType.NOT_LOGGED_IN:
         {
@@ -84,86 +84,82 @@ export default class MessageComponent extends React.Component<Props,State>
     }
   } 
 
-
-
-
   ////////////////////////////
   // No subscriptions
   ////////////////////////////
 
-
-  getSubscribeButton()
+  private getSubscribeButton()
   {
-      //Heh
+      // Heh
       let element = <div className={authorStyles.subscriptionButtonContainer}>
                       <SVGInline className={authorStyles.subscribeButton} svg={subscribeButton}/>
-                  </div>
+                  </div>;
 
       return <div className={styles.corner}>
       {element}
-      </div>
+      </div>;
   }
 
-  getSubscribeSubredditButton()
+  private getSubscribeSubredditButton()
   {
-      //Heh
-      let element : JSX.Element = <div key={"subscribe_subreddit_button"} className={authorStyles.subscriptionButtonContainer} style={ { position:"relative" } } >
+      // Heh
+      let element: JSX.Element = <div key={"subscribe_subreddit_button"} className={authorStyles.subscriptionButtonContainer} style={ { position: "relative" } } >
                                     <div className={authorStyles.subscriptionButtonOverlapContainer}>
-                                        <div className={authorStyles.subscriptionButton} style={ { position:"absolute" } }>
+                                        <div className={authorStyles.subscriptionButton} style={ { position: "absolute" } }>
                                             <SVGInline  className={authorStyles.unsubscribeButton} svg={subscribeSubredditButton}/>
                                         </div>
-                                        <div className={authorStyles.subscriptionButton} style={ { position:"absolute" } }>
+                                        <div className={authorStyles.subscriptionButton} style={ { position: "absolute" } }>
                                             <SVGInline  className={authorStyles.subscribeButton} svg={subscribeButton}/>
                                         </div>
                                     </div>
-                                </div>
+                                </div>;
 
       return <div className={styles.corner}>
       {element}
       {this.getExpandCaret(true)}
-      </div>
+      </div>;
 
   }
 
-  getExpandCaret( hidden : boolean)
+  private getExpandCaret( hidden: boolean)
   {
     let element =  <div className={ classConcat( authorStyles.displaySubredditsButtonContainer, styles.caret, hidden ? styles.hidden : null ) }>
                     <SVGInline className={authorStyles.displaySubredditsButton} svg={expand_caret}/>
-                  </div>
+                  </div>;
 
     return element;
   }
 
-  getExpandExample()
+  private getExpandExample()
   {
       let element =  <div className={ classConcat( authorStyles.subscriptionButtonContainer, styles.hidden ) } >
                         <SVGInline className={authorStyles.unsubscribeButton} svg={subscribeButton}/>
-                      </div>
+                      </div>;
 
       return <div className={styles.corner}>
               {element}
               {this.getExpandCaret(false)}
-             </div>
+             </div>;
               
   }
 
-  getRememberMeCheckbox()
+  private getRememberMeCheckbox()
   {
     return  <div className={styles.rememberMeContainer} onClick={ () => this.setRememberMe( !this.state.rememberMe ) }>
             <components.tools.Checkbox checked={this.state.rememberMe} callback={ (checked) => this.setRememberMe(checked) } />
              Remember me 
-            </div>
+            </div>;
   }
 
-  setRememberMe( rememberMe : boolean ) 
+  private setRememberMe( rememberMe: boolean ) 
   {
     this.setState( { rememberMe : rememberMe } );
   }
 
-  getUnsubscribeButton( partialStar : boolean)
+  private getUnsubscribeButton( partialStar: boolean)
   {
-      //Function remains the same, but apperance is slightly different
-      //depending on whether the subscription is all subreddits or only one.
+      // Function remains the same, but apperance is slightly different
+      // depending on whether the subscription is all subreddits or only one.
       let svgName = subscribeButton;
       if (partialStar)
       {
@@ -172,16 +168,16 @@ export default class MessageComponent extends React.Component<Props,State>
       
       let element =  <div className={authorStyles.subscriptionButtonContainer} >
                       <SVGInline className={authorStyles.unsubscribeButton} svg={svgName}/>
-                    </div>
+                    </div>;
 
       return <div className={styles.corner}>
               {element}
               {this.getExpandCaret(true)}
-             </div>
+             </div>;
               
   }
 
-  getNoSubscriptionsLoginMessage( authenticated : boolean)
+  private getNoSubscriptionsLoginMessage( authenticated: boolean)
   {
     if (authenticated)
     {
@@ -194,16 +190,15 @@ export default class MessageComponent extends React.Component<Props,State>
                   <span>your favorite authors!</span>
 
                 </div>
-                
+              
 
-
-            </div>
+            </div>;
     }
     else
     {
       return  <MediaQuery query="screen and (max-width: 1100px)">
               {
-                  (matches : boolean) => 
+                  (matches: boolean) =>
                   {
                     return <div className={styles.loginContainer}>
                             <div className={styles.loginContainerOuter}>
@@ -214,14 +209,14 @@ export default class MessageComponent extends React.Component<Props,State>
                             </div> 
                             {this.getRememberMeCheckbox()}
                             </div>
-                          </div>
-                    } 
+                          </div>;
+                    }
               }
-              </MediaQuery>
+              </MediaQuery>;
     }
   }
 
-  getNoSubscriptionsMessage( authenticated : boolean )
+  private getNoSubscriptionsMessage( authenticated: boolean )
   {
     return <div className={styles.container}>
               <SVGInline  className={siteStyles.loadingImage} svg={loading_done}/>
@@ -245,15 +240,15 @@ export default class MessageComponent extends React.Component<Props,State>
               {this.getBottomLinks( false, true)}
 
 
-            </div>
+            </div>;
   }
 
-  getTextMessage( text : string )
+  private getTextMessage( text: string )
   {
-    return <span className={styles.rowMessage}>{text}</span>
+    return <span className={styles.rowMessage}>{text}</span>;
   }
 
-  getSubscriptionInfo()
+  private getSubscriptionInfo()
   {
     return <div className={styles.rowMessageCenterer}>
             <div className={styles.row}>
@@ -276,14 +271,14 @@ export default class MessageComponent extends React.Component<Props,State>
               {this.getExpandExample()}
               {this.getTextMessage("Manage subscribed Subreddits")}
             </div>
-          </div>
+          </div>;
   }
 
   /////////////////////////////
   // About
   /////////////////////////////
 
-  getBottomLinks( swapPrivacyForAbout : boolean = false, showAbout : boolean = false)
+  private getBottomLinks( swapPrivacyForAbout: boolean = false, showAbout: boolean = false)
   {
 
     let getLink = ( to, text) => {
@@ -291,8 +286,8 @@ export default class MessageComponent extends React.Component<Props,State>
       return <NavLink key={text} className={ styles.link}
       to={ to }>
       {text}
-      </NavLink> 
-    }
+      </NavLink>; 
+    };
 
     let optionals = [];
 
@@ -320,13 +315,13 @@ export default class MessageComponent extends React.Component<Props,State>
                 { optionals }
               <a className={styles.link} href={config.client.contactUrl}>Contact</a>
               <a className={styles.link} href={config.client.sourceCodeUrl}>Source code</a>
-          </div>
+          </div>;
   }
 
-  getAboutMessage()
+  private getAboutMessage()
   {
-    //Line breaks in string input is ignored, so I guess we're doing this.
-    let aboutMessageParts : string[] = config.client.aboutMessage.split('\n');
+    // Line breaks in string input is ignored, so I guess we're doing this.
+    let aboutMessageParts: string[] = config.client.aboutMessage.split('\n');
     let aboutMessageComponents = [];
     let i = 0;
     for (let part of aboutMessageParts)
@@ -365,10 +360,10 @@ export default class MessageComponent extends React.Component<Props,State>
               {this.getBottomLinks()}
 
 
-            </div>
+            </div>;
   }
 
-  getPrivacyMessage()
+  private getPrivacyMessage()
   {
     return <div className={styles.container}>
     
@@ -395,14 +390,14 @@ export default class MessageComponent extends React.Component<Props,State>
               {this.getBottomLinks(true)}
 
 
-            </div>
+            </div>;
   }
 
-  getWaiting()
+  private getWaiting()
   {
     return <div className={styles.container}>
       <SVGInline  className={siteStyles.loadingImage} svg={loadingAnimation}/>
-    </div>
+    </div>;
 
   }
 

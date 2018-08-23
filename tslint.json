@@ -1,0 +1,51 @@
+{
+    "extends": "tslint:recommended",
+    "rules": {
+        "no-trailing-whitespace": false,
+        "one-line": false,
+        "ordered-imports": false,
+        "quotemark": false,
+        "trailing-comma": 
+        [
+            false,
+            {
+                "multiline": "never",
+                "singleline": "never"
+            }
+        ],
+        "interface-name": [true, "never-prefix"],
+        "max-line-length": false,
+        "prefer-const": false,
+        "whitespace": 
+        [
+            true, 
+            "check-operator", 
+            "check-module", 
+            "check-type",  
+            "check-typecast", 
+            "check-type-operator", 
+            "check-preblock" 
+        ],
+        "no-empty-interface": false,
+        "object-literal-shorthand": false,
+        "no-consecutive-blank-lines": false,
+        "object-literal-sort-keys": false,
+        "curly": false,
+        "no-angle-bracket-type-assertion": false,
+        "no-shadowed-variable": false,
+        "no-namespace": false,
+        "typedef-whitespace": [ false ],
+        "forin": false,
+        "member-ordering": false,
+        "no-empty": false,
+        "max-classes-per-file": false,
+        "array-type": false,
+        "no-console": false,
+        "align": false,
+        "one-variable-per-declaration": false
+    },
+
+    "jsRules": {
+
+    }
+}

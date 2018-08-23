@@ -8,19 +8,19 @@ import * as Entities from '~/backend/entity';
 import * as models from '~/common/models';
 import * as authentication from '~/backend/authentication';
 
-import * as endpointCommons from './endpointCommons'
+import * as endpointCommons from './endpointCommons';
 import { EndpointException } from '~/common/exceptions';
 import { Scope } from '~/backend/authentication/generation';
 
-import * as stats from '~/backend/stats'
+import * as stats from '~/backend/stats';
 
 import * as Log from '~/common/log';
-import * as tools from '~/common/tools'
-import serverConfig from 'root/server_config'
+import * as tools from '~/common/tools';
+import serverConfig from 'root/server_config';
 
 const router = Express.Router();
 
-//Set current 
+// Set current 
 router.get('/api/user/last_visit', async (req: Request, res: Response) =>
 {
     let manager = RFY.wetland.getManager();
@@ -37,7 +37,7 @@ router.get('/api/user/last_visit', async (req: Request, res: Response) =>
 
                     stats.add(stats.StatsCategoryType.USER_PAGE_LOADS);
 
-                    let prevDate = ( (<Date>user.last_visit).getTime() / 1000 );
+                    let prevDate = ( (<Date> user.last_visit).getTime() / 1000 );
 
                     res.json( prevDate );
 
@@ -48,7 +48,7 @@ router.get('/api/user/last_visit', async (req: Request, res: Response) =>
         {
             Log.A('Update last visit', null, tools.http.getReqIp( req, serverConfig.server.reverseProxy ) );
 
-            //We don't keep track, so return current time.
+            // We don't keep track, so return current time.
             res.json( Date.now() / 1000 );
         }
     }
@@ -59,8 +59,8 @@ router.get('/api/user/last_visit', async (req: Request, res: Response) =>
 
 });
 
-//There are currently no settings stored server side
-//But if there were any, this is where you'd get them.
+// There are currently no settings stored server side
+// But if there were any, this is where you'd get them.
 router.get('/api/user/settings', async (req: Request, res: Response) =>
 {
     let manager = RFY.wetland.getManager();
@@ -98,8 +98,8 @@ router.post('/api/user', async (req: Request, res: Response) =>
 
     try
     {
-        //Unused for the moment
-        //let user: Entities.User = await authentication.verification.getAuthorizedUser(manager, token, { populate: "settings" },  Scope.SETTINGS);
+        // Unused for the moment
+        // let user: Entities.User = await authentication.verification.getAuthorizedUser(manager, token, { populate: "settings" },  Scope.SETTINGS);
     
         switch(rawReq.type)
         {

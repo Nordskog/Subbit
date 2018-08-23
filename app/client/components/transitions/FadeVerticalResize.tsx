@@ -9,7 +9,7 @@ import { tools } from '~/common';
 
  export default class FadeVerticalResize extends Transition
 {    
-    come(container : HTMLDivElement, callback)
+    public come(container : HTMLDivElement, callback)
     {
         let height : number = container.clientHeight;
         let {verticalPadding, horizontalPadding} = tools.component.getPadding(container);
@@ -36,7 +36,7 @@ import { tools } from '~/common';
             timeline.play();
     }
 
-    go(container : HTMLDivElement, callback)
+    public go(container : HTMLDivElement, callback)
     {
         
         let height : number = container.clientHeight;

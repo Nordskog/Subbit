@@ -1,7 +1,7 @@
-﻿import * as Wetland from 'wetland';
+﻿// tslint:disable:variable-name
 
-import Subreddit from './Subreddit'
-import Subscription from './Subscription'
+import * as Wetland from 'wetland';
+import Subscription from './Subscription';
 
 export default class Author extends Wetland.Entity
 {
@@ -16,7 +16,7 @@ export default class Author extends Wetland.Entity
 
     public subscriptions : Wetland.ArrayCollection<Subscription>;
 
-    static setMapping(mapping : Wetland.Mapping<Author>)
+    protected static setMapping(mapping : Wetland.Mapping<Author>)
     {
 
         let options = {
@@ -50,13 +50,13 @@ export default class Author extends Wetland.Entity
         mapping.oneToMany('subscriptions', { targetEntity: 'Subscription', mappedBy: 'author' });
     }
 
-    beforeCreate()
+    protected beforeCreate()
     {
-        //Fill name_lower
+        // Fill name_lower
         this.name_lower = this.name.toLowerCase();
     }
 
-    beforeUpdate(updatedValues, EntityManager : Wetland.EntityManager)
+    protected beforeUpdate(updatedValues, EntityManager : Wetland.EntityManager)
     {
         this.updatedAt = new Date();
     }

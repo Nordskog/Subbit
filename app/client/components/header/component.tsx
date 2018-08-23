@@ -1,25 +1,24 @@
 ﻿import * as React from 'react';
-import { NavLink} from 'redux-first-router-link'
+import { NavLink } from 'redux-first-router-link';
 
-import * as urls from '~/common/urls'
-import * as models from '~/common/models'
+import * as models from '~/common/models';
 
-import * as components from '~/client/components'
+import * as components from '~/client/components';
 
 import { AuthorFilter, PostTimeRange } from '~/common/models';
 
 import * as siteStyles from 'css/site.scss';
-import * as styles from 'css/header.scss'
+import * as styles from 'css/header.scss';
 
-import * as transitions from 'react-transition-group'
+import * as transitions from 'react-transition-group';
 
-import * as actions from '~/client/actions'
+import * as actions from '~/client/actions';
 
-import SVGInline from "react-svg-inline"
+import SVGInline from "react-svg-inline";
 
-import * as subbit_logo from 'assets/images/subbit_logo.svg'
+import * as subbit_logo from 'assets/images/subbit_logo.svg';
 
-import MediaQuery from 'react-responsive'
+import MediaQuery from 'react-responsive';
 import { getTimeRangeDisplayString, getFilterDisplayString } from '~/common/tools/string';
 import { classConcat } from '~/common/tools/css';
 
@@ -35,14 +34,14 @@ interface Props
 
 export default class HeaderComponent extends React.Component<Props, null>
 {
-    usernameField;
+    private usernameField;
 
     constructor(props)
     {
         super(props);
     }
 
-    render()
+    public render()
     {
         return  <MediaQuery query="screen and (max-width: 1100px)">
                 {
@@ -58,10 +57,10 @@ export default class HeaderComponent extends React.Component<Props, null>
                         }
                     } 
                 }
-                </MediaQuery>
+                </MediaQuery>;
     }
 
-    getheader()
+    private getheader()
     {
         return <div className={styles.header}>
                     <div className={styles.headerLeft}>
@@ -97,18 +96,18 @@ export default class HeaderComponent extends React.Component<Props, null>
                     <div className={styles.headerClear} />
                     
                    
-                </div>
+                </div>;
     }
 
     
-    getCompactHeader()
+    private getCompactHeader()
     {
         let headerLeftStyles = [];
         headerLeftStyles.push( styles.headerLeft );
-        //Enlargen left-floated div to make the right float 
-        //line break twice the normal distance, so it appears
-        //below the top time range row
-        if (this.props.filter == AuthorFilter.TOP)
+        // Enlargen left-floated div to make the right float 
+        // line break twice the normal distance, so it appears
+        // below the top time range row
+        if (this.props.filter === AuthorFilter.TOP)
             headerLeftStyles.push( styles.headerLeftDoubleHeight );
 
 
@@ -149,41 +148,41 @@ export default class HeaderComponent extends React.Component<Props, null>
                     <transitions.TransitionGroup component="div">
                         {this.getTopTimePanels()}
                     </transitions.TransitionGroup>
-                </div>
+                </div>;
     }
 
-    getRightCorner()
+    private getRightCorner()
     {
         return  <div className={ styles.headerRightCornerOuter }>
                     <div className={ styles.headerRightCornerInner } />
-                </div>
+                </div>;
     }
 
-    getLink( filter : AuthorFilter)
+    private getLink( filter : AuthorFilter)
     {
 
-        if (this.props.subreddit != null && filter == AuthorFilter.BEST)
+        if (this.props.subreddit != null && filter === AuthorFilter.BEST)
             return null;
 
-        return <components.transitions.FadeHorizontalResize key={"filterlink_"+getFilterDisplayString(filter)}>
+        return <components.transitions.FadeHorizontalResize key={"filterlink_" + getFilterDisplayString(filter)}>
                     <NavLink    className={ this.getButtonStyleIfFilterMatch(filter )}
                         to={ this.getFilterLink(filter) }>
                         {getFilterDisplayString(filter)}
                     </NavLink>
-                </components.transitions.FadeHorizontalResize>   
+                </components.transitions.FadeHorizontalResize>;   
     }
 
-    getLogo()
+    private getLogo()
     {
        return   <NavLink    className={ styles.logoContainer }
                      to={ { type: actions.types.Route.HOME, payload: {  } as actions.types.Route.HOME } }>
                     <SVGInline className={styles.logo} svg={subbit_logo}/>
-                </NavLink>
+                </NavLink>;
     }
 
-    getButtonStyleIfFilterMatch(filter : string)
+    private getButtonStyleIfFilterMatch(filter : string)
     {
-        if (filter == this.props.filter)
+        if (filter === this.props.filter)
         {
             return  `${siteStyles.button} ${styles.sortButtonActive}`;
         }
@@ -193,9 +192,9 @@ export default class HeaderComponent extends React.Component<Props, null>
         }
     }
 
-    getFilterLink(filter : models.AuthorFilter)
+    private getFilterLink(filter : models.AuthorFilter)
     {
-        if (this.props.subreddit == null || filter == AuthorFilter.SUBSCRIPTIONS)
+        if (this.props.subreddit == null || filter === AuthorFilter.SUBSCRIPTIONS)
         {
             return { type: actions.types.Route.FILTER, payload: { filter: filter } as actions.types.Route.FILTER };
         }
@@ -205,9 +204,9 @@ export default class HeaderComponent extends React.Component<Props, null>
         }
     }
 
-    getTopTimePanels()
+    private getTopTimePanels()
     {
-        if (this.props.filter !=  AuthorFilter.TOP )
+        if (this.props.filter !==  AuthorFilter.TOP )
             return null;
 
         let elements = [
@@ -225,20 +224,20 @@ export default class HeaderComponent extends React.Component<Props, null>
                     <div className={ `${styles.headerRow} ${styles.topTimeContainer}` }>
                         {elements}
                     </div>
-                </components.transitions.FadeVerticalResize>   
+                </components.transitions.FadeVerticalResize>;   
     }
 
-    getTopTimePanel( time : PostTimeRange)
+    private getTopTimePanel( time : PostTimeRange)
     {
 
-        return <NavLink key={time.toString()}   className={ this.props.time == time ? styles.sortButtonActiveSub : styles.sortButtonSub }
+        return <NavLink key={time.toString()}   className={ this.props.time === time ? styles.sortButtonActiveSub : styles.sortButtonSub }
                             to={ this.getTopLink(time) }>
                             {getTimeRangeDisplayString(time)}
-                </NavLink>
+                </NavLink>;
                  
     }
 
-    getTopLink(time : models.PostTimeRange)
+    private getTopLink(time : models.PostTimeRange)
     {
         if (this.props.subreddit == null)
         {
@@ -251,14 +250,14 @@ export default class HeaderComponent extends React.Component<Props, null>
     }
 
 
-    getSettingsPanel( mobile : boolean = false)
+    private getSettingsPanel( mobile : boolean = false)
     {
         return <components.userSettings.Popup
                     mobile={mobile}
-        />
+        />;
     }
 
-   handleLogoutClick()
+    private handleLogoutClick()
    {
        this.props.logout();
    }

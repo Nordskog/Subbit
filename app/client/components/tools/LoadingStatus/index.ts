@@ -1,1 +1,1 @@
-export { default as LoadingStatus } from './container'
+export { default as LoadingStatus } from './container';

@@ -1,12 +1,12 @@
-import * as Entities from '~/backend/entity'
-import * as Wetland from 'wetland'
+import * as Entities from '~/backend/entity';
+import * as Wetland from 'wetland';
 import { PostDisplay } from '~/common/models';
 
 export async function getUser( manager : Wetland.Scope, username : string, options? : any )
 {
     if (options == null)
         options = {};
-    return await manager.getRepository(Entities.User).findOne({ username: username }, { ...options })
+    return await manager.getRepository(Entities.User).findOne({ username: username }, { ...options });
 }
 
 export async function setPostDisplayMode(manager : Wetland.Scope, user : Entities.User, mode : PostDisplay) : Promise<Entities.User>
@@ -24,9 +24,9 @@ export async function getCount(manager : Wetland.Scope)
                         .getQuery()
                         .getSingleScalarResult();
 
-    //Wetland typings wrong, returns string of value
-    if ( typeof count == "string")
-        count = Number.parseInt(count as any);
+    // Wetland typings wrong, returns string of value
+    if ( typeof count === "string")
+        count = Number.parseInt(count as any, 10);
         
     return count;
 }

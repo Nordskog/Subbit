@@ -1,16 +1,16 @@
 import * as React from 'react';
 
 
-import * as styles from 'css/subredditList.scss'
-import * as animationStyles from 'css/animations.scss'
+import * as styles from 'css/subredditList.scss';
+import * as animationStyles from 'css/animations.scss';
 
-import * as components from '~/client/components/'
+import * as components from '~/client/components/';
 import * as models from '~/common/models';
 
-import expand_caret from 'assets/images/expand_caret.svg'
-import collapse_caret from 'assets/images/collapse_caret.svg'
+import expand_caret from 'assets/images/expand_caret.svg';
+import collapse_caret from 'assets/images/collapse_caret.svg';
 
-import * as transitions from 'react-transition-group'
+import * as transitions from 'react-transition-group';
 
 interface Props 
 {
@@ -30,7 +30,7 @@ interface State
 
 
 
-export default class popup extends React.Component<Props, State >
+export default class Popup extends React.Component<Props, State >
 {
 
     constructor(props : Props)
@@ -53,7 +53,7 @@ export default class popup extends React.Component<Props, State >
             >
   
             {
-                close => 
+                (close) => 
                 {
                     return <div >
                         <div className={modal ? styles.modalPopupContainer : styles.popupContainer}>
@@ -63,9 +63,9 @@ export default class popup extends React.Component<Props, State >
                                 onAltClick={ ( item) =>  { close(); return true; } }
                             />
                         </div>
-                 </div>
+                 </div>;
                 }
             }
-        </components.tools.Popup.Component>
+        </components.tools.Popup.Component>;
     }
-};
+}

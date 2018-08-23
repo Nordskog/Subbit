@@ -1,3 +1,4 @@
+// tslint:disable:ban-types
 import { Severity } from './models';
 
 export function I( message : any, meta : Object = {})
@@ -36,10 +37,10 @@ export function L( severity : Severity, message : any, meta : Object = {})
 
 export function init()
 {
-  //Do nothing on client.
+  // Do nothing on client.
 }
 
 export function setExitOnUncaughtException( exitOnError : boolean )
 {
-  //Do nothing on client
+  // Do nothing on client
 }

@@ -7,7 +7,8 @@
     "run-dev": "cross-env NODE_ENV=development ts-node ./app/server.ts",
     "build": "rimraf buildClient && cross-env NODE_ENV=production webpack --progress --config ./app/webpack_client.ts",
     "cli": "cross-env NODE_ENV=production ts-node ./app/cli",
-    "clean": "rimraf buildClient"
+    "clean": "rimraf buildClient",
+    "lint": "tslint ./app/**/*.ts{,x} -t verbose"
   },
   "description": "RedditFuckYeah",
   "author": {
@@ -64,7 +65,6 @@
     "@types/express-serve-static-core": "^4.0.50",
     "@types/gsap": "^1.19.2",
     "@types/history": "^4.6.2",
-    "@types/html-webpack-plugin": "^2.30.3",
     "@types/isomorphic-fetch": "0.0.34",
     "@types/jsonwebtoken": "^7.2.5",
     "@types/knex": "0.0.66",
@@ -108,6 +108,7 @@
     "style-loader": "^0.19.0",
     "svg-inline-loader": "^0.8.0",
     "tsconfig-paths-webpack-plugin": "^1.2.0",
+    "tslint": "^5.11.0",
     "typescript": "^2.9.2",
     "typings-for-css-modules-loader": "^1.7.0",
     "uglifyjs-webpack-plugin": "^1.2.5",

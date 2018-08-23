@@ -1,4 +1,4 @@
-﻿import * as store from '~/client/store'
+﻿import * as store from '~/client/store';
 
 export function getAccessToken(state: store.State)
 {

@@ -1,1 +1,1 @@
-export { default as SubredditDropdown } from './container'
+export { default as SubredditDropdown } from './container';

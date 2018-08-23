@@ -1,19 +1,13 @@
 import * as React from 'react';
-import { NavLink} from 'redux-first-router-link'
-import Link from 'redux-first-router-link'
-
 
 import * as models from '~/common/models';
 
-import * as tools from '~/common/tools'
-import * as urls from '~/common/urls'
+import SVGInline from "react-svg-inline";
+import * as expand_caret from 'assets/images/expand_caret.svg';
 
-import SVGInline from "react-svg-inline"
-import * as expand_caret from 'assets/images/expand_caret.svg'
+import * as components from '~/client/components';
 
-import * as components from '~/client/components'
-
-import * as styles from "css/redditlist.scss"
+import * as styles from "css/redditlist.scss";
 import { ListItem } from '~/client/components/tools/SearchList';
 import { AuthorFilter } from '~/common/models';
 import { getFilterDisplayString } from '~/common/tools/string';
@@ -34,11 +28,11 @@ interface State
 
 export default class FilterDropdown extends React.Component<Props, State>
 {
-    state = { filters: [] };
+    public state = { filters: [] };
     
-    static getDerivedStateFromProps( nextProps : Props, prevState : State) : State
+    public static getDerivedStateFromProps( nextProps : Props, prevState : State) : State
     {
-        //Only used by mobile, so place subscriptions at the top so it's easy to find.
+        // Only used by mobile, so place subscriptions at the top so it's easy to find.
         let filters: components.tools.SearchList.ListItem[]  = 
         [
             FilterDropdown.getFilterItem(  models.AuthorFilter.SUBSCRIPTIONS),
@@ -58,13 +52,13 @@ export default class FilterDropdown extends React.Component<Props, State>
         return  { filters: filters };
     }
 
-    static getFilterItem( filter : models.AuthorFilter) : ListItem
+    private static getFilterItem( filter : models.AuthorFilter) : ListItem
     {
         return {
             name: getFilterDisplayString(filter),
             object: filter,
             highlighted: false
-        }
+        };
     }
 
     constructor(props)
@@ -73,13 +67,13 @@ export default class FilterDropdown extends React.Component<Props, State>
 
     }
 
-    render()
+    public render()
     {
         return this.getFilterDropdown( this.getButton() );
 
     }
 
-    getButton()
+    private getButton()
     {
         return  <div className={styles.container}>
 
@@ -92,10 +86,10 @@ export default class FilterDropdown extends React.Component<Props, State>
             </div>
         </div>
 
-    </div>
+    </div>;
     }
 
-    getCurrentFilter()
+    private getCurrentFilter()
     {
         let filter = this.props.filter;
         if (filter == null)
@@ -103,17 +97,17 @@ export default class FilterDropdown extends React.Component<Props, State>
         return <span><b>{ getFilterDisplayString(filter)}</b></span>;
     }
 
-    getFilterDropdown( trigger : JSX.Element ) : JSX.Element
+    private getFilterDropdown( trigger : JSX.Element ) : JSX.Element
     {
-        //Note that the onClick does not include the subreddit if we select subs.
+        // Note that the onClick does not include the subreddit if we select subs.
         let filters : components.tools.SearchList.SearchItem = {
             prefix: "",
             toggleHighlight: false,
             displayHighlight : false,
             addToDisplayList : false,
             items: this.state.filters,
-            onClick: ( item : components.tools.SearchList.ListItem) => { this.props.changeFilter(item.object, item.object == AuthorFilter.SUBSCRIPTIONS ? null : this.props.subreddit); return true; }
-        }
+            onClick: ( item : components.tools.SearchList.ListItem) => { this.props.changeFilter(item.object, item.object === AuthorFilter.SUBSCRIPTIONS ? null : this.props.subreddit); return true; }
+        };
 
 
 
@@ -123,12 +117,12 @@ export default class FilterDropdown extends React.Component<Props, State>
                                 position={components.tools.Popup.Position.BOTTOM}
                                 alignment={components.tools.Popup.Alignment.BEGINNING}
                                 modal={this.props.modal}
-        />
+        />;
     
     }
 
-    getExpandCaret()
+    private getExpandCaret()
     {
-        return  <SVGInline className={styles.expandButton} svg={expand_caret}/>
+        return  <SVGInline className={styles.expandButton} svg={expand_caret}/>;
     }
 }

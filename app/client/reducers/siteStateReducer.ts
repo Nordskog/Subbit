@@ -1,13 +1,13 @@
 ﻿
-import * as actions from '~/client/actions'
-import * as models from '~/common/models'
+import * as actions from '~/client/actions';
+import * as models from '~/common/models';
 import { LoadingStatus } from '~/common/models';
 
 export function siteStateReducer(state = getDefaultSiteState(), action :  models.Action<any>)
 {
     switch (action.type)
     {
-        //used when a brand new listing starting from page 0 is retrieved
+        // used when a brand new listing starting from page 0 is retrieved
         case actions.types.page.LOADING_STATE_CHANGED:
         {
             let payload : actions.types.page.LOADING_STATE_CHANGED = action.payload;
@@ -17,7 +17,7 @@ export function siteStateReducer(state = getDefaultSiteState(), action :  models
                 status:  payload.status,
                 loadingCount: null,
                 loadingProgress: null
-            }
+            };
         }
 
         case actions.types.page.NEW_PAGE:
@@ -29,7 +29,7 @@ export function siteStateReducer(state = getDefaultSiteState(), action :  models
                 status: payload.status,
                 loadingCount: null,
                 loadingProgress: null
-            }
+            };
         }
 
         case actions.types.page.LOADING_PROGRESS:
@@ -40,7 +40,7 @@ export function siteStateReducer(state = getDefaultSiteState(), action :  models
                 ...state,
                 status: LoadingStatus.LOADING,
                 ...payload
-            }
+            };
         }
 
         //////////////////
@@ -52,7 +52,7 @@ export function siteStateReducer(state = getDefaultSiteState(), action :  models
             return {
                 ...state,
                 mode: models.SiteMode.STATS
-            }
+            };
         }
 
         case actions.types.Route.PRIVACY:
@@ -60,7 +60,7 @@ export function siteStateReducer(state = getDefaultSiteState(), action :  models
             return {
                 ...state,
                 mode: models.SiteMode.PRIVACY
-            }
+            };
         }
 
         case actions.types.Route.ABOUT:
@@ -68,7 +68,7 @@ export function siteStateReducer(state = getDefaultSiteState(), action :  models
             return {
                 ...state,
                 mode: models.SiteMode.ABOUT
-            }
+            };
         }
 
         case actions.types.Route.AUTHENTICATE:
@@ -76,7 +76,7 @@ export function siteStateReducer(state = getDefaultSiteState(), action :  models
             return {
                 ...state,
                 mode: models.SiteMode.WAITING
-            }
+            };
         }
 
         case actions.types.Route.AUTHOR:
@@ -87,7 +87,7 @@ export function siteStateReducer(state = getDefaultSiteState(), action :  models
             return {
                 ...state,
                 mode: models.SiteMode.AUTHORS
-            }
+            };
         }
     }
 

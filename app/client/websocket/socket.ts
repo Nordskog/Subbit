@@ -1,9 +1,9 @@
 
-import * as urls from '~/common/urls'
-import * as models from '~/common/models'
-import * as handler from '~/client/websocket/handler'
-import * as socketServerActions from '~/backend/sockets/actionTypes'
-import config from 'root/config'
+import * as urls from '~/common/urls';
+import * as models from '~/common/models';
+import * as handler from '~/client/websocket/handler';
+import * as socketServerActions from '~/backend/sockets/actionTypes';
+import config from 'root/config';
 import * as keepAlive from './keepAlive';
 
 let lastAccessToken : string;
@@ -14,7 +14,7 @@ let authenticated : boolean = false;
 let awaitingOpen : ( () => any ) [] = []; 
 let awaitingAuthentication : ( () => any ) [] = []; 
 
-//Call when socket connects, is not cleared on unintentional disconnect
+// Call when socket connects, is not cleared on unintentional disconnect
 const connectListener : Set<models.WebsocketReconnectCallback> = new Set<models.WebsocketReconnectCallback>();
 
 export function reconnect()
@@ -26,28 +26,28 @@ export function reconnect()
     }
 }
 
-export function connect( access_token : string )
+export function connect( accessToken : string )
 {
-    //Calling connect means we want this to stay open
+    // Calling connect means we want this to stay open
     wantToBeOpen = true;
 
     if (ws != null)
     {
-        //Already connected.
+        // Already connected.
         return;
     }
 
-    //Queue up the transmitCredentials request before we connect
-    //TODO update from store
-    lastAccessToken = access_token; //Keep around incase we need to reconnect
-    transmitCredentials(access_token);
+    // Queue up the transmitCredentials request before we connect
+    // TODO update from store
+    lastAccessToken = accessToken; // Keep around incase we need to reconnect
+    transmitCredentials(accessToken);
 
     ws = new WebSocket( `${config.server.websocket_address}/api/socket` );
 
     ws.onmessage = ( ev : MessageEvent ) => 
     {
-        handler.handleMessage( JSON.parse(ev.data) )
-    }
+        handler.handleMessage( JSON.parse(ev.data) );
+    };
 
     ws.onopen = ( ev : MessageEvent ) => 
     {
@@ -57,26 +57,26 @@ export function connect( access_token : string )
         keepAlive.startPingPong();
         processAwaitingOpen();
         callOnConnectCallbacks();
-    }
+    };
 
     
     ws.onerror = ( ev: Event ) =>
     {
-        //TODO deal with socket errors, get them even on clean disconnects.
-    }
+        // TODO deal with socket errors, get them even on clean disconnects.
+    };
 
 
     ws.onclose = ( ev : CloseEvent ) => 
     {
         clearState();
 
-        //If socket was closed but we want to remain connected,
-        //attempt reconnect after timeout.
+        // If socket was closed but we want to remain connected,
+        // attempt reconnect after timeout.
         if (wantToBeOpen)
         {
             keepAlive.startPongTimeout(); 
         }
-    }
+    };
 }
 
 export function notifyAuthenticated()
@@ -85,13 +85,13 @@ export function notifyAuthenticated()
     processAwaitingAuthentication();
 }
 
-function transmitCredentials( access_token : string )
+function transmitCredentials( accessToken : string )
 {
     let req : models.Action< socketServerActions.auth.AUTHENTICATE > = 
     {
         type: socketServerActions.auth.AUTHENTICATE,
-        payload: { access_token : access_token }
-    }
+        payload: { access_token : accessToken }
+    };
     send(req);
     
 }
@@ -153,8 +153,8 @@ export function disconnectIfInactive()
     }
 }
 
-//Clearing status because if disconnect.
-//Does not mean we want to be disconnected.
+// Clearing status because if disconnect.
+// Does not mean we want to be disconnected.
 function clearState()
 {
     awaitingOpen.length = 0;
@@ -165,7 +165,7 @@ function clearState()
     socketOpen = false;
     if ( ws != null)
     {
-        if ( ws.readyState != ws.CLOSED && ws.readyState != ws.CLOSING )
+        if ( ws.readyState !== ws.CLOSED && ws.readyState !== ws.CLOSING )
             ws.close();
         ws = null;
     }
@@ -175,7 +175,7 @@ function clearState()
 
 export function disconnect()
 {
-    //Calling disconnect means we want this to stay closed
+    // Calling disconnect means we want this to stay closed
     wantToBeOpen = false;
 
     if (ws != null)
@@ -187,7 +187,7 @@ export function disconnect()
 
 export function addConnectCallback( callback : models.WebsocketReconnectCallback )
 {
-    //If socket is already alive call immediately
+    // If socket is already alive call immediately
     if (socketOpen)
     {
         callback();

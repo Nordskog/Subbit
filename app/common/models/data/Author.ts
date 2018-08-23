@@ -1,5 +1,5 @@
-import Subscription from './Subscription'
-import {Post} from '~/common/models/reddit'
+import Subscription from './Subscription';
+import { Post } from '~/common/models/reddit';
 
 export default interface Author
 {

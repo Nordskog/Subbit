@@ -1,14 +1,14 @@
 import * as React from 'react';
-import * as models from '~/common/models'
-import * as components from '~/client/components'
+import * as models from '~/common/models';
+import * as components from '~/client/components';
 import { ToggleItem } from '~/client/components/tools';
-import * as urls from '~/common/urls'
-import * as actions from '~/client/actions'
-import MediaQuery from 'react-responsive'
+import * as urls from '~/common/urls';
+import * as actions from '~/client/actions';
+import MediaQuery from 'react-responsive';
 
-import { NavLink} from 'redux-first-router-link'
+import { NavLink } from 'redux-first-router-link';
 
-import * as styles from 'css/userSettings.scss'
+import * as styles from 'css/userSettings.scss';
 import { PostDisplay } from '~/common/models';
 
 import config from 'root/config';
@@ -40,7 +40,7 @@ export default class UserSettingsComponent extends React.Component<Props, State>
         this.state = { rememberMe: true, postDisplayItems: [], postDisplaySelected: null};
     }
 
-    static getDerivedStateFromProps( newProps : Props)
+    public static getDerivedStateFromProps( newProps : Props)
     {
         let selected : ToggleItem = null;
         let items : ToggleItem[] =  [
@@ -84,20 +84,20 @@ export default class UserSettingsComponent extends React.Component<Props, State>
                     {this.getAboutButton()}
                     {this.getLogoutButton()}
                     {this.getlogoutOnAllDevicesButton()}
-                </div>
+                </div>;
     }
 
-    getPostDisplayToggle()
+    private getPostDisplayToggle()
     {
         return  <components.tools.OptionDropdown message={"Post display format"}> 
                          <components.tools.Toggle
                         items={this.state.postDisplayItems}
                         selected={this.state.postDisplaySelected}
-                        onClick={ (item : ToggleItem ) => { this.props.changePostDisplay(item.object) } } />   
-                </components.tools.OptionDropdown>
+                        onClick={ (item : ToggleItem ) => { this.props.changePostDisplay(item.object); } } />   
+                </components.tools.OptionDropdown>;
     }
 
-    getLoginButton()
+    private getLoginButton()
     {
         if (!this.props.authenticated)
         {
@@ -115,64 +115,64 @@ export default class UserSettingsComponent extends React.Component<Props, State>
                                             </div>
                                         </div>
                 
-                                    </div>
+                                    </div>;
                         } 
                     }
-                    </MediaQuery>
+                    </MediaQuery>;
         }
     }
 
-    setRememberMe( rememberMe : boolean)
+    private setRememberMe( rememberMe : boolean)
     {
         this.setState( { rememberMe: rememberMe } );
     }
 
-    getStatsButton()
+    private getStatsButton()
     {
         if (this.props.statsAccess)
         {
             return  <NavLink onClick={ () => this.props.close()} className={ styles.genericButton }
                         to={ { type: actions.types.Route.STATS, payload: { } } as actions.types.Route.STATS }>
                         Stats
-                    </NavLink>
+                    </NavLink>;
         }
     }
 
-    getAboutButton()
+    private getAboutButton()
     {
         return  <NavLink onClick={ () => this.props.close()} className={ styles.genericButton }
                     to={ { type: actions.types.Route.ABOUT, payload: { } } as actions.types.Route.ABOUT }>
                     About
-                </NavLink>  
+                </NavLink>;  
     }
 
-    getLogoutButton()
+    private getLogoutButton()
     {
         if (this.props.authenticated)
         {
             return <components.tools.ConfirmationDropdown
-                        onClick={ ok => this.handleLogoutClick(ok) }
+                        onClick={ (ok) => this.handleLogoutClick(ok) }
                         message={"Logout"}
                         positiveMessage={"Logout"}
                         negativeMessage={"Never mind"}
-            />
+            />;
         }
     }
 
-    getlogoutOnAllDevicesButton()
+    private getlogoutOnAllDevicesButton()
     {
         if (this.props.authenticated)
         {
             return <components.tools.ConfirmationDropdown
-                        onClick={ ok => this.handleLogoutAllClick(ok) }
+                        onClick={ (ok) => this.handleLogoutAllClick(ok) }
                         message={"Logout on all devices"}
                         positiveMessage={"Logout"}
                         negativeMessage={"Never mind"}
-            />
+            />;
         }
     }
 
-    handleLogoutClick( ok : boolean )
+    private handleLogoutClick( ok : boolean )
     {
         if (ok)
         {
@@ -182,7 +182,7 @@ export default class UserSettingsComponent extends React.Component<Props, State>
         }
     }
 
-    handleLogoutAllClick( ok : boolean )
+    private handleLogoutAllClick( ok : boolean )
     {
         if (ok)
         {
@@ -192,4 +192,4 @@ export default class UserSettingsComponent extends React.Component<Props, State>
         }
     }
 
-};
+}

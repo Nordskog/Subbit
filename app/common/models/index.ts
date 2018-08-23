@@ -8,7 +8,7 @@ export * from './Action';
 export
 {
     auth, data, state, stats, reddit
-}
+};
 
 export enum AuthorFilter
 {
@@ -19,7 +19,7 @@ export enum AuthorFilter
     SUBSCRIPTIONS =  'subs',
     RISING = "rising",
     CONTROVERSIAL = "controversial",
-};
+}
 
 export enum PostTimeRange
 {

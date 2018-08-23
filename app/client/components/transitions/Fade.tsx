@@ -9,7 +9,7 @@ import Transition from './Transition';
 
  export default class Fade extends Transition
 {
-    come(container : HTMLDivElement, callback)
+    public come(container : HTMLDivElement, callback)
     {
         let timeline = new TimelineLite();
 
@@ -30,7 +30,7 @@ import Transition from './Transition';
             timeline.play();
     }
 
-    go(container : HTMLDivElement, callback)
+    public go(container : HTMLDivElement, callback)
     {
            TweenLite.fromTo(container, this.state.duration, 
                {

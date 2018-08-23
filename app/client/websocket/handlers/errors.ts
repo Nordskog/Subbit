@@ -1,5 +1,5 @@
-import * as toast from '~/client/toast'
-import * as actionTypes from '~/client/websocket/actionTypes'
+import * as toast from '~/client/toast';
+import * as actionTypes from '~/client/websocket/actionTypes';
 
 export function handleError( payload : actionTypes.errors.ERROR )
 {

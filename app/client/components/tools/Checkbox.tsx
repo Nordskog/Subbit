@@ -1,18 +1,18 @@
 import * as React from 'react';
-import * as siteStyles from 'css/site.scss'
+import * as siteStyles from 'css/site.scss';
 
-import SVGInline from "react-svg-inline"
-import * as checkmark from 'assets/images/checkmark.svg'
+import SVGInline from "react-svg-inline";
+import * as checkmark from 'assets/images/checkmark.svg';
 
 interface Props
 {
-    checked? : boolean
+    checked? : boolean;
     callback?( checked : boolean ):  void;
 }
 
 interface State
 {
-    checked : boolean
+    checked : boolean;
 }
 
 export default class Checkbox extends React.Component<Props, State>
@@ -23,7 +23,7 @@ export default class Checkbox extends React.Component<Props, State>
         this.state = { checked: true };
     }
 
-    static getDerivedStateFromProps( newProps : Props)
+    public static getDerivedStateFromProps( newProps : Props)
     {
         if (newProps.checked != null)
         {
@@ -40,7 +40,7 @@ export default class Checkbox extends React.Component<Props, State>
         return  <div className={siteStyles.checkboxContainer}>
                     <SVGInline className={this.state.checked ? siteStyles.checkBoxChecked : siteStyles.checkBox} svg={checkmark}/>
                     <input type="checkbox" onChange={ () => this.handleClick() }/>
-                </div>
+                </div>;
     }
 
     public toggle()
@@ -53,7 +53,7 @@ export default class Checkbox extends React.Component<Props, State>
         return this.state.checked;
     }
 
-    handleClick()
+    private handleClick()
     {
         if (this.props.callback != null)
         {

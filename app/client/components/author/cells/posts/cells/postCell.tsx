@@ -1,25 +1,25 @@
 ﻿import * as React from 'react';
 
-import * as actions from '~/client/actions'
+import * as actions from '~/client/actions';
 import * as models from '~/common/models';
-import * as tools from '~/common/tools'
-import * as urls from '~/common/urls'
-import * as styles from 'css/post.scss'
+import * as tools from '~/common/tools';
+import * as urls from '~/common/urls';
+import * as styles from 'css/post.scss';
 
-import * as vote from 'assets/images/vote.svg'
+import * as vote from 'assets/images/vote.svg';
 import { PostDisplay } from '~/common/models';
 import { NavLink } from 'redux-first-router-link';
 import { classConcat } from '~/common/tools/css';
-import SVGInline from "react-svg-inline"
+import SVGInline from "react-svg-inline";
 
 import defaultThumbnail from 'assets/images/thumbnail_default.png';
 import selfThumbnail from 'assets/images/thumbnail_self.png';
 import nsfwThubmnail from 'assets/images/thumbnail_nsfw.png';
 
-const danger_flairs : Set<string> = new Set<string>();
-danger_flairs.add("nsfw");
-danger_flairs.add("nsfl");
-danger_flairs.add("spoiler");
+const dangerFlairs : Set<string> = new Set<string>();
+dangerFlairs.add("nsfw");
+dangerFlairs.add("nsfl");
+dangerFlairs.add("spoiler");
 
 const defaultThumbnails : Map<string, any> = new Map<string, any>();
 defaultThumbnails.set("self",selfThumbnail);
@@ -38,7 +38,7 @@ interface Props
 export default class PostCell extends React.Component<Props, null>
 {
 
-    render()
+    public render()
     {
         switch( this.props.postDisplay )
         {
@@ -51,7 +51,7 @@ export default class PostCell extends React.Component<Props, null>
         }
     }
 
-    getMinimalPost()
+    private getMinimalPost()
     {
         return <div className={this.props.isTopPost ? `${styles.postContainer} ${styles.topPostContainer}` : styles.postContainer}>
             <div className={styles.voteScoreImageAlignerOuter}>
@@ -67,10 +67,10 @@ export default class PostCell extends React.Component<Props, null>
                     this.getDateCol(),
                 )
             }
-        </div>
+        </div>;
     }
 
-    getCompactPost()
+    private getCompactPost()
     {
         return <div className={this.props.isTopPost ? `${styles.postContainer} ${styles.topPostContainer}` : styles.postContainer}>
             <div className={styles.voteScoreImageAlignerOuter}>
@@ -91,20 +91,20 @@ export default class PostCell extends React.Component<Props, null>
                     </div>
                 )
             }
-            </div>
+            </div>;
     }
 
-    getTitleLinebreakFix()
+    private getTitleLinebreakFix()
     {
-        //For some inane reason, the last word of the title will 
-        //follow the posted date and whatnot and be broken to the next line,
-        //despite there being plenty of space available on the first line.
-        //It only moves the last element, so inserting an empty span inside
-        //the title link leaves the rest of the title unharmed.
-        return <span> </span>
+        // For some inane reason, the last word of the title will 
+        // follow the posted date and whatnot and be broken to the next line,
+        // despite there being plenty of space available on the first line.
+        // It only moves the last element, so inserting an empty span inside
+        // the title link leaves the rest of the title unharmed.
+        return <span> </span>;
     }
 
-    getLink( includeFlairs : boolean = true, ...inlineElements : JSX.Element[])
+    private getLink( includeFlairs : boolean = true, ...inlineElements : JSX.Element[])
     {
         return <div className={styles.postTitlecenterer}>
                     <div className={styles.post}>
@@ -115,11 +115,11 @@ export default class PostCell extends React.Component<Props, null>
                         <span className={styles.postLinkRightMargin}/>
                         {inlineElements}
                         </div> 
-                 </div> 
+                 </div>; 
         
     }
 
-    getNormalPost()
+    private getNormalPost()
     {
         return <div className={this.props.isTopPost ? `${styles.postContainer} ${styles.topPostContainer}` : styles.postContainer}>
             <div className={styles.voteScoreImageAlignerOuter}>
@@ -145,42 +145,42 @@ export default class PostCell extends React.Component<Props, null>
 
             </div>
 
-            </div>
+            </div>;
 
     }
 
-    getFlairsAndStuff()
+    private getFlairsAndStuff()
     {
-        return [this.getFlair(), this.getSpoiler(), this.getNsfwFlair() ]
+        return [this.getFlair(), this.getSpoiler(), this.getNsfwFlair() ];
     }
 
-    getFlair()
+    private getFlair()
     {
         if (this.props.post.link_flair_text != null && this.props.post.link_flair_text.length > 0)
         {
-            return <span key={"flair_flair"} className={ this.getFlairClass(this.props.post.link_flair_text) }>{this.props.post.link_flair_text}</span>
+            return <span key={"flair_flair"} className={ this.getFlairClass(this.props.post.link_flair_text) }>{this.props.post.link_flair_text}</span>;
         }
     }
 
-    getSpoiler()
+    private getSpoiler()
     {
         if (this.props.post.spoiler)
         {
-            return <span key={"spoiler_flair"} className={ styles.spoiler }>Spoiler</span>
+            return <span key={"spoiler_flair"} className={ styles.spoiler }>Spoiler</span>;
         }
     }  
 
-    getNsfwFlair()
+    private getNsfwFlair()
     {
         if (this.props.post.over_18)
         {
-            return <span key={"nsfw_flair"} className={ styles.nsfw_flair }>NSFW</span>
+            return <span key={"nsfw_flair"} className={ styles.nsfw_flair }>NSFW</span>;
         }
     }
 
-    getFlairClass( flair : string)
+    private getFlairClass( flair : string)
     {
-        if ( danger_flairs.has( flair.toLowerCase() ) )
+        if ( dangerFlairs.has( flair.toLowerCase() ) )
         {
             return styles.nsfw_flair;
         }
@@ -190,11 +190,11 @@ export default class PostCell extends React.Component<Props, null>
         }
     }
 
-    getImage()
+    private getImage()
     {
         let url : string = this.props.post.thumbnail;
 
-        //In chrome they are sometimes "" instead of null ... ?
+        // In chrome they are sometimes "" instead of null ... ?
         if (url == null || url.length < 1)
         {
             url = defaultThumbnail;
@@ -205,21 +205,21 @@ export default class PostCell extends React.Component<Props, null>
         }
 
         let style = [];
-        style.push( this.props.postDisplay == PostDisplay.FULL ? styles.imageContainer : styles.tinyImageContainer );
+        style.push( this.props.postDisplay === PostDisplay.FULL ? styles.imageContainer : styles.tinyImageContainer );
         if (this.props.isTopPost)
             style.push( styles.topImage );
 
         return  <a href={this.props.post.url} className={styles.imageVerticalCenter} >
                     <img className={ classConcat(...style) } src={url}/>
-                </a>  
+                </a>;  
     }
 
-    getComments()
+    private getComments()
     {
-        return <span key={"comments_span"} className={styles.comments}><a href={urls.getPostUrl(this.props.post.subreddit, this.props.post.id)}>{this.props.post.num_comments} comments</a></span>
+        return <span key={"comments_span"} className={styles.comments}><a href={urls.getPostUrl(this.props.post.subreddit, this.props.post.id)}>{this.props.post.num_comments} comments</a></span>;
     }
 
-    getSubreddit()
+    private getSubreddit()
     {
         if (this.props.displaySubreddit)
             return  <span className={styles.subreddit} key={"subreddit_span"}>
@@ -228,36 +228,36 @@ export default class PostCell extends React.Component<Props, null>
                             to={ { type: actions.types.Route.SUBREDDIT, payload: { subreddit: this.props.post.subreddit } }  }>
                             to r/<b>{this.props.post.subreddit}</b>
                         </NavLink>
-                    </span>
+                    </span>;
     }
 
-    getDateCol()
+    private getDateCol()
     {
             return <span key={"date_span"} className={styles.postedDate}> {tools.time.getTimeSinceDisplayString(this.props.post.created_utc)} </span>;
     }
 
-    getScoreCol()
+    private getScoreCol()
     {   
         return <div className={this.props.isTopPost ?  styles.topScoreContainer  :  styles.scoreContainer } key={"score_col"} >
                     <span> {tools.number.numberTo4CharDisplayString(this.props.post.score)} </span>
-                </div>
+                </div>;
     }
 
-    getUpvoted(upvoted : boolean)
+    private getUpvoted(upvoted : boolean)
     {
         let style = styles.voteIndicator;
         if (upvoted)
         {
-            style =  styles.upvote;;
+            style =  styles.upvote;
         }
         else if (upvoted != null)
         {
-            style = styles.downvote;;
+            style = styles.downvote;
         }
 
        return   <div className={styles.postReadContainer} >
                         <SVGInline className={style} svg={vote}/>
-                </div>
+                </div>;
        
 
     }

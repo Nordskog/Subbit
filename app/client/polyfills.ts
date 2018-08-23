@@ -1,4 +1,6 @@
 // https://tc39.github.io/ecma262/#sec-array.prototype.includes
+// tslint:disable:no-var-keyword
+// tslint:disable:no-bitwise
 
 export function fill()
 {

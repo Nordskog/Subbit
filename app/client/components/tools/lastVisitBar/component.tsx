@@ -3,10 +3,10 @@ import * as React from 'react';
 
 import * as models from '~/common/models';
 
-import * as tools from '~/common/tools'
-import * as urls from '~/common/urls'
+import * as tools from '~/common/tools';
+import * as urls from '~/common/urls';
 
-import * as authorStyles from 'css/author.scss'
+import * as authorStyles from 'css/author.scss';
 
 interface Props
 {
@@ -15,15 +15,15 @@ interface Props
 
 export default class LastVisitBar extends React.Component<Props, null>
 {
-    render()
+    public render()
     {
         return <div className={authorStyles.lastVisit}>
                       {this.getTimeSince()}
 
-                </div>
+                </div>;
     }
 
-    getTimeSince()
+    private getTimeSince()
     {
         return <span>Your last visit {tools.time.getTimeSinceDisplayString(this.props.lastVisit)} </span>;
     }

@@ -1,20 +1,20 @@
-import * as models from '~/common/models'
-import * as urls from '~/common/urls'
-import * as tools from '~/common/tools'
+import * as models from '~/common/models';
+import * as urls from '~/common/urls';
+import * as tools from '~/common/tools';
 import { NetworkException, Exception } from '~/common/exceptions';
 import { exceptions } from '~/common';
-import config from 'root/config'
+import config from 'root/config';
+import fetch from 'isomorphic-fetch';
 
-
-export async function getRequest<T>(url : string, parameters? : any, access_token?: string) : Promise<T>
+export async function getRequest<T>(url : string, parameters? : any, accessToken?: string) : Promise<T>
 {
     url = urls.RFY_API_URL + url;
     url = tools.url.appendUrlParameters(url,parameters);
-    let options = getBackendFetchOptions('GET', access_token);
+    let options = getBackendFetchOptions('GET', accessToken);
 
-    //Stack trace in catch-block when using await is useless.
-    //Grab actual stack trace here and append below.
-    //Only necessary when creating a new exception in catch.
+    // Stack trace in catch-block when using await is useless.
+    // Grab actual stack trace here and append below.
+    // Only necessary when creating a new exception in catch.
     let stacktrace = new Error().stack;
 
     let response;
@@ -28,8 +28,8 @@ export async function getRequest<T>(url : string, parameters? : any, access_toke
             throw err;
         else
         {
-            //Browser does not provide any useful information.
-            let exception = new NetworkException(null, "Could not contact "+config.client.siteName+" server", url);
+            // Browser does not provide any useful information.
+            let exception = new NetworkException(null, "Could not contact " + config.client.siteName + " server", url);
             exceptions.appendStack(exception, stacktrace);
             throw exception;
         }
@@ -45,18 +45,18 @@ export async function getRequest<T>(url : string, parameters? : any, access_toke
     }
 }
 
-export async function postRequest<T, A>(url : string, request : models.Action<A>, access_token?: string) : Promise<T>
+export async function postRequest<T, A>(url : string, request : models.Action<A>, accessToken?: string) : Promise<T>
 {
     url = urls.RFY_API_URL + url;
-    let options = getBackendFetchOptions('POST', access_token);
+    let options = getBackendFetchOptions('POST', accessToken);
     options = {
         ...options,
         body: JSON.stringify(request)
-    }
+    };
 
-    //Stack trace in catch-block when using await is useless.
-    //Grab actual stack trace here and append below.
-    //Only necessary when creating a new exception in catch.
+    // Stack trace in catch-block when using await is useless.
+    // Grab actual stack trace here and append below.
+    // Only necessary when creating a new exception in catch.
     let stacktrace = new Error().stack;
 
     let response;
@@ -70,8 +70,8 @@ export async function postRequest<T, A>(url : string, request : models.Action<A>
             throw err;
         else
         {
-            //Browser does not provide any useful information.
-            let exception = new NetworkException(null, "Could not contact "+config.client.siteName+" server", url);
+            // Browser does not provide any useful information.
+            let exception = new NetworkException(null, "Could not contact " + config.client.siteName + " server", url);
             exceptions.appendStack(exception, stacktrace);
             throw exception;
         }
@@ -88,19 +88,19 @@ export async function postRequest<T, A>(url : string, request : models.Action<A>
     }
 }
 
-export function getBackendFetchOptions(method: string, access_token: string)
+export function getBackendFetchOptions(method: string, accessToken: string)
 {
     let config;
-    if (access_token)
+    if (accessToken)
     {
         config = {
             method: method,
             headers: {  'Content-Type': 'application/json', 
-                        'access_token': access_token ,
+                        'access_token': accessToken ,
                         'User-Agent': tools.env.getUseragent(),
         }
 
-        }
+        };
     }
     else
     {
@@ -109,7 +109,7 @@ export function getBackendFetchOptions(method: string, access_token: string)
             headers: {  'Content-Type': 'application/json',
                         'User-Agent': tools.env.getUseragent(),
                     },
-        }
+        };
     }
 
     return config;

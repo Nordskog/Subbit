@@ -1,8 +1,8 @@
 ﻿import * as urls from '~/common/urls';
 import * as tools from '~/common/tools';
-import * as api from '~/common/api'
-import * as models from '~/common/models'
-import * as serverActions from '~/backend/actions'
+import * as api from '~/common/api';
+import * as models from '~/common/models';
+import * as serverActions from '~/backend/actions';
 
 export function authenticate(code : string, state : string) : Promise< models.auth.UserInfo>
 {
@@ -19,16 +19,16 @@ export function authenticate(code : string, state : string) : Promise< models.au
             null );
 }
 
-export function refreshRedditAccessToken(user: string, access_token : string) : Promise<models.auth.RedditAuth>
+export function refreshRedditAccessToken(user: string, accessToken : string) : Promise<models.auth.RedditAuth>
 {
     return api.rfy.getRequest(
         '/authorize_refresh', 
         {
         },
-        access_token    );
+        accessToken    );
 }
 
-export function logoutOnAllDevices(access_token : string) : Promise<models.auth.RedditAuth>
+export function logoutOnAllDevices(accessToken : string) : Promise<models.auth.RedditAuth>
 {
     return api.rfy.postRequest(
         '/authorize_local', 
@@ -39,5 +39,5 @@ export function logoutOnAllDevices(access_token : string) : Promise<models.auth.
 
             }
         },
-        access_token );
+        accessToken );
 }

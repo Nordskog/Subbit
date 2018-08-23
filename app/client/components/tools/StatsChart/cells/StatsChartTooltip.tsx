@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import * as styles from 'css/stats.scss'
+import * as styles from 'css/stats.scss';
 
 interface Props
 {
@@ -16,7 +16,7 @@ interface State
 export default class StatsChartTooltip extends React.Component<any,any> 
 {
 
-  render() 
+  public render() 
   {
 
 
@@ -42,7 +42,7 @@ export default class StatsChartTooltip extends React.Component<any,any>
 
             <circle cx={this.props.x} cy={this.props.y} r="3" fill={"#c43a31"} />
             <line x1={x} y1={0 - 40} x2={x} y2={height} stroke={"#c43a31"} />
-            </g>
+            </g>;
   }
 
 

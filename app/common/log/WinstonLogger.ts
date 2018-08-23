@@ -1,12 +1,13 @@
+// tslint:disable:ban-types
+
 import * as Winston from 'winston';
 import WinstonDailyRotateFile from 'winston-daily-rotate-file';
 import { Severity } from './models';
 import serverConfig from 'root/server_config';
 import * as Path from 'path';
 import * as FS from 'fs';
-import LoggerInterface from './LoggerInterface'
+import LoggerInterface from './LoggerInterface';
 import errToJson from 'error-to-json';
-import { format } from 'url';
 
 const LogLevels = {
     levels: {
@@ -27,7 +28,7 @@ const LogLevels = {
 
 export class WinstonLogger implements LoggerInterface
 {
-    logger : Winston.Logger = null;
+    private logger : Winston.Logger = null;
 
     constructor( isDev : boolean = false)
     {
@@ -35,7 +36,7 @@ export class WinstonLogger implements LoggerInterface
             levels: LogLevels.levels,
             format: Winston.format.combine( Winston.format.json(), Winston.format.timestamp( { format: () => Date.now() / 1000 } )),
             transports: [
-                //All added dynamically.
+                // All added dynamically.
             ]
           });
         
@@ -47,7 +48,7 @@ export class WinstonLogger implements LoggerInterface
           
           else
           {
-            //Init file logs, fallback to console if not configured.
+            // Init file logs, fallback to console if not configured.
             if ( !this.initFileLogs() )
             {
               this.initConsoleLog();
@@ -60,7 +61,7 @@ export class WinstonLogger implements LoggerInterface
       // Convenience functions for filtering log output
       ///////////////////////////////////////////////////
       
-    static filterInclude(level) 
+    private static filterInclude(level) 
     {
         return Winston.format( (info) =>
         {
@@ -70,7 +71,7 @@ export class WinstonLogger implements LoggerInterface
         })();
     }
       
-    static filterExclude(level) 
+    private static filterExclude(level) 
     {
         return Winston.format( (info) =>
         {
@@ -80,7 +81,7 @@ export class WinstonLogger implements LoggerInterface
         })();
     }
       
-    static createLogFolder( folder : string)
+    private static createLogFolder( folder : string)
     {
         if (folder != null)
         {
@@ -92,7 +93,7 @@ export class WinstonLogger implements LoggerInterface
         }
     }
       
-    initFileLogs() : boolean
+    private initFileLogs() : boolean
     {
         if (serverConfig.logging.logDirectoryPath != null)
         {
@@ -100,10 +101,10 @@ export class WinstonLogger implements LoggerInterface
         
             this.logger.add( new WinstonDailyRotateFile( 
             { 
-                level:Severity.access,
+                level: Severity.access,
                 format: Winston.format.combine( Winston.format.json(), Winston.format.timestamp(), WinstonLogger.filterInclude(Severity.access) ),
                 filename: Path.join( serverConfig.logging.logDirectoryPath, 'access_%DATE%.log'),
-                datePattern: 'YYYY-MM-DD',  //1 log file per day
+                datePattern: 'YYYY-MM-DD',  // 1 log file per day
                 maxSize: '20m',
                 maxFiles: '14d'
             }));
@@ -111,10 +112,10 @@ export class WinstonLogger implements LoggerInterface
         
             this.logger.add( new WinstonDailyRotateFile( 
             {  
-                level:Severity.info,
+                level: Severity.info,
                 format: Winston.format.combine( Winston.format.json(), Winston.format.timestamp() ),
                 filename: Path.join( serverConfig.logging.logDirectoryPath, 'log_%DATE%.log'),
-                datePattern: 'YYYY-MM-DD',  //1 log file per day
+                datePattern: 'YYYY-MM-DD',  // 1 log file per day
                 maxSize: '20m',
                 maxFiles: '14d'
             }));
@@ -122,10 +123,10 @@ export class WinstonLogger implements LoggerInterface
             this.logger.add( new WinstonDailyRotateFile( 
             {  
                 handleExceptions: true,
-                level:Severity.warning,
+                level: Severity.warning,
                 format: Winston.format.combine( Winston.format.json(), Winston.format.timestamp() ),
                 filename: Path.join( serverConfig.logging.logDirectoryPath, 'error_%DATE%.log'),
-                datePattern: 'YYYY-MM-DD',  //1 log file per day
+                datePattern: 'YYYY-MM-DD',  // 1 log file per day
                 maxSize: '20m',
                 maxFiles: '14d'
             }));
@@ -136,7 +137,7 @@ export class WinstonLogger implements LoggerInterface
         return false;
     }
       
-    initConsoleLog()
+    private initConsoleLog()
     {
         this.logger.add( 
             new Winston.transports.Console( 
@@ -152,12 +153,12 @@ export class WinstonLogger implements LoggerInterface
     // Interface implementation
     ////////////////////////////
 
-    I( message : any, meta : Object = {})
+    public I( message : any, meta : Object = {})
     {
         this.L(Severity.info, message, meta);
     }
 
-    A( message : any, user : string, ip : string,  meta : Object = {})
+    public A( message : any, user : string, ip : string,  meta : Object = {})
     {
         meta = {  ... meta, 
                 user: user, 
@@ -167,22 +168,22 @@ export class WinstonLogger implements LoggerInterface
             this.L(Severity.access, message, meta);
     }
 
-    E( message : any, meta : Object = {})
+    public E( message : any, meta : Object = {})
     {
         this.L(Severity.error, message, meta);
     }
 
-    D( message : any, meta : Object = {})
+    public D( message : any, meta : Object = {})
     {
         this.L(Severity.debug, message, meta);
     }
 
-    W( message : any, meta : Object = {})
+    public W( message : any, meta : Object = {})
     {
         this.L(Severity.warning, message, meta);
     }
 
-    L( severity : Severity, message : any, meta : Object = {})
+    public L( severity : Severity, message : any, meta : Object = {})
     {
         if (message instanceof Error)
         {
@@ -192,7 +193,7 @@ export class WinstonLogger implements LoggerInterface
         this.logger.log( severity, message, meta);
     }
 
-    setExitOnUncaughtException( exitOnError : boolean )
+    public setExitOnUncaughtException( exitOnError : boolean )
     {
         if (this.logger != null)
         {

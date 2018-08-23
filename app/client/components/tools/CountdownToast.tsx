@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as toastStyles from 'css/toast.scss'
+import * as toastStyles from 'css/toast.scss';
 
 interface Props
 {
@@ -18,29 +18,29 @@ interface State
 
 export default class CountdownToastComponent extends React.Component<Props,State>
 {
-    timer = null;
-    state = {countdownStart: null, countdown: null};
+    private timer = null;
+    public state = {countdownStart: null, countdown: null};
 
-    static getDerivedStateFromProps( nextProps : Props, prevState : State )
+    public static getDerivedStateFromProps( nextProps : Props, prevState : State )
     {
-        if (prevState != null && nextProps.start == prevState.countdownStart)
+        if (prevState != null && nextProps.start === prevState.countdownStart)
             return null;
 
         return { countdownStart: nextProps.start, countdown: nextProps.start };
     }
 
-    componentDidMount() 
+    public componentDidMount() 
     {
         this.timer = setInterval( () => this.updateTime(), 1000);
     }
 
-    componentWillUnmount()
+    public componentWillUnmount()
     {
         clearInterval(this.timer);
         this.timer = null;
     }
 
-    updateTime()
+    private updateTime()
     {
         if (this.state.countdown <= 0 && this.timer != null)
         {
@@ -55,35 +55,35 @@ export default class CountdownToastComponent extends React.Component<Props,State
         }
     }
 
-    render()
+    public render()
     {
         return <div className={toastStyles.columnContainer}>
                     {this.getMessage()}
                     {this.getCountdown()}
-                </div>
+                </div>;
         
         
     }
 
-    getMessage()
+    private getMessage()
     {
         if (this.props.message != null)
-            return <span>{this.props.message}</span>
+            return <span>{this.props.message}</span>;
     }
 
-    getCountdown()
+    private getCountdown()
     {
         if (this.props.countdownMessage != null && this.props.countdownPostMessage != null)
         {
-            return <span>{this.props.countdownMessage} {this.state.countdown} {this.props.countdownPostMessage}</span>
+            return <span>{this.props.countdownMessage} {this.state.countdown} {this.props.countdownPostMessage}</span>;
         }
         else if (this.props.countdownMessage != null)
         {
-            return <span>{this.props.countdownMessage} {this.state.countdown}</span>
+            return <span>{this.props.countdownMessage} {this.state.countdown}</span>;
         }
         else
         {
-            return <span>{this.state.countdown}</span>
+            return <span>{this.state.countdown}</span>;
         }
     
     }

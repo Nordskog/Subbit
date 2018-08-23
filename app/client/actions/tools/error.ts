@@ -1,7 +1,7 @@
 import * as ReduxTypes from './types';
 import { Exception, CancelledException, NetworkException, AuthorizationInvalidException } from "~/common/exceptions";
 import { toast, ToastType } from "~/client/toast";
-import * as actions from '~/client/actions'
+import * as actions from '~/client/actions';
 import * as Log from '~/common/log';
 
 export function WrapWithHandler( action : (dispatch : ReduxTypes.Dispatch, getState : ReduxTypes.GetState ) => (any | Promise<any>) )
@@ -16,35 +16,35 @@ export function WrapWithHandler( action : (dispatch : ReduxTypes.Dispatch, getSt
         {
             handleError(dispatch, err);
         }
-    }
+    };
 }
 
 export function handleError(dispatch : ReduxTypes.Dispatch, err : Error )
 {
     if (err instanceof CancelledException)
     {
-        //We always do this on purpose
+        // We always do this on purpose
     }
-    //Display these
+    // Display these
     else if (err instanceof AuthorizationInvalidException)
     {
-        //Simplify for user consumption
+        // Simplify for user consumption
         toast( ToastType.ERROR, 10000, err.message);
 
-        //This error means the access tokem is invalid
-        //and the user should be logged out.
+        // This error means the access tokem is invalid
+        // and the user should be logged out.
         dispatch(actions.authentication.logoutUserAction());
 
         Log.I(err.toString());
     }
     else if (err instanceof NetworkException)
     {
-        if (err.code == 401)
+        if (err.code === 401)
         {
-            //401 from the server means access token invalidate, force a logout.
+            // 401 from the server means access token invalidate, force a logout.
             dispatch(actions.authentication.logoutUserAction());
 
-            //Simplify for user consumption
+            // Simplify for user consumption
             toast
             ( ToastType.ERROR, 10000, err.message);
 
@@ -52,7 +52,7 @@ export function handleError(dispatch : ReduxTypes.Dispatch, err : Error )
         }
         else
         {
-            //Simplify for user consumption
+            // Simplify for user consumption
             toast( ToastType.ERROR, 10000, err.message);
 
             Log.E(err);

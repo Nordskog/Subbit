@@ -13,7 +13,7 @@ export function concatConditionals( operation : string, combiner : string, ...co
     {
         builder = `${builder} ${divider} ${condition}`;
         divider = combiner;
-    } )
+    } );
 
     return builder;
 }

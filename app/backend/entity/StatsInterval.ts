@@ -1,6 +1,6 @@
 ﻿import * as Wetland from 'wetland';
 
-import StatsEntry from './StatsEntry'
+import StatsEntry from './StatsEntry';
 
 export default class StatsInterval extends Wetland.Entity
 {
@@ -11,7 +11,7 @@ export default class StatsInterval extends Wetland.Entity
     public createdAt : Date;
     public updatedAt : Date;
 
-    static setMapping(mapping : Wetland.Mapping<StatsInterval>)
+    protected static setMapping(mapping : Wetland.Mapping<StatsInterval>)
     {
         let options = {
             tableName: 'stats_intervals',
@@ -32,7 +32,7 @@ export default class StatsInterval extends Wetland.Entity
 
     }
 
-    beforeUpdate(updatedValues, EntityManager : Wetland.EntityManager)
+    protected beforeUpdate(updatedValues, EntityManager : Wetland.EntityManager)
     {
         updatedValues.updatedAt = new Date();
     } 

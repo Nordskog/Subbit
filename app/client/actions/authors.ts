@@ -2,12 +2,12 @@
 
 import { AuthorFilter, LoadingStatus } from '~/common/models';
 import * as Redux from 'redux';
-import * as api from '~/common/api'
-import * as actions from '~/client/actions'
-import * as models from '~/common/models'
-import * as tools from '~/common/tools'
+import * as api from '~/common/api';
+import * as actions from '~/client/actions';
+import * as models from '~/common/models';
+import * as tools from '~/common/tools';
 
-import * as authority from '~/client/authority'
+import * as authority from '~/client/authority';
 import { CancellationError } from 'bluebird';
 import { CancelledException, NetworkException, Exception } from '~/common/exceptions';
 import { Dispatch, GetState } from '~/client/actions/tools/types';
@@ -17,11 +17,11 @@ import { Post } from '~/common/models/reddit';
 
 export function changeSubreddit( subreddit : string)
 {
-    return async function (dispatch : Dispatch, getState : GetState)
+    return async (dispatch : Dispatch, getState : GetState) =>
     {    
         if (subreddit == null)
         {
-            //No sub means home (frontpage)
+            // No sub means home (frontpage)
             dispatch(
                 { type: actions.types.Route.HOME, payload: { } } 
                 );
@@ -34,12 +34,12 @@ export function changeSubreddit( subreddit : string)
             { type: actions.types.Route.SUBREDDIT, payload: { subreddit: subreddit, filter: null  } as actions.types.Route.SUBREDDIT } 
             );
         }
-    }
+    };
 }
 
 export function changeFilter( filter : AuthorFilter, subreddit? : string)
 {
-    return async function (dispatch : Dispatch, getState : GetState)
+    return async (dispatch : Dispatch, getState : GetState) =>
     {    
         if (subreddit == null)
         {
@@ -55,24 +55,25 @@ export function changeFilter( filter : AuthorFilter, subreddit? : string)
             { type: actions.types.Route.SUBREDDIT, payload: { subreddit: subreddit, filter: filter  } as actions.types.Route.SUBREDDIT } 
             );
         }
-    }
+    };
 }
 
 export function viewAuthor( author: string, subreddit? : string)
 {
-    return async function (dispatch : Dispatch, getState : GetState)
+    return async (dispatch : Dispatch, getState : GetState) =>
     {
        let state: State = getState();
     
-        dispatch(
-        { type: actions.types.Route.AUTHOR, payload: { author: author, subreddit: subreddit  } as actions.types.Route.AUTHOR } 
+       dispatch
+        ({ 
+            type: actions.types.Route.AUTHOR, payload: { author: author, subreddit: subreddit  } as actions.types.Route.AUTHOR } 
         );
-    }
+    };
 }
 
-export function fetchAuthorsAction ( appendResults: boolean = false, loadFromSession : boolean = false, loadFromHistory : boolean = false)
+export function fetchAuthorsAction( appendResults: boolean = false, loadFromSession : boolean = false, loadFromHistory : boolean = false)
 {
-    return WrapWithHandler( async function (dispatch : Dispatch, getState : GetState)
+    return WrapWithHandler( async (dispatch : Dispatch, getState : GetState) =>
     {
         try
         {
@@ -102,14 +103,14 @@ export function fetchAuthorsAction ( appendResults: boolean = false, loadFromSes
 
             if (authorEntries != null)
             {
-                //Especially if we're dealing with history, subscriptions inserted into authors list might not match actual subscriptions
+                // Especially if we're dealing with history, subscriptions inserted into authors list might not match actual subscriptions
                 actions.directActions.authors.populateAuthorSubscriptions(authorEntries, getState);
 
-                //getAuthors() normally handles adding to authority, but do it here manually if loading from storage.
-                authorEntries.forEach( ( author : models.data.AuthorEntry ) => { authority.author.updateAuthority(author.author) } );
+                // getAuthors() normally handles adding to authority, but do it here manually if loading from storage.
+                authorEntries.forEach( ( author : models.data.AuthorEntry ) => { authority.author.updateAuthority(author.author); } );
 
-                //Subreddit name will be populated from url, which may well have the wrong casing.
-                //getAuthors() normally takes care of this too.
+                // Subreddit name will be populated from url, which may well have the wrong casing.
+                // getAuthors() normally takes care of this too.
                 actions.directActions.authors.ensureSubredditCasingMatch(dispatch, authorEntries, subreddit);
             }
 
@@ -142,7 +143,7 @@ export function fetchAuthorsAction ( appendResults: boolean = false, loadFromSes
                 }  as actions.types.page.LOADING_STATE_CHANGED
             });
 
-            //Dispatch newly loaded authors
+            // Dispatch newly loaded authors
             dispatch({
                 type: actions.types.authors.FETCH_AUTHORS_COMPLETED,
                 payload: { authors: authorEntries,
@@ -158,11 +159,11 @@ export function fetchAuthorsAction ( appendResults: boolean = false, loadFromSes
         {
             if ( error instanceof CancelledException)
             {
-                //Expected
+                // Expected
             }
             else
             {
-                //Kill any remaining requests
+                // Kill any remaining requests
                 api.cancelAll();
 
                 dispatch({
@@ -176,12 +177,12 @@ export function fetchAuthorsAction ( appendResults: boolean = false, loadFromSes
 
                 if ( error instanceof NetworkException)
                 {
-                    //Reddit's servers are melting
-                    if ( error.code == 500 )
+                    // Reddit's servers are melting
+                    if ( error.code === 500 )
                     {
                         throw new Exception("Reddit: Internal Server Error");
                     }
-                    else if ( error.code == 503)
+                    else if ( error.code === 503)
                     {
                         throw new Exception("Reddit: Servers overloaded");
                     }
@@ -199,7 +200,7 @@ export function fetchAuthorsAction ( appendResults: boolean = false, loadFromSes
             }
         }
 
-        //Dispatches are synchronous, so state should be updated when we reach this.
+        // Dispatches are synchronous, so state should be updated when we reach this.
         actions.directActions.session.saveAuthors(getState);
         actions.directActions.history.saveAuthors(getState);
 
@@ -217,26 +218,26 @@ export function fetchNewPosts( author : models.data.AuthorEntry, count : number 
     return fetchPosts(author, count, true);
 }
 
-//Respects after
+// Respects after
 function fetchPosts( author : models.data.AuthorEntry, count : number, replaceExisting : boolean )
 {
-    return WrapWithHandler( async function (dispatch : Dispatch, getState : GetState)
+    return WrapWithHandler( async (dispatch : Dispatch, getState : GetState) =>
     {
         let state: State = getState();
 
         let redditAuth = await actions.directActions.authentication.retrieveAndUpdateRedditAuth( dispatch, state);
 
         let subreddits : string[] = [];
-        if (state.authorState.filter == models.AuthorFilter.SUBSCRIPTIONS)
+        if (state.authorState.filter === models.AuthorFilter.SUBSCRIPTIONS)
         {
-            //Well that shouldn't happen
+            // Well that shouldn't happen
             if (author.subscription == null)
                 return;
 
             subreddits = author.subscription.subreddits.map( (subreddit : models.data.SubscriptionSubreddit) => 
             {
                 return subreddit.name;
-            } )
+            } );
         }
         else
         {
@@ -244,13 +245,13 @@ function fetchPosts( author : models.data.AuthorEntry, count : number, replaceEx
             subreddits = [state.authorState.subreddit];
         }
 
-        //Init to existing if replacing, empty if getting more
+        // Init to existing if replacing, empty if getting more
         let posts = replaceExisting ? author.author.posts : [];
         let after = replaceExisting ? null : author.after;
 
         try
         {
-            //If we are replacing existing posts instead of getting more, after is null.
+            // If we are replacing existing posts instead of getting more, after is null.
             let postData = await api.reddit.posts.getPosts(author.author.name, replaceExisting ? null : author.after, redditAuth, count, ...subreddits);
 
             posts = postData.posts;

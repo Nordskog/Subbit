@@ -1,27 +1,27 @@
 export enum StatsCategoryType
 {
-    //Accumulating. These will be updated in loop.
+    // Accumulating. These will be updated in loop.
     USERS = "USERS",
     AUTHORS = "AUTHORS",
     SUBSCRIPTIONS = "SUBSCRIPTIONS",
 
-    //Realtime,
+    // Realtime,
     PAGE_LOADS = "PAGE_LOADS",
     USER_PAGE_LOADS = "USER_PAGE_LOADS",
     SUCCESSFUL_LOGINS = "SUCCESSFUL_LOGINS",
     FAILED_LOGINS = "FAILED_LOGINS",
     ERRORS = "ERRORS",
 
-    //Also realtime, but updated in loops
+    // Also realtime, but updated in loops
     CPU_USAGE = "CPU_USAGE",
     MEMORY_USAGE = "MEMORY_USAGE"
 }
 
 export enum StatsDataType
 {
-    ONGOING,    //Total of added values
-    AVERAGE,    //Average of added values
-    CUMULATIVE  //Value as it was provided
+    ONGOING,    // Total of added values
+    AVERAGE,    // Average of added values
+    CUMULATIVE  // Value as it was provided
 }
 
 export enum StatsTimeRange

@@ -1,7 +1,7 @@
-import * as tools from '~/common/tools'
-import * as api from '~/common/api'
-import * as models from '~/common/models'
-import * as actions from '~/client/actions'
+import * as tools from '~/common/tools';
+import * as api from '~/common/api';
+import * as models from '~/common/models';
+import * as actions from '~/client/actions';
 import { State } from '~/client/store';
 import { Dispatch, GetState } from '~/client/actions/tools/types';
 import { RedditAuth, LoginType } from '~/common/models/auth';
@@ -18,7 +18,7 @@ export async function retrieveAndUpdateRedditAuth(dispatch : Dispatch, state : S
     }
 
     let redditAuth : models.auth.RedditAuth  = tools.store.getRedditAuth(state);
-    //Refresh if expiry in less than 5min
+    // Refresh if expiry in less than 5min
     if (redditAuth.expiry < ( (Date.now() / 1000) + (5 * 60) ))
     {
         redditAuth = await api.rfy.authentication.refreshRedditAccessToken(user,token);
@@ -30,7 +30,7 @@ export async function retrieveAndUpdateRedditAuth(dispatch : Dispatch, state : S
         });
     }
 
-   return redditAuth;
+    return redditAuth;
 }
 
 export function removeAuthentication(dispatch : Dispatch)
@@ -52,7 +52,7 @@ export function removeAuthentication(dispatch : Dispatch)
 export function saveAuthentication( userInfo : models.auth.UserInfo)
 {
     let storage = localStorage;
-    if (userInfo.id_token.loginType == LoginType.SESSION)
+    if (userInfo.id_token.loginType === LoginType.SESSION)
         storage = sessionStorage;
 
     storage.setItem('id_token', JSON.stringify(userInfo.id_token) );
@@ -63,7 +63,7 @@ export function saveAuthentication( userInfo : models.auth.UserInfo)
 export function saveRedditAuth( auth : RedditAuth, loginType : models.auth.LoginType)
 {
     let storage = localStorage;
-    if (loginType == LoginType.SESSION)
+    if (loginType === LoginType.SESSION)
         storage = sessionStorage;
 
     storage.setItem('reddit_auth', JSON.stringify( auth ) );
@@ -72,11 +72,11 @@ export function saveRedditAuth( auth : RedditAuth, loginType : models.auth.Login
 
 function loadAuthenticationFromStorage( storage : Storage)
 {
-    let id_token_raw = storage.getItem('id_token');
-    let access_token = storage.getItem('access_token');
-    let reddit_auth_json = storage.getItem('reddit_auth');
+    let idTokenRaw = storage.getItem('id_token');
+    let accessToken = storage.getItem('access_token');
+    let redditAuthJson = storage.getItem('reddit_auth');
 
-    return { id_token_raw, access_token, reddit_auth_json  }
+    return { idTokenRaw, accessToken, redditAuthJson  };
 
 }
 
@@ -85,17 +85,17 @@ export function loadAuthentication(dispatch : Dispatch, getState : GetState)
     let state : State = getState();
     if (!state.authState.isAuthenticated)
     {
-        //Check local storage
-        let { id_token_raw, access_token, reddit_auth_json  } = loadAuthenticationFromStorage(localStorage);
+        // Check local storage
+        let { idTokenRaw, accessToken, redditAuthJson  } = loadAuthenticationFromStorage(localStorage);
 
-        //If nulls present, check session storage
-        if (id_token_raw == null || access_token == null || reddit_auth_json == null)
-            ({ id_token_raw, access_token, reddit_auth_json  } = loadAuthenticationFromStorage(localStorage) );
+        // If nulls present, check session storage
+        if (idTokenRaw == null || accessToken == null || redditAuthJson == null)
+            ({ idTokenRaw, accessToken, redditAuthJson  } = loadAuthenticationFromStorage(localStorage) );
 
-        //If still null then we don't have any stored credentials
-        if (id_token_raw != null && access_token != null && reddit_auth_json != null)
+        // If still null then we don't have any stored credentials
+        if (idTokenRaw != null && accessToken != null && redditAuthJson != null)
         {
-            let userInfo : models.auth.UserInfo = tools.jwt.combineUserInfo(JSON.parse(id_token_raw), access_token, JSON.parse(reddit_auth_json ) );
+            let userInfo : models.auth.UserInfo = tools.jwt.combineUserInfo(JSON.parse(idTokenRaw), accessToken, JSON.parse(redditAuthJson ) );
             
             dispatch({
                 type: actions.types.authentication.LOGIN_SUCCESS,

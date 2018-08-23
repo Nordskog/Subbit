@@ -11,7 +11,7 @@ export function authStateReducer(state = getDefaultAuthState(), action : models.
 
         case actions.types.authentication.REDDIT_TOKEN_UPDATED:
         {
-            action = action as models.Action< actions.types.authentication.REDDIT_TOKEN_UPDATED >
+            action = action as models.Action< actions.types.authentication.REDDIT_TOKEN_UPDATED >;
 
             return {
                 ...state,
@@ -20,24 +20,24 @@ export function authStateReducer(state = getDefaultAuthState(), action : models.
                     ...state.user,
                     redditAuth: action.payload
                 }
-            }
+            };
         }
         case actions.types.authentication.LOGOUT_SUCCESS:
         {
-            action = action as models.Action< actions.types.authentication.LOGOUT_SUCCESS >
+            action = action as models.Action< actions.types.authentication.LOGOUT_SUCCESS >;
             return {
                 ...state,
                 ...getDefaultAuthState()
-            }
+            };
         }
 
         case actions.types.authentication.LOGIN_SUCCESS:
         {
-            action = action as models.Action< actions.types.authentication.LOGIN_SUCCESS >
+            action = action as models.Action< actions.types.authentication.LOGIN_SUCCESS >;
             return {
                 isAuthenticated: true,
                 user: action.payload,
-            }
+            };
         }
 
         default:

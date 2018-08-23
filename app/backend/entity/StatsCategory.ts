@@ -1,7 +1,7 @@
 ﻿import * as Wetland from 'wetland';
 
-import * as models from '~/common/models'
-import StatsEntry from './StatsEntry'
+import * as models from '~/common/models';
+import StatsEntry from './StatsEntry';
 
 export default class StatsCategory extends Wetland.Entity
 {
@@ -12,7 +12,7 @@ export default class StatsCategory extends Wetland.Entity
     public createdAt : Date;
     public updatedAt : Date;
 
-    static setMapping(mapping : Wetland.Mapping<StatsCategory>)
+    protected static setMapping(mapping : Wetland.Mapping<StatsCategory>)
     {
         let options = {
             tableName: 'stats_categories',
@@ -33,7 +33,7 @@ export default class StatsCategory extends Wetland.Entity
 
     }
 
-    beforeUpdate(updatedValues, EntityManager : Wetland.EntityManager)
+    protected beforeUpdate(updatedValues, EntityManager : Wetland.EntityManager)
     {
         updatedValues.updatedAt = new Date();
     } 

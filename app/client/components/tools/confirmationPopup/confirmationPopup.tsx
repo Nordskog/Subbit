@@ -1,8 +1,8 @@
 import * as React from 'react';
 
 
-import * as styles from 'css/confirmationPopup.scss'
-import * as components from '~/client/components/'
+import * as styles from 'css/confirmationPopup.scss';
+import * as components from '~/client/components/';
 
 interface Props 
 {
@@ -21,7 +21,7 @@ interface State
 
 
 
-export default class confirmationPopup extends React.Component<Props, State >
+export default class ConfirmationPopup extends React.Component<Props, State >
 {
 
     constructor(props : Props)
@@ -29,13 +29,13 @@ export default class confirmationPopup extends React.Component<Props, State >
         super(props);
     }
 
-    textValue : string = '';
+    private textValue : string = '';
 
     public getTitle()
     {
         if (this.props.title != null)
         {
-            return <span className={styles.titleContainer}> {this.props.title} </span>
+            return <span className={styles.titleContainer}> {this.props.title} </span>;
         }
     }
 
@@ -43,30 +43,30 @@ export default class confirmationPopup extends React.Component<Props, State >
     {
         if (this.props.message != null)
         {
-            return <span className={styles.messageContainer}> {this.props.message} </span>
+            return <span className={styles.messageContainer}> {this.props.message} </span>;
         }
     }
 
-    getPositiveButton( close : () => void)
+    private getPositiveButton( close : () => void)
     {
         if (this.props.positiveButton != null)
         {
             return <div onClick={ () => 
                 {
-                   this.props.onSave(true)
+                   this.props.onSave(true);
                    close(); 
-                } } className={ styles.saveButton }>{this.props.positiveButton}</div>
+                } } className={ styles.saveButton }>{this.props.positiveButton}</div>;
         }
     }
 
-    getNegativeButton( close : () => void)
+    private getNegativeButton( close : () => void)
     {
         if (this.props.positiveButton != null)
         {
             return <div onClick={ () => {
-                this.props.onSave(false)
-                close() 
-            } } className={ styles.cancelButton }>{this.props.negativeButton}</div>
+                this.props.onSave(false);
+                close(); 
+            } } className={ styles.cancelButton }>{this.props.negativeButton}</div>;
         }
     }
 
@@ -76,7 +76,7 @@ export default class confirmationPopup extends React.Component<Props, State >
                             trigger={ this.props.trigger } 
                             modal={true} >
                         {
-                            close => 
+                            (close) => 
                             {
                                 return <div className={ styles.container }>
                                     {this.getTitle()}
@@ -85,11 +85,11 @@ export default class confirmationPopup extends React.Component<Props, State >
                                         {this.getPositiveButton(close)}
                                         {this.getNegativeButton(close)}
                                     </div>
-                                </div>
+                                </div>;
                             }
                         }
 
 
-                    </components.tools.Popup.Component >
+                    </components.tools.Popup.Component >;
     }
-};
+}

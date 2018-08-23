@@ -8,16 +8,16 @@ import * as RFY from '~/backend/rfy';
 
 import * as models from '~/common/models';
 import * as authentication from '~/backend/authentication';
-import * as urls from '~/common/urls'
-import * as tools from '~/common/tools'
-import * as api from '~/common/api'
-import * as entityActions from '~/backend/entityActions'
+import * as urls from '~/common/urls';
+import * as tools from '~/common/tools';
+import * as api from '~/common/api';
+import * as entityActions from '~/backend/entityActions';
 
-import * as serverActions from '~/backend/actions'
+import * as serverActions from '~/backend/actions';
 
-import * as redditAuth from '~/backend/authentication/redditAuth'
+import * as redditAuth from '~/backend/authentication/redditAuth';
 
-import * as endpointCommons from './endpointCommons'
+import * as endpointCommons from './endpointCommons';
 import { AuthorizationException, EndpointException } from '~/common/exceptions';
 import { Scope } from '~/backend/authentication/generation';
 import * as Log from '~/common/log';
@@ -29,11 +29,9 @@ import config from 'root/config';
 
 const router = Express.Router();
 
-require('isomorphic-fetch');
-
 router.get('/api/authorize_remote', (req: Request, res: Response) =>
 {
-    //Will redirect to home if login is disabled
+    // Will redirect to home if login is disabled
     let url : string = config.server.server_address;
 
     if ( config.common.loginEnabled )
@@ -43,7 +41,7 @@ router.get('/api/authorize_remote', (req: Request, res: Response) =>
     
         Log.A('Reddit login redirect', null, tools.http.getReqIp( req, serverConfig.server.reverseProxy ) );
     
-        //Login via reddit
+        // Login via reddit
         url = authentication.redditAuth.generateRedditLoginUrl(sessionLogin ? models.auth.LoginType.SESSION : models.auth.LoginType.PERMANENT, compactLogin);
     }
 
@@ -54,7 +52,7 @@ router.get('/api/authorize_refresh', async (req: Request, res: Response) =>
 {
     let token : string = req.headers.access_token as string;
 
-    let manager : Wetland.Scope = RFY.wetland.getManager()
+    let manager : Wetland.Scope = RFY.wetland.getManager();
 
     try
     {
@@ -62,11 +60,11 @@ router.get('/api/authorize_refresh', async (req: Request, res: Response) =>
 
         Log.A('Authorize refresh', user.username, tools.http.getReqIp( req, serverConfig.server.reverseProxy ) );
 
-        //The client side will refresh the token if it will expire within 5min.
-        //Return stored token if valid for longer than 5min.
+        // The client side will refresh the token if it will expire within 5min.
+        // Return stored token if valid for longer than 5min.
         if (user.auth.expiry < new Date( Date.now() + ( 1000 * 60 * 5 ) ))
         {
-            //Refresh token
+            // Refresh token
             let result = await api.reddit.auth.authenticatedWithRefreshToken( user.auth.refresh_token, redditAuth.getHttpBasicAuthHeader() );
             if (result == null || result.access_token == null)
             {
@@ -79,7 +77,7 @@ router.get('/api/authorize_refresh', async (req: Request, res: Response) =>
         }
         else
         {
-            //Existing token still valid for at least 5min, return that.
+            // Existing token still valid for at least 5min, return that.
         }
 
         res.json(
@@ -113,10 +111,10 @@ router.post('/api/authorize_local', async (req: Request, res: Response) =>
                 {
                     let payload : serverActions.auth.AUTHENTICATE_WITH_REDDIT_CODE = action.payload;
     
-                    //Will throw if invalid
+                    // Will throw if invalid
                     let loginType = authentication.redditAuth.confirmAuthState(payload.state);
     
-                    //From what I've seen the code is alphanumerical + undscore and dash. Sanitize here.
+                    // From what I've seen the code is alphanumerical + undscore and dash. Sanitize here.
                     if ( !tools.string.confirmAlphaNumericDashUnderscore(payload.code) )
                     {
                         throw new AuthorizationException( `Code from reddit should be alphanumerical, got: ${payload.code}`);
@@ -128,7 +126,7 @@ router.post('/api/authorize_local', async (req: Request, res: Response) =>
                         throw new AuthorizationException("Did not receive authorization response from reddit");
                     }
     
-                    let manager : Wetland.Scope = RFY.wetland.getManager()
+                    let manager : Wetland.Scope = RFY.wetland.getManager();
                     let user : Entities.User = await redditAuth.createOrUpdateUserFromRedditToken(manager,result);
     
                     let userInfo : models.auth.UserInfo = authentication.generation.generateUserInfo(user, loginType);

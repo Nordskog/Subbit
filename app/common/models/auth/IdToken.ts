@@ -1,6 +1,6 @@
 import { LoginType } from './index';
 
-export default interface id_token
+export default interface IdToken
 {
     username?: string;
     admin_access? : boolean;

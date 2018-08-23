@@ -1,1 +1,1 @@
-export { default as StatsChartTooltip } from './StatsChartTooltip'
+export { default as StatsChartTooltip } from './StatsChartTooltip';

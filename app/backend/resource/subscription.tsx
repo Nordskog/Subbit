@@ -5,18 +5,18 @@ import * as Express from 'express';
 import * as RFY from '~/backend/rfy';
 import * as Entities from '~/backend/entity';
 
-import * as serverActions from '~/backend/actions'
-import * as models from '~/common/models'
+import * as serverActions from '~/backend/actions';
+import * as models from '~/common/models';
 
 import * as authentication from '~/backend/authentication';
 
 import * as Wetland from 'wetland';
 
-import * as entityActions from '~/backend/entityActions'
+import * as entityActions from '~/backend/entityActions';
 
-import * as endpointCommons from './endpointCommons'
+import * as endpointCommons from './endpointCommons';
 import { EndpointException } from '~/common/exceptions';
-import { Severity } from '~/common/log'
+import { Severity } from '~/common/log';
 
 import * as Log from '~/common/log';
 import serverConfig from 'root/server_config';
@@ -36,22 +36,22 @@ router.get('/api/subscription', async (req: Request, res: Response) =>
         
         Log.A('List subscriptions', user.username, tools.http.getReqIp( req, serverConfig.server.reverseProxy ));
 
-        //Just grabbing the user and populating everything we need generates terrible, complicated with a binding for each 
-        //sub. Short of doing a raw query this is generally the best approach.
+        // Just grabbing the user and populating everything we need generates terrible, complicated with a binding for each 
+        // sub. Short of doing a raw query this is generally the best approach.
         let qb : Wetland.QueryBuilder<Entities.Subscription> = RFY.wetland.getManager()
             .getRepository(Entities.Subscription)
             .getQueryBuilder('sub')
             .select( ['sub',  'subreddits', 'author'] )
             .leftJoin('sub.author', 'author')
             .leftJoin('sub.subreddits', 'subreddits')
-            .where( {'user_id' : user.id} )
+            .where( {user_id : user.id} );
 
         let subs : Entities.Subscription[] = await qb.getQuery().getResult() || [];
 
-        //Rather than looking up the user for each subscription
+        // Rather than looking up the user for each subscription
         subs.forEach( ( sub : Entities.Subscription ) => sub.user = user );
 
-        res.json( subs.map( sub => 
+        res.json( subs.map( (sub) => 
         { 
             return Entities.Subscription.formatModel(sub);
         }));
@@ -96,7 +96,7 @@ router.post('/api/subscription', async (req: Request, res: Response) =>
                 let sub : Entities.Subscription = await entityActions.subscriptions.getSubscription(manager, payload.id, user);
                 if (sub == null)
                 {
-                    throw new EndpointException(400, "Subscription with id "+payload.id+" does not exist", Severity.warning);
+                    throw new EndpointException(400, "Subscription with id " + payload.id + " does not exist", Severity.warning);
                 }
 
                 await entityActions.subscriptions.addSubredditToSubscription(manager, sub, payload.subreddit);
@@ -114,7 +114,7 @@ router.post('/api/subscription', async (req: Request, res: Response) =>
                 let sub : Entities.Subscription = await entityActions.subscriptions.getSubscription(manager, payload.id, user);
                 if (sub == null)
                 {
-                    throw new EndpointException(400, "Subscription with id "+payload.id+" does not exist", Severity.warning);
+                    throw new EndpointException(400, "Subscription with id " + payload.id + " does not exist", Severity.warning);
                 }
 
                 await entityActions.subscriptions.removeSubredditFromSubscription(manager, sub, payload.subreddit);
@@ -132,9 +132,9 @@ router.post('/api/subscription', async (req: Request, res: Response) =>
                 let sub : Entities.Subscription = await entityActions.subscriptions.getSubscription(manager, payload.id, user);
                 if (sub == null)
                 {
-                    //Likely browsing in multiple tabs with subs out of sync.
-                    //Warning will be displayed to user, and sub removed locally. 
-                    throw new EndpointException(400, "Subscription with id "+payload.id+" does not exist", Severity.warning);
+                    // Likely browsing in multiple tabs with subs out of sync.
+                    // Warning will be displayed to user, and sub removed locally. 
+                    throw new EndpointException(400, "Subscription with id " + payload.id + " does not exist", Severity.warning);
                 }
 
                 manager.remove(sub);

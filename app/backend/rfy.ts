@@ -12,13 +12,13 @@ export async function initDatabase()
     
     try
     {
-        //Run any missing migrations
+        // Run any missing migrations
         let migrator: Migrator = wetland.getMigrator();
         let migrationsRun : string = await migrator.latest(Migrator.ACTION_RUN);
 
         if (migrationsRun != null)
         {
-            Log.I(`Ran ${parseInt(migrationsRun)} migrations`);
+            Log.I(`Ran ${parseInt(migrationsRun, 10)} migrations`);
         }
     }
     catch ( err )

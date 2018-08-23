@@ -1,7 +1,8 @@
-﻿import * as Wetland from 'wetland';
+﻿// tslint:disable:variable-name
 
-import Subscription from './Subscription'
-import Auth from './Auth'
+import * as Wetland from 'wetland';
+import Subscription from './Subscription';
+import Auth from './Auth';
 import UserSettings from './UserSettings';
 
 export default class User extends Wetland.Entity
@@ -9,8 +10,8 @@ export default class User extends Wetland.Entity
     public username : string;
     public last_visit : Date;
     
-    public generation : string;     //token generation
-    public auth : Auth; //Reddit uath
+    public generation : string;     // token generation
+    public auth : Auth;             // Reddit uath
     public subscriptions : Wetland.ArrayCollection<Subscription>;
     public settings : UserSettings;
 
@@ -21,7 +22,7 @@ export default class User extends Wetland.Entity
     public createdAt : Date;
     public updatedAt : Date;
 
-    static setMapping(mapping : Wetland.Mapping<User>)
+    protected static setMapping(mapping : Wetland.Mapping<User>)
     {
         let options = {
             tableName: 'users',
@@ -37,7 +38,7 @@ export default class User extends Wetland.Entity
             });
 
 
-        //Unused, but I might use it for something eventually.
+        // Unused, but I might use it for something eventually.
         mapping.field('admin_access',
             {
                 type: 'boolean',
@@ -65,7 +66,7 @@ export default class User extends Wetland.Entity
             defaultTo: mapping.now()
         });
 
-        //Username will be grabbed from reddit, so case should be constant
+        // Username will be grabbed from reddit, so case should be constant
         mapping.uniqueConstraint('username');
 
         mapping.oneToMany('subscriptions', { targetEntity: 'Subscription', mappedBy: 'user' });
@@ -73,7 +74,7 @@ export default class User extends Wetland.Entity
         mapping.oneToOne('settings', { targetEntity: 'UserSettings', mappedBy: 'user' });
     }
 
-    beforeUpdate(updatedValues, EntityManager : Wetland.EntityManager)
+    protected beforeUpdate(updatedValues, EntityManager : Wetland.EntityManager)
     {
         this.updatedAt = new Date();
     }

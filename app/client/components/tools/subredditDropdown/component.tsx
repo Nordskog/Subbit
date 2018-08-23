@@ -2,16 +2,16 @@ import * as React from 'react';
 
 import * as models from '~/common/models';
 
-import SVGInline from "react-svg-inline"
+import SVGInline from "react-svg-inline";
 
-import * as expand_caret from 'assets/images/expand_caret.svg'
+import * as expand_caret from 'assets/images/expand_caret.svg';
 
-import * as components from '~/client/components'
+import * as components from '~/client/components';
 
-import * as styles from "css/redditlist.scss"
+import * as styles from "css/redditlist.scss";
 import { Post } from '~/common/models/reddit';
 
-import MediaQuery from 'react-responsive'
+import MediaQuery from 'react-responsive';
 import { tools } from '~/common';
 
 interface Props
@@ -22,7 +22,7 @@ interface Props
     viewAuthor( author : string, subreddit? : string) : void;
     filter : models.AuthorFilter;
     searchSubreddit( name : string) : Promise< string[] >;
-    searchPosts(subreddit : string, query : string ): Promise<Post[]>
+    searchPosts(subreddit : string, query : string ): Promise<Post[]>;
 }
 
 interface State
@@ -33,13 +33,13 @@ interface State
 
 export default class SubredditDropdown extends React.Component<Props, State>
 {
-    state = { subreddits: []};
+    public state = { subreddits: []};
     
-    static getDerivedStateFromProps( nextProps : Props, prevState : State) : State
+    public static getDerivedStateFromProps( nextProps : Props, prevState : State) : State
     {
         let subreddits: components.tools.SearchList.ListItem[]  = [];
 
-        //Also add all subreddits from subscriptions
+        // Also add all subreddits from subscriptions
         {
             let subSet : Set<string> = new Set<string>();
             nextProps.subscriptions.forEach( (sub : models.data.Subscription) => 
@@ -53,10 +53,10 @@ export default class SubredditDropdown extends React.Component<Props, State>
         }
 
             subreddits.unshift( { name: "All", highlighted: false, object: "All"});
-            subreddits.unshift( { name: "Frontpage", highlighted: false, object: null, prefix: ""});  //object null since home is no subreddit
+            subreddits.unshift( { name: "Frontpage", highlighted: false, object: null, prefix: ""});  // object null since home is no subreddit
 
-        //We will also add two dummy items. ALL And HOME (frontpage);
-        //The latter is checked for and passed to changeSubreddit as null
+        // We will also add two dummy items. ALL And HOME (frontpage);
+        // The latter is checked for and passed to changeSubreddit as null
 
         return  { subreddits: subreddits };
     }
@@ -67,13 +67,13 @@ export default class SubredditDropdown extends React.Component<Props, State>
 
     }
 
-    render()
+    public render()
     {
         return this.getSubredditsPopup( this.getButton() );
 
     }
 
-    getButton()
+    private getButton()
     {
         return  <div className={styles.container}>
 
@@ -86,19 +86,19 @@ export default class SubredditDropdown extends React.Component<Props, State>
             </div>
         </div>
 
-    </div>
+    </div>;
     }
 
-    getCurrentSubreddit()
+    private getCurrentSubreddit()
     {
         if (this.props.subreddit != null)
         {
             return <span>r/<b>{this.props.subreddit}</b></span>;
         }
-        return <b>Frontpage</b>
+        return <b>Frontpage</b>;
     }
 
-    getSubredditsPopup( trigger : JSX.Element ) : JSX.Element
+    private getSubredditsPopup( trigger : JSX.Element ) : JSX.Element
     {
         let searches : components.tools.SearchList.SearchItem[] = [];
 
@@ -111,7 +111,7 @@ export default class SubredditDropdown extends React.Component<Props, State>
             displayHighlight : false,
             addToDisplayList : false,
             items: this.state.subreddits,
-            search: async ( name : string ) => { return ( await this.props.searchSubreddit(name) ).map( name => { return { name: name, object: name } }  ) },
+            search: async ( name : string ) => ( await this.props.searchSubreddit(name) ).map( (name) => ({ name: name, object: name })  ),
             enterBeforeSearchResult: ( name : string ) => 
             {
                 name = tools.string.sanitizeAlphaNumericDashUnderscore(name);
@@ -119,12 +119,12 @@ export default class SubredditDropdown extends React.Component<Props, State>
                 return { 
                      name: name.trim(), 
                      object: name.trim() 
-                } 
+                }; 
             },
             prefix: "r/",
             searchPlaceholder: "Subreddit",
             onClick: ( item : components.tools.SearchList.ListItem) => { this.props.changeSubreddit(item.object); return true; }
-        }
+        };
 
         searches.push(subSearch);
 
@@ -141,24 +141,24 @@ export default class SubredditDropdown extends React.Component<Props, State>
                         name: sub.author,
                         highlighted: true,
                         alt: this.props.subreddit != null ? `in r/${this.props.subreddit}` : null
-                    }
+                    };
                 }
             ),
             
             search: ( name : string ) => 
             { 
                 name = tools.string.sanitizeAlphaNumericDashUnderscore(name);
-                return [{name: name, alt: this.props.subreddit != null ? `in r/${this.props.subreddit}` : null}] 
-            },   //Can't search for users :(
+                return [{name: name, alt: this.props.subreddit != null ? `in r/${this.props.subreddit}` : null}]; 
+            },   // Can't search for users :(
             prefix: "",
             searchPlaceholder: "Author",
             displayHighlight: true,
             toggleHighlight : false,
             addToDisplayList : false,
             delaySearch : false,
-            onClick: ( item : components.tools.SearchList.ListItem) => { this.props.viewAuthor(item.name); return true },
-            onAltClick: ( item : components.tools.SearchList.ListItem) => { this.props.viewAuthor(item.name, this.props.subreddit) }
-        }
+            onClick: ( item : components.tools.SearchList.ListItem) => { this.props.viewAuthor(item.name); return true; },
+            onAltClick: ( item : components.tools.SearchList.ListItem) => { this.props.viewAuthor(item.name, this.props.subreddit); }
+        };
 
         searches.push(authorSearch);
 
@@ -166,17 +166,17 @@ export default class SubredditDropdown extends React.Component<Props, State>
         // Posts
         ////////////////////////////
 
-        if (this.props.subreddit != null && this.props.subreddit != "All")  //No point in searching all
+        if (this.props.subreddit != null && this.props.subreddit !== "All")  // No point in searching all
         {
             let postSearch : components.tools.SearchList.SearchItem = {
 
                 items: [],
                 search: async ( query : string ) => 
                     { 
-                        return ( await this.props.searchPosts(this.props.subreddit, query) ).map( post => 
+                        return ( await this.props.searchPosts(this.props.subreddit, query) ).map( (post) => 
                             { 
-                                return { name: post.title, object: post.author, alt: post.author } 
-                            }) 
+                                return { name: post.title, object: post.author, alt: post.author }; 
+                            }); 
                     },
                 prefix: "",
                 searchPlaceholder: "Post",
@@ -184,9 +184,9 @@ export default class SubredditDropdown extends React.Component<Props, State>
                 toggleHighlight : false,
                 addToDisplayList : false,
                 delaySearch : true,
-                onClick: ( item : components.tools.SearchList.ListItem) => { this.props.viewAuthor(item.object, this.props.subreddit); return true },
-                onAltClick: ( item : components.tools.SearchList.ListItem) => { this.props.viewAuthor(item.object, this.props.subreddit) }
-            }
+                onClick: ( item : components.tools.SearchList.ListItem) => { this.props.viewAuthor(item.object, this.props.subreddit); return true; },
+                onAltClick: ( item : components.tools.SearchList.ListItem) => { this.props.viewAuthor(item.object, this.props.subreddit); }
+            };
 
             searches.push(postSearch);
         }
@@ -204,7 +204,7 @@ export default class SubredditDropdown extends React.Component<Props, State>
                     items={searches}
                     position={components.tools.Popup.Position.BOTTOM}
                     alignment={components.tools.Popup.Alignment.BEGINNING}
-                    />
+                    />;
                 }
                 else
                 {
@@ -214,31 +214,18 @@ export default class SubredditDropdown extends React.Component<Props, State>
                     items={searches}
                     position={components.tools.Popup.Position.BOTTOM}
                     alignment={components.tools.Popup.Alignment.BEGINNING}
-                    />
+                    />;
                 }
             } 
         }
-        </MediaQuery>
+        </MediaQuery>;
 
 
     }
 
-    getExpandCaret()
+    private getExpandCaret()
     {
-        return  <SVGInline className={styles.expandButton} svg={expand_caret}/>
+        return  <SVGInline className={styles.expandButton} svg={expand_caret}/>;
     
-    }
-
-
-    getSubredditLinkContent(subreddit : string)
-    {
-        if (subreddit == null)
-        {
-           return {  type: this.props.filter.toUpperCase() }
-        }
-        else
-        {
-           return { type: 'SUBREDDIT', payload: { subreddit: subreddit, filter:this.props.filter } };
-        }
     }
 }

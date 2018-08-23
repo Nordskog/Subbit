@@ -2,7 +2,7 @@
 
 
 
-import * as component from '~/client/components/'
+import * as component from '~/client/components/';
 
 import * as models from '~/common/models';
 
@@ -28,9 +28,9 @@ interface State
 
 export default class AuthorsComponent extends React.Component<Props, State >
 {
-    shouldRenderLastVisitBar()
+    private shouldRenderLastVisitBar()
     {
-        let shouldRender = ( this.props.filter == AuthorFilter.NEW || this.props.filter == AuthorFilter.SUBSCRIPTIONS) && this.props.authors.length > 0;
+        let shouldRender = ( this.props.filter === AuthorFilter.NEW || this.props.filter === AuthorFilter.SUBSCRIPTIONS) && this.props.authors.length > 0;
         if (shouldRender)
         {
             let topAuthor : AuthorEntry = this.props.authors[0];
@@ -41,11 +41,11 @@ export default class AuthorsComponent extends React.Component<Props, State >
         return shouldRender;
     }
 
-    renderAuthors()
+    private renderAuthors()
     {
         let renders = new Array(this.props.authors.length);
 
-        //list visited only works when sorting by new, so NEW or SUBSCRIPTIONS
+        // list visited only works when sorting by new, so NEW or SUBSCRIPTIONS
         let lastVisitAdded : boolean = !this.shouldRenderLastVisitBar();
 
         this.props.authors.forEach( (author, index) =>
@@ -57,7 +57,7 @@ export default class AuthorsComponent extends React.Component<Props, State >
                     renders.push( <component.tools.lastVisitBar
                         key={"Last visit bar"}
                         lastVisit={this.props.lastVisit}
-                    /> )
+                    /> );
 
                     lastVisitAdded = true;
                 }
@@ -67,7 +67,7 @@ export default class AuthorsComponent extends React.Component<Props, State >
             renders.push( 
                 <component.author.component key={author.author.name} author={author} />
              );
-        } )
+        } );
 
         return renders;
     }
@@ -82,4 +82,4 @@ export default class AuthorsComponent extends React.Component<Props, State >
     }
 
 
-};
+}

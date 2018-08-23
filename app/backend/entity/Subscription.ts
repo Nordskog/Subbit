@@ -1,8 +1,10 @@
-﻿import * as Wetland from 'wetland';
-import Author from './Author'
-import User from './User'
-import Subreddit from './Subreddit'
-import * as models from '~/common/models'
+﻿// tslint:disable:variable-name
+
+import * as Wetland from 'wetland';
+import Author from './Author';
+import User from './User';
+import Subreddit from './Subreddit';
+import * as models from '~/common/models';
 
 
 export default class Subscription extends Wetland.Entity
@@ -15,11 +17,11 @@ export default class Subscription extends Wetland.Entity
     public createdAt : Date;
     public updatedAt : Date;
 
-    //These should be removed and entity properties used
+    // These should be removed and entity properties used
     public author_id : number;
     public user_id : number;
 
-    static setMapping(mapping : Wetland.Mapping<Subscription>)
+    protected static setMapping(mapping : Wetland.Mapping<Subscription>)
     {
         let options = {
             tableName: 'subscriptions',
@@ -34,12 +36,12 @@ export default class Subscription extends Wetland.Entity
         mapping.manyToMany('subreddits', { targetEntity: 'Subreddit', inversedBy: 'subscriptions' });
     }
 
-    beforeUpdate(updatedValues, EntityManager : Wetland.EntityManager)
+    protected beforeUpdate(updatedValues, EntityManager : Wetland.EntityManager)
     {
         this.updatedAt = new Date();
     }
 
-    static formatModel(sub : Subscription) : models.data.Subscription
+    public static formatModel(sub : Subscription) : models.data.Subscription
     {
         if (sub == null)
         {
@@ -50,15 +52,15 @@ export default class Subscription extends Wetland.Entity
             id: sub.id,
             user : sub.user.username,
             author: sub.author.name,
-            subscribed: true,   //If it exists on the server then we're subscribed
+            subscribed: true,   // If it exists on the server then we're subscribed
             subreddits : sub.subreddits.map( ( subred : Subreddit ) => 
             {
                 return {
                     id: subred.id, 
                     name: subred.name,
                     subscribed: true
-                }
+                };
             } )
-        } as models.data.Subscription
+        } as models.data.Subscription;
     }
 }

@@ -1,7 +1,9 @@
-﻿import * as Wetland from 'wetland';
-import User from './User'
+﻿// tslint:disable:variable-name
 
-//Reddit auth
+import * as Wetland from 'wetland';
+import User from './User';
+
+// Reddit auth
 export default class Auth extends Wetland.Entity
 {
     public access_token : string;
@@ -16,7 +18,7 @@ export default class Auth extends Wetland.Entity
     public createdAt : Date;
     public updatedAt : Date;
 
-    static setMapping(mapping : Wetland.Mapping<Auth>)
+    protected static setMapping(mapping : Wetland.Mapping<Auth>)
     {
 
         let options = {
@@ -65,7 +67,7 @@ export default class Auth extends Wetland.Entity
         mapping.oneToOne('user', { targetEntity: 'User', inversedBy: 'auth' }).joinColumn( 'user', {onDelete: 'cascade'} );
     }
 
-    beforeUpdate(updatedValues, EntityManager : Wetland.EntityManager)
+    protected beforeUpdate(updatedValues, EntityManager : Wetland.EntityManager)
     {
         this.updatedAt = new Date();
     }

@@ -1,22 +1,19 @@
-﻿import * as serverActions from '~/backend/actions'
-import * as models from '~/common/models'
-import * as urls from '~/common/urls'
-import * as api from '~/common/api'
+﻿import * as serverActions from '~/backend/actions';
+import * as models from '~/common/models';
+import * as api from '~/common/api';
 
 
-require('isomorphic-fetch');
-
-export function fetchSubscriptions( access_token: string ): Promise<models.data.Subscription[]>
+export function fetchSubscriptions( accessToken: string ): Promise<models.data.Subscription[]>
 {
     return api.rfy.getRequest(
         '/subscription', 
         {
 
         },
-        access_token);
+        accessToken);
 }
 
-export function subscribe(user: string, author: string, access_token: string, subreddits : string[]): Promise<models.data.Subscription>
+export function subscribe(user: string, author: string, accessToken: string, subreddits : string[]): Promise<models.data.Subscription>
 {
     return api.rfy.postRequest(
         '/subscription', 
@@ -29,10 +26,10 @@ export function subscribe(user: string, author: string, access_token: string, su
                 subreddits: subreddits
             }
         },
-        access_token );
+        accessToken );
 }
 
-export function unsubscribe(subscriptionId: number, access_token: string) : Promise<boolean>
+export function unsubscribe(subscriptionId: number, accessToken: string) : Promise<boolean>
 {
     return api.rfy.postRequest(
         '/subscription', 
@@ -43,10 +40,10 @@ export function unsubscribe(subscriptionId: number, access_token: string) : Prom
                 id: subscriptionId,
             }
         },
-        access_token );
+        accessToken );
 }
 
-export function addSubreddit(subscription: number, subreddit: string, access_token: string) : Promise<models.data.Subscription>
+export function addSubreddit(subscription: number, subreddit: string, accessToken: string) : Promise<models.data.Subscription>
 {
     return api.rfy.postRequest(
         '/subscription', 
@@ -58,10 +55,10 @@ export function addSubreddit(subscription: number, subreddit: string, access_tok
                 subreddit: subreddit,
             }
         },
-        access_token );
+        accessToken );
 }
 
-export function removeSubreddit(subscription: number, subreddit: string, access_token: string) : Promise<models.data.Subscription>
+export function removeSubreddit(subscription: number, subreddit: string, accessToken: string) : Promise<models.data.Subscription>
 {
     return api.rfy.postRequest(
         '/subscription', 
@@ -73,5 +70,5 @@ export function removeSubreddit(subscription: number, subreddit: string, access_
                 subreddit: subreddit  
             }
         },
-        access_token );
+        accessToken );
 }

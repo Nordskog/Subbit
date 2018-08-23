@@ -1,5 +1,5 @@
-import IdToken from './IdToken'
-import RedditAuth from './RedditAuth'
+import IdToken from './IdToken';
+import RedditAuth from './RedditAuth';
 
 export default interface UserInfo
 {

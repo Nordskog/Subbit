@@ -1,14 +1,16 @@
+// tslint:disable:ban-types
+
 import { Severity } from './models';
-import LoggerInterface from './LoggerInterface'
+import LoggerInterface from './LoggerInterface';
 import { Action } from '~/common/models';
-import * as clusterActions from '~/backend/cluster/actionTypes'
+import * as clusterActions from '~/backend/cluster/actionTypes';
 import errToJson from 'error-to-json';
 
 export class SlaveLogger implements LoggerInterface
 {
   
-    //Sends log to master 
-    static log( severity : Severity, msg : any, meta : object )
+    // Sends log to master 
+    public static log( severity : Severity, msg : any, meta : object )
     {
       if (msg instanceof Error)
       {
@@ -23,7 +25,7 @@ export class SlaveLogger implements LoggerInterface
           msg: msg, 
           meta: meta
         }
-      }
+      };
 
         process.send( action );
     }
@@ -32,12 +34,12 @@ export class SlaveLogger implements LoggerInterface
     // Interface implementation
     ////////////////////////////
   
-    I( message : any, meta : Object = {})
+    public I( message : any, meta : Object = {})
     {
       SlaveLogger.log(Severity.info, message, meta);
     }
     
-    A( message : any, user : string, ip : string,  meta : Object = {})
+    public A( message : any, user : string, ip : string,  meta : Object = {})
     {
       meta = {  ... meta, 
                 user: user, 
@@ -46,29 +48,29 @@ export class SlaveLogger implements LoggerInterface
       SlaveLogger.log(Severity.access, message, meta);
     }
     
-    E( message : any, meta : Object = {})
+    public E( message : any, meta : Object = {})
     {
       SlaveLogger.log(Severity.error,message, meta);
     }
     
-    D( message : any, meta : Object = {})
+    public D( message : any, meta : Object = {})
     {
       SlaveLogger.log(Severity.debug,message, meta);
     }
     
-    W( message : any, meta : Object = {})
+    public W( message : any, meta : Object = {})
     {
       SlaveLogger.log(Severity.warning, message, meta);
     }
     
-    L( severity : Severity, message : any, meta : Object = {})
+    public L( severity : Severity, message : any, meta : Object = {})
     {
       SlaveLogger.log( severity, message, meta);
     }
 
-    setExitOnUncaughtException( exitOnError : boolean )
+    public setExitOnUncaughtException( exitOnError : boolean )
     {
-      //Does nothing
+      // Does nothing
     }
 
 }

@@ -1,4 +1,6 @@
-﻿import * as Wetland from 'wetland';
+﻿// tslint:disable:variable-name
+
+import * as Wetland from 'wetland';
 import { PostDisplay } from '~/common/models';
 
 export default class UserSettings extends Wetland.Entity
@@ -9,7 +11,7 @@ export default class UserSettings extends Wetland.Entity
 
     public post_display_mode : PostDisplay;
 
-    static setMapping(mapping : Wetland.Mapping<UserSettings>)
+    protected static setMapping(mapping : Wetland.Mapping<UserSettings>)
     {
         let options = {
             tableName: 'user_settings',
@@ -21,14 +23,14 @@ export default class UserSettings extends Wetland.Entity
         mapping.oneToOne('user', { targetEntity: 'User', inversedBy: 'settings' }).joinColumn( 'user', {onDelete: 'cascade'} );
     }
 
-    static formatModel( us : UserSettings )
+    public static formatModel( us : UserSettings )
     {
         return {
-            //Nothing!
-        }
+            // Nothing!
+        };
     }
 
-    beforeUpdate(updatedValues, EntityManager : Wetland.EntityManager)
+    protected beforeUpdate(updatedValues, EntityManager : Wetland.EntityManager)
     {
         this.updatedAt = new Date();
     }

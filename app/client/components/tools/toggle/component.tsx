@@ -1,7 +1,5 @@
 import * as React from 'react';
-import * as models from '~/common/models'
-
-import * as styles from 'css/toggle.scss'
+import * as styles from 'css/toggle.scss';
 
 export interface ToggleItem
 {
@@ -30,19 +28,19 @@ export default class ToggleComponent extends React.Component<Props, State>
     }
 
 
-    static getDerivedStateFromProps( newProps : Props)
+    public static getDerivedStateFromProps( newProps : Props)
     {
-        return { selected : newProps.selected }
+        return { selected : newProps.selected };
     }
 
     public render()
     {
         return  <div className={styles.container}>
                     {this.getItems()}
-                </div>
+                </div>;
     }
 
-    getItems()
+    private getItems()
     {
         let elements = [];
         this.props.items.forEach( ( item : ToggleItem, index : number) => 
@@ -53,19 +51,19 @@ export default class ToggleComponent extends React.Component<Props, State>
         return elements;
     }
 
-    getItem( item : ToggleItem, key : string )
+    private getItem( item : ToggleItem, key : string )
     {
         return <div key={key} onClick={ () => this.handleClick(item)  } className={ this.isSelected(item) ? styles.itemSelected : styles.item} >
                     {item.display}
-               </div>
+               </div>;
     }
 
-    isSelected( item : ToggleItem)
+    private isSelected( item : ToggleItem)
     {
-        return item == this.state.selected;
+        return item === this.state.selected;
     }
 
-    handleClick( item : ToggleItem)
+    private handleClick( item : ToggleItem)
     {
         if ( this.isSelected(item) )
             return;

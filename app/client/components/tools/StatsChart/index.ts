@@ -1,1 +1,1 @@
-export { default as StatsChartComponent, StatsChartItem } from './component'
+export { default as StatsChartComponent, StatsChartItem } from './component';

@@ -1,4 +1,4 @@
-import * as Http from 'http'
+import * as Http from 'http';
 
 export function getReqIp( req : Http.IncomingMessage, isBehindReverseProxy : boolean )
 {
@@ -7,7 +7,7 @@ export function getReqIp( req : Http.IncomingMessage, isBehindReverseProxy : boo
 
     if ( isBehindReverseProxy )
     {
-        return ( <string>(req.headers['x-forwarded-for']) ).split(/\s*,\s*/)[0];
+        return ( <string> (req.headers['x-forwarded-for']) ).split(/\s*,\s*/)[0];
     }
     else
     {

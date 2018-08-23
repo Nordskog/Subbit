@@ -1,8 +1,8 @@
-﻿import * as api from '~/common/api'
-import * as actions from '~/client/actions'
+﻿import * as api from '~/common/api';
+import * as actions from '~/client/actions';
 
-import * as tools from '~/common/tools'
-import * as models from '~/common/models'
+import * as tools from '~/common/tools';
+import * as models from '~/common/models';
 
 import { State } from '~/client/store';
 import { WrapWithHandler } from '~/client/actions/tools/error';
@@ -30,12 +30,12 @@ export function logoutUserAction()
     {
         actions.directActions.authentication.removeAuthentication(dispatch);
         actions.directActions.session.clear();
-        //No sub means home (frontpage)
+        // No sub means home (frontpage)
         dispatch(
             { 
                 type: actions.types.Route.HOME, payload: { } } 
             );
-    }
+    };
 }
 
 export function logoutUserOnAllDevices()
@@ -50,7 +50,7 @@ export function logoutUserOnAllDevices()
         actions.directActions.authentication.removeAuthentication(dispatch);
         actions.directActions.session.clear();
 
-        //No sub means home (frontpage)
+        // No sub means home (frontpage)
         dispatch(
             { 
                 type: actions.types.Route.HOME, payload: { } } 

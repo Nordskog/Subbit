@@ -1,1 +1,1 @@
-export { default as Posts } from './component'
+export { default as Posts } from './component';

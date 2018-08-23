@@ -1,25 +1,25 @@
 ﻿import * as React from 'react';
 import * as components from '~/client/components';
 
-import AsyncStats from '~/client/components/stats/async'
+import AsyncStats from '~/client/components/stats/async';
 
-import * as Toastify from 'react-toastify'
-import * as models from '~/common/models'
+import * as Toastify from 'react-toastify';
+import * as models from '~/common/models';
 
-import * as styles from 'css/site.scss'
+import * as styles from 'css/site.scss';
 import { MessageType } from '~/client/components/tools';
 
 interface Props
 {
-    siteMode : models.SiteMode,
+    siteMode : models.SiteMode;
     authenticated: boolean;
     subscriptionCount: number;
     filter: models.AuthorFilter;
 }
  
-export default class app extends React.Component<Props,any>
+export default class App extends React.Component<Props,any>
 {
-    render()
+    public render()
     {
       return <div>
                 <Toastify.ToastContainer/>
@@ -33,10 +33,10 @@ export default class app extends React.Component<Props,any>
                 </div>
 
                     
-             </div>
+             </div>;
     }
 
-    getContent()
+    private getContent()
     {   
 
         switch( this.props.siteMode )
@@ -45,28 +45,28 @@ export default class app extends React.Component<Props,any>
                 return this.getStats();
 
             case models.SiteMode.ABOUT:
-                return <components.tools.Message message={MessageType.ABOUT} />
+                return <components.tools.Message message={MessageType.ABOUT} />;
 
             case models.SiteMode.PRIVACY:
-                return <components.tools.Message message={MessageType.PRIVACY} />
+                return <components.tools.Message message={MessageType.PRIVACY} />;
 
             case models.SiteMode.WAITING:
-                return <components.tools.Message message={MessageType.WAITING} />
+                return <components.tools.Message message={MessageType.WAITING} />;
         }
 
-        if (this.props.filter == models.AuthorFilter.SUBSCRIPTIONS  )
+        if (this.props.filter === models.AuthorFilter.SUBSCRIPTIONS  )
         {
             if ( !this.props.authenticated)
             {
                 return <components.tools.Message 
                  message={MessageType.NOT_LOGGED_IN}
-                />
+                />;
             }
             else if (  this.props.subscriptionCount < 1)
             {
                 return <components.tools.Message 
                             message={MessageType.NO_SUBSCRIPTIONS}
-                />
+                />;
             }
         }
 
@@ -74,18 +74,18 @@ export default class app extends React.Component<Props,any>
 
     }
 
-    getAuthors()
+    private getAuthors()
     {
         return [    <components.authors key={"authors"} />,
                     <components.tools.scrollEndDetector key={"scrollEndDetector"} />,
                     <components.tools.LoadingStatus key={"LoadingStatus"} />
-               ]
+               ];
     }
 
-    getStats()
+    private getStats()
     {
         return <AsyncStats
-        />
+        />;
     }
 
 

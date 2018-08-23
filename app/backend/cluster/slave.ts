@@ -1,11 +1,11 @@
-import * as WebSocket from 'ws'
-import * as cluster from 'cluster'
+import * as WebSocket from 'ws';
+import * as cluster from 'cluster';
 import * as Http from 'http';
 import * as Net from 'net';
 import { Action } from '~/common/models';
 import * as Log from '~/common/log';
-import * as clusterActions from '~/backend/cluster/'
-import * as stats from '~/backend/stats'
+import * as clusterActions from '~/backend/cluster/';
+import * as stats from '~/backend/stats';
 
 let lastDeath : number = 0;
 
@@ -19,7 +19,7 @@ function forkSlave( managerSocket : WebSocket.Server )
 
     worker.on( 'exit', () => 
     {
-        //Delay if last death occurred less than 30 seconds ago.
+        // Delay if last death occurred less than 30 seconds ago.
         if ( Date.now() - lastDeath < 1000 * 30 )
         {
             Log.I(`Slave ${worker.id} exited. Restarting in 30 seconds`);
@@ -60,7 +60,7 @@ function forkSlave( managerSocket : WebSocket.Server )
                 case clusterActions.actionTypes.log.LOG:
                 {
                     let payload : clusterActions.actionTypes.log.LOG = message.payload;
-                    Log.L(payload.severity, payload.msg, payload.meta)
+                    Log.L(payload.severity, payload.msg, payload.meta);
                     break;
                 }
 

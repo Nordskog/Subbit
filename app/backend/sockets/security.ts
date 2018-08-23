@@ -6,8 +6,8 @@ const authenticatedSockets : Map<WebSocket, AuthenticatedSocket> = new Map<WebSo
 
 class AuthenticatedSocket
 {
-    ws : WebSocket;
-    scopes : Set<Scope>;
+    private ws : WebSocket;
+    private scopes : Set<Scope>;
 
     constructor( ws : WebSocket, ...scopes : Scope[])
     {
@@ -17,12 +17,12 @@ class AuthenticatedSocket
             this.scopes.add(scope);
     }
 
-    checkScopes( scope : Scope ) : boolean
+    public checkScopes( scope : Scope ) : boolean
     {
         return this.scopes.has(scope);
     }
 
-    addScopes( ...scopes : Scope[] )
+    public addScopes( ...scopes : Scope[] )
     {
         for ( let scope of scopes)
             this.scopes.add(scope);
@@ -65,6 +65,6 @@ export function throwCheckAccess(  ws : WebSocket, scope : Scope)
 {
     if ( !checkAccess(ws, scope))
     {
-        throw new AuthorizationException("Socket is not authorized for scope "+scope);
+        throw new AuthorizationException("Socket is not authorized for scope " + scope);
     }
 }

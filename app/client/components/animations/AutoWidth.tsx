@@ -17,9 +17,9 @@ interface State
 
  export default class AutoWidth extends React.Component<Props, State>
 {
-    container : HTMLDivElement;
-    prevWidth : number;
-    timeline : TimelineLite;
+    private container : HTMLDivElement;
+    private prevWidth : number;
+    private timeline : TimelineLite;
     
     constructor( props : Props)
     {
@@ -27,18 +27,18 @@ interface State
         this.state = { delay: props.delay || 0, duration: props.duration || 0.3 };
     }
 
-    componentDidMount()
+    public componentDidMount()
     {
         this.prevWidth = this.container.clientWidth;
     }
 
-    componentDidUpdate()
+    public componentDidUpdate()
     {
         let width : number = this.container.clientWidth;
 
-        if ( this.prevWidth != width)
+        if ( this.prevWidth !== width)
         {
-            //Client size includes padding, but it is added to the height we set. Remove from animated value to compensate.
+            // Client size includes padding, but it is added to the height we set. Remove from animated value to compensate.
             let {verticalPadding, horizontalPadding} = tools.component.getPadding(this.container);
             width -= horizontalPadding;
 
@@ -46,9 +46,9 @@ interface State
             {
                     if (this.timeline != null)
                     {
-                        //Wait for it to finish I guess.
-                        //Maybe dynamically update target?
-                        //Since it's changing we don't really know what it should be though.
+                        // Wait for it to finish I guess.
+                        // Maybe dynamically update target?
+                        // Since it's changing we don't really know what it should be though.
                     }
                     else
                     {
@@ -63,7 +63,7 @@ interface State
                                  clearProps:  'width'
                             });
                 
-                            this.timeline.eventCallback( 'onComplete', () => { this.timeline = null }) ;
+                            this.timeline.eventCallback( 'onComplete', () => { this.timeline = null; }) ;
                             this.timeline.play();
                     }
             }
@@ -72,11 +72,11 @@ interface State
         this.prevWidth = width;
     }
 
-    render()
+    public render()
     {
-        return  <div ref={c => this.container = c} style={ { overflow: 'hidden' } }>
+        return  <div ref={(c) => this.container = c} style={ { overflow: 'hidden' } }>
                     {this.props.children}
-                </div>
+                </div>;
     }
     
 }

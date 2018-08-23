@@ -1,5 +1,5 @@
-import * as actions from '~/client/actions'
-import * as api from '~/common/api'
+import * as actions from '~/client/actions';
+import * as api from '~/common/api';
 import { handleError } from '~/client/actions/tools/error';
 import { Dispatch, GetState } from '~/client/actions/tools/types';
 import { Post } from '~/common/models/reddit';

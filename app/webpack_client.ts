@@ -1,15 +1,13 @@
-﻿
-let path = require('path');
+﻿import path from 'path';
 let basePath = __dirname;
 
-import clientConfig from '../config'
-
-const HtmlWebpackPlugin = require('html-webpack-plugin');   //Something wrong with webpack typings
+import clientConfig from '../config';
+import HtmlWebpackPlugin from 'html-webpack-plugin';  // Something wrong with typings. do not use typings.
 import * as Webpack from 'webpack';
 import ExtractTextPlugin from "extract-text-webpack-plugin";
-import TsconfigPathsPlugin  from 'tsconfig-paths-webpack-plugin';
+import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
 import UglifyJsPlugin from 'uglifyjs-webpack-plugin';
-//import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+// import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import LodashModuleReplacementPlugin from 'lodash-webpack-plugin';
 import SitemapPlugin from 'sitemap-webpack-plugin';
 import RobotstxtPlugin from 'robotstxt-webpack-plugin';
@@ -49,7 +47,7 @@ const config = {
     },
     output: {
         filename: 'static/[name].js',
-        path: path.join(basePath, '../buildClient'), //Most stuff will go in static, root stuff moved to /buildClient
+        path: path.join(basePath, '../buildClient'), // Most stuff will go in static, root stuff moved to /buildClient
         publicPath: '/',
         chunkFilename: 'static/[name].js'
     },
@@ -70,7 +68,7 @@ const config = {
                 loader: 'file-loader?name=static/[name].[ext]'
             },
             {
-                test:/\.(scss)$/,
+                test: /\.(scss)$/,
                 use: ['extracted-loader'].concat( ExtractTextPlugin.extract(
                 {
                     use: 
@@ -99,7 +97,7 @@ const config = {
                 }))             
             },
             {
-                test:/\.(css)$/,
+                test: /\.(css)$/,
                 use: ['extracted-loader'].concat( ExtractTextPlugin.extract(
                 {
                     use: 
@@ -123,20 +121,20 @@ const config = {
                 loader: 'url-loader?limit=10000&mimetype=application/octet-stream'
             },
             {
-                test:/\.(ico)$/,
+                test: /\.(ico)$/,
                 loader: 'file-loader?name=static/[name].[ext]'
             },
             
             {
 
-                //SVGs loaded inline because compatibility (I'm looking at you, IE)
+                // SVGs loaded inline because compatibility (I'm looking at you, IE)
                 test: /\.svg$/,
                 exclude: [/node_modules/, /animations/],
                 use: [
                     { 
                         loader: 'svg-inline-loader',
 
-                        //Everything is styled by css
+                        // Everything is styled by css
                         options: { removeTags: true }
                     }
               ]
@@ -144,7 +142,7 @@ const config = {
 
            {
 
-            //Animted svgs are fancy and should use their own styles
+            // Animted svgs are fancy and should use their own styles
             test: /\.(svg)$/,
             exclude: [/node_modules/, /images/],
             use: [
@@ -174,15 +172,15 @@ const config = {
             filename: "index.html",
             inject: "body"
         }),
-        new Webpack.NormalModuleReplacementPlugin(   //Replace nodejs log library with console output on client
+        new Webpack.NormalModuleReplacementPlugin(   // Replace nodejs log library with console output on client
             /rfyServerLogging.ts/,
             'rfyClientLogging.ts'
         ),
-        new Webpack.NormalModuleReplacementPlugin(   //Replace nodejs log library with console output on client
+        new Webpack.NormalModuleReplacementPlugin(   // Replace nodejs log library with console output on client
             /rfyEnvServer.ts/,
             'rfyEnvClient.ts'
         ),
-        //Merge Victory's ten-million lodash distros
+        // Merge Victory's ten-million lodash distros
         new LodashModuleReplacementPlugin({
             currying: true,
             flattening: true,
@@ -194,8 +192,8 @@ const config = {
             "process.env.npm_package_version": JSON.stringify( process.env.npm_package_version)
           }),
         new UglifyJsPlugin(
-        ), //Default config is pretty good
-        //new BundleAnalyzerPlugin(),    //Enable me when you want stats
+        ), // Default config is pretty good
+        // new BundleAnalyzerPlugin(),    //Enable me when you want stats
 
         new SitemapPlugin(clientConfig.server.server_address, [
             { path: '/best/',           changefreq: 'daily',    priority: 0.8},

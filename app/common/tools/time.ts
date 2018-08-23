@@ -8,11 +8,11 @@ const SECONDS_IN_YEAR = SECONDS_IN_MONTH * 12;
 
 function formatTime(singularUnit: string, count: number)
 {
-    //Includes space at end
+    // Includes space at end
     if (count === 0)
         return "";
     else if (count === 1)
-        return count + " " +singularUnit+" ";
+        return count + " " + singularUnit + " ";
     else
         return count + " " + singularUnit + "s ";
 }
@@ -58,7 +58,7 @@ function distributeSeconds( seconds : number)
     minutes = Math.floor(seconds / SECONDS_IN_MINUTE);
     seconds -= minutes * SECONDS_IN_MINUTE;
 
-    return { years, months, weeks, days, hours, minutes }
+    return { years, months, weeks, days, hours, minutes };
 }
 
 function secondsToTimeSinceString(seconds: number) : string
@@ -96,11 +96,12 @@ function secondsToSimpleTimeSinceString(seconds: number) : string
     if (hours > 0)
         return formatTime("hour", hours);
     if (minutes > 0)
-        return minutes+ " min";
+        return minutes + " min";
     if (seconds > 0)
-        return seconds+ " sec";
+        return seconds + " sec";
 }
 
-export function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
+export function sleep(ms) 
+{
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}

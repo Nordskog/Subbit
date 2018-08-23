@@ -1,8 +1,8 @@
-import * as cluster from 'cluster'
+import * as cluster from 'cluster';
 import * as Http from 'http';
 import * as Net from 'net';
 import { Action } from '~/common/models/Action';
-import * as actionTypes from '~/backend/cluster/actionTypes'
+import * as actionTypes from '~/backend/cluster/actionTypes';
 import { LoginType } from '~/common/models/auth';
 import * as redditAuth from '~/backend/authentication/redditAuth';
 import { StatsCategoryType } from '~/common/models/stats';
@@ -18,7 +18,7 @@ export function addStatsEntry( category : StatsCategoryType, value: number )
                 category: category,
                 value: value,
             },
-        }
+        };
 
     process.send(action);
 
@@ -33,19 +33,19 @@ export function broadcastAuthState( identifier : string, expiresAt: number, logi
                 expiresAt: expiresAt,
                 loginType: loginType,
 
-                sourceWorker: sourceWorker  //Sometimes null
+                sourceWorker: sourceWorker  // Sometimes null
             },
-        }
+        };
 
-    //Master broadcasts to all workers except one that send it
+    // Master broadcasts to all workers except one that send it
     if (cluster.isMaster)
     {
-        //Slave broadcasts to master
+        // Slave broadcasts to master
         for ( let id in cluster.workers)
         {
             let worker = cluster.workers[id];
 
-            if (worker.id != sourceWorker)
+            if (worker.id !== sourceWorker)
                 worker.send(action);
         }
     }
@@ -62,19 +62,19 @@ export function broadcastAuthStateRemoval( identifier : string, sourceWorker? : 
         type: actionTypes.auth.REMOVE_AUTH_STATE,
         payload: {
                 identifier: identifier,
-                sourceWorker: sourceWorker  //Sometimes null
+                sourceWorker: sourceWorker  // Sometimes null
             },
-        }
+        };
 
-    //Master broadcasts to all workers except one that send it
+    // Master broadcasts to all workers except one that send it
     if (cluster.isMaster)
     {
-        //Slave broadcasts to master
+        // Slave broadcasts to master
         for ( let id in cluster.workers)
         {
             let worker = cluster.workers[id];
 
-            if (worker.id != sourceWorker)
+            if (worker.id !== sourceWorker)
                 worker.send(action);
         }
     }
@@ -97,9 +97,9 @@ export function receiveAuthStateRemoval( identifier : string, sourceWorker : num
 
 export function UpgradeConnection( request : Http.IncomingMessage, socket : Net.Socket )
 {
-        //Hand to master so we don't have to deal with a lot of IPC routing.
-        //Only pass the data we actually need, since the objects contain 
-        //circular references and can't be stringified directly.
+        // Hand to master so we don't have to deal with a lot of IPC routing.
+        // Only pass the data we actually need, since the objects contain 
+        // circular references and can't be stringified directly.
         let action : Action<actionTypes.websocket.UPGRADE_CONNECTION> = {
             type: actionTypes.websocket.UPGRADE_CONNECTION,
             payload: {
@@ -113,7 +113,7 @@ export function UpgradeConnection( request : Http.IncomingMessage, socket : Net.
                     } as any
                 },
             }
-        }
+        };
 
         socket.pause();
         process.send( action, socket );

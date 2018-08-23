@@ -1,7 +1,7 @@
 import * as React from 'react';
-import * as models from '~/common/models'
+import * as models from '~/common/models';
 import { LoadingStatus } from '~/common/models';
-import * as siteStyles from 'css/site.scss'
+import * as siteStyles from 'css/site.scss';
 import { LoadingIcon, LoadingProgress } from '~/client/components/tools';
 
 interface Props extends models.state.SiteState
@@ -12,7 +12,7 @@ interface Props extends models.state.SiteState
 export default class LoadingStatusComponent extends React.Component<Props,null> 
 {
 
-  render() 
+  public render() 
   {
     return  <div className={siteStyles.loadingStatus}>
               < LoadingIcon status={this.props.status} />
@@ -21,13 +21,12 @@ export default class LoadingStatusComponent extends React.Component<Props,null>
               loadingCount={this.props.loadingCount}
               loadingProgress={this.props.loadingProgress}
               />
-            </div>
+            </div>;
   }
 
-  getMessage()
+  private getMessage()
   {
-              < LoadingIcon status={this.props.status} />
-    switch(this.props.status)
+    switch( this.props.status)
     {
         case LoadingStatus.DONE:
           return null;

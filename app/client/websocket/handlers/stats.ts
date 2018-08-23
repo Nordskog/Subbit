@@ -1,4 +1,4 @@
-import * as statsModels from '~/common/models/stats'
+import * as statsModels from '~/common/models/stats';
 
 export type StatsUpdateCallback = ( stats : statsModels.StatsUpdate ) => void;
 export type StatsHistoryCallback = ( stats : statsModels.StatsHistory ) => void;

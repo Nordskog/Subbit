@@ -1,17 +1,17 @@
-import { isServer } from '~/common/tools/env'
-import { Severity } from '~/common/log'
+import { isServer } from '~/common/tools/env';
+import { Severity } from '~/common/log';
 
-//The Object.setPrototypeOf stuff is an es5 requirement when extending base classes.
-//https://github.com/Microsoft/TypeScript-wiki/blob/master/Breaking-Changes.md#extending-built-ins-like-error-array-and-map-may-no-longer-work
+// The Object.setPrototypeOf stuff is an es5 requirement when extending base classes.
+// https://github.com/Microsoft/TypeScript-wiki/blob/master/Breaking-Changes.md#extending-built-ins-like-error-array-and-map-may-no-longer-work
 
 export class Exception extends Error
 {
-    message : string;
-    name : string;
+    public message : string;
+    public name : string;
 
     // ...
-    prototype: any;
-    stack: string;
+    public prototype: any;
+    public stack: string;
 
     constructor( message : string)
     {
@@ -21,27 +21,27 @@ export class Exception extends Error
         this.message = message;
     }
 
-    //Append a stack to this error's stack.
-    //Necessary for nested promises
-    appendStack( appendStack : string)
+    // Append a stack to this error's stack.
+    // Necessary for nested promises
+    public appendStack( appendStack : string)
     {
         this.stack = this.stack.concat(appendStack);
     }
 
-    toString()
+    public toString()
     {
         return `${this.name}: ${this.message}`;
     }
 }
 
-//Usually expected behavior, doesn't need to be logged
+// Usually expected behavior, doesn't need to be logged
 export class EndpointException extends Exception
 {
-    //Optional http code, if error is likely to make it to an endpoint
-    code : number = null;
+    // Optional http code, if error is likely to make it to an endpoint
+    public code : number = null;
 
-    //Optional severity level for backend logging.
-    severity : Severity = Severity.info;
+    // Optional severity level for backend logging.
+    public severity : Severity = Severity.info;
 
     constructor( code : number, message : string, severity : Severity = Severity.info)
     {
@@ -52,7 +52,7 @@ export class EndpointException extends Exception
         this.severity = severity;
     }
 
-    toString()
+    public toString()
     {
         if (this.code == null)
             return `${this.name}: ${this.message}`;
@@ -61,7 +61,7 @@ export class EndpointException extends Exception
     }
 }
 
-//Usually expected behavior, doesn't need to be logged
+// Usually expected behavior, doesn't need to be logged
 export class CancelledException extends Exception
 {
     constructor( message : string)
@@ -71,7 +71,7 @@ export class CancelledException extends Exception
         this.name = "CancelledException";
     }
 
-    toString()
+    public toString()
     {
          return `${this.name}: ${this.message}`;
     }
@@ -81,56 +81,56 @@ export class SocketException extends Exception
 {
     constructor( message : string)
     {
-        super(message)
+        super(message);
         Object.setPrototypeOf(this, SocketException.prototype);
         this.name = "SocketException";
     }
 
-    toString()
+    public toString()
     {
          return `${this.name}: ${this.message}`;
     }
 }
 
-//Usually expected behavior, doesn't need to be logged
+// Usually expected behavior, doesn't need to be logged
 export class AuthorizationException extends Exception
 {
     constructor( message : string)
     {
-        super(message)
+        super(message);
         Object.setPrototypeOf(this, AuthorizationException.prototype);
         this.name = "AuthorizationException";
     }
 
-    toString()
+    public toString()
     {
          return `${this.name}: ${this.message}`;
     }
 }
 
-//Access token has expired or otherwise invalidated.
-//Corresponds to http code 401, which should trigger a logout.
+// Access token has expired or otherwise invalidated.
+// Corresponds to http code 401, which should trigger a logout.
 export class AuthorizationInvalidException extends Exception
 {
     constructor( message : string)
     {
-        super(message)
+        super(message);
         Object.setPrototypeOf(this, AuthorizationInvalidException.prototype);
         this.name = "AuthorizationInvalidException";
     }
 
-    toString()
+    public toString()
     {
          return `${this.name}: ${this.message}`;
     }
 }
 
-//Should probably notify user of this
+// Should probably notify user of this
 export class NetworkException extends Exception
 {
-    url : string;
-    code: number;
-    res: Response;
+    public url : string;
+    public code: number;
+    public res: Response;
 
     constructor( code : number, message : string, url : string, res? : Response)
     {
@@ -142,14 +142,14 @@ export class NetworkException extends Exception
         this.res = res;
     }
 
-    static async fromResponse( res : Response) : Promise<NetworkException>
+    public static async fromResponse( res : Response) : Promise<NetworkException>
     {
         let text : string = null;
         try
         {
             let resBody : any = await res.json();
 
-            //It's fairly common for servers to return a json object with a message field
+            // It's fairly common for servers to return a json object with a message field
             if ( resBody.message != null )
             {
                 if (resBody.reason != null)
@@ -163,15 +163,15 @@ export class NetworkException extends Exception
             }
             else
             {
-                //If not, the body may be a primitive
+                // If not, the body may be a primitive
                 if (resBody !== Object(resBody))
                 {
                     text = resBody;
                 }
                 else
                 {
-                    //Otherwise just stringify the thing
-                    //and pray we don't end up with Object object
+                    // Otherwise just stringify the thing
+                    // and pray we don't end up with Object object
                     text = JSON.stringify(resBody);
                 }
   
@@ -179,7 +179,7 @@ export class NetworkException extends Exception
         }
         catch( err)
         {
-            //No json body then
+            // No json body then
         }
         if (text == null)
             text = res.statusText;
@@ -187,7 +187,7 @@ export class NetworkException extends Exception
         return new NetworkException( res.status, text, res.url);
     }
 
-    toString()
+    public toString()
     {
         let str; 
 
@@ -202,7 +202,7 @@ export class NetworkException extends Exception
         return str;
     }
 
-    toSimpleString()
+    public toSimpleString()
     {
         if (this.code == null)
             return `${this.name}: ${this.message}`;

@@ -1,4 +1,5 @@
-import * as models from '~/common/models'
+import * as models from '~/common/models';
+    // tslint:disable:class-name
 
 export namespace subscription
 {
@@ -35,8 +36,8 @@ export namespace subscription
 
 export namespace auth
 {
-    export const AUTHENTICATE_WITH_REDDIT_CODE: string = 'AUTHENTICATE_WITH_REDDIT_CODE'
-    export const UNAUTHORIZE_ALL_DEVICES: string = 'UNAUTHORIZE_ALL_DEVICES'
+    export const AUTHENTICATE_WITH_REDDIT_CODE: string = 'AUTHENTICATE_WITH_REDDIT_CODE';
+    export const UNAUTHORIZE_ALL_DEVICES: string = 'UNAUTHORIZE_ALL_DEVICES';
 
     export interface UNAUTHORIZE_ALL_DEVICES
     {
@@ -52,7 +53,7 @@ export namespace auth
 
 export namespace user
 {
-    export const SET_SETTING_POST_DISPLAY_MODE: string = 'SET_SETTING_POST_DISPLAY_MODE'
+    export const SET_SETTING_POST_DISPLAY_MODE: string = 'SET_SETTING_POST_DISPLAY_MODE';
 
     export interface SET_SETTING_POST_DISPLAY_MODE
     {

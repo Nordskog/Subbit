@@ -1,10 +1,10 @@
-import * as models from '~/common/models'
-import * as urls from '~/common/urls'
-import * as config from 'root/config'
+import * as models from '~/common/models';
+import * as urls from '~/common/urls';
+import * as config from 'root/config';
 
 export function getFilterUrl(subreddit : string, filter : models.AuthorFilter, oauth : boolean) : string
 {
-    let url = `${oauth ?  urls.REDDIT_OAUTH_API_URL : urls.REDDIT_URL}`
+    let url = `${oauth ?  urls.REDDIT_OAUTH_API_URL : urls.REDDIT_URL}`;
     if (subreddit != null)
     {
         url = url + `/r/${subreddit}`;
@@ -14,13 +14,13 @@ export function getFilterUrl(subreddit : string, filter : models.AuthorFilter, o
             case models.AuthorFilter.TOP:
             case models.AuthorFilter.NEW:
             {
-                //TODO range selection for top
+                // TODO range selection for top
                 url = url + `/${filter}`;
                 break;
             }
 
-            //Default is nothing, which corresponds to hot
-            //BEST is not valid here
+            // Default is nothing, which corresponds to hot
+            // BEST is not valid here
             case models.AuthorFilter.HOT:
             default:
             {
@@ -36,12 +36,12 @@ export function getFilterUrl(subreddit : string, filter : models.AuthorFilter, o
             case models.AuthorFilter.NEW:
             case models.AuthorFilter.HOT:
             {
-                //TODO range selection
+                // TODO range selection
                 url = url + `/${filter}`;
                 break;
             }
 
-            //Default is nothing, which corresponds to best
+            // Default is nothing, which corresponds to best
             case models.AuthorFilter.BEST:
             default:
             {
@@ -50,7 +50,7 @@ export function getFilterUrl(subreddit : string, filter : models.AuthorFilter, o
         }
     }
 
-    url = `${url}${ oauth ? '' : '/.json' }`
+    url = `${url}${ oauth ? '' : '/.json' }`;
 
     return url;
 }
@@ -61,30 +61,30 @@ export function getPostsUrl(author : string, after : string, limit : number, oau
     let params;
     if (subreddits == null || subreddits.length < 1)
     {
-        url = url + `/user/${author}/submitted${ oauth ? '' : '.json' }`
+        url = url + `/user/${author}/submitted${ oauth ? '' : '.json' }`;
 
         params =
             {
                 sort: 'new',
                 after: after,
                 limit: limit,
-                raw_json: 1 //Otherwise you get html-safe characters
+                raw_json: 1 // Otherwise you get html-safe characters
             };
         
     }
     else
     {
-        url = url + `/r/${subreddits.join('+')}/search${ oauth ? '' : '.json' }`
+        url = url + `/r/${subreddits.join('+')}/search${ oauth ? '' : '.json' }`;
 
         params =
             {
                 restrict_sr: 'on',
                 include_over_18: 'on',
-                q: 'author:'+author,
+                q: 'author:' + author,
                 sort: 'new',
                 after: after,
                 limit: limit,
-                raw_json: 1     //Otherwise you get html-safe characters
+                raw_json: 1     // Otherwise you get html-safe characters
             };
         
     }
@@ -97,7 +97,7 @@ export function getPostSearchUrl( searchTerm : string, subreddit : string, oauth
     let url = oauth ?  urls.REDDIT_OAUTH_API_URL : urls.REDDIT_URL;
     let params;
     {
-        url = url + `/r/${subreddit}/search${ oauth ? '' : '.json' }`
+        url = url + `/r/${subreddit}/search${ oauth ? '' : '.json' }`;
 
         params =
             {
@@ -105,7 +105,7 @@ export function getPostSearchUrl( searchTerm : string, subreddit : string, oauth
                 include_over_18: 'on',
                 q: `title:"${searchTerm}"`,
                 limit: limit,
-                raw_json: 1     //Otherwise you get html-safe characters
+                raw_json: 1     // Otherwise you get html-safe characters
             };
         
     }
@@ -113,8 +113,8 @@ export function getPostSearchUrl( searchTerm : string, subreddit : string, oauth
     return { baseUrl: url, params: params };
 }
 
-//We will be storing posts in session storage,
-//so get rid of any data we don't actually use.
+// We will be storing posts in session storage,
+// so get rid of any data we don't actually use.
 export function filterPostContent( post : models.reddit.Post )
 {
     return {
@@ -135,5 +135,5 @@ export function filterPostContent( post : models.reddit.Post )
         title : post.title,
         url : post.url,
         likes : post.likes,
-    }
+    };
 }

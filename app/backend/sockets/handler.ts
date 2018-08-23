@@ -1,13 +1,13 @@
 import * as WebSocket from 'ws'; 
-import * as actionTypes from '~/backend/sockets/actionTypes'
+import * as actionTypes from '~/backend/sockets/actionTypes';
 import * as actions from '~/backend/sockets/actions';
-import * as authentication from '~/backend/authentication'
-import * as models from '~/common/models'
+import * as authentication from '~/backend/authentication';
+import * as models from '~/common/models';
 import * as handlers from '~/backend/sockets/handlers';
-import * as statsTrackers from '~/backend/stats/trackers'
-import * as socketSecurity from './security'
+import * as statsTrackers from '~/backend/stats/trackers';
+import * as socketSecurity from './security';
 import * as Wetland from 'wetland';
-import * as RFY from '~/backend/rfy'
+import * as RFY from '~/backend/rfy';
 import * as Log from '~/common/log';
 import { Scope } from '~/backend/authentication/generation';
 import { SocketException } from '~/common/exceptions';
@@ -19,7 +19,7 @@ import { user } from '~/client/actions';
 
 export async function handleSocketMessage( ws : WsSocket, message : WebSocket.Data )
 {
-    let rawReq : models.Action< any > = JSON.parse(<string>message);
+    let rawReq : models.Action< any > = JSON.parse(<string> message);
 
     switch(rawReq.type)
     {

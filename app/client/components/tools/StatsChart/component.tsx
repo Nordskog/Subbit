@@ -1,34 +1,34 @@
 import * as React from 'react';
-import * as models from '~/common/models'
+import * as models from '~/common/models';
 
-import * as socket from '~/client/websocket'
+import * as socket from '~/client/websocket';
 import { StatsHistory, StatsUpdate, StatsCategoryType, StatsTimeRange } from '~/common/models/stats';
 
-import * as styles from 'css/stats.scss'
+import * as styles from 'css/stats.scss';
 
-import * as cells from './cells'
+import * as cells from './cells';
 
-//For tree shaking purposes
-//import { VictoryChart, VictoryVoronoiContainer, VictoryAxis, VictoryArea  } from 'victory';
+// For tree shaking purposes
+// import { VictoryChart, VictoryVoronoiContainer, VictoryAxis, VictoryArea  } from 'victory';
 import { VictoryChart } from 'victory-chart';
 import { VictoryVoronoiContainer } from 'victory-voronoi-container';
 import { VictoryAxis } from 'victory-axis';
 import { VictoryArea } from 'victory-area';
 
-import theme from './theme'
+import theme from './theme';
 
-//Warning: Failed prop type: Invalid prop `domain` supplied to `VictoryArea`.
-//See https://github.com/FormidableLabs/victory/issues/659
+// Warning: Failed prop type: Invalid prop `domain` supplied to `VictoryArea`.
+// See https://github.com/FormidableLabs/victory/issues/659
 
 export interface StatsChartItem
 {
   data : { x: number, y: number}[];
   category: StatsCategoryType;
   timeRange : StatsTimeRange;
-  limit : number; //Unix time duration
+  limit : number; // Unix time duration
   minDomain : number;
   labelSuffix : string;
-  end : number; //unix time of latest entry
+  end : number; // unix time of latest entry
 
 }
 
@@ -41,16 +41,16 @@ interface Props
 
 interface State
 {
-  end : number; //Convenient way of telling when data has been updated
+  end : number; // Convenient way of telling when data has been updated
 }
 
 export default class StatsChartComponent extends React.Component<Props,State> 
 {
-  state = { end: 0 };
+  public state = { end: 0 };
 
-  static getDerivedStateFromProps( nextProps : Props, prevState : State) : State
+  public static getDerivedStateFromProps( nextProps : Props, prevState : State) : State
   {
-    if ( nextProps.item.end != prevState.end)
+    if ( nextProps.item.end !== prevState.end)
     {
       return { end: nextProps.item.end };
     }
@@ -60,9 +60,9 @@ export default class StatsChartComponent extends React.Component<Props,State>
     }
   }
 
-  shouldComponentUpdate( nextProps : Props, nextState : State)
+  public shouldComponentUpdate( nextProps : Props, nextState : State)
   {
-    if ( nextState.end != this.state.end )
+    if ( nextState.end !== this.state.end )
     {
       return true;
     }
@@ -70,12 +70,12 @@ export default class StatsChartComponent extends React.Component<Props,State>
     return false;
   }
 
-  render() 
+  public render() 
   {
     return this.getChart();
   }
 
-  getData()
+  private getData()
   {
     if (this.props.item == null)
     {
@@ -87,7 +87,7 @@ export default class StatsChartComponent extends React.Component<Props,State>
     }
   }
 
-  getChart( )
+  private getChart( )
   {
     let labelSize : number = 15;
 
@@ -103,7 +103,7 @@ export default class StatsChartComponent extends React.Component<Props,State>
     <VictoryChart 
               scale={ {x: "time", y: "linear"}}
               theme={theme as any}
-              padding={ { top:0, bottom: 10, left: 80, right: 20 }}
+              padding={ { top: 0, bottom: 10, left: 80, right: 20 }}
               height={100}
               width={350}
               containerComponent={
@@ -127,7 +127,7 @@ export default class StatsChartComponent extends React.Component<Props,State>
                     tickLabels: {fontSize: labelSize, padding: 5}
                     
                   }}
-                  tickFormat={ value => this.props.formatTooltip(value) }
+                  tickFormat={ (value) => this.props.formatTooltip(value) }
                   tickCount={3}
                   domain={ [0, this.props.item.minDomain] }
                   />
@@ -140,6 +140,6 @@ export default class StatsChartComponent extends React.Component<Props,State>
 
             </VictoryChart>
 
-            </div>
+            </div>;
   }
 }

@@ -1,7 +1,7 @@
-﻿import * as models from '~/common/models'
-import * as actionTypes from '~/client/actions/actionTypes'
+﻿import * as models from '~/common/models';
+import * as actionTypes from '~/client/actions/actionTypes';
 
-//Reducer for options, currently empty
+// Reducer for options, currently empty
 export function userReducer(state = getDefaultUserState(), action :  models.Action<any>) : models.state.User
 {
     switch(action.type)
@@ -12,7 +12,7 @@ export function userReducer(state = getDefaultUserState(), action :  models.Acti
             return {
                 ...state,
                 subscriptions: payload
-            }
+            };
         }    
 
         case actionTypes.subscription.SUBSCRIPTION_CHANGED:
@@ -21,18 +21,18 @@ export function userReducer(state = getDefaultUserState(), action :  models.Acti
 
             return {
                 ...state,
-                subscriptions: state.subscriptions.map( sub =>
+                subscriptions: state.subscriptions.map( (sub) =>
                 {
-                    if (sub.id == payload.id)
+                    if (sub.id === payload.id)
                     {
-                        return payload as models.data.Subscription
+                        return payload as models.data.Subscription;
                     }
                     else
                     {
                         return sub;
                     }
                 })
-            }
+            };
         }
 
         case actionTypes.subscription.SUBSCRIPTION_ADDED:
@@ -42,7 +42,7 @@ export function userReducer(state = getDefaultUserState(), action :  models.Acti
             return {
                 ...state,
                 subscriptions: [payload as models.data.Subscription].concat( state.subscriptions )
-            }
+            };
         }
 
         case actionTypes.subscription.SUBSCRIPTION_REMOVED:
@@ -51,11 +51,11 @@ export function userReducer(state = getDefaultUserState(), action :  models.Acti
 
             return {
                 ...state,
-                subscriptions: state.subscriptions.filter( sub =>
+                subscriptions: state.subscriptions.filter( (sub) =>
                 {
-                    return (sub.id != payload.id)
+                    return (sub.id !== payload.id);
                 })
-            }
+            };
         }
 
         case actionTypes.user.POST_DISPLAY_MODE_CHANGED:
@@ -68,7 +68,7 @@ export function userReducer(state = getDefaultUserState(), action :  models.Acti
                             ...state.settings,
                             post_display_mode: payload 
                         }
-            }
+            };
         }
 
         case actionTypes.user.LAST_VISIT_UPDATED:
@@ -78,7 +78,7 @@ export function userReducer(state = getDefaultUserState(), action :  models.Acti
             return {
                 ...state,
                 lastVisit: payload
-            }
+            };
         }
 
         case actionTypes.user.USER_SETTINGS_FETCHED:
@@ -88,7 +88,7 @@ export function userReducer(state = getDefaultUserState(), action :  models.Acti
             return {
                 ...state,
                 settings: {  ...state.settings, ...payload }
-            }
+            };
         }
 
         
@@ -98,7 +98,7 @@ export function userReducer(state = getDefaultUserState(), action :  models.Acti
             return {
                 ...state,
                 subscriptions: []
-            }
+            };
         }
     }
 

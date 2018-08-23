@@ -1,8 +1,8 @@
 import * as WebSocket from 'ws'; 
-import * as entities from '~/backend/entity'
-import * as models from '~/common/models'
-import * as actions from '~/client/actions'
-import * as api from '~/common/api'
+import * as entities from '~/backend/entity';
+import * as models from '~/common/models';
+import * as actions from '~/client/actions';
+import * as api from '~/common/api';
 
 const subscribedSockets : Set<WebSocket> = new Set<WebSocket>();
 

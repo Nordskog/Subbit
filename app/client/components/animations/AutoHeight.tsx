@@ -17,9 +17,9 @@ interface State
 
  export default class AutoHeight extends React.Component<Props, State>
 {
-    container : HTMLDivElement;
-    prevHeight : number;
-    timeline : TimelineLite;
+    private container : HTMLDivElement;
+    private prevHeight : number;
+    private timeline : TimelineLite;
     
     constructor( props : Props)
     {
@@ -27,18 +27,18 @@ interface State
         this.state = { delay: props.delay || 0, duration: props.duration || 0.3 };
     }
 
-    componentDidMount()
+    public componentDidMount()
     {
         this.prevHeight = this.container.clientHeight;
     }
 
-    componentDidUpdate()
+    public componentDidUpdate()
     {
         let height : number = this.container.clientHeight;
 
-        if ( this.prevHeight != height)
+        if ( this.prevHeight !== height)
         {
-            //Client size includes padding, but it is added to the height we set. Remove from animated value to compensate.
+            // Client size includes padding, but it is added to the height we set. Remove from animated value to compensate.
             let {verticalPadding, horizontalPadding} = tools.component.getPadding(this.container);
             height -= verticalPadding;
 
@@ -46,9 +46,9 @@ interface State
             {
                     if (this.timeline != null)
                     {
-                        //Wait for it to finish I guess.
-                        //Maybe dynamically update target?
-                        //Since it's changing we don't really know what it should be though.
+                        // Wait for it to finish I guess.
+                        // Maybe dynamically update target?
+                        // Since it's changing we don't really know what it should be though.
                     }
                     else
                     {
@@ -63,7 +63,7 @@ interface State
                                  clearProps:  'height'
                             });
                 
-                            this.timeline.eventCallback( 'onComplete', () => { this.timeline = null }) ;
+                            this.timeline.eventCallback( 'onComplete', () => { this.timeline = null; }) ;
                             this.timeline.play();
                     }
             }
@@ -72,11 +72,11 @@ interface State
         this.prevHeight = height;
     }
 
-    render()
+    public render()
     {
-        return  <div ref={c => this.container = c} style={ { overflow: 'hidden' } }>
+        return  <div ref={(c) => this.container = c} style={ { overflow: 'hidden' } }>
                     {this.props.children}
-                </div>
+                </div>;
     }
     
 }

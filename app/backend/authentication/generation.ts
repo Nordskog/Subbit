@@ -1,8 +1,8 @@
 ﻿import * as jwt from 'jsonwebtoken';
 
-import serverConfig from 'root/server_config'
-import * as models from '~/common/models'  
-import * as tools from '~/common/tools'  
+import serverConfig from 'root/server_config';
+import * as models from '~/common/models';  
+import * as tools from '~/common/tools';  
 import * as Entities from '~/backend/entity';
 import { AccessToken } from '~/common/models/auth/';
 
@@ -14,11 +14,11 @@ export enum Scope
     LOGOUT = 'LOGOUT',
     ADMIN = 'ADMIN',
     STATS = 'STATS'
-};
+}
 
 export function createIdToken(user: Entities.User, loginType : models.auth.LoginType) : models.auth.IdToken
 {
-    //id token info is only used to toggle visibility of ui elements; don't never really trust it.
+    // id token info is only used to toggle visibility of ui elements; don't never really trust it.
     let token : models.auth.IdToken = {
         username: user.username,
         admin_access: user.admin_access,
@@ -26,8 +26,8 @@ export function createIdToken(user: Entities.User, loginType : models.auth.Login
         loginType: loginType 
     };
 
-    let token_raw = jwt.sign( token, serverConfig.token.privateKey, { expiresIn: '1 year' });
-    token.raw = token_raw;
+    let tokenRaw = jwt.sign( token, serverConfig.token.privateKey, { expiresIn: '1 year' });
+    token.raw = tokenRaw;
 
     return token;
 
@@ -35,15 +35,15 @@ export function createIdToken(user: Entities.User, loginType : models.auth.Login
 
 export function createAccessToken(user : Entities.User, loginType : models.auth.LoginType)
 {
-    //generation is stored in the db for each user.
-    //After token has been verified this value is also checked.
-    //This allows us to invalidate all existing tokens for this user.
+    // generation is stored in the db for each user.
+    // After token has been verified this value is also checked.
+    // This allows us to invalidate all existing tokens for this user.
 
-    //Default scopes any user will have access to
+    // Default scopes any user will have access to
     let tokenScopes : Scope[] = [Scope.SUBSCRIPTIONS, Scope.SETTINGS, Scope.LOGOUT, Scope.REDDIT];
 
-    //Admin and stats scopes.
-    //These are verified server-side, and are only used to display ui stuff
+    // Admin and stats scopes.
+    // These are verified server-side, and are only used to display ui stuff
     if (user.admin_access)
         tokenScopes.push( Scope.ADMIN);
     if (user.stats_access)
@@ -57,14 +57,14 @@ export function createAccessToken(user : Entities.User, loginType : models.auth.
     };
 
 
-    let expiry = '12 hours'
+    let expiry = '12 hours';
     switch(loginType)
     {
         case models.auth.LoginType.PERMANENT:  
             expiry = '180 days'; 
             break;
         case models.auth.LoginType.SESSION:
-            expiry = '12 hours'  
+            expiry = '12 hours';  
     }
 
     let options : jwt.SignOptions = {
@@ -94,12 +94,12 @@ function genJti()
 
 export function generateUserInfo( user : Entities.User, loginType : models.auth.LoginType)
 {
-    let id_token : models.auth.IdToken = createIdToken(user, loginType);
-    let access_token : string = createAccessToken(user, loginType);
+    let idToken : models.auth.IdToken = createIdToken(user, loginType);
+    let accessToken : string = createAccessToken(user, loginType);
 
     let userInfo: models.auth.UserInfo = {
-        id_token: id_token,
-        access_token: access_token,
+        id_token: idToken,
+        access_token: accessToken,
         redditAuth : {
             access_token : user.auth.access_token,
             expiry : tools.time.dateToUnix(user.auth.expiry)

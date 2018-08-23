@@ -1,14 +1,14 @@
 import * as React from 'react';
-import * as models from '~/common/models'
-import * as components from '~/client/components'
+import * as models from '~/common/models';
+import * as components from '~/client/components';
 
-import * as socket from '~/client/websocket'
+import * as socket from '~/client/websocket';
 import { StatsHistory, StatsUpdate, StatsTimeRange, StatsCategoryType, StatsDataEntry } from '~/common/models/stats';
 import { StatsChartItem } from '~/client/components/tools/StatsChart';
-import StatsChart from '~/client/components/tools/StatsChart/component'
+import StatsChart from '~/client/components/tools/StatsChart/component';
 import { time } from '~/common/tools';
 
-import * as styles from 'css/stats.scss'
+import * as styles from 'css/stats.scss';
 
 type StatsChartList = Map<StatsTimeRange, StatsChartItem>;
 
@@ -25,17 +25,17 @@ interface State
 export default class StatsComponent extends React.Component<Props,State> 
 {
 
-  handleConnectCallback : models.WebsocketReconnectCallback;
+  private handleConnectCallback : models.WebsocketReconnectCallback;
 
   constructor( props : Props)
   {
     super(props);
-    this.state = { charts:new Map<StatsCategoryType, StatsChartList>() } ;
+    this.state = { charts: new Map<StatsCategoryType, StatsChartList>() } ;
 
-    //So we can add/remove callback by reference
+    // So we can add/remove callback by reference
     this.handleConnectCallback = () => this.handleConnect();
   }
-  componentWillMount()
+  public componentWillMount()
   {
     if (this.props.authState.isAuthenticated && this.props.authState.user.id_token.stats_access)
     {
@@ -45,20 +45,20 @@ export default class StatsComponent extends React.Component<Props,State>
     }
   }
 
-  componentWillUnmount()
+  public componentWillUnmount()
   {
     socket.actions.UnregisterForConnectEvent( this.handleConnectCallback );
     socket.actions.stats.unregisterForStats();
   }
 
-  handleConnect()
+  private handleConnect()
   {
-    //Re-register for updates
+    // Re-register for updates
     socket.actions.stats.registerForStats( (update) => this.handleStatsUpdate(update), (history) => this.handleStatsHistory(history));
 
     for (let [category, list] of this.state.charts)
     {
-      //Request updates history for all graphs
+      // Request updates history for all graphs
       for (let [timeRange, item] of list)
       {
         socket.actions.stats.requestHistory(  category, timeRange);
@@ -67,15 +67,15 @@ export default class StatsComponent extends React.Component<Props,State>
     }
   }
 
-  handleStatsUpdate( update : StatsUpdate )
+  private handleStatsUpdate( update : StatsUpdate )
   { 
     let chartObject = this.getChartObject(update.category, update.timeRange);
     if (chartObject != null)
     {
       chartObject.data.push( { x: update.data.end * 1000, y: update.data.value } );
 
-      //Server-side we keep a backlog of 360 or so points of data.
-      //When displaying them here, about half of that range seems decent.
+      // Server-side we keep a backlog of 360 or so points of data.
+      // When displaying them here, about half of that range seems decent.
       let limit = ( ( Date.now() / 1000 ) - (chartObject.limit / 2) ) * 1000;
 
       for ( let i = 0; i < chartObject.data.length; i++)
@@ -86,7 +86,7 @@ export default class StatsComponent extends React.Component<Props,State>
         {
           break;
         }
-        //Will usually only remove a single item before breaking
+        // Will usually only remove a single item before breaking
         chartObject.data.shift();
         i--;
       }
@@ -99,7 +99,7 @@ export default class StatsComponent extends React.Component<Props,State>
 
   }
 
-  handleStatsHistory( history : StatsHistory)
+  private handleStatsHistory( history : StatsHistory)
   {
     let chartObject = this.getChartObject(history.category, history.timeRange);
     if (chartObject != null)
@@ -112,14 +112,14 @@ export default class StatsComponent extends React.Component<Props,State>
       chartObject.limit = history.limit;
       if (history.data.length > 0)
       {
-        chartObject.end = history.data[ history.data.length -1 ].end;
+        chartObject.end = history.data[ history.data.length - 1 ].end;
       }
       else 
         chartObject.end = 0;
 
       chartObject.minDomain = history.minExpectedValue;
 
-      //Create new new object so component can skip unencessary updates
+      // Create new new object so component can skip unencessary updates
       this.setState( { charts: this.state.charts } );
 
     }
@@ -127,7 +127,7 @@ export default class StatsComponent extends React.Component<Props,State>
   
   }
 
-  render() 
+  public render() 
   {
     if (this.props.authState.isAuthenticated && this.props.authState.user.id_token.stats_access)
     {
@@ -155,15 +155,15 @@ export default class StatsComponent extends React.Component<Props,State>
                 {this.renderChartCategory("Failed logins", StatsCategoryType.FAILED_LOGINS)}
                 {this.renderChartCategory("Errors", StatsCategoryType.ERRORS)}
 
-            </div>
+            </div>;
     }
     else
     {
-      return <div>You're not allowed to see this</div>
+      return <div>You're not allowed to see this</div>;
     }
   }
 
-  getLabelSuffix( category : StatsCategoryType)
+  public getLabelSuffix( category : StatsCategoryType)
   {
     switch(category)
     {
@@ -174,7 +174,7 @@ export default class StatsComponent extends React.Component<Props,State>
     }
   }
 
-  formatTooltip( value : number, category : StatsCategoryType) : string
+  public formatTooltip( value : number, category : StatsCategoryType) : string
   {
     switch(category)
     {
@@ -187,12 +187,12 @@ export default class StatsComponent extends React.Component<Props,State>
   }
 
 
-  registerChart( category : StatsCategoryType, timeRange : StatsTimeRange)
+  public registerChart( category : StatsCategoryType, timeRange : StatsTimeRange)
   {
     let chartObject = this.getChartObject(category, timeRange);
     if (chartObject != null)
     {
-      //Already exists
+      // Already exists
       return;
     }
 
@@ -211,15 +211,15 @@ export default class StatsComponent extends React.Component<Props,State>
       end: 0,
       labelSuffix: this.getLabelSuffix(category),
       minDomain: 10
-    }
+    };
 
     list.set(timeRange, chartObject);
 
-    //Requet initial state
-    //socket.actions.stats.requestHistory( category, timeRange);
+    // Requet initial state
+    // socket.actions.stats.requestHistory( category, timeRange);
   }
 
-  getChartObject(  category : StatsCategoryType, timeRange : StatsTimeRange )
+  public getChartObject(  category : StatsCategoryType, timeRange : StatsTimeRange )
   {
     let list : StatsChartList = this.state.charts.get(category);
     if (list == null)
@@ -228,9 +228,9 @@ export default class StatsComponent extends React.Component<Props,State>
       return list.get(timeRange);
   }
 
-  renderChartCategory( title : string, category : StatsCategoryType, isCumulative : boolean = false)
+  public renderChartCategory( title : string, category : StatsCategoryType, isCumulative : boolean = false)
   {
-      //Timeranges must match what is being tracked on the backend
+      // Timeranges must match what is being tracked on the backend
 
       return <div className={styles.categoryContainer}> 
       <div className={styles.categoryHeader}>
@@ -241,10 +241,10 @@ export default class StatsComponent extends React.Component<Props,State>
         {this.renderSingleChart( category, StatsTimeRange.HOUR, isCumulative ? "3 days" : "Per hour"  )} 
         {this.renderSingleChart( category, StatsTimeRange.DAY, isCumulative ? "90 days" : "Per day"  )} 
       </div>
-    </div>
+    </div>;
   }
  
-  renderSingleChart( category : StatsCategoryType, timeRange : StatsTimeRange, title : string )
+  public renderSingleChart( category : StatsCategoryType, timeRange : StatsTimeRange, title : string )
   {
     this.registerChart(category, timeRange);
 
@@ -252,6 +252,6 @@ export default class StatsComponent extends React.Component<Props,State>
                 item={this.getChartObject(category, timeRange)}
                 title={title}
                 formatTooltip={( value ) => this.formatTooltip(value, category)}
-            />
+            />;
   }
 }

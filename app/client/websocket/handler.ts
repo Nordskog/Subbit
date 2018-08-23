@@ -1,7 +1,7 @@
-import * as store from '~/client/store'
-import * as models from '~/common/models'
-import * as actions from '~/client/websocket/actionTypes'
-import * as handlers from '~/client/websocket/handlers'
+import * as store from '~/client/store';
+import * as models from '~/common/models';
+import * as actions from '~/client/websocket/actionTypes';
+import * as handlers from '~/client/websocket/handlers';
 import { Exception } from '~/common/exceptions';
 
 export function handleMessage( req : models.Action<any> )
@@ -57,7 +57,7 @@ export function handleMessage( req : models.Action<any> )
 
         default:
         {
-            throw new Exception("Unknown action passed to client websocket:"+req.type);
+            throw new Exception("Unknown action passed to client websocket:" + req.type);
         }
         
     }
@@ -65,7 +65,7 @@ export function handleMessage( req : models.Action<any> )
 
 export function listenersActive() : boolean
 {
-    //Loop through all handlers
+    // Loop through all handlers
     if (handlers.stats.active())
         return true;
 

@@ -1,1 +1,1 @@
-export { default as FilterDropdown } from './container'
+export { default as FilterDropdown } from './container';

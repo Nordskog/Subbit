@@ -1,22 +1,19 @@
 import * as React from 'react';
-import * as components from '~/client/components'
+import * as components from '~/client/components';
 
 import Component from './container';
 
-import * as transitions from 'react-transition-group'
+import * as styles from 'css/userSettings.scss';
 
-import * as styles from 'css/userSettings.scss'
-import * as animationStyles from 'css/animations.scss';
-
-import SVGInline from "react-svg-inline"
-import * as settings_icon from 'assets/images/settings_icon.svg'
+import SVGInline from "react-svg-inline";
+import * as settings_icon from 'assets/images/settings_icon.svg';
 
 interface Props
 {
     mobile : boolean;
 }
 
-export default class popup extends React.Component<Props, null>
+export default class Popup extends React.Component<Props, null>
 {
 
     public render()
@@ -26,9 +23,9 @@ export default class popup extends React.Component<Props, null>
                         </div>;
 
         
-        //On mobile the menu button may jump down below the menu bar,
-        //so instead of relying on the position parameter, we will hardcode
-        //the offset from the top of the screen.
+        // On mobile the menu button may jump down below the menu bar,
+        // so instead of relying on the position parameter, we will hardcode
+        // the offset from the top of the screen.
         let position = components.tools.Popup.Position.BOTTOM;
         let clazz = null;
 
@@ -46,7 +43,7 @@ export default class popup extends React.Component<Props, null>
             contentClass={clazz}
             alignment={ components.tools.Popup.Alignment.END }>
             {
-                close => 
+                (close) => 
                 {
                         return <div >
                                     <div className={styles.popupContainer}>
@@ -54,10 +51,10 @@ export default class popup extends React.Component<Props, null>
                                             close={close}
                                         />
                                     </div>
-                                </div>
+                                </div>;
                 }
             }
-      </components.tools.Popup.Component>
+      </components.tools.Popup.Component>;
 
     }
-};
+}

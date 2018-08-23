@@ -23,15 +23,15 @@ interface State
  */
  export default class Transition extends React.Component<Props, State>
 {
-    container : HTMLDivElement;
+    private container : HTMLDivElement;
     
-    static defaultProps = {
+    public static defaultProps = {
         style : {  overflow: 'hidden' },
         delay: 0,
         appear: false,
         duration: 0.3
 
-    }
+    };
 
     constructor( props : Props)
     {
@@ -40,18 +40,18 @@ interface State
 
     }
 
-    come(container : HTMLDivElement, callback)
+    public come(container : HTMLDivElement, callback)
     {
 
     }
 
-    go(container : HTMLDivElement, callback)
+    public go(container : HTMLDivElement, callback)
     {
 
     }
 
 
-    componentWillAppear(callback)
+    public componentWillAppear(callback)
     {
         if (this.state.appear)
             this.come(this.container,callback);
@@ -59,37 +59,37 @@ interface State
             callback();
     }
     
-    componentDidAppear()
+    public componentDidAppear()
     {
 
 
     }
     
 
-    componentWillEnter( callback )
+    public componentWillEnter( callback )
     {
         this.come(this.container, callback);
     }
 
-    componentWillLeave( callback)
+    public componentWillLeave( callback)
     {
         this.go(this.container, callback);
     }
     
-    componentDidLeave()
+    public componentDidLeave()
     {
     }
     
-    componentDidEnter( )
+    public componentDidEnter( )
     {
         
     }
 
-    render()
+    public render()
     {
-        return  <div ref={c => this.container = c} onClick={this.props.onClick} className={this.props.className} style={ this.props.style }>
+        return  <div ref={(c) => this.container = c} onClick={this.props.onClick} className={this.props.className} style={ this.props.style }>
                     {this.props.children}
-                </div>
+                </div>;
     }
     
 }

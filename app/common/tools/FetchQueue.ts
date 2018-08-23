@@ -1,4 +1,4 @@
-import * as tools from '~/common/tools'
+import * as tools from '~/common/tools';
 import { CancelledException } from '~/common/exceptions';
 
 import * as Log from '~/common/log';
@@ -13,13 +13,13 @@ export interface RateLimitInfo
 
 class RateMonitor
 {
-    rateLimit: RateLimitInfo;
-    queued : boolean = false;
-    queue: QueueItem[] = [];
-    rateLimitHeaderReceived = false;    //Ignore ratelimit until received in header
+    public rateLimit: RateLimitInfo;
+    public queued : boolean = false;
+    public queue: QueueItem[] = [];
+    public rateLimitHeaderReceived = false;    // Ignore ratelimit until received in header
 
-    activeRequests : number = 0;
-    activeMax : number;
+    public activeRequests : number = 0;
+    public activeMax : number;
 
     constructor( maxConcurrent = 5 )
     {
@@ -31,7 +31,7 @@ class RateMonitor
             this.rateLimit.remaining = this.activeMax;
     }
 
-    clearQueue()
+    public clearQueue()
     {
         for (let item of this.queue)
         {
@@ -41,7 +41,7 @@ class RateMonitor
         this.queue.length = 0;
     }
 
-    timeUntilRequestAllowed() : number
+    public timeUntilRequestAllowed() : number
     {
         if (!this.rateLimitHeaderReceived)
             return 0;
@@ -52,33 +52,33 @@ class RateMonitor
         }
         else
         {
-            return 0;   //i.e. now
+            return 0;   // i.e. now
         }
     }
 
-    slotsAvailable() : boolean
+    public slotsAvailable() : boolean
     {
         return (this.activeRequests < this.activeMax);
     }
 
-    //Lower remaining by 1, and add 1 to active counter
-    informOfRequest()
+    // Lower remaining by 1, and add 1 to active counter
+    public informOfRequest()
     {
         this.rateLimit.remaining = this.rateLimit.remaining - 1;
         this.activeRequests = this.activeRequests + 1;
     }
 
-    informOfResponse()
+    public informOfResponse()
     {
         this.activeRequests = this.activeRequests - 1;
     }
 
-    clearRateLimit()
+    public clearRateLimit()
     {
         this.rateLimitHeaderReceived = false;
     }
 
-    updateRateLimitInfo( remaining : number, resetIn: number, used : number)
+    public updateRateLimitInfo( remaining : number, resetIn: number, used : number)
     {
         this.rateLimitHeaderReceived = true;
         this.rateLimit.remaining = remaining;
@@ -89,10 +89,10 @@ class RateMonitor
 
 class QueueItem
 {
-    execute: () => Promise<Response>;
-    resolve:(result) => void;
-    reject: (reason) =>  void;
-    rejected: boolean = false;
+    public execute: () => Promise<Response>;
+    public resolve: (result) => void;
+    public reject: (reason) =>  void;
+    public rejected: boolean = false;
 
     constructor(execute, resolve, reject )
     {
@@ -106,24 +106,24 @@ export type RateLimitCallback = ( info : RateLimitInfo) => void;
 
 export default class RequestQueue
 {
-    monitor : RateMonitor;
-    inProgress: Set<QueueItem> = new Set<QueueItem>();
+    private monitor : RateMonitor;
+    private inProgress: Set<QueueItem> = new Set<QueueItem>();
 
-    rateLimitCallback: ( info : RateLimitInfo) => void;
-    rateLimitedCallback: ( info : RateLimitInfo) => void;
+    private rateLimitCallback: ( info : RateLimitInfo) => void;
+    private rateLimitedCallback: ( info : RateLimitInfo) => void;
 
     constructor( maxConcurrent = 5 )
     {
         this.monitor = new RateMonitor( maxConcurrent );
     }
 
-    registerRatelimitCallbacks( rateLimitCallback : RateLimitCallback, rateLimitedCallback : RateLimitCallback )
+    public registerRatelimitCallbacks( rateLimitCallback : RateLimitCallback, rateLimitedCallback : RateLimitCallback )
     {
         this.rateLimitCallback = rateLimitCallback;
         this.rateLimitedCallback = rateLimitedCallback;
     }
 
-    enqueue( execute : () => Promise<Response>  )
+    public enqueue( execute : () => Promise<Response>  )
     {
         let promise = new Promise<Response>( (resolve, reject) =>
          {
@@ -135,7 +135,7 @@ export default class RequestQueue
         return promise;
     }
 
-    callRatelimitCallback()
+    private callRatelimitCallback()
     {
         if (this.rateLimitCallback != null)
         {
@@ -143,7 +143,7 @@ export default class RequestQueue
         }
     }
 
-    callRateLimitedCallback()
+    private callRateLimitedCallback()
     {
         if (this.rateLimitedCallback != null)
         {
@@ -151,13 +151,13 @@ export default class RequestQueue
         }
     }
     
-    async processQueue()
+    private async processQueue()
     {
         if (!this.monitor.queued)
         {
             while(this.monitor.queue.length > 0 && this.monitor.slotsAvailable())
             {
-                //Check ratelimit
+                // Check ratelimit
                 let timeUntilAllowed = this.monitor.timeUntilRequestAllowed();
     
                 if (timeUntilAllowed <= 0)
@@ -179,7 +179,7 @@ export default class RequestQueue
         }
     }
     
-    async functionProcessDelayed(delaySeconds : number)
+    private async functionProcessDelayed(delaySeconds : number)
     {
         if (!this.monitor.queued)
         {   
@@ -195,7 +195,7 @@ export default class RequestQueue
         }
     }
     
-    async processItem( item : QueueItem)
+    private async processItem( item : QueueItem)
     {
         this.monitor.informOfRequest();
 
@@ -217,11 +217,11 @@ export default class RequestQueue
             let used : number = Number(response.headers.get("X-Ratelimit-Used"));
             let remaining : number = Number(response.headers.get("X-Ratelimit-Remaining"));
             let resetIn : number = Number(response.headers.get("X-Ratelimit-Reset"));
-            this.monitor.updateRateLimitInfo(remaining, resetIn, used);   //Rate limit header is ignored until we reach one
+            this.monitor.updateRateLimitInfo(remaining, resetIn, used);   // Rate limit header is ignored until we reach one
         }
         else
         {
-            //No rate limit info in last repsonse? Act is if we never got any at all.
+            // No rate limit info in last repsonse? Act is if we never got any at all.
             this.monitor.clearRateLimit();
         }
 
@@ -233,7 +233,7 @@ export default class RequestQueue
         item.resolve(response);
     }
     
-    clearQueue()
+    public clearQueue()
     {
         this.monitor.clearQueue();
 

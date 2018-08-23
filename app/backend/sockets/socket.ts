@@ -1,8 +1,8 @@
 import * as WebSocket from 'ws'; 
-import * as Http from 'http'
-import * as handler from './handler'
-import * as tools from '~/common/tools'
-import serverConfig from 'root/server_config'
+import * as Http from 'http';
+import * as handler from './handler';
+import * as tools from '~/common/tools';
+import serverConfig from 'root/server_config';
 import { handleException } from '~/backend/sockets/errors';
 import * as Log from '~/common/log';
 import { WsSocket } from './models';
@@ -24,7 +24,7 @@ function init()
     // Connection ping-pong
     //////////////////////////
     
-    let interval : number = 1000 * 60; //1 minute
+    let interval : number = 1000 * 60; // 1 minute
     setInterval( () => 
     {
         for ( let ws  of server.clients)
@@ -37,7 +37,7 @@ function init()
             else
             {
                 wsSocket.isAlive = false;
-                wsSocket.ping( () => {} );
+                wsSocket.ping( () => { } );
             }
         }
 
@@ -54,7 +54,7 @@ function init()
         ws.ip = tools.http.getReqIp(req, serverConfig.server.reverseProxy );
         Log.A(`Websocket connection`, null, ws.ip);
 
-        //Keep track of stale connections
+        // Keep track of stale connections
         ws.isAlive = true;
 
         ws.on('pong', () =>
@@ -64,7 +64,7 @@ function init()
 
         ws.on('error', (err : Error) =>
         {
-            //TODO deal with socket errors, get them even on clean disconnects.
+            // TODO deal with socket errors, get them even on clean disconnects.
         });
 
         ws.on('close', () => 

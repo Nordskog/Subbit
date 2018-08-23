@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import * as styles from 'css/optionDropdown.scss'
-import * as components from '~/client/components'
-import * as transitions from 'react-transition-group'
+import * as styles from 'css/optionDropdown.scss';
+import * as components from '~/client/components';
+import * as transitions from 'react-transition-group';
 
 interface Props
 {
@@ -17,7 +17,7 @@ interface State
     expanded : boolean;
 }
 
-export default class confirmationDropdown extends React.Component<Props, State>
+export default class ConfirmationDropdown extends React.Component<Props, State>
 {
     constructor( props : Props)
     {
@@ -32,10 +32,10 @@ export default class confirmationDropdown extends React.Component<Props, State>
                         {this.props.message}
                     </div>
                     {this.getDropdown()}
-                </transitions.TransitionGroup>
+                </transitions.TransitionGroup>;
     }
 
-    getDropdown()
+    private getDropdown()
     {
         if (this.state.expanded)
         {
@@ -44,16 +44,16 @@ export default class confirmationDropdown extends React.Component<Props, State>
                             <div onClick={() => this.handleResponseClick(true)} className={styles.dangerSubButton}>{this.props.positiveMessage}</div>
                             <div onClick={() => this.handleResponseClick(false)} className={styles.safeSubButton}>{this.props.negativeMessage}</div>
                         </div>
-                    </components.transitions.FadeVerticalResize>
+                    </components.transitions.FadeVerticalResize>;
         }
     }
 
-    handleClick()
+    private handleClick()
     {
         this.setState( { expanded: !this.state.expanded } );
     }
 
-    handleResponseClick( ok : boolean)
+    private handleResponseClick( ok : boolean)
     {
         if (!ok)
         {

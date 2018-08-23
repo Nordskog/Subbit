@@ -1,8 +1,8 @@
-import * as models from '~/common/models'
+import * as models from '~/common/models';
 
-//jwt code takes up too much space. Will past contents directly,
-//since we only use it to display ui elements anyway
-//import { decode } from 'jsonwebtoken';
+// jwt code takes up too much space. Will past contents directly,
+// since we only use it to display ui elements anyway
+// import { decode } from 'jsonwebtoken';
 
 /*
 export function decodeTokensToUserInfo(id_token : string, access_token : string, redditAuth : models.auth.RedditAuth) : models.auth.UserInfo
@@ -20,14 +20,14 @@ userinfo.id_token.raw = id_token;
 */
 
 
-export function combineUserInfo(id_token : models.auth.IdToken, access_token : string, redditAuth : models.auth.RedditAuth) : models.auth.UserInfo
+export function combineUserInfo(idToken : models.auth.IdToken, accessToken : string, redditAuth : models.auth.RedditAuth) : models.auth.UserInfo
 {
    let userinfo : models.auth.UserInfo = {
-    id_token: id_token,
-    access_token: access_token,
+    id_token: idToken,
+    access_token: accessToken,
     redditAuth: redditAuth,
    };
 
     return userinfo;
-};
+}
 

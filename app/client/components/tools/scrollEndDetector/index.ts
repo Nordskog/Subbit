@@ -1,1 +1,1 @@
-export { default as scrollEndDetector } from './container'
+export { default as scrollEndDetector } from './container';

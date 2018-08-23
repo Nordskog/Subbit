@@ -1,10 +1,6 @@
 import * as React from 'react';
-import * as components from '~/client/components'
-import * as transitions from 'react-transition-group'
-
-import * as siteStyles from 'css/site.scss'
-
-import * as animationStyles from 'css/animations.scss'
+import * as components from '~/client/components';
+import * as siteStyles from 'css/site.scss';
 
 interface Props
 {
@@ -29,15 +25,15 @@ export default class InfoPopup extends React.Component<Props, State>
             position={ components.tools.Popup.Position.TOP}
             alignment={ components.tools.Popup.Alignment.BEGINNING }>
         {
-            close => 
+            (close) => 
             {
                     return  <div className={siteStyles.InfoPopup}>
                                 {this.props.text}
                                 <div className={siteStyles.infoPopupArrow} />
-                            </div>
+                            </div>;
             }
         }
 
-        </components.tools.Popup.Component>
+        </components.tools.Popup.Component>;
     }
 }

@@ -1,8 +1,10 @@
+// tslint:disable:class-name
+
 import * as statsModels from '~/common/models/stats';
 
 export namespace auth 
 {
-    export const AUTHENTICATED: string = 'AUTHENTICATED'
+    export const AUTHENTICATED: string = 'AUTHENTICATED';
     export interface AUTHENTICATED
     {
 
@@ -11,8 +13,8 @@ export namespace auth
 
 export namespace stats
 {
-    export const STATS_UPDATE: string = 'STATS_UPDATE'
-    export const STATS_HISTORY: string = 'STATS_HISTORY'
+    export const STATS_UPDATE: string = 'STATS_UPDATE';
+    export const STATS_HISTORY: string = 'STATS_HISTORY';
 
     export interface STATS_UPDATE extends statsModels.StatsUpdate
     {
@@ -27,7 +29,7 @@ export namespace stats
 
 export namespace errors 
 {
-    export const ERROR: string = 'ERROR'
+    export const ERROR: string = 'ERROR';
 
     export interface ERROR
     {
@@ -36,4 +38,4 @@ export namespace errors
 }
 
 export const PONG: string = 'PONG';
-export interface PONG { };
+export interface PONG { }

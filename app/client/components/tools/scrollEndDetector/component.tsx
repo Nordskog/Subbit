@@ -1,7 +1,7 @@
 import * as React from 'react';
-import * as models from '~/common/models'
+import * as models from '~/common/models';
 import { LoadingStatus } from '~/common/models';
-import * as siteStyles from 'css/site.scss'
+import * as siteStyles from 'css/site.scss';
 
 interface Props
 {
@@ -12,7 +12,7 @@ interface Props
 interface State
 {
   status: LoadingStatus;
-  prevProps: Props; //I ... guess this is a thing now
+  prevProps: Props; // I ... guess this is a thing now
 }
 
 export default class ScrollEndDetectorComponent extends React.Component<Props,State> {
@@ -24,9 +24,9 @@ export default class ScrollEndDetectorComponent extends React.Component<Props,St
     this.handleScroll = this.handleScroll.bind(this);
   }
 
-  static getDerivedStateFromProps( nextProps : Props, prevState : State )
+  public static getDerivedStateFromProps( nextProps : Props, prevState : State )
   {
-      if (nextProps != prevState.prevProps)
+      if (nextProps !== prevState.prevProps)
       {
           return { 
             ...nextProps,
@@ -37,34 +37,34 @@ export default class ScrollEndDetectorComponent extends React.Component<Props,St
   }
 
 
-  componentDidMount() {
+  public componentDidMount() {
     window.addEventListener("scroll", this.handleScroll);
   }
 
-  componentWillUnmount() {
+  public componentWillUnmount() {
     window.removeEventListener("scroll", this.handleScroll);
   }
   
-  shouldComponentUpdate(nextProps : Props, nextState : State)
+  public shouldComponentUpdate(nextProps : Props, nextState : State)
   {
-    //We don't render anything so we don't really care.
-    //If the page content does not extend far enough to make the scroll bar appear,
-    //we will never trigger a scroll event. Here we check if the state changes from 
-    //loading -> done, and do an additional check after a short delay.
-    if (this.props.status == LoadingStatus.LOADING && nextProps.status == LoadingStatus.DONE)
+    // We don't render anything so we don't really care.
+    // If the page content does not extend far enough to make the scroll bar appear,
+    // we will never trigger a scroll event. Here we check if the state changes from 
+    // loading -> done, and do an additional check after a short delay.
+    if (this.props.status === LoadingStatus.LOADING && nextProps.status === LoadingStatus.DONE)
     {
       setTimeout( () => 
       {
         this.handleScroll();
-      }, 200)
+      }, 200);
     }
 
 
     return true;
   }
 
-isNearBottomOfPage()
-{
+  private isNearBottomOfPage()
+  {
     const windowHeight = "innerHeight" in window ? window.innerHeight : document.documentElement.offsetHeight;
     const body = document.body;
     const html = document.documentElement;
@@ -72,8 +72,8 @@ isNearBottomOfPage()
     const windowBottom = windowHeight + window.pageYOffset;
 
 
-    //Turns out it will never euqal docHeight, always being off by 0.3 or so
-    //Triggering load once we're within  half screen height to end seems reasonable
+    // Turns out it will never euqal docHeight, always being off by 0.3 or so
+    // Triggering load once we're within  half screen height to end seems reasonable
     let triggerDistance = (windowHeight);
     if ( (windowBottom) >= (docHeight - triggerDistance) )  
     {
@@ -82,12 +82,12 @@ isNearBottomOfPage()
 }
 
 
-  canLoadMore()
+  private canLoadMore()
   {
-    return this.state.status == LoadingStatus.DONE;
+    return this.state.status === LoadingStatus.DONE;
   }
 
-  handleScroll() 
+  private handleScroll() 
   {
     if ( !this.canLoadMore() )
       return;
@@ -104,7 +104,7 @@ isNearBottomOfPage()
   }
 
 
-  render() {
-    return <div/>
+  public render() {
+    return <div/>;
   }
 }

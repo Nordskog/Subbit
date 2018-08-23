@@ -17,7 +17,7 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
                     ...state,
                     authors: state.authors.concat(action.payload.authors),
                     after: action.payload.after
-                }
+                };
             }
             else
             {
@@ -25,7 +25,7 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
                     ...state,
                     authors: action.payload.authors,
                     after: action.payload.after
-                }
+                };
             }
         }
         case actions.types.authors.POSTS_ADDED:
@@ -34,9 +34,9 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
 
             return {
                 ...state,
-                authors: state.authors.map( author => 
+                authors: state.authors.map( (author) => 
                     {
-                        if (author.author.name == payload.author )
+                        if (author.author.name === payload.author )
                         {
                             return {
                                 ...author,
@@ -46,12 +46,12 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
                                 },
                                 after: payload.after,
                                 end: payload.end
-                            }
+                            };
                         }
                         else
                             return author;
                     })
-            }
+            };
         }
         
         case actions.types.authors.POST_DETAILS_UPDATED:
@@ -60,18 +60,18 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
 
             return {
                 ...state,
-                authors: state.authors.map( author => 
+                authors: state.authors.map( (author) => 
                     {
                         if (action.payload.has(author.author.name))
                         {
                             return {
                                 ...author
-                            }
+                            };
                         }
                         else
                             return author;
                     })
-            }
+            };
         }
         case actions.types.subscription.SUBSCRIPTION_CHANGED:
         case actions.types.subscription.SUBSCRIPTION_ADDED:
@@ -81,7 +81,7 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
 
                 return {
                     ...state,
-                    authors: state.authors.map( author =>
+                    authors: state.authors.map( (author) =>
                     {
                         if (author.author.name === action.payload.author)
                         {
@@ -89,23 +89,23 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
                             return {
                                         ...author,
                                         subscription: action.payload
-                            }
+                            };
                         }
                         else
                             return author;
                     })
-                }
+                };
             }
         case actions.types.subscription.SUBSCRIPTION_REMOVED:
         {
             let payload : actions.types.subscription.SUBSCRIPTION_REMOVED = action.payload;
 
-            //When a subscription is removed we removed it from everywhere else, but only mark it as
-            //unsubscribed in the authorEntry. This way the user can re-subscribe without losing the subreddits.
+            // When a subscription is removed we removed it from everywhere else, but only mark it as
+            // unsubscribed in the authorEntry. This way the user can re-subscribe without losing the subreddits.
 
             return {
                 ...state,
-                authors: state.authors.map( author =>
+                authors: state.authors.map( (author) =>
                 {
                     if (author.subscription && author.subscription.id === action.payload.id)
                     {
@@ -116,12 +116,12 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
                                         subscribed : false
                                     
                                     }
-                        }
+                        };
                     }
                     else
                         return author;
                 })
-            }
+            };
         }
 
         case actions.types.authors.SUBREDDIT_CHANGED:
@@ -132,7 +132,7 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
                 ...state,
                 subreddit: payload,
                 after: null
-                }
+                };
             
         }
 
@@ -143,7 +143,7 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
             return {
                 ...state,
                 subreddit: payload
-                }
+                };
             
         }
 
@@ -158,7 +158,7 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
             return {
                 ...state,
                 authors: []
-            }
+            };
         }
 
         ///////////////
@@ -167,7 +167,7 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
 
         case actions.types.Route.AUTHENTICATE:
         {
-            //subs for now, auth reducer does the heavy lifting
+            // subs for now, auth reducer does the heavy lifting
             return {
                 ...state,
                 filter: AuthorFilter.SUBSCRIPTIONS,
@@ -175,7 +175,7 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
                 author: null,
                 after: null,
                 time: null
-            }
+            };
         }
 
         case actions.types.Route.PRIVACY: 
@@ -190,7 +190,7 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
                 author: null,
                 after: null,
                 time: null
-            }
+            };
         }
 
         case actions.types.Route.FILTER:
@@ -203,8 +203,8 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
                 subreddit: null,
                 author: null,
                 after: null,
-                time: payload.filter == AuthorFilter.TOP ? payload.time || models.PostTimeRange.ALL  : null
-            }
+                time: payload.filter === AuthorFilter.TOP ? payload.time || models.PostTimeRange.ALL  : null
+            };
         }
         
         case actions.types.Route.SUBREDDIT:
@@ -217,8 +217,8 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
                 subreddit: action.payload.subreddit,
                 author: null,
                 after: null,
-                time: payload.filter == AuthorFilter.TOP ? payload.time || models.PostTimeRange.ALL : null
-            }
+                time: payload.filter === AuthorFilter.TOP ? payload.time || models.PostTimeRange.ALL : null
+            };
         }
 
         case actions.types.Route.AUTHOR:
@@ -232,7 +232,7 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
                 author: payload.author,
                 after: null,
                 time: null
-            }
+            };
         }
 
 

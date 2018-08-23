@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import * as styles from 'css/popup.scss'
+import * as styles from 'css/popup.scss';
 import * as animationStyles from 'css/animations.scss';
-import * as ReactDOM from 'react-dom'
+import * as ReactDOM from 'react-dom';
 import { tools } from '~/common';
 
 export enum Position 
@@ -39,10 +39,10 @@ interface State
 
 export default class Popup extends React.Component<Props, State>
 {
-    state = { open: false };
-    triggerRef : HTMLElement;
+    public state = { open: false };
+    private triggerRef : HTMLElement;
 
-    static defaultProps = {
+    public static defaultProps = {
         modal: false,
         fullscreen: false,
         hover: false,
@@ -52,16 +52,16 @@ export default class Popup extends React.Component<Props, State>
         fadeIn : 0.25
 
 
-    }
+    };
 
-    setTriggerRef( ref : any)
+    private setTriggerRef( ref : any)
     {
-        //Sometimes gets called twice with an initially null value
+        // Sometimes gets called twice with an initially null value
         if (ref == null)
             return;
 
-        //Ref may be to a dom element, or a component
-        //TODO better test
+        // Ref may be to a dom element, or a component
+        // TODO better test
         if (ref.getBoundingClientRect == null)
         {
             this.triggerRef =  ReactDOM.findDOMNode(ref) as any;
@@ -73,9 +73,9 @@ export default class Popup extends React.Component<Props, State>
         }
     }
 
-    mouseHoverTimeout = null;
+    private mouseHoverTimeout = null;
 
-    candleMouseHoverTimeout()
+    private candleMouseHoverTimeout()
     {
         if (this.mouseHoverTimeout != null)
         {
@@ -85,7 +85,7 @@ export default class Popup extends React.Component<Props, State>
         this.mouseHoverTimeout = null;
     }
 
-    handleMouseEnter()
+    private handleMouseEnter()
     {
         this.candleMouseHoverTimeout();
         if (!this.state.open)
@@ -96,7 +96,7 @@ export default class Popup extends React.Component<Props, State>
         }
     }
 
-    handleMouseLeave()
+    private handleMouseLeave()
     {
         this.candleMouseHoverTimeout();
         if (this.state.open)
@@ -107,7 +107,7 @@ export default class Popup extends React.Component<Props, State>
         }
     }
 
-    getTrigger( clickClose : boolean)
+    private getTrigger( clickClose : boolean)
     {
         if (this.props.hover)
         {
@@ -136,17 +136,17 @@ export default class Popup extends React.Component<Props, State>
 
     }
 
-    getAlignmentPositionOffset( triggerHeight : number) : number
+    private getAlignmentPositionOffset( triggerHeight : number) : number
     {
         switch(this.props.alignment)
         {
             case Alignment.BEGINNING:
                 return 0;
 
-            case Alignment.CENTER:  //styles.centerTop //styles.centerLeft
+            case Alignment.CENTER:  // styles.centerTop //styles.centerLeft
                 return triggerHeight * 0.5;
 
-            case Alignment.END:     //styles.top    //styles.left
+            case Alignment.END:     // styles.top    //styles.left
                 return triggerHeight;
             
         }
@@ -154,7 +154,7 @@ export default class Popup extends React.Component<Props, State>
         return 0;
     }
 
-    getPosition()
+    private getPosition()
     {
         if (this.props.position != null && !this.props.modal )
         {
@@ -163,7 +163,7 @@ export default class Popup extends React.Component<Props, State>
             let triggerTop : number = boundingBox.top + (window.scrollY || document.documentElement.scrollTop || 0);
             let triggerLeft : number = boundingBox.left + (window.scrollX || document.documentElement.scrollLeft || 0 );
 
-            //Compensate for relative parent that is not root
+            // Compensate for relative parent that is not root
             let offsetTop : number = this.triggerRef.offsetTop;
             let offsetLeft : number = this.triggerRef.offsetLeft;
             triggerTop =  (offsetTop - triggerTop) + triggerTop;
@@ -196,7 +196,7 @@ export default class Popup extends React.Component<Props, State>
                 return {
                     top: posTop,
                     left: 0
-                }
+                };
             }
             else
             {
@@ -241,7 +241,7 @@ export default class Popup extends React.Component<Props, State>
                 return {
                     top: posTop,
                     left: posLeft,
-                }
+                };
             }
         }
         else
@@ -251,15 +251,15 @@ export default class Popup extends React.Component<Props, State>
     
     }
 
-    getChildren()
+    private getChildren()
     {
-        return this.props.children( () => { this.setState( { open: false } ) } );
+        return this.props.children( () => { this.setState( { open: false } ); } );
     }
 
-    getPositionStyle()
+    private getPositionStyle()
     {
         let alignment = this.props.alignment;
-        if (this.props.fullscreen && this.props.position != Position.CENTER)
+        if (this.props.fullscreen && this.props.position !== Position.CENTER)
             alignment = null;
 
         switch(this.props.position)
@@ -322,7 +322,7 @@ export default class Popup extends React.Component<Props, State>
         }
     }
 
-    getFullscreenStyle()
+    private getFullscreenStyle()
     {
         if (this.props.fullscreen)
         {
@@ -330,7 +330,7 @@ export default class Popup extends React.Component<Props, State>
         }
     }
 
-    getStyle()
+    private getStyle()
     {
         if ( !this.props.modal)
         {
@@ -342,19 +342,19 @@ export default class Popup extends React.Component<Props, State>
         }
     }
 
-    getFadeInStyle()
+    private getFadeInStyle()
     {
         let animationStyle = {};
 
         if (this.props.fadeIn > 0)
         {
-            animationStyle = { animation: `${animationStyles.fadeIn} ${ this.props.fadeIn }s`  }
+            animationStyle = { animation: `${animationStyles.fadeIn} ${ this.props.fadeIn }s`  };
         }
 
         return animationStyle;
     }
 
-    render()
+    public render()
     {
         if (this.state.open)
         {
@@ -362,24 +362,24 @@ export default class Popup extends React.Component<Props, State>
             {
                 return [
                     <div className={ styles.holder }      key={"holder"}/>,
-                    <div className={ tools.css.classConcat( this.props.showBackground ?  styles.hiddenModalOverlay :styles.modalOverlay, this.props.overlayClass ) } style={ this.getFadeInStyle() }    key={"overlay"} onClick={ () => this.setState( { open: false } ) }>
+                    <div className={ tools.css.classConcat( this.props.showBackground ?  styles.hiddenModalOverlay : styles.modalOverlay, this.props.overlayClass ) } style={ this.getFadeInStyle() }    key={"overlay"} onClick={ () => this.setState( { open: false } ) }>
                         <div className={ tools.css.classConcat(styles.content, ...this.getStyle(), this.props.contentClass) } key={"content"} style={ { ...this.getFadeInStyle(), ...this.getPosition()} }>
                             {this.getChildren()}
                         </div>
                     </div>,
                     this.getTrigger(false)
-                ]
+                ];
             }
             else
             {
                 return [
                     <div className={styles.holder}  key={"holder"}/>,
-                    this.props.showBackground? null : <div className={ tools.css.classConcat( styles.overlay, this.props.overlayClass ) }  key={"overlay"} style={ this.getFadeInStyle() } onClick={ () => this.setState( { open: false } ) } />,
+                    this.props.showBackground ? null : <div className={ tools.css.classConcat( styles.overlay, this.props.overlayClass ) }  key={"overlay"} style={ this.getFadeInStyle() } onClick={ () => this.setState( { open: false } ) } />,
                     <div className={ tools.css.classConcat(styles.content, ...this.getStyle(), this.props.contentClass)} key={"content"} style={  { ...this.getFadeInStyle(), ...this.getPosition()}  }>
                         {this.getChildren()}
                     </div>,
                     this.getTrigger(false)
-                ]
+                ];
             }
         }
         else

@@ -8,7 +8,7 @@ import { tools } from '~/common';
 
  export default class FadeHorizontalResize extends Transition
 {
-    come(container : HTMLDivElement, callback)
+    public come(container : HTMLDivElement, callback)
     {
         let width : number = container.clientWidth;
         let {verticalPadding, horizontalPadding} = tools.component.getPadding(container);
@@ -34,7 +34,7 @@ import { tools } from '~/common';
             timeline.play();
     }
 
-    go(container : HTMLDivElement, callback)
+    public go(container : HTMLDivElement, callback)
     {
         let width : number = container.clientWidth;
         let {verticalPadding, horizontalPadding} = tools.component.getPadding(container);

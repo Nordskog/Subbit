@@ -1,9 +1,9 @@
 
-import * as models from '~/common/models'
-import { reddit } from '~/common/models'
+import * as models from '~/common/models';
+import { reddit } from '~/common/models';
 
-import * as apiTools from './apiTools'
-import * as urls from '~/common/urls'
+import * as apiTools from './apiTools';
+import * as urls from '~/common/urls';
 import * as api from '~/common/api';
 
 
@@ -20,27 +20,27 @@ export async function getAuthors( seedWithPost : boolean, subreddit? : string, f
         },
         auth);
 
-    if (filter == models.AuthorFilter.HOT)
+    if (filter === models.AuthorFilter.HOT)
     {
-        //Stickied posts are always at the top of the list in hot. Remove them for now.
-        //TODO think about stickies
-        result.data.children = result.data.children.filter( ( post : reddit.Thing<reddit.Post> ) => { return !post.data.stickied } );
+        // Stickied posts are always at the top of the list in hot. Remove them for now.
+        // TODO think about stickies
+        result.data.children = result.data.children.filter( ( post : reddit.Thing<reddit.Post> ) =>   !post.data.stickied );
     }
 
     let authors : models.data.Author[] = result.data.children.map( ( post : reddit.Thing<reddit.Post> ) => 
     {
         let entry = {
-            id: -1, //Not provided here
+            id: -1, // Not provided here
             name: post.data.author,
-            last_post_date: post.data.created_utc,   //As far as this listing is concerned
+            last_post_date: post.data.created_utc,   // As far as this listing is concerned
             posts : [],
-            post_count : 0,  //hmmm
+            post_count : 0,  // hmmm
             subscriptions: []
         };
 
-        //When a user makes their first post to a subreddit, it will not be present in some of reddit's apis
-        //for some time. Seems to only occur when there is only a single post.
-        //Workaround is to include it here, and just erase later if we get a proper post list.
+        // When a user makes their first post to a subreddit, it will not be present in some of reddit's apis
+        // for some time. Seems to only occur when there is only a single post.
+        // Workaround is to include it here, and just erase later if we get a proper post list.
         if (seedWithPost)
         {
             entry.posts.push( apiTools.filterPostContent( post.data ) );
@@ -48,7 +48,7 @@ export async function getAuthors( seedWithPost : boolean, subreddit? : string, f
         return entry;
     });
 
-    //Remove duplicates, prioritizing lower-index authors
+    // Remove duplicates, prioritizing lower-index authors
     let authorNameSet = new Set<string>();
     authors = authors.filter( ( author : models.data.Author ) => 
     {
@@ -78,22 +78,22 @@ export async function getPosts(author: string, after : string, auth : models.aut
   
     let posts : models.reddit.Post[] = result.data.children.map( ( post : reddit.Thing<reddit.Post> ) => 
     {
-        return post.data
+        return post.data;
     });
 
-    //Filter stickied posts for now. TODO: think about stickies
-    posts = posts.filter( ( post : models.reddit.Post ) => { return !post.stickied } );
+    // Filter stickied posts for now. TODO: think about stickies
+    posts = posts.filter( ( post : models.reddit.Post ) => !post.stickied );
 
-    //And remove any data we don't want, as we'll be storing this in session storage.
-    posts = posts.map( post => apiTools.filterPostContent(post));
+    // And remove any data we don't want, as we'll be storing this in session storage.
+    posts = posts.map( (post) => apiTools.filterPostContent(post));
 
     return { posts: posts,  after: result.data.after };
 
 }
 
-//Normal reddit search will also search the contents of self text posts, making them useless for searching by post title.
-//with title:"something something" you can narrow it down to the title, but it only accepts full words, no partials.
-//Go with the latter as it at least produces somewhat useful results.
+// Normal reddit search will also search the contents of self text posts, making them useless for searching by post title.
+// with title:"something something" you can narrow it down to the title, but it only accepts full words, no partials.
+// Go with the latter as it at least produces somewhat useful results.
 export async function searchPosts( subreddit: string, searchTerm : string, limit? : number, auth? : models.auth.RedditAuth ) : Promise<models.reddit.Post[]>
 {
     let {baseUrl, params} = apiTools.getPostSearchUrl(searchTerm, subreddit, auth != null, limit);
@@ -105,11 +105,11 @@ export async function searchPosts( subreddit: string, searchTerm : string, limit
   
     let posts : models.reddit.Post[] = result.data.children.map( ( post : reddit.Thing<reddit.Post> ) => 
     {
-        return post.data
+        return post.data;
     });
 
-    //Filter stickied posts for now. TODO: think about stickies
-    posts = posts.filter( ( post : models.reddit.Post ) => { return !post.stickied } );
+    // Filter stickied posts for now. TODO: think about stickies
+    posts = posts.filter( ( post : models.reddit.Post ) => !post.stickied );
 
     return posts;
 }

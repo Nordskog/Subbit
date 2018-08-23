@@ -1,11 +1,11 @@
 ﻿
-import { getDefaultAuthorState } from '~/client/reducers/authorReducer'
-import { getDefaultAuthState } from '~/client/reducers/authStateReducer'
-import { getDefaultUserState } from '~/client/reducers/userReducer'
-import { getDefaultSiteState } from '~/client/reducers/siteStateReducer'
+import { getDefaultAuthorState } from '~/client/reducers/authorReducer';
+import { getDefaultAuthState } from '~/client/reducers/authStateReducer';
+import { getDefaultUserState } from '~/client/reducers/userReducer';
+import { getDefaultSiteState } from '~/client/reducers/siteStateReducer';
 import * as ReduxFirstRouter from 'redux-first-router';
 
-import * as models from '~/common/models'
+import * as models from '~/common/models';
 
 export interface State
 {
@@ -14,7 +14,7 @@ export interface State
     location: ReduxFirstRouter.Location;
     userState: models.state.User;
     siteState: models.state.SiteState;
-};
+}
 
 export function getDefaultState(userInfo?: models.auth.UserInfo) : State
 {
@@ -24,12 +24,12 @@ export function getDefaultState(userInfo?: models.auth.UserInfo) : State
         location: undefined,
         userState: getDefaultUserState(),
         siteState: getDefaultSiteState(),
-    }
+    };
 }
 
-import configureStore from './configureStore'
-import createHistory from 'history/createBrowserHistory'
-import { History } from 'history'
+import configureStore from './configureStore';
+import createHistory from 'history/createBrowserHistory';
+import { History } from 'history';
 import { Store } from 'redux';
 import { RouteThunk } from 'redux-first-router';
 

@@ -4,30 +4,30 @@
 
 import * as models from '~/common/models';
 
-import * as styles from 'css/author.scss'
+import * as styles from 'css/author.scss';
 
 
-import * as components from '~/client/components'
+import * as components from '~/client/components';
 
-import config from 'root/config'
+import config from 'root/config';
 
-import SVGInline from "react-svg-inline"
-import * as subscribeButton from 'assets/images/subscribe_button.svg'
-import * as subscribeSubredditButton from 'assets/images/subscribe_subreddit_button.svg'
-import * as subscribedPartialButton from 'assets/images/subscribed_partial_button.svg'
-import * as expand_caret from 'assets/images/expand_caret.svg'
-import * as collapse_caret from 'assets/images/collapse_caret.svg'
-import * as loading_caret from 'assets/images/loading_caret.svg'
+import SVGInline from "react-svg-inline";
+import * as subscribeButton from 'assets/images/subscribe_button.svg';
+import * as subscribeSubredditButton from 'assets/images/subscribe_subreddit_button.svg';
+import * as subscribedPartialButton from 'assets/images/subscribed_partial_button.svg';
+import * as expand_caret from 'assets/images/expand_caret.svg';
+import * as collapse_caret from 'assets/images/collapse_caret.svg';
+import * as loading_caret from 'assets/images/loading_caret.svg';
 
-import * as transitions from 'react-transition-group'
+import * as transitions from 'react-transition-group';
 
-import { NavLink} from 'redux-first-router-link'
+import { NavLink } from 'redux-first-router-link';
 import { urls, tools } from '~/common';
 import * as  Toast from '~/client/toast';
 import SubscriptionSubreddit from '~/common/models/data/SubscriptionSubreddit';
 
 
-import * as actions from '~/client/actions'
+import * as actions from '~/client/actions';
 import { Subscription } from '~/common/models/data';
 
 enum SubscriptionState
@@ -54,30 +54,31 @@ interface Props
 }
 interface State
 {
-    subscriptionsModified: boolean;   //Set to false on subs opened, checke on return to posts
-    awaitingPosts: boolean;           //Returning from subscriptions, do not display until new props arrive
+    subscriptionsModified: boolean;   // Set to false on subs opened, checke on return to posts
+    awaitingPosts: boolean;           // Returning from subscriptions, do not display until new props arrive
     postsExpanded: boolean;
     subredditsExpanded: boolean;
-    prevProps : Props;  //Sigh.
+    prevProps : Props;  // Sigh.
 }
 
 export default class AuthorCell extends React.Component<Props, State>
 {
 
-    container : HTMLDivElement;
+    private container : HTMLDivElement;
 
     constructor(props)
     {
         super(props);
         this.state = { postsExpanded : false, subredditsExpanded: false, subscriptionsModified: false, awaitingPosts : false, prevProps: props };
     }
-    shouldComponentUpdate(nextProps : Readonly<Props>, newState : State, nextContext) : boolean
+
+    public shouldComponentUpdate(nextProps : Readonly<Props>, newState : State, nextContext) : boolean
     {
         if (nextProps.author === this.props.author && 
-            this.state.postsExpanded == newState.postsExpanded &&
-            this.state.subredditsExpanded == newState.subredditsExpanded &&
-            this.props.postDisplay == nextProps.postDisplay &&
-            this.state.awaitingPosts == newState.awaitingPosts
+            this.state.postsExpanded === newState.postsExpanded &&
+            this.state.subredditsExpanded === newState.subredditsExpanded &&
+            this.props.postDisplay === nextProps.postDisplay &&
+            this.state.awaitingPosts === newState.awaitingPosts
         )
         {
             return false;
@@ -86,17 +87,17 @@ export default class AuthorCell extends React.Component<Props, State>
         return true;
     }
 
-    //React devs are retarded and changed this to also be called when state changes,
-    //so we have to store a copy of props and compare it to prev to tell if it was actually props that changed.
+    // React devs are retarded and changed this to also be called when state changes,
+    // so we have to store a copy of props and compare it to prev to tell if it was actually props that changed.
 
-    static getDerivedStateFromProps( nextProps : Props, prevState : State) : State
+    public static getDerivedStateFromProps( nextProps : Props, prevState : State) : State
     {
-        //Props unchanged, it was just the state that changed.
-        if (nextProps == prevState.prevProps)
+        // Props unchanged, it was just the state that changed.
+        if (nextProps === prevState.prevProps)
             return null;
 
-        //If managing subscriptions and subscription was removed, or subscriptions were modified
-        //and we returned to posts, but are awaiting updated posts.
+        // If managing subscriptions and subscription was removed, or subscriptions were modified
+        // and we returned to posts, but are awaiting updated posts.
         if  (( ( prevState.subredditsExpanded && ( nextProps.author.subscription.subscribed != null && !nextProps.author.subscription.subscribed ) )
              ||
              ( prevState.awaitingPosts )
@@ -109,14 +110,14 @@ export default class AuthorCell extends React.Component<Props, State>
         return { ...prevState, prevProps: nextProps };
     }
 
-    renderNoPostsMessage()
+    private renderNoPostsMessage()
     {
         return  <components.transitions.FadeVerticalResize key={'no_posts_container'} className={styles.noPostsContainer}>
                     <div className={styles.noPostsContainerInner}>No posts here</div>
-                </components.transitions.FadeVerticalResize>
+                </components.transitions.FadeVerticalResize>;
     }
 
-    renderPosts()
+    private renderPosts()
     {
         if (this.state.subredditsExpanded)
             return null;
@@ -135,17 +136,17 @@ export default class AuthorCell extends React.Component<Props, State>
                     scrollToAuthorTop={() => this.scrollToAuthorTop()}
                     displaySubreddit={this.props.subreddit == null}
                 />
-            </components.transitions.FadeVerticalResize>
+            </components.transitions.FadeVerticalResize>;
     }
 
-    scrollToAuthorTop()
+    private scrollToAuthorTop()
     {
 
-        //Scroll to top of component if top of window is below it
+        // Scroll to top of component if top of window is below it
         if (this.container.getBoundingClientRect().top < 0)
         {
             let options = {
-                behavior: "smooth" as ScrollBehavior,   //Casts necessary for some silly reason
+                behavior: "smooth" as ScrollBehavior,   // Casts necessary for some silly reason
                 block: "start" as ScrollLogicalPosition, 
                 inline: "nearest" as ScrollLogicalPosition
             };
@@ -154,9 +155,9 @@ export default class AuthorCell extends React.Component<Props, State>
         }
     }
 
-    render()
+    public render()
     {
-        return <div className={ this.isSubscribed(this.props.author.subscription) ? styles.subscribedAuthor : styles.author} key = { this.props.author.author.name } ref={ (c) => {this.container = c}} >
+        return <div className={ this.isSubscribed(this.props.author.subscription) ? styles.subscribedAuthor : styles.author} key = { this.props.author.author.name } ref={ (c) => {this.container = c;}} >
             <transitions.TransitionGroup component={'div'} className={styles.authorHeader}>
                 {this.getButton()}
                 {this.getShowSubredditsButton()}
@@ -176,28 +177,28 @@ export default class AuthorCell extends React.Component<Props, State>
 
             </div>
 
-        </div>
+        </div>;
     }
 
-    getTransitionGroupWorkaround()
+    public getTransitionGroupWorkaround()
     {
-        //Transition groups are bugged in certain situations. This fixes it, for some reason.
+        // Transition groups are bugged in certain situations. This fixes it, for some reason.
         return <div/>;
     }
 
-    renderAwaitingCover()
+    public renderAwaitingCover()
     {
         if (this.state.awaitingPosts)
         {
             return  <components.transitions.Fade key={'awaiting_cover'}>
             <div className={styles.authorWaitingCover} />
 
-           </components.transitions.Fade>
+           </components.transitions.Fade>;
         }
 
     }
 
-    getSubredditLink()
+    public getSubredditLink()
     {
         if (this.props.subreddit != null && this.props.solo)
         {
@@ -207,26 +208,26 @@ export default class AuthorCell extends React.Component<Props, State>
                 to={ { type: actions.types.Route.SUBREDDIT, payload: { subreddit: this.props.subreddit } }  }>
                 r/<b>{this.props.subreddit}</b>
             </NavLink>
-            </div>
+            </div>;
         }
     }
 
-    getAuthorLink()
+    public getAuthorLink()
     {
-        //If we are in a subreddit, we should link to the user in that subreddit.
-        //If we are already displaying a single author, we should link to the author in all subreddits.
+        // If we are in a subreddit, we should link to the user in that subreddit.
+        // If we are already displaying a single author, we should link to the author in all subreddits.
         let subreddit : string = this.props.subreddit;
         if (this.props.solo)
             subreddit = null;
             
         return <NavLink 
                     className={styles.nameContainer}
-                    to={ { type: actions.types.Route.AUTHOR, payload: { author:this.props.author.author.name, subreddit: subreddit } }  }>
+                    to={ { type: actions.types.Route.AUTHOR, payload: { author: this.props.author.author.name, subreddit: subreddit } }  }>
                     {this.props.author.author.name}
-                </NavLink>
+                </NavLink>;
     }
 
-    getSubscribedCount()
+    public getSubscribedCount()
     {
         let subCount : number = 0;
         if (this.props.author.subscription != null && this.props.author.subscription.subscribed)
@@ -243,7 +244,7 @@ export default class AuthorCell extends React.Component<Props, State>
 
 
 
-    getSubscribedSubreddits()
+    public getSubscribedSubreddits()
     {
         if ( this.isSubscribed(this.props.author.subscription) && this.state.subredditsExpanded)
         {
@@ -254,16 +255,16 @@ export default class AuthorCell extends React.Component<Props, State>
                         return {
                             name: subreddit.name,
                             highlighted: true
-                        }
+                        };
                     }
                 ),
-                search: async ( name : string ) => { return ( await this.props.searchSubreddits(name) ).map( name => { return { name: name } }  ) },
+                search: async ( name : string ) => ( await this.props.searchSubreddits(name) ).map( (name) => ({ name: name }) ),
                 enterBeforeSearchResult: ( name : string ) => 
                 { 
                     name = tools.string.sanitizeAlphaNumericDashUnderscore(name);
                     return  { 
                         name: name.trim() 
-                    } 
+                    }; 
                 },
                 prefix: "r/",
                 searchPlaceholder: "Subreddit",
@@ -290,7 +291,7 @@ export default class AuthorCell extends React.Component<Props, State>
                             this.props.addSubscriptionSubreddit(this.props.author.subscription, item.name);
                         }
                     }
-            }
+            };
 
             return  <components.transitions.FadeVerticalResize key={'subs_container'}>
              <div className={styles.subscriptionsContainer}>
@@ -299,38 +300,38 @@ export default class AuthorCell extends React.Component<Props, State>
                             />
             </div>
 
-            </components.transitions.FadeVerticalResize>
+            </components.transitions.FadeVerticalResize>;
 
         }
 
         return null;
     }
 
-    isSubscribed( sub : Subscription ) : boolean
+    public isSubscribed( sub : Subscription ) : boolean
     {
-       return (sub != null && ( sub.subscribed == null || sub.subscribed )   )
+       return (sub != null && ( sub.subscribed == null || sub.subscribed )   );
     }
 
-    isSubscribedInSubreddit( sub : Subscription ) : boolean 
+    public isSubscribedInSubreddit( sub : Subscription ) : boolean 
     {
-        //If we are subscribed to the user, but not in the currently selected subreddit
+        // If we are subscribed to the user, but not in the currently selected subreddit
         if ( this.isSubscribed( sub ) && this.props.subreddit != null )
         {
-            for ( let i = 0; i < sub.subreddits.length; i++)
+            for (let subreddit of sub.subreddits)
             {
-                if (sub.subreddits[i].name.toLowerCase() == this.props.subreddit.toLowerCase())
+                if (subreddit.name.toLowerCase() === this.props.subreddit.toLowerCase())
                 {
                     return true;
                 }
-
             }
+
             return  false;
         }
 
         return true;
     }
 
-    isSubscribedAll( sub : Subscription ) : boolean 
+    public isSubscribedAll( sub : Subscription ) : boolean 
     {
         if ( this.isSubscribed( sub ) )
         {
@@ -344,21 +345,21 @@ export default class AuthorCell extends React.Component<Props, State>
 
     }
 
-    getSubscriptionState( sub : Subscription) : SubscriptionState
+    public getSubscriptionState( sub : Subscription) : SubscriptionState
     {
         if (this.isSubscribed(sub))
         {
             if (this.isSubscribedAll(sub))
             {
             
-                //Full star, click unsubscribes all
+                // Full star, click unsubscribes all
                 return SubscriptionState.SUBSCRIBED_ALL;
             }
             else
             {
                 if (this.isSubscribedInSubreddit(sub))
                 {
-                    //Display full star with hole? Click unsubscribes all
+                    // Display full star with hole? Click unsubscribes all
                     return SubscriptionState.SUBSCRIBED_PARTIAL;
                 }
                 else
@@ -373,7 +374,7 @@ export default class AuthorCell extends React.Component<Props, State>
         }
     }
 
-    getButton()
+    public getButton()
     {
         let subState : SubscriptionState = this.getSubscriptionState( this.props.author.subscription );
 
@@ -390,51 +391,51 @@ export default class AuthorCell extends React.Component<Props, State>
         }
     }
 
-    getSubscribeButton()
+    public getSubscribeButton()
     {
-        //Heh
+        // Heh
         let butt : JSX.Element = <div key={"subscribe_button"} className={styles.subscriptionButtonContainer} onClick={ () => this.handleSubscribeClick()} >
                                     <div className={styles.subscribeButton} >
                                         <SVGInline svg={subscribeButton}/>
                                     </div>
-                                </div>
+                                </div>;
 
         let text : string = "subscribe";
         if (this.props.subreddit != null)
-            text = "subscribe in r/"+this.props.subreddit;
+            text = "subscribe in r/" + this.props.subreddit;
 
             
             
         return <components.tools.InfoPopup
                     trigger={butt}
-                    text={text} /> 
+                    text={text} />; 
     }
 
-    getSubscribeSubredditButton()
+    public getSubscribeSubredditButton()
     {
-        //Heh
-        let butt : JSX.Element = <div key={"subscribe_subreddit_button"} className={styles.subscriptionButtonContainer} onClick={ () => this.handleAddSubredditClick(this.props.subreddit)} style={ { position:"relative" } } >
+        // Heh
+        let butt : JSX.Element = <div key={"subscribe_subreddit_button"} className={styles.subscriptionButtonContainer} onClick={ () => this.handleAddSubredditClick(this.props.subreddit)} style={ { position: "relative" } } >
                                     <div className={styles.subscriptionButtonOverlapContainer}>
-                                        <div className={styles.subscriptionButton} style={ { position:"absolute" } }>
+                                        <div className={styles.subscriptionButton} style={ { position: "absolute" } }>
                                             <SVGInline  className={styles.unsubscribeButton} svg={subscribeSubredditButton}/>
                                         </div>
-                                        <div className={styles.subscriptionButton} style={ { position:"absolute" } }>
+                                        <div className={styles.subscriptionButton} style={ { position: "absolute" } }>
                                             <SVGInline  className={styles.subscribeButton} svg={subscribeButton}/>
                                         </div>
                                     </div>
-                                </div>
+                                </div>;
 
-        let text : string = "subscribe in r/"+this.props.subreddit;
+        let text : string = "subscribe in r/" + this.props.subreddit;
 
         return <components.tools.InfoPopup
                     trigger={butt}
-                    text={text} />
+                    text={text} />;
     }
 
-    getUnsubscribeButton( partialStar : boolean)
+    public getUnsubscribeButton( partialStar : boolean)
     {
-        //Function remains the same, but apperance is slightly different
-        //depending on whether the subscription is all subreddits or only one.
+        // Function remains the same, but apperance is slightly different
+        // depending on whether the subscription is all subreddits or only one.
         let icon = subscribeButton;
         let key = "unsubscribe_subscription_button";
         if (partialStar)
@@ -443,42 +444,42 @@ export default class AuthorCell extends React.Component<Props, State>
             key = "unsubscribe_partial_subscription_button";
         }
         
-        //The key has to go on the svg rather than the outer element for chrome to treat everything as a new element.
-        //I don't know why.
+        // The key has to go on the svg rather than the outer element for chrome to treat everything as a new element.
+        // I don't know why.
         let butt : JSX.Element = <div className={styles.subscriptionButtonContainer} onClick={ () => this.handleUnsubscribeClick()} >
                                     <SVGInline className={styles.unsubscribeButton} key={key} svg={icon}/>
-                                </div>
+                                </div>;
                 
-        let text : string = "unsubscribe"
+        let text : string = "unsubscribe";
 
             
 
         return <components.tools.InfoPopup
                     trigger={butt}
-                    text={text} />
+                    text={text} />;
     }
 
 
-    getShowSubredditsButton()
+    public getShowSubredditsButton()
     {
         let subState : SubscriptionState = this.getSubscriptionState( this.props.author.subscription );
-        let visible = subState != SubscriptionState.UNSUBSCRIBED;
-        let temporary = visible && this.props.author.subscription.id == null;  //Sub created but haven't received reply from server yet. Disable click.
+        let visible = subState !== SubscriptionState.UNSUBSCRIBED;
+        let temporary = visible && this.props.author.subscription.id == null;  // Sub created but haven't received reply from server yet. Disable click.
 
         if ( visible )
         {
-            //Note that all components have the same outer key, but the inner key is different.
-            //This is because chrome will not render svgs with dynamic hrefs.
-            //We still want transitions to treat them all the same, so we give the container the same key,
-            //and make react treat them as different instances by changing the inner key.
-            //Later: SVGs are now inlined so this probably doesn't matter.
+            // Note that all components have the same outer key, but the inner key is different.
+            // This is because chrome will not render svgs with dynamic hrefs.
+            // We still want transitions to treat them all the same, so we give the container the same key,
+            // and make react treat them as different instances by changing the inner key.
+            // Later: SVGs are now inlined so this probably doesn't matter.
             if (this.state.awaitingPosts)
             {
                 return <components.transitions.FadeHorizontalResize key={'show_subreddits_button'}>
                             <div className={styles.displaySubredditsButtonContainer} >
                                 <SVGInline key={"awaiting_posts"} className={styles.loadingPostsIndicator} svg={loading_caret}/>
                             </div>
-                        </components.transitions.FadeHorizontalResize>
+                        </components.transitions.FadeHorizontalResize>;
             }
             else 
             {
@@ -487,19 +488,19 @@ export default class AuthorCell extends React.Component<Props, State>
                 if (this.state.subredditsExpanded)
                 {
                     icon = collapse_caret;
-                    key = "collapse_posts"
+                    key = "collapse_posts";
                 }
                 else
                 {
                     icon = expand_caret;
-                    key = "expand_posts"
+                    key = "expand_posts";
                 }
                 
                 return <components.transitions.FadeHorizontalResize key={'show_subreddits_button'}>
-                            <div  className={styles.displaySubredditsButtonContainer} onClick={ temporary ? null : () => { this.handleManageSubscriptionsClick() } } >
+                            <div  className={styles.displaySubredditsButtonContainer} onClick={ temporary ? null : () => { this.handleManageSubscriptionsClick(); } } >
                                 <SVGInline key={key} className={styles.displaySubredditsButton} svg={icon}/>
                             </div>
-                        </components.transitions.FadeHorizontalResize>
+                        </components.transitions.FadeHorizontalResize>;
             }
         }
     }
@@ -508,20 +509,20 @@ export default class AuthorCell extends React.Component<Props, State>
     // Star click handlers
     ////////////////////////////
 
-    handleManageSubscriptionsClick()
+    public handleManageSubscriptionsClick()
     {
-        //Waiting for posts or sub info from server.
+        // Waiting for posts or sub info from server.
         if (this.state.awaitingPosts ) 
         {
             return;
         }
 
-        //Collapse
+        // Collapse
         if (this.state.subredditsExpanded)
         {
-            //Request updated posts if we are viewing subscriptions and have made changes.
-            //Set posts awaiting to prevent return until new posts have been loaded.
-            if (this.state.subscriptionsModified && this.props.filter == models.AuthorFilter.SUBSCRIPTIONS)
+            // Request updated posts if we are viewing subscriptions and have made changes.
+            // Set posts awaiting to prevent return until new posts have been loaded.
+            if (this.state.subscriptionsModified && this.props.filter === models.AuthorFilter.SUBSCRIPTIONS)
             {
                 this.props.fetchPosts(this.props.author, config.client.postFetchCount);
                 this.setState( { subredditsExpanded: true, subscriptionsModified: false, awaitingPosts: true } );
@@ -531,68 +532,68 @@ export default class AuthorCell extends React.Component<Props, State>
                 this.setState( { subredditsExpanded: false, subscriptionsModified: false } );
             }        
         }
-        else //Expand
+        else // Expand
         {
-            //Reset modified bool to false
+            // Reset modified bool to false
             this.setState( { subredditsExpanded: true, subscriptionsModified: false } );
         }
     }
 
 
 
-    handleSubscribeClick()
+    public handleSubscribeClick()
     {
         if (!this.props.authenticated)
         {
             this.props.goToSubscriptions();
             return;
-            //Forward to subs page, which asks user to log in.
+            // Forward to subs page, which asks user to log in.
         }
 
         let subreddits : string[] = [];
         
-        //Not subscribed, but subscription populated
+        // Not subscribed, but subscription populated
         if ( this.props.author.subscription != null)
         {
-            //User is resubscribing without closing page, repopulate subscribed subreddits
+            // User is resubscribing without closing page, repopulate subscribed subreddits
             subreddits = this.props.author.subscription.subreddits.map( ( subreddit : models.data.SubscriptionSubreddit ) => subreddit.name );
         }
 
         if (this.props.subreddit != null)
         {
-            //Add current subreddit if we are in one. 
-            //TODO support multi subreddits
+            // Add current subreddit if we are in one. 
+            // TODO support multi subreddits
             subreddits.push(this.props.subreddit);
         }
 
         this.props.subscribe(this.props.author.author.name, subreddits); 
     }
 
-    handleUnsubscribeClick()
+    public handleUnsubscribeClick()
     {
-        //Subscription is temporary while await response from server, cannot be mofidied yet.
+        // Subscription is temporary while await response from server, cannot be mofidied yet.
         if (this.props.author.subscription.id == null)
             return;
 
         this.props.unsubscribe(this.props.author.subscription);
 
-        //Close subreddits panel if open
+        // Close subreddits panel if open
         if (this.state.subredditsExpanded)
         {
-            //Will not fetch posts.
+            // Will not fetch posts.
             this.setState( { subredditsExpanded: false, subscriptionsModified: false } );
         }
     }
 
-    //This is used when clicking the star.
-    //Adding/removing in the manage subreddits panel calls props function directly.
-    handleAddSubredditClick(subreddit : string)
+    // This is used when clicking the star.
+    // Adding/removing in the manage subreddits panel calls props function directly.
+    public handleAddSubredditClick(subreddit : string)
     {
         this.props.addSubscriptionSubreddit(this.props.author.subscription, subreddit);
-        //Close subreddits panel if open
+        // Close subreddits panel if open
         if (this.state.subredditsExpanded)
         {
-            //Will not fetch posts.
+            // Will not fetch posts.
             this.setState( { subredditsExpanded: false, subscriptionsModified: false } );
         }
     }

@@ -1,8 +1,8 @@
-﻿import * as Wetland from 'wetland';
+﻿// tslint:disable:variable-name
 
-import Author from './Author'
-import Subscription from './Subscription'
-import * as models from '~/common/models'
+import * as Wetland from 'wetland';
+import Author from './Author';
+import * as models from '~/common/models';
 
 export default class Subreddit extends Wetland.Entity
 {
@@ -16,7 +16,7 @@ export default class Subreddit extends Wetland.Entity
     public createdAt : Date;
     public updatedAt : Date;
 
-    static setMapping(mapping : Wetland.Mapping<Subreddit>)
+    protected static setMapping(mapping : Wetland.Mapping<Subreddit>)
     {
         let options = {
             tableName: 'subreddits',
@@ -42,20 +42,20 @@ export default class Subreddit extends Wetland.Entity
         mapping.manyToMany('subscriptions', { targetEntity: 'Subscription', mappedBy: 'subreddits' });
     }
 
-    beforeCreate()
+    protected beforeCreate()
     {
-        //Fill name_lower
+        // Fill name_lower
         this.name_lower = this.name.toLowerCase();
     }
 
-    beforeUpdate(updatedValues, EntityManager : Wetland.EntityManager)
+    protected beforeUpdate(updatedValues, EntityManager : Wetland.EntityManager)
     {
         updatedValues.updatedAt = new Date();
     }
 
     
 
-    static formatModel(subreddit : Subreddit) : models.data.Subreddit
+    public static formatModel(subreddit : Subreddit) : models.data.Subreddit
     {
         if (subreddit == null)
         {
@@ -65,6 +65,6 @@ export default class Subreddit extends Wetland.Entity
         return {
             id: subreddit.id,
             name : subreddit.name
-        } as models.data.Subreddit
+        } as models.data.Subreddit;
     }
 }

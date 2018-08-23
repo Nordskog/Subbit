@@ -17,10 +17,9 @@ export { OptionDropdown } from './optionDropdown';
 export { default as Checkbox } from './Checkbox';
 
 import * as SearchList from './SearchList';
-//import * as StatsChart from './StatsChart'
 import * as Popup from './popup';
 
 export 
 {
     Popup, SearchList
-}
+};

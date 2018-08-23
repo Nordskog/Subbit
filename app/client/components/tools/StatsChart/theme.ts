@@ -18,8 +18,8 @@ const colors = [
   cyan900
 ];
 
-//Basically all that matters
-const blueGrey50 = "#3a3e3f";  //Grid
+// Basically all that matters
+const blueGrey50 = "#3a3e3f";  // Grid
 const blueGrey300 = "#90A4AE";
 const blueGrey700 = "#455A64";
 const grey900 = "#212121";

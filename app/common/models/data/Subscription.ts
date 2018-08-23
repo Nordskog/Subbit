@@ -1,8 +1,8 @@
-import SubscriptionSubreddit from './SubscriptionSubreddit'
+import SubscriptionSubreddit from './SubscriptionSubreddit';
 
 export default interface Subscription
 {
-    subscribed? : boolean;  //Consider true if null
+    subscribed? : boolean;  // Consider true if null
     user: string;
     author: string;
     id: number;

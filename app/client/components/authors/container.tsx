@@ -13,7 +13,7 @@ function mapStateToProps(state: State )
     return { authors: state.authorState.authors, 
         filter: state.authorState.filter,
         lastVisit: state.userState.lastVisit
-    }
+    };
 }
 
 function mapDispatchToProps(dispatch: Dispatch) : object

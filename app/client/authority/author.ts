@@ -1,4 +1,4 @@
-import * as models from '~/common/models'
+import * as models from '~/common/models';
 
 const authorAuthority : Map<string,models.data.Author> = new Map<string,models.data.Author>();
 

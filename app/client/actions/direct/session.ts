@@ -91,8 +91,8 @@ export function loadScroll() : number
     return scroll;
 }
 
-//Clear any data stored in session. 
-//Does not affect auth info stored there.
+// Clear any data stored in session. 
+// Does not affect auth info stored there.
 export function clear()
 {
     sessionStorage.removeItem('session_data_scroll');

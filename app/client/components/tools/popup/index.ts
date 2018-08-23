@@ -1,1 +1,1 @@
-export { default as Component, Position, Alignment } from './component'
+export { default as Component, Position, Alignment } from './component';

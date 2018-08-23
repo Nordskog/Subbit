@@ -1,15 +1,15 @@
 
 
 import { getDataTypeForCategory, getMinExpectedValueForCategory } from "./helpers";
-import {StatsTracker, StatsEntryFinalizedCallback} from './StatsTracker';
+import { StatsTracker, StatsEntryFinalizedCallback } from './StatsTracker';
 
 
 import * as socketActions from '~/backend/sockets/actions';
 import * as Entities from '~/backend/entity';
 import * as Wetland from 'wetland';
-import * as RFY from '~/backend/rfy'
+import * as RFY from '~/backend/rfy';
 
-import {StatsTimeRange, StatsCategoryType} from './types';
+import { StatsTimeRange, StatsCategoryType } from './types';
 
 import * as Log from '~/common/log';
 
@@ -30,8 +30,8 @@ export default class StatsCategory
     
     public static async construct( category : StatsCategoryType, ...timeRanges : StatsTimeRange[]  )
     {
-        //Dodging some race conditions when different categories are all trying to
-        //init intervals at the same time
+        // Dodging some race conditions when different categories are all trying to
+        // init intervals at the same time
         let instance : StatsCategory = new StatsCategory(category, ...timeRanges);
         
         await instance.init();
@@ -45,31 +45,31 @@ export default class StatsCategory
         this.timeRanges = timeRanges;
 
         this.tracker = new StatsTracker( getDataTypeForCategory(category), getMinExpectedValueForCategory(category), ...timeRanges ); 
-        this.tracker.setStatsEntryFinalizedCallback( (value, end, timeRange, tracker) => { this.handleUpdate(value, end,timeRange, tracker) } )
+        this.tracker.setStatsEntryFinalizedCallback( (value, end, timeRange, tracker) => { this.handleUpdate(value, end,timeRange, tracker); } );
     }
 
     private async init()
     {
 
-        //Init IDs of category and all the intervals
+        // Init IDs of category and all the intervals
         await this.initCategoryId();
         await Promise.all( 
-                        this.timeRanges.map( (timeRange : StatsTimeRange )  => { return this.initIntervalId(timeRange) } )
+                        this.timeRanges.map( (timeRange : StatsTimeRange )  => this.initIntervalId(timeRange) )
                     );
-        await this.loadHistory()
+        await this.loadHistory();
     }
 
-    getCategoryId() : number 
+    public getCategoryId() : number 
     {
         return this.categoryEntityId;
     }
 
-    getIntervalId( interval : StatsTimeRange) : number 
+    public getIntervalId( interval : StatsTimeRange) : number 
     {
         return StatsCategory.StatsIntervalEntityMap.get(interval);
     }
 
-    async initCategoryId()
+    private async initCategoryId()
     {
         if ( this.categoryEntityId != null)
             return this.categoryEntityId;
@@ -78,13 +78,13 @@ export default class StatsCategory
         let categoryEntity : Entities.StatsCategory = await manager.getRepository(Entities.StatsCategory).findOne( { category : this.category } );
         if ( categoryEntity == null )
         {
-            //Doesn't exist, create.
+            // Doesn't exist, create.
             categoryEntity = new Entities.StatsCategory();
             categoryEntity.category = this.category;
             manager.persist(categoryEntity);
             await manager.flush();
 
-            //Item is returned with id
+            // Item is returned with id
         }
 
         this.categoryEntityId = categoryEntity.id;
@@ -92,19 +92,19 @@ export default class StatsCategory
         return this.categoryEntityId;
     }
 
-    async initIntervalId( interval : StatsTimeRange)
+    private async initIntervalId( interval : StatsTimeRange)
     {
         let manager : Wetland.Scope = RFY.wetland.getManager();
 
-        //Check map first
+        // Check map first
         let id = this.getIntervalId(interval);
         if (id == null)
         {
-            //Check database.
+            // Check database.
             let intervalEntity : Entities.StatsInterval = await manager.getRepository(Entities.StatsInterval).findOne( { interval : interval } );
             if (intervalEntity == null)
             {
-                //Doesn't exist, create.
+                // Doesn't exist, create.
                 intervalEntity = new Entities.StatsInterval();
                 intervalEntity.interval = interval;
                 manager.persist(intervalEntity);
@@ -118,7 +118,7 @@ export default class StatsCategory
         return id;
     }
 
-    async loadHistory()
+    public async loadHistory()
     {
         let manager : Wetland.Scope = RFY.wetland.getManager();
 
@@ -130,7 +130,7 @@ export default class StatsCategory
                                                                                     interval_id: this.getIntervalId(interval)
                                                                                 },
                                                                                 {
-                                                                                        orderBy: {"end": 'asc' }
+                                                                                        orderBy: {end: 'asc' }
                                                                                 }
                                                                             ) || [];
             if (entries != null && entries.length > 0)
@@ -138,7 +138,7 @@ export default class StatsCategory
         }
     }
 
-    async saveEntry( value : number, end : Date, interval : StatsTimeRange )
+    public async saveEntry( value : number, end : Date, interval : StatsTimeRange )
     {
 
         try
@@ -164,15 +164,15 @@ export default class StatsCategory
         }
     }
 
-    handleUpdate( value, end, timeRange, tracker)
+    private handleUpdate( value, end, timeRange, tracker)
     {
         this.saveEntry(value, end, timeRange);
         this.notifySocket(value,end, this.category, timeRange, tracker);
 
-        //Skip database if not set up yet
+        // Skip database if not set up yet
     }
 
-    notifySocket( value : number, end : Date, category: StatsCategoryType, timeRange : StatsTimeRange, tracker : StatsTracker )
+    private notifySocket( value : number, end : Date, category: StatsCategoryType, timeRange : StatsTimeRange, tracker : StatsTracker )
 {
     socketActions.stats.dispatchStatsUpdate(
     {
@@ -183,19 +183,19 @@ export default class StatsCategory
             value : value,
             end: end.getTime() / 1000
         }
-    })
+    });
 }
 
     ////////////////////
-    //Passthrough
+    // Passthrough
     ////////////////////
 
-    add( value? : number)
+    public add( value? : number)
     {
         this.tracker.add(value);
     }
 
-    getHistory( timeRange : StatsTimeRange )
+    public getHistory( timeRange : StatsTimeRange )
     {
        return this.tracker.getHistory(timeRange);
     }

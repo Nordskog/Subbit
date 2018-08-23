@@ -1,9 +1,6 @@
-﻿let path = require('path');
-let basePath = __dirname;
+﻿import clientConfig from '../config';
 
-import clientConfig from '../config'
-
-let HtmlWebpackPlugin = require('html-webpack-plugin'); //Something wrong with webpack typings
+import HtmlWebpackPlugin from 'html-webpack-plugin';  // Something wrong with typings. do not use typings.
 import * as Webpack from 'webpack';
 import ExtractTextPlugin from "extract-text-webpack-plugin";
 import StatsPlugin from 'stats-webpack-plugin';
@@ -11,7 +8,7 @@ import SitemapPlugin from 'sitemap-webpack-plugin';
 import RobotstxtPlugin from 'robotstxt-webpack-plugin';
 import OptimizeCssAssetsPlugin from 'optimize-css-assets-webpack-plugin';
 
-import prodConfig from './webpack_client'
+import prodConfig from './webpack_client';
 
 const config = {
     ...prodConfig,
@@ -41,12 +38,12 @@ const config = {
             filename: "index.html",
             inject: "body"
         }),
-        new Webpack.NormalModuleReplacementPlugin   //Replace nodejs log library with console output on client
+        new Webpack.NormalModuleReplacementPlugin   // Replace nodejs log library with console output on client
         (
             /rfyServerLogging.ts/,
             'rfyClientLogging.ts'
         ),
-        new Webpack.NormalModuleReplacementPlugin(   //Replace nodejs log library with console output on client
+        new Webpack.NormalModuleReplacementPlugin(   // Replace nodejs log library with console output on client
             /rfyEnvServer.ts/,
             'rfyEnvClient.ts'
         ),
@@ -85,6 +82,6 @@ const config = {
         }) 
 
     ]
-}
+};
 
 export default config;

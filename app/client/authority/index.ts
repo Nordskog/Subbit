@@ -1,6 +1,6 @@
-import * as author from './author'
+import * as author from './author';
 
 export 
 {
     author
-}
+};

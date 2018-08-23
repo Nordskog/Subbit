@@ -1,9 +1,9 @@
 
 import * as actions from './actions';
 import * as models from '~/common/models';
-import * as socket from '~/client/websocket/socket'
+import * as socket from '~/client/websocket/socket';
 
-const SOCKET_TIMEOUT : number = 1000 * 10; //10 seconds
+const SOCKET_TIMEOUT : number = 1000 * 10; // 10 seconds
 
 let pingPongTimeout = null;
 let pingPongInterval = null;
@@ -11,12 +11,12 @@ let awaitingPong : boolean = false;
 
 export function startPingPong()
 {
-    //Stop if already running
+    // Stop if already running
     stopPingPong();
 
     pingPongInterval = setInterval( () => 
     {   
-        //Send ping
+        // Send ping
         startPongTimeout();  
         actions.ping();
         
@@ -37,19 +37,19 @@ function checkPong()
 {
     if (awaitingPong)
     {
-        //No pong received, reconnect!  
+        // No pong received, reconnect!  
         actions.reconnect();
     }
     else 
     {
-        //Pong received while we waited, all good.
+        // Pong received while we waited, all good.
     }
 }
 
-//Can also be called even when not connected to trigger a delayed reconnect
+// Can also be called even when not connected to trigger a delayed reconnect
 export function startPongTimeout()
 {
-    //Clear if already running.
+    // Clear if already running.
     if (pingPongTimeout != null)
     {
         clearInterval(pingPongTimeout);

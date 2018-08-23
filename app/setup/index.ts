@@ -6,4 +6,4 @@ import * as database from './database';
 export 
 {
     stats, log, auth, database
-}
+};

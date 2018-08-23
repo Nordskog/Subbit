@@ -1,13 +1,13 @@
 
 
-import {StatsTimeRange, StatsCategoryType} from './types';
+import { StatsTimeRange, StatsCategoryType } from './types';
 import { StatsHistory } from '~/common/models/stats';
 import { Exception } from '~/common/exceptions';
-import StatsCategory from './StatsCategory'
+import StatsCategory from './StatsCategory';
 import * as entityActions from '~/backend/entityActions';
 import * as helpers from '~/backend/stats/helpers';
-import * as cluster from 'cluster'
-import * as clusterActions from '~/backend/cluster'
+import * as cluster from 'cluster';
+import * as clusterActions from '~/backend/cluster';
 
 //////////////////////////////////
 // Lists all our stats trackers
@@ -15,7 +15,7 @@ import * as clusterActions from '~/backend/cluster'
 
 const trackers : Map<StatsCategoryType,StatsCategory> = new Map<StatsCategoryType,StatsCategory>();
 
-//Timeranges we have trackers on
+// Timeranges we have trackers on
 const trackedTimeRanges : Set<StatsTimeRange> = new Set<StatsTimeRange>();
 
 //////////////////////////////////
@@ -29,11 +29,11 @@ export async function addTracker( category : StatsCategoryType, ...timeRanges : 
 
     if (trackedTimeRanges.size < 1)
     {   
-        //Start loop that will clear entries older than limit for their interval
+        // Start loop that will clear entries older than limit for their interval
         startClearLoop();
     }
 
-    //We keep track of timeranges we are tracking and clear old entries from db on a loop
+    // We keep track of timeranges we are tracking and clear old entries from db on a loop
     for ( let timeRange of  timeRanges )
     {
         trackedTimeRanges.add(timeRange);
@@ -49,7 +49,7 @@ export function getTracker( category : StatsCategoryType)
 
 export function add( category : StatsCategoryType, value? : number)
 {  
-    //Stats is handled entirely by master
+    // Stats is handled entirely by master
     if (cluster.isWorker)
     {
         clusterActions.addStatsEntry(category, value);
@@ -59,7 +59,7 @@ export function add( category : StatsCategoryType, value? : number)
         let cat : StatsCategory = getTracker(category);
         if (cat == null)
         {
-            //Not tracking this category
+            // Not tracking this category
         }
         else
         {
@@ -79,7 +79,7 @@ export function getHistory( category : StatsCategoryType, timeRange : StatsTimeR
     let history : StatsHistory = catInstance.getHistory(timeRange);
     history.category = category;
 
-    return history
+    return history;
 }
 
 function startClearLoop()
@@ -88,7 +88,7 @@ function startClearLoop()
     // Once a minute we clear values that are too old from the db
     ////////////////////////////////////////
 
-    let loopInterval : number = 1000 * 60;  //One minute.
+    let loopInterval : number = 1000 * 60;  // One minute.
     setInterval( async () => 
     {
         let prunedCount : number = 0;

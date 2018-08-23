@@ -1,1 +1,1 @@
-export { default as authors } from './container'
+export { default as authors } from './container';

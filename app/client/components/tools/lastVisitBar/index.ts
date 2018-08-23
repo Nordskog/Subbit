@@ -1,1 +1,1 @@
-export { default as lastVisitBar } from './component'
+export { default as lastVisitBar } from './component';

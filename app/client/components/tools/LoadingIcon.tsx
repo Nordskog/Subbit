@@ -2,12 +2,12 @@ import * as React from 'react';
 
 import * as models from '~/common/models';
 
-import * as siteStyles from 'css/site.scss'
+import * as siteStyles from 'css/site.scss';
 
-import SVGInline from "react-svg-inline"
+import SVGInline from "react-svg-inline";
 
 
-//File-loader
+// File-loader
 import * as loading_animation from 'assets/animations/loading_animation.svg';
 import * as loading_done from 'assets/animations/loading_done.svg';
 import * as loading_error from 'assets/animations/loading_error.svg';
@@ -25,10 +25,10 @@ interface State
 
 export default class LoadingIndicator extends React.Component<Props, State>
 {
-    shouldComponentUpdate(nextProps : Props, nextState : State)
+    public shouldComponentUpdate(nextProps : Props, nextState : State)
     {
-        //Animation is reset on re-render, so avoid updates
-        if (this.props.status == nextProps.status)
+        // Animation is reset on re-render, so avoid updates
+        if (this.props.status === nextProps.status)
         {
             return false;
         }
@@ -36,7 +36,7 @@ export default class LoadingIndicator extends React.Component<Props, State>
         return true;
     }
 
-    getImage()
+    private getImage()
     {
 
         let image : any = null;
@@ -65,12 +65,12 @@ export default class LoadingIndicator extends React.Component<Props, State>
             }
         }
 
-        return <SVGInline className={siteStyles.loadingImage} svg={image}/>
+        return <SVGInline className={siteStyles.loadingImage} svg={image}/>;
     
     }
 
 
-    render()
+    public render()
     {
         return this.getImage();
     }

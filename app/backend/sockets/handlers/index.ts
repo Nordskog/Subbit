@@ -1,6 +1,6 @@
-import * as stats from './stats'
+import * as stats from './stats';
 
 export
 {
     stats
-}
+};

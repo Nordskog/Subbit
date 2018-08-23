@@ -16,7 +16,7 @@ export namespace auth
         let action : Action<clientSocketActions.auth.AUTHENTICATED> = {
             type: clientSocketActions.auth.AUTHENTICATED,
             payload: {}
-        }
+        };
 
         ws.send( JSON.stringify( action  ) );
     }
@@ -33,7 +33,7 @@ export namespace stats
         let action : Action<clientSocketActions.stats.STATS_UPDATE> = {
             type: clientSocketActions.stats.STATS_UPDATE,
             payload: data
-        }
+        };
 
         handlers.stats.dispatch(action);
     }
@@ -43,7 +43,7 @@ export namespace stats
         let action : Action<clientSocketActions.stats.STATS_HISTORY> = {
             type: clientSocketActions.stats.STATS_HISTORY,
             payload: history
-        }
+        };
 
         handlers.stats.dispatch(action);
     }
@@ -60,7 +60,7 @@ export namespace errors
         let action : Action<clientSocketActions.errors.ERROR> = {
             type: clientSocketActions.errors.ERROR,
             payload: { message : message}
-        }
+        };
 
         if (ws != null)
             ws.send( JSON.stringify( action  ) );
@@ -76,7 +76,7 @@ export function pong( ws : WebSocket)
     let action : Action<clientSocketActions.PONG> = {
         type: clientSocketActions.PONG,
         payload: {}
-    }
+    };
 
     if (ws != null)
         ws.send( JSON.stringify( action  ) );

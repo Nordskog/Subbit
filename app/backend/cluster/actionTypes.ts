@@ -3,6 +3,8 @@ import * as Net from 'net';
 import { Severity } from '~/common/log';
 import { models } from '~/common';
 import { StatsCategoryType } from '~/common/models/stats';
+// tslint:disable:class-name
+// tslint:disable:ban-types
 
 export namespace websocket
 {

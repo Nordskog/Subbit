@@ -1,47 +1,47 @@
 import { State } from "~/client/store";
 import { api, tools, models } from "~/common";
-import * as actions from '~/client/actions'
+import * as actions from '~/client/actions';
 import { WrapWithHandler } from "~/client/actions/tools/error";
 import { Dispatch, GetState } from "~/client/actions/tools/types";
 
 
 export function getAndUpdateLastVisit( loadFromSession : boolean = false)
 {
-    return WrapWithHandler( async function (dispatch : Dispatch, getState : GetState)
+    return WrapWithHandler( async (dispatch : Dispatch, getState : GetState) =>
     {
         let lastVisit : number;
 
-        //Load from session when navigating or restoring tab, as we don't consider this a separate visit.
+        // Load from session when navigating or restoring tab, as we don't consider this a separate visit.
         if (loadFromSession != null)
         {
             lastVisit = actions.directActions.session.loadLastVisit();
         }
 
-        //Otherwise attempt loading from local storage.
+        // Otherwise attempt loading from local storage.
         if (lastVisit == null)
         {
-            //Attempt to load from storage
+            // Attempt to load from storage
             lastVisit = actions.directActions.storage.loadLastVisit();
 
             let state: State = getState();
             let token: string = tools.store.getAccessToken(state);
 
-            //Get last recorded value server-side
+            // Get last recorded value server-side
             let newLastVisit = await api.rfy.user.getAndUpdateLastVisit(token);
 
-            let now = Date.now()/1000;
+            let now = Date.now() / 1000;
 
-            //All of this has the ultimate effect of the current lastVisit time sticking even if the user refreshes the page.
-            //If they go more than 2min without refreshing the page it will be updated.
+            // All of this has the ultimate effect of the current lastVisit time sticking even if the user refreshes the page.
+            // If they go more than 2min without refreshing the page it will be updated.
 
             // If storage value is available, use it unless sever-side value was recorded more than 2 minutes ago.
             if (lastVisit != null && ( newLastVisit + (60 * 5) ) >  ( Date.now() / 1000 ) )
             {
-                //Lastvisit remains as storage value.
+                // Lastvisit remains as storage value.
             }
             else
             {
-                //User server-recorded value
+                // User server-recorded value
                 lastVisit = newLastVisit;
             }
 
@@ -50,7 +50,7 @@ export function getAndUpdateLastVisit( loadFromSession : boolean = false)
         }
         else
         {
-            //If present in session storage we want to keep this admittedly out-of-date value
+            // If present in session storage we want to keep this admittedly out-of-date value
         }
 
         dispatch({
@@ -63,22 +63,22 @@ export function getAndUpdateLastVisit( loadFromSession : boolean = false)
 
 export function getLocalSettings()
 {
-    return WrapWithHandler( async function (dispatch : Dispatch, getState : GetState)
+    return WrapWithHandler( async (dispatch : Dispatch, getState : GetState) =>
     {
         actions.directActions.user.loadUserSettings(dispatch);
     });
 }
 
-//Currently unused, but endpoint exists.
+// Currently unused, but endpoint exists.
 export function getRemoteSettings()
 {
-    return WrapWithHandler( async function (dispatch : Dispatch, getState : GetState)
+    return WrapWithHandler( async (dispatch : Dispatch, getState : GetState) =>
     {
         let state: State = getState();
     
         let token: string = tools.store.getAccessToken(state);
 
-        //No user, no tracking visit
+        // No user, no tracking visit
         if (token == null)
             return;
 

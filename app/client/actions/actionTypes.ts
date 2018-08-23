@@ -1,5 +1,6 @@
-﻿import * as models from '~/common/models'
-import { userInfo } from 'os';
+﻿// tslint:disable:class-name
+
+import * as models from '~/common/models';
 import { LoadingStatus, AuthorFilter } from '~/common/models';
 
 export namespace authors
@@ -12,14 +13,14 @@ export namespace authors
 
     export interface FETCH_AUTHORS_COMPLETED
     {
-        authors: models.data.AuthorEntry[]
+        authors: models.data.AuthorEntry[];
         append: boolean;
         page : number;
         end : boolean;
         after : string;
     }
 
-    export type POST_DETAILS_UPDATED = Set<string>
+    export type POST_DETAILS_UPDATED = Set<string>;
 
     export type SUBREDDIT_CHANGED = string;
 
@@ -34,7 +35,7 @@ export namespace authors
         replace: boolean;
     }
 
-};
+}
 
 export namespace authentication
 {
@@ -56,7 +57,7 @@ export namespace authentication
     {
 
     }
-};
+}
 
 export namespace subscription
 {
@@ -88,7 +89,7 @@ export namespace subscription
     {   
         id: number;
     }
-};
+}
 
 export namespace page
 {
@@ -112,7 +113,7 @@ export namespace page
         status: models.LoadingStatus;
     }
 
-};
+}
 
 export namespace user
 {
@@ -139,34 +140,34 @@ export namespace Route
     export interface ABOUT 
     {
 
-    };
+    }
 
     export interface STATS 
     {
 
-    };
+    }
 
     export interface HOME 
     {
 
-    };
+    }
 
     export interface PRIVACY 
     {
 
-    };
+    }
 
     export interface FILTER
     {
         filter : AuthorFilter;
-        time? : models.PostTimeRange;   //Only for top
+        time? : models.PostTimeRange;   // Only for top
     }
 
     export interface SUBREDDIT
     {
         subreddit: string;
         filter?: AuthorFilter;
-        time? : models.PostTimeRange;   //Only for top
+        time? : models.PostTimeRange;   // Only for top
     }
 
     export interface AUTHOR
@@ -177,6 +178,6 @@ export namespace Route
 
     export interface AUTHENTICATE 
     {
-        //Uses params
-    };
+        // Uses params
+    }
 }

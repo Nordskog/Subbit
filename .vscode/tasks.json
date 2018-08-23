@@ -14,25 +14,14 @@
                 "isDefault": true
             }
         },
+
         {
             "type": "npm",
-            "script": "clean",
-            "problemMatcher": []
-        },
-        {
-            "type": "npm",
-            "script": "build",
-            "problemMatcher": []
-        },
-        {
-            "type": "npm",
-            "script": "run:dev",
-            "problemMatcher": []
-        },
-        {
-            "type": "npm",
-            "script": "run:server",
-            "problemMatcher": []
+            "script": "lint",
+            "problemMatcher": {
+                "base": "$tslint5",
+                "fileLocation": "relative"
+            }
         }
     ]
 }

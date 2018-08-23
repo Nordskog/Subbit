@@ -1,6 +1,4 @@
-﻿import * as envTools from '~/common/tools/env';
-
-const config = 
+﻿const config = 
 {
     ////////////////////////////////////////////////
     // General client settings
@@ -8,14 +6,14 @@ const config =
     ////////////////////////////////////////////////
     client:
     {
-        postDisplayCount: 6,      //Number of posts to display intially before expanding
-        postExpandCount: 10,     //Number of posts to expand by every time more posts button is hit
-        postFetchCount: 36,      //How many posts to fetch in each request
-        authorDisplayCount: 10,  //How many authors to display on one page (subscriptions always displays all)
-        userAgent:  "Subbit_"+process.env.npm_package_version,    //Replaced by webpack config for client
+        postDisplayCount: 6,      // Number of posts to display intially before expanding
+        postExpandCount: 10,     // Number of posts to expand by every time more posts button is hit
+        postFetchCount: 36,      // How many posts to fetch in each request
+        authorDisplayCount: 10,  // How many authors to display on one page (subscriptions always displays all)
+        userAgent:  "Subbit_" + process.env.npm_package_version,    // Replaced by webpack config for client
         siteName: "Subbit",
         aboutMessage: "Problems? Roughy can help.\nHit him up on Reddit or in #Subbit on Snoonet",
-        contactUrl: "mailto:example@exmaple.com",
+        contactUrl: "mailto:you@internet.com",
         sourceCodeUrl: "https://github.com/Nordskog/Subbit"
     },
 
@@ -26,14 +24,14 @@ const config =
     //////////////////////////////////////////////////////////////////////////
     server:
     {
-        //This is only for external access, ie the client.
-        //The port the actual server will run on is configured in server_config.ts
-        //SSL is not handled, let a reverse proxy handly that.
+        // This is only for external access, ie the client.
+        // The port the actual server will run on is configured in server_config.ts
+        // SSL is not handled, let a reverse proxy handly that.
 
-        //External address for the server, including port if not running on 80/433
+        // External address for the server, including port if not running on 80/433
         server_address: "http://127.0.0.1:8080",
 
-        //Same as above, with websocket protocol
+        // Same as above, with websocket protocol
         websocket_address: "ws://127.0.0.1:8080"
 
         // append "/authenticate" for reddit redirect url:
@@ -42,9 +40,10 @@ const config =
 
     common:
     {
-        //Disable login so no one can create accounts
+        // Disable login so no one can create accounts
         loginEnabled: true
     }
-}
+    
+};
 
 export default config;

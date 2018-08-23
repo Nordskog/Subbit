@@ -1,16 +1,15 @@
 // Where any external sources still register to communicate via the socket
 import * as handlers from './handlers';
 import * as socket from './socket';
-import * as socketServerActions from '~/backend/sockets/actionTypes'
-import * as models from '~/common/models'
+import * as socketServerActions from '~/backend/sockets/actionTypes';
+import * as models from '~/common/models';
 import { Exception } from '~/common/exceptions';
 import { StatsTimeRange, StatsCategoryType } from '~/common/models/stats';
-import * as keepAlive from './keepAlive';
 
 
-export function connect( access_token : string )
+export function connect( accessToken : string )
 {
-    socket.connect( access_token );
+    socket.connect( accessToken );
 }
 
 /////////////////////
@@ -28,7 +27,7 @@ export namespace stats
         {
             type: socketServerActions.stats.SUBSCRIBE_TO_STATS,
             payload: {}
-        }
+        };
         socket.send(req, true);
     }
 
@@ -38,7 +37,7 @@ export namespace stats
         {
             type: socketServerActions.stats.UNSUBSCRIBE_FROM_STATS,
             payload: {}
-        }
+        };
         socket.send(req, true);
 
         handlers.stats.setStatsCallbacks(null, null);
@@ -58,7 +57,7 @@ export namespace stats
                 category : category,
                 timeRange : timeRange
             }
-        }
+        };
         socket.send(req, true);
         
     }
@@ -74,7 +73,7 @@ export function ping()
     {
         type: socketServerActions.PING,
         payload: {}
-    }
+    };
     socket.send(req, false);
 }
 

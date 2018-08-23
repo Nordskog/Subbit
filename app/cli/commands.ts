@@ -1,7 +1,7 @@
 import * as RFY from '~/backend/rfy';
-import * as entityActions from '~/backend/entityActions'
-import * as Wetland from 'wetland'
-import * as Entities from '~/backend/entity'
+import * as entityActions from '~/backend/entityActions';
+import * as Wetland from 'wetland';
+import * as Entities from '~/backend/entity';
 import { StatsTimeRange } from '~/backend/stats';
 import * as statsHelpers from '~/backend/stats/helpers';
 
@@ -72,6 +72,7 @@ export async function handleCommand( command : Command, args : string[])
                         break;
                     }
 
+                    // tslint:disable-next-line:triple-equals
                     let enabled : boolean = args[2] == 'true';
                     let role : CliUserRole = args[1] as any;
 

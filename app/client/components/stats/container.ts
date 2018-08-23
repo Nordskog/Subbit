@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import component from './component';
-import { State } from '~/client/store'
+import { State } from '~/client/store';
 
 import { Dispatch } from '~/client/actions/tools/types';
 
@@ -11,7 +11,7 @@ function mapStateToProps(state: State)
 
 function mapDispatchToProps( dispatch : Dispatch): object
 {
-        return { }
+        return { };
 }
 
 const StatsComponent = connect(

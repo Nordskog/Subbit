@@ -14,15 +14,15 @@ function mapStateToProps(state: State )
         postDisplay: state.userState.settings.post_display_mode,
         authenticated: state.authState.isAuthenticated,
         statsAccess: state.authState.isAuthenticated && state.authState.user.id_token.stats_access
-    }
+    };
 }
 
 function mapDispatchToProps(dispatch : Dispatch, ownProps) : object
 {
     return {
-        changePostDisplay: ( mode: models.PostDisplay  ) => { dispatch(actions.posts.changePostDisplay(mode) ) },
-        logoutOnAllDevices: () => { dispatch(actions.authentication.logoutUserOnAllDevices() )  },
-        logout: () => { dispatch(actions.authentication.logoutUserAction() )  }
+        changePostDisplay: ( mode: models.PostDisplay  ) => { dispatch(actions.posts.changePostDisplay(mode) ); },
+        logoutOnAllDevices: () => { dispatch(actions.authentication.logoutUserOnAllDevices() );  },
+        logout: () => { dispatch(actions.authentication.logoutUserAction() );  }
         };
     
 }

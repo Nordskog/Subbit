@@ -3,19 +3,19 @@ import * as React from 'react';
 
 import * as models from '~/common/models';
 
-import config from 'root/config'
+import config from 'root/config';
 
-import * as cells from './cells'
+import * as cells from './cells';
 
-import * as authorStyles from 'css/author.scss'
+import * as authorStyles from 'css/author.scss';
 
-import SVGInline from "react-svg-inline"
-import * as expand_caret from 'assets/images/expand_caret.svg'
-import * as collapse_caret from 'assets/images/collapse_caret.svg'
+import SVGInline from "react-svg-inline";
+import * as expand_caret from 'assets/images/expand_caret.svg';
+import * as collapse_caret from 'assets/images/collapse_caret.svg';
 
-import * as components from '~/client/components'
+import * as components from '~/client/components';
 
-import * as transitions from 'react-transition-group'
+import * as transitions from 'react-transition-group';
 
 interface Props
 {
@@ -45,12 +45,12 @@ export default class Posts extends React.Component<Props, State>
             postsExpanded: false,
             loading: false,
             expandedPostCount : 0
-        }
+        };
     }
 
-    static getDerivedStateFromProps(nextProps : Props, prevState : State)
+    public static getDerivedStateFromProps(nextProps : Props, prevState : State)
     {
-        if (prevState.prevProps != nextProps)
+        if (prevState.prevProps !== nextProps)
         {
             return {
                 ...prevState,
@@ -62,7 +62,7 @@ export default class Posts extends React.Component<Props, State>
         return null;
     }
 
-    render()
+    public render()
     {
         let renderedPosts = [];
         let limit = this.state.postsExpanded ?  this.state.expandedPostCount + config.client.postDisplayCount : config.client.postDisplayCount;
@@ -80,11 +80,11 @@ export default class Posts extends React.Component<Props, State>
                     key={post.id}
                     postDisplay={this.props.postDisplay}
                     post={post}
-                    isTopPost={index==0}
+                    isTopPost={index === 0}
                     displaySubreddit={ this.props.displaySubreddit }
                 /> );
             }
-        };
+        }
 
         return  <div style={ { height: 'auto', overflow: 'hidden' } } className={authorStyles.posts}>
             
@@ -99,29 +99,29 @@ export default class Posts extends React.Component<Props, State>
                         {this.getCollapseButton()}
                 </transitions.TransitionGroup>
 
-            </div>
+            </div>;
     }
 
-    canExpand() : boolean
+    public canExpand() : boolean
     {
         return (this.props.posts.length > (this.state.expandedPostCount + config.client.postDisplayCount) || this.props.canLoadMore);
     }
 
-    expandPosts()
+    public expandPosts()
     {
         if (this.state.loading)
             return;
 
-        //if (this.state.postsExpanded)
-        //{
+        // if (this.state.postsExpanded)
+        // {
         //    this.grabMorePosts();
-        //}
-        //else
+        // }
+        // else
         {
 
             let newCount : number = this.state.expandedPostCount + config.client.postExpandCount;
 
-            //Just expanding, grab more if necessary
+            // Just expanding, grab more if necessary
             if (this.props.posts.length <= newCount && this.props.canLoadMore)
             {
                 this.grabMorePosts();
@@ -134,9 +134,9 @@ export default class Posts extends React.Component<Props, State>
         }
     }
 
-    collapsePosts()
+    public collapsePosts()
     {
-        //Do not allow if loading posts
+        // Do not allow if loading posts
         if (this.state.loading)
             return;
 
@@ -144,7 +144,7 @@ export default class Posts extends React.Component<Props, State>
         this.setState( { postsExpanded: false,  expandedPostCount: 0 } );
     }
 
-    grabMorePosts()
+    public grabMorePosts()
     {
         this.props.grabMorePosts();
     }
@@ -155,7 +155,7 @@ export default class Posts extends React.Component<Props, State>
     // Elements 
     ///////////////////////
 
-    getExpandButton()
+    public getExpandButton()
     {
         if (!this.canExpand() )
             return null;
@@ -168,10 +168,10 @@ export default class Posts extends React.Component<Props, State>
 
                         <span>{this.state.loading ? 'Loading...' : 'More posts'}</span>
                 </div>
-            </components.transitions.FadeVerticalResize >
+            </components.transitions.FadeVerticalResize >;
     }
 
-    getCollapseButton()
+    public getCollapseButton()
     {
         if (!this.state.postsExpanded)
             return null;
@@ -182,7 +182,7 @@ export default class Posts extends React.Component<Props, State>
                             <SVGInline className={authorStyles.morePostsButton} svg={collapse_caret}/>
                         </div>
                     </div>
-                </components.transitions.FadeVerticalResize>
+                </components.transitions.FadeVerticalResize>;
     }
     
 }

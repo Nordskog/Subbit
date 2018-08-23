@@ -23,10 +23,10 @@ export function loadAuthors()
 {
     if (history != null)
     {
-        //Do not restore from history if action is REPLACE.
-        //In our setup this occurs when we access the same path as current, or when we reload the tab.
-        //The former should act as a refresh, the latter is handled by session.
-        if (history.action == "REPLACE")
+        // Do not restore from history if action is REPLACE.
+        // In our setup this occurs when we access the same path as current, or when we reload the tab.
+        // The former should act as a refresh, the latter is handled by session.
+        if (history.action === "REPLACE")
             return;
 
         if (history.location.state != null)

@@ -1,6 +1,7 @@
+// tslint:disable:ban-types
 
 import { Severity } from './models';
-import LoggerInterface from './LoggerInterface'
+import LoggerInterface from './LoggerInterface';
 import { WinstonLogger } from '~/common/log/WinstonLogger';
 import { SlaveLogger } from '~/common/log/SlaveLogger';
 

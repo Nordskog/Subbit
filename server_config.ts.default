@@ -5,15 +5,17 @@ const config =
     /////////////////////////////////
     // Database connection
     /////////////////////////////////
+    
     database:
     {
+        // Supports Postgres and MySql
         client: 'postgres',
         connection:
         {
             host: 'localhost',
-            user: 'user_here',
-            password: 'password_here',
-            database: 'database_name_here'
+            user: 'postgres',
+            password: 'password',
+            database: 'subbit_prod'
         }
     },
 
@@ -33,6 +35,8 @@ const config =
 
     token:
     {
+        // The public key isn't (currently) exposed anywhere,
+        // so you can replace both of these with a common secret string instead.
         privateKey: fs.readFileSync("./jwtRS256.key"),
         publicKey: fs.readFileSync("./jwtRS256.key.pub"),
         audience: "meandmyself",
@@ -45,20 +49,20 @@ const config =
 
     server:
     {
-        //This is the port the actual server will run on.
-        //The address and port the client will use to access it is configured in config
+        // This is the internal port the server will run on.
+        // The address and port the client will use to access it is configured in config
         port: 8080,
-        reverseProxy: false, //Whether the server will be running behind a reverse proxy
-        userAgent:  `SubbitServer_${process.env.npm_package_version}`,    //Used when making server-side requests to reddit
+        reverseProxy: false, // Whether the server will be running behind a reverse proxy
+        userAgent:  `SubbitServer_${process.env.npm_package_version}`,    // Used when making server-side requests to reddit
     },
 
     logging:
     {
-        //Where logs will be stored.
-        //If undefined everything will be dumped into the console instead.
+        // Where logs will be stored.
+        // If undefined everything will be dumped into the console instead.
         logDirectoryPath: './logs/'
     }
 
-}
+};
 
 export default config;

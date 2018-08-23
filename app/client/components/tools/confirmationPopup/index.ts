@@ -1,1 +1,1 @@
-export { default as confirmationPopup } from './confirmationPopup'
+export { default as confirmationPopup } from './confirmationPopup';

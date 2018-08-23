@@ -1,44 +1,40 @@
 ﻿'use strict';
 
-//Path configs that mirror those found in tsconfig
-//because apparently ts-node ignores those
-require('module-alias').addAlias("~", __dirname + "/");
-require('module-alias').addAlias("css", __dirname + "/../css");
-require('module-alias').addAlias("root", __dirname + "/../");
+// Path configs that mirror those found in tsconfig
+// because apparently ts-node ignores those
+import moduleAlias from 'module-alias';
+moduleAlias.addAlias("~", __dirname + "/");
+moduleAlias.addAlias("css", __dirname + "/../css");
+moduleAlias.addAlias("root", __dirname + "/../");
 
-let debug = require('debug');
-let path = require('path');
+import path from 'path';
 
-//More stuff should probably be moved into separate modulesl 
-import * as setup from '~/setup'
+// More stuff should probably be moved into separate modulesl 
+import * as setup from '~/setup';
 
-import * as RFY from '~/backend/rfy';
-
-import Webpack from 'webpack'
+import Webpack from 'webpack';
 
 import Express from 'express';
-
-import * as stats from '~/backend/stats'
 
 import * as Http from 'http';
 import * as Net from 'net';
 
-import * as socket from '~/backend/sockets'
-import * as WebSocket from 'ws'
+import * as socket from '~/backend/sockets';
+import * as WebSocket from 'ws';
 
 import * as Log from '~/common/log';
 
 import bodyParser from 'body-parser';
 
-import serverConfig from 'root/server_config'
+import serverConfig from 'root/server_config';
 
-import clientConfig from './webpack_client'
-import clientConfigDev from './webpack_client_dev'
+import clientConfig from './webpack_client';
+import clientConfigDev from './webpack_client_dev';
 
-import * as cluster from 'cluster'
+import * as cluster from 'cluster';
 import { Action } from '~/common/models';
 
-import * as clusterActions from '~/backend/cluster/'
+import * as clusterActions from '~/backend/cluster/';
 
 import os from 'os';
 
@@ -48,7 +44,7 @@ import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import historyApiFallback from 'connect-history-api-fallback';
 
-const DEV = process.env.NODE_ENV === 'development'
+const DEV = process.env.NODE_ENV === 'development';
 
 async function setupMain()
 {
@@ -62,15 +58,15 @@ async function setupMain()
     // We're alive!
     ////////////////////
 
-    Log.I("Starting master "+process.pid);
+    Log.I("Starting master " + process.pid);
 
-    if (DEV)
+    if (DEV) 
         Log.I("Server configuration: DEV");
     else
         Log.I("Server configuration: PROD");
 
     ///////////////////////////////////////
-    //Database, stats
+    // Database, stats
     ///////////////////////////////////////
 
     await setup.database.setup();
@@ -80,9 +76,9 @@ async function setupMain()
     // Websocket
     //////////////////////
 
-    //Because there's a lot of back-and-forth, websocket stuff
-    //is all handled on master.
-    let managerSocket : WebSocket.Server = socket.getServer();
+    // Because there's a lot of back-and-forth, websocket stuff
+    // is all handled on master.
+    let managerSocket: WebSocket.Server = socket.getServer();
 
     //////////////////
     // Fork slaves
@@ -91,7 +87,7 @@ async function setupMain()
     let cpus = os.cpus().length;
     if (DEV)
     {
-        //Limit to single core when dev
+        // Limit to single core when dev
         cpus = 1;
     }
 
@@ -112,7 +108,7 @@ async function setupSlave()
     Log.I(`Starting slave #${cluster.worker.id} at ${process.pid}`);
 
     ///////////////////////////////////////
-    //Database, stats, reddit auth
+    // Database, stats, reddit auth
     ///////////////////////////////////////
 
     await setup.database.setup();
@@ -121,7 +117,7 @@ async function setupSlave()
     /////////////////////
     // Express backend
     /////////////////////
-    var app: Express.Express = Express();
+    let app: Express.Express = Express();
 
     // Middleware
     app.use(bodyParser.json());
@@ -140,20 +136,20 @@ async function setupSlave()
 
     if (DEV)
     {
-        const clientCompiler = Webpack(<any>clientConfigDev);
+        const clientCompiler = Webpack(<any> clientConfigDev);
 
-        app.use(historyApiFallback( {   verbose: false  }));    //Handles catch-all route
+        app.use(historyApiFallback( {   verbose: false  }));    // Handles catch-all route
         app.use(webpackDevMiddleware(clientCompiler, { publicPath: publicPath } ) );
         app.use(webpackHotMiddleware(clientCompiler));
     }
     else
     {
-        //Index, robots, sitemap, favicon in root.
-        //Static resources in /static
+        // Index, robots, sitemap, favicon in root.
+        // Static resources in /static
         app.use(Express.static( outputPath ));
 
-        //Catch-all route for app container
-        app.get('*', function(req, res)
+        // Catch-all route for app container
+        app.get('*', (req, res) =>
         {
             res.sendFile( path.join(outputPath, "index.html") );
         });
@@ -163,15 +159,15 @@ async function setupSlave()
     // http to handle express and websockets on same port
     //////////////////////////////////////////////////////////
 
-    const httpServer : Http.Server = Http.createServer();
+    const httpServer: Http.Server = Http.createServer();
     httpServer.on('request', app);
 
     ///////////////////////////////
     // WebSocket
     ///////////////////////////////
 
-    //Handle separate websockets for manager / client
-    httpServer.on('upgrade', (request : Http.IncomingMessage, socket : Net.Socket, head : Buffer) => 
+    // Handle separate websockets for manager / client
+    httpServer.on('upgrade', (request: Http.IncomingMessage, socket: Net.Socket, head: Buffer) => 
     {
         if (request.url === '/api/socket')
         {
@@ -183,7 +179,7 @@ async function setupSlave()
     // Messages from master
     //////////////////////////////
 
-    process.on( 'message', ( message : Action<any>, handle : Net.Socket | Net.Server  ) => 
+    process.on( 'message', ( message: Action<any>, handle: Net.Socket | Net.Server  ) => 
     {            
         if (message != null)
         {
@@ -191,14 +187,14 @@ async function setupSlave()
             {
                 case clusterActions.actionTypes.auth.ADD_AUTH_STATE:
                 {
-                    let payload : clusterActions.actionTypes.auth.ADD_AUTH_STATE = message.payload;
+                    let payload: clusterActions.actionTypes.auth.ADD_AUTH_STATE = message.payload;
                     clusterActions.receiveAuthState(payload.identifier, payload.expiresAt, payload.loginType, payload.sourceWorker );
                     break;
                 }
 
                 case clusterActions.actionTypes.auth.REMOVE_AUTH_STATE:
                 {
-                    let payload : clusterActions.actionTypes.auth.REMOVE_AUTH_STATE = message.payload;
+                    let payload: clusterActions.actionTypes.auth.REMOVE_AUTH_STATE = message.payload;
                     clusterActions.receiveAuthStateRemoval(payload.identifier, payload.sourceWorker );
                     break;
                 }
@@ -212,8 +208,8 @@ async function setupSlave()
 
     app.set('port', serverConfig.server.port);
 
-    httpServer.listen(app.get('port'), function () {
-        debug('Server listening on port ' + httpServer.address().port);
+    httpServer.listen(app.get('port'), () => {
+        Log.I('Server listening on port ' + httpServer.address().port);
     });
 }
 

@@ -1,4 +1,6 @@
-import { Severity } from './models'
+// tslint:disable:ban-types
+
+import { Severity } from './models';
 export default interface LoggerInterface
 {
     I( message : any, meta : Object ) : void;

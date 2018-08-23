@@ -1,5 +1,5 @@
-import * as models from '~/common/models'
-import * as actions from '~/client/actions'
+import * as models from '~/common/models';
+import * as actions from '~/client/actions';
 import { Dispatch, GetState } from '~/client/actions/tools/types';
 
 
@@ -11,10 +11,10 @@ export function saveUserSettings( userSettings : models.data.UserSettings)
 export function loadUserSettings( dispatch : Dispatch )
 {
 
-    let user_settings_raw = localStorage.getItem('user_settings');
-    if (user_settings_raw != null)
+    let userSettingsJson = localStorage.getItem('user_settings');
+    if (userSettingsJson != null)
     {
-        let userSettings = JSON.parse(user_settings_raw);
+        let userSettings = JSON.parse(userSettingsJson);
         
         dispatch({
             type: actions.types.user.USER_SETTINGS_FETCHED,

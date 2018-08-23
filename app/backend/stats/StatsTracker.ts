@@ -5,13 +5,13 @@ import { StatsTimeRange, StatsDataType } from './types';
 import { getAgeLimit, getTimeRangeEnd } from './helpers';
 import * as Log from '~/common/log';
 
-//A single value
+// A single value
 class StatsEntry
 {
-    value : number = 0;
-    end : Date;
-    count? : number = 1 ; //For average. Calculated when entry is finalized (new data is outside range)
-    finalized : boolean = false;
+    public value : number = 0;
+    public end : Date;
+    public count? : number = 1 ; // For average. Calculated when entry is finalized (new data is outside range)
+    public finalized : boolean = false;
 
     constructor( end : Date,  value? : number, count? : number )
     {
@@ -28,7 +28,7 @@ class StatsEntry
         }
     }
      
-    add( value : number, count? : number)
+    public add( value : number, count? : number)
     {
         this.value += value;
         if (count == null)
@@ -43,13 +43,13 @@ class StatsEntry
 
     }
 
-    set( value : number)
+    public set( value : number)
     {
-        //For cumulative
+        // For cumulative
         this.value = value;
     }
 
-    finalize( type : StatsDataType)
+    public finalize( type : StatsDataType)
     {
         this.finalized = true;
 
@@ -64,24 +64,24 @@ class StatsEntry
 
             default:
             {
-                //Nothing really.
+                // Nothing really.
             }
         }
     }
 }
 
-//Values for a single time range
+// Values for a single time range
 class StatsTimeline
 {
-    timeRange : StatsTimeRange;
-    type : StatsDataType;
+    public timeRange : StatsTimeRange;
+    public type : StatsDataType;
 
-    parent : StatsTimeline;
+    public parent : StatsTimeline;
 
-    entries : StatsEntry[] = [];
-    latestEntry : StatsEntry;
+    public entries : StatsEntry[] = [];
+    public latestEntry : StatsEntry;
 
-    finalizedCallback : (StatsTimeline, StatsEntry) => void;
+    private finalizedCallback : (StatsTimeline, StatsEntry) => void;
 
     constructor( timeRange : StatsTimeRange, type : StatsDataType, parent : StatsTimeline, finalizedCallback : (StatsTimeline, StatsEntry) => void )
     {
@@ -91,59 +91,59 @@ class StatsTimeline
         this.finalizedCallback = finalizedCallback;
     }
 
-    //Caller is responsible for ensuring that value is not null.
-    //In the case of cumulative the value should be the actual total,
-    //not the difference from previous add.
-    add( value : number, count : number, newDate : Date = new Date() )
+    // Caller is responsible for ensuring that value is not null.
+    // In the case of cumulative the value should be the actual total,
+    // not the difference from previous add.
+    public add( value : number, count : number, newDate : Date = new Date() )
     {
         if (this.latestEntry == null || this.latestEntry.end < newDate )
         {
             this.closeCurrentEntry(newDate);
 
-            //Time surpassed end of last previous entry, creat enew.
+            // Time surpassed end of last previous entry, creat enew.
             this.addNewEntry(newDate, value, count);
 
             this.prune();
         }
         else
         {
-            //Time within end of entry, add data.
+            // Time within end of entry, add data.
             this.addToCurrentEntry(value, 1);
         }
     }
 
-    //Add to current entry without checking date
-    addToCurrentEntry(value : number, count : number)
+    // Add to current entry without checking date
+    public addToCurrentEntry(value : number, count : number)
     {
-        if (this.type == StatsDataType.CUMULATIVE)
+        if (this.type === StatsDataType.CUMULATIVE)
             this.latestEntry.set(value);
         else
             this.latestEntry.add(value, count);
     }
 
-    getCurrentValue()
+    public getCurrentValue()
     {
         if (this.latestEntry != null)
             return this.latestEntry.value;
         return 0;
     }
 
-    addNewEntry( date : Date, value : number, count : number = 1)
+    public addNewEntry( date : Date, value : number, count : number = 1)
     {   
         let newEntry = new StatsEntry(getTimeRangeEnd(date, this.timeRange), value, count);
         this.entries.push(newEntry);
         this.latestEntry = newEntry;
     }
     
-    //Let higher timeranges know of new data
-    notifyParent(value : number, count : number, newDate? : Date )
+    // Let higher timeranges know of new data
+    private notifyParent(value : number, count : number, newDate? : Date )
     {
         if (this.parent != null)
         {
             if (newDate == null)
             {
-                //If date isn't included self is in same entry as before,
-                //which means the parent will be too.
+                // If date isn't included self is in same entry as before,
+                // which means the parent will be too.
                 this.parent.addToCurrentEntry(value, count);
             }
             else
@@ -153,7 +153,7 @@ class StatsTimeline
         }
     }
 
-    prune()
+    protected prune()
     {
         let ageLimit = getAgeLimit(new Date(), this.timeRange);
         
@@ -174,13 +174,13 @@ class StatsTimeline
         }
     }
 
-    closeCurrentEntry( newDate : Date = new Date())
+    private closeCurrentEntry( newDate : Date = new Date())
     {
         if (this.latestEntry != null)
         {
-            //When we have loaded history, the lastest entry
-            //will be an item that is already finalized and stored.
-            //Do not emit any signals for it.
+            // When we have loaded history, the lastest entry
+            // will be an item that is already finalized and stored.
+            // Do not emit any signals for it.
             if (!this.latestEntry.finalized)
             {
                 this.latestEntry.finalize( this.type );
@@ -192,8 +192,8 @@ class StatsTimeline
         }
     }
 
-    //Check if we have passed end time of latest entry and should finalize it.
-    check( date? : Date, value? : number )
+    // Check if we have passed end time of latest entry and should finalize it.
+    public check( date? : Date, value? : number )
     {
         if (date == null)
             date = new Date();
@@ -202,12 +202,12 @@ class StatsTimeline
         {
             this.closeCurrentEntry();
 
-            //Check may be called without a value.
-            //If end passed we add a null value,
-            //or copy existing value of cumulative.
+            // Check may be called without a value.
+            // If end passed we add a null value,
+            // or copy existing value of cumulative.
             if ( value == null)
                 value = 0; 
-            if (this.type == StatsDataType.CUMULATIVE)
+            if (this.type === StatsDataType.CUMULATIVE)
                 value = this.getCurrentValue();
 
             this.addNewEntry(date, value); 
@@ -221,14 +221,14 @@ class StatsTimeline
 
 export type StatsEntryFinalizedCallback = ( value : number, end : Date, timeRnage : StatsTimeRange, tracker : StatsTracker) => void;
 
-//Overlord
+// Overlord
 export class StatsTracker
 {
-    type : StatsDataType;
-    timelines : StatsTimeline[] = [];
-    lowestUnitTimeLine : StatsTimeline;
-    callback : StatsEntryFinalizedCallback;
-    minExpectedValue : number = 10; //Mainly for display purposes on the client side
+    public type : StatsDataType;
+    private timelines : StatsTimeline[] = [];
+    public lowestUnitTimeLine : StatsTimeline;
+    private callback : StatsEntryFinalizedCallback;
+    private minExpectedValue : number = 10; // Mainly for display purposes on the client side
 
 
     constructor( type : StatsDataType, minExpectedValue : number, ...timeRanges : StatsTimeRange[])
@@ -236,40 +236,40 @@ export class StatsTracker
         this.type = type;
         this.minExpectedValue = minExpectedValue;
 
-        //Enums are their time duration in ms. Sort descending.
+        // Enums are their time duration in ms. Sort descending.
         timeRanges.sort( (a, b) => b - a );
         let prevTimeline = null;
 
         for( let timeRange of timeRanges)
         {
-            let timeLine = new StatsTimeline( timeRange, type, prevTimeline, (timeline, entry) => this.handleEntryFinalized(timeline,entry) )
+            let timeLine = new StatsTimeline( timeRange, type, prevTimeline, (timeline, entry) => this.handleEntryFinalized(timeline,entry) );
 
             this.timelines.push( timeLine );
             prevTimeline = timeLine;
-        };
+        }
 
-        this.lowestUnitTimeLine = this.timelines[ this.timelines.length - 1 ]
+        this.lowestUnitTimeLine = this.timelines[ this.timelines.length - 1 ];
 
 
-        if ( type == StatsDataType.ONGOING || type == StatsDataType.AVERAGE )
+        if ( type === StatsDataType.ONGOING || type === StatsDataType.AVERAGE )
         {
-            //Call add on self to kick things off, with an explicit value of 0
-            //Do not do this for cumulative
+            // Call add on self to kick things off, with an explicit value of 0
+            // Do not do this for cumulative
             this.add(0);
         }
         
-        //Only makes sense for ongoing
-        if ( type == StatsDataType.ONGOING )
+        // Only makes sense for ongoing
+        if ( type === StatsDataType.ONGOING )
         {
             this.entryEndCheckLoop();
         }
 
     }
 
-    //Checks if entries have surpassed their end time and should be finalized,
-    //incase we don't receive any new data.
-    //Only call once, will repeat itself.
-    entryEndCheckLoop()
+    // Checks if entries have surpassed their end time and should be finalized,
+    // incase we don't receive any new data.
+    // Only call once, will repeat itself.
+    private entryEndCheckLoop()
     {
         
 
@@ -285,13 +285,13 @@ export class StatsTracker
         }, diff);
     }
 
-    //May be called with null for convenience.
-    //Default is 1 or previous value for cumulative
-    add( value? : number)
+    // May be called with null for convenience.
+    // Default is 1 or previous value for cumulative
+    public add( value? : number)
     {   
         if (value == null)
         {
-            if (this.type == StatsDataType.CUMULATIVE)
+            if (this.type === StatsDataType.CUMULATIVE)
             {
                 value = this.lowestUnitTimeLine.getCurrentValue();
             }
@@ -304,23 +304,23 @@ export class StatsTracker
         this.lowestUnitTimeLine.add(value, 1);
     }
 
-    handleEntryFinalized( timeline : StatsTimeline, entry : StatsEntry )
+    private handleEntryFinalized( timeline : StatsTimeline, entry : StatsEntry )
     {
         if (this.callback != null)
             this.callback(entry.value, entry.end, timeline.timeRange, this);
     }
 
-    setStatsEntryFinalizedCallback( callback : StatsEntryFinalizedCallback )
+    public setStatsEntryFinalizedCallback( callback : StatsEntryFinalizedCallback )
     {
         this.callback = callback;
     }
 
-    getTimeline( timeRange : StatsTimeRange)
+    public getTimeline( timeRange : StatsTimeRange)
     {
-        return this.timelines.find( tm => tm.timeRange == timeRange );
+        return this.timelines.find( (tm) => tm.timeRange === timeRange );
     }
 
-    populateHistory( timeRange : StatsTimeRange, data : { value : number, end : Date }[]  )
+    public populateHistory( timeRange : StatsTimeRange, data : { value : number, end : Date }[]  )
     {
         let timeline : StatsTimeline = this.getTimeline(timeRange);
         if (timeline == null)
@@ -329,8 +329,8 @@ export class StatsTracker
             return;
         }
 
-        //Loaded items are marked as finalized so that even if there is not an existing latestItem
-        //it will not be re-saved
+        // Loaded items are marked as finalized so that even if there is not an existing latestItem
+        // it will not be re-saved
         timeline.entries = data.map( ( entry ) => 
         {
             let newEntry = new StatsEntry( entry.end, entry.value);
@@ -338,8 +338,8 @@ export class StatsTracker
             return newEntry;
         });
 
-        //Lowest unit has an entry added in the constructor,
-        //but the rest do not.
+        // Lowest unit has an entry added in the constructor,
+        // but the rest do not.
         if (timeline.latestEntry != null)
         {
             timeline.entries.push(timeline.latestEntry );
@@ -352,27 +352,27 @@ export class StatsTracker
         
     }
 
-    getHistory( timeRange : StatsTimeRange ) : models.stats.StatsHistory
+    public getHistory( timeRange : StatsTimeRange ) : models.stats.StatsHistory
     {
         let entries : StatsEntry[]  = [];
         for ( let timeline of this.timelines)
         {
-            if (timeline.timeRange == timeRange)
+            if (timeline.timeRange === timeRange)
             {
                 entries = timeline.entries;
                 break;
             }
         }
 
-        let historyEntries = entries.map( entry => 
+        let historyEntries = entries.map( (entry) => 
             {
                 return {
                     value: entry.value,
                     end: entry.end.getTime() / 1000
-                }
+                };
             });
 
-        //Should usually skip the last one, as it is still adding data
+        // Should usually skip the last one, as it is still adding data
         historyEntries.pop();
 
         return {
@@ -381,7 +381,7 @@ export class StatsTracker
             limit: ( Date.now() / 1000  ) - ( getAgeLimit( new Date(), timeRange).getTime() / 1000 ),
             data: historyEntries,
             minExpectedValue: this.minExpectedValue
-        }
+        };
     }
 
 

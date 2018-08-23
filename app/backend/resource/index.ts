@@ -5,4 +5,4 @@ import subscriptionRouter from './subscription';
 export 
 {
     authRouter, userRouter, subscriptionRouter
-}
+};

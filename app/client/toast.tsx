@@ -1,6 +1,6 @@
 import * as Toastify from "react-toastify";
 
-import * as styles from 'css/toast.scss'
+import * as styles from 'css/toast.scss';
 import * as React from 'react';
 import { CountdownToast } from "~/client/components/tools";
 
@@ -18,12 +18,12 @@ export function toast( type : Toastify.ToastType, timeout : number | false, ...m
     let elements = [];
     message.forEach( (message : string, index : number) => 
     {
-        elements.push( <span key={index}  >{message}</span> )
-    } )
+        elements.push( <span key={index}  >{message}</span> );
+    } );
 
     let container = <div className={styles.columnContainer}>
                         {elements}
-                    </div>
+                    </div>;
 
     Toastify.toast(container, {
         type: type,
@@ -47,7 +47,7 @@ export function countdownToast( type : Toastify.ToastType, timeout : number | fa
                         start={start}
                         message={message}
                         countdownMessage={countdownMessage}
-                        countdownPostMessage={postCountdownMessage}  />
+                        countdownPostMessage={postCountdownMessage}  />;
 
     toastReact( type, timeout, countdown );
 }
