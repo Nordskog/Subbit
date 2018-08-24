@@ -25,7 +25,7 @@ export async function getAuthors( dispatch : Dispatch, getState : GetState )
         // Single author
         authors = [{
             id : -1,
-            name: state.authorState.author, // Need to correct lookup name maybe
+            name: state.authorState.author,
             last_post_date: 0,
             post_count : 0,
             posts: [],
@@ -105,6 +105,7 @@ export async function getAuthors( dispatch : Dispatch, getState : GetState )
 
     if (state.authorState.filter === models.AuthorFilter.SUBSCRIPTIONS)
     {
+        // Sort by last post descending
         authorEntries.sort( (a : models.data.AuthorEntry, b: models.data.AuthorEntry) => 
         {
             let aCreated = a.author.posts.length > 0 ? a.author.posts[0].created_utc : 0;
@@ -116,6 +117,18 @@ export async function getAuthors( dispatch : Dispatch, getState : GetState )
                 return 1;
             return 0;
         });
+    }
+
+    if ( state.authorState.filter === models.AuthorFilter.SUBSCRIPTIONS || state.authorState.author )
+    {
+        // Name casing may be incorrect. Check post data.
+        for (let entry of authorEntries)
+        {
+            if (entry.author.posts.length > 0)
+            {
+                entry.author.name = entry.author.posts[0].author;
+            }
+        }
     }
 
     return { authorEntries : authorEntries, after : after  };
