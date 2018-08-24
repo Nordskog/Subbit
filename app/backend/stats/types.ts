@@ -11,6 +11,7 @@ export enum StatsCategoryType
     SUCCESSFUL_LOGINS = "SUCCESSFUL_LOGINS",
     FAILED_LOGINS = "FAILED_LOGINS",
     ERRORS = "ERRORS",
+    REQUESTS = "REQUESTS",
 
     // Also realtime, but updated in loops
     CPU_USAGE = "CPU_USAGE",

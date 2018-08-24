@@ -19,7 +19,8 @@ let StatsCategoryTypeEnums : StatsCategoryType[] = [
     StatsCategoryType.FAILED_LOGINS, 
     StatsCategoryType.ERRORS,
     StatsCategoryType.CPU_USAGE, 
-    StatsCategoryType.MEMORY_USAGE
+    StatsCategoryType.MEMORY_USAGE,
+    StatsCategoryType.REQUESTS
 ];
 
 export async function setup()

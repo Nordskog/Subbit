@@ -12,6 +12,8 @@ import path from 'path';
 // More stuff should probably be moved into separate modulesl 
 import * as setup from '~/setup';
 
+import * as stats from '~/backend/stats';
+
 import Webpack from 'webpack';
 
 import Express from 'express';
@@ -118,6 +120,13 @@ async function setupSlave()
     // Express backend
     /////////////////////
     let app: Express.Express = Express();
+
+    // Catch-all for requests stats
+    app.use( (req, res, next) => 
+    {
+        stats.add( stats.StatsCategoryType.REQUESTS );
+        next();
+    });
 
     // Middleware
     app.use(bodyParser.json());

@@ -149,6 +149,7 @@ export default class StatsComponent extends React.Component<Props,State>
                 <div className={styles.section}>
                 Statistics
                 </div>
+                {this.renderChartCategory("Requests", StatsCategoryType.REQUESTS)}
                 {this.renderChartCategory("Page loads", StatsCategoryType.PAGE_LOADS)}
                 {this.renderChartCategory("User page loads", StatsCategoryType.USER_PAGE_LOADS)}
                 {this.renderChartCategory("Successful logins", StatsCategoryType.SUCCESSFUL_LOGINS)}
