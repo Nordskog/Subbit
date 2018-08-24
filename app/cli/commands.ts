@@ -2,8 +2,6 @@ import * as RFY from '~/backend/rfy';
 import * as entityActions from '~/backend/entityActions';
 import * as Wetland from 'wetland';
 import * as Entities from '~/backend/entity';
-import { StatsTimeRange } from '~/backend/stats';
-import * as statsHelpers from '~/backend/stats/helpers';
 
 export enum Command
 {

@@ -5,9 +5,9 @@
 // Path configs that mirror those found in tsconfig
 // because apparently ts-node ignores those
 import moduleAlias from 'module-alias';
-moduleAlias.addAlias("~", __dirname + "/");
-moduleAlias.addAlias("css", __dirname + "/../css");
-moduleAlias.addAlias("root", __dirname + "/../");
+moduleAlias.addAlias("~", __dirname + "/..");
+moduleAlias.addAlias("css", __dirname + "/../../css");
+moduleAlias.addAlias("root", __dirname + "/../../");
 
 import { Command, handleCommand } from './commands';
 
