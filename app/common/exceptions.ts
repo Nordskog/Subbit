@@ -77,6 +77,25 @@ export class CancelledException extends Exception
     }
 }
 
+// For all other generic stuff we want logged, but not popped in user's face
+export class LogOnlyException extends Exception
+{
+    public wrappedError : Error;
+
+    constructor( message : string, error : Error)
+    {
+        super(message);
+        Object.setPrototypeOf(this, LogOnlyException.prototype);
+        this.wrappedError = error;
+        this.name = "LogOnlyExceptio";
+    }
+
+    public toString()
+    {
+         return `${this.name}: ${this.message}`;
+    }
+}
+
 export class SocketException extends Exception
 {
     constructor( message : string)

@@ -1,5 +1,5 @@
 import * as ReduxTypes from './types';
-import { Exception, CancelledException, NetworkException, AuthorizationInvalidException } from "~/common/exceptions";
+import { Exception, CancelledException, NetworkException, AuthorizationInvalidException, LogOnlyException } from "~/common/exceptions";
 import { toast, ToastType } from "~/client/toast";
 import * as actions from '~/client/actions';
 import * as Log from '~/common/log';
@@ -21,7 +21,12 @@ export function WrapWithHandler( action : (dispatch : ReduxTypes.Dispatch, getSt
 
 export function handleError(dispatch : ReduxTypes.Dispatch, err : Error )
 {
-    if (err instanceof CancelledException)
+    if (err instanceof LogOnlyException)
+    {
+        Log.E(err.toString);
+        Log.E(err.wrappedError);
+    }
+    else if (err instanceof CancelledException)
     {
         // We always do this on purpose
     }

@@ -3,6 +3,7 @@ import { api, tools, models } from "~/common";
 import * as actions from '~/client/actions';
 import { WrapWithHandler } from "~/client/actions/tools/error";
 import { Dispatch, GetState } from "~/client/actions/tools/types";
+import { LogOnlyException } from "~/common/exceptions";
 
 
 export function getAndUpdateLastVisit( loadFromSession : boolean = false)
@@ -26,10 +27,20 @@ export function getAndUpdateLastVisit( loadFromSession : boolean = false)
             let state: State = getState();
             let token: string = tools.store.getAccessToken(state);
 
-            // Get last recorded value server-side
-            let newLastVisit = await api.rfy.user.getAndUpdateLastVisit(token);
 
-            let now = Date.now() / 1000;
+            // Get last recorded value server-side
+            // We don't want this to display an error on failure,
+            // since for unauthenticated users everything else will work fine
+            // running on the cdn's cache
+            let newLastVisit = 0;
+            try 
+            {
+                newLastVisit = await api.rfy.user.getAndUpdateLastVisit(token);
+            }
+            catch ( err )
+            {
+                throw new LogOnlyException("Failed to update last visit", err);
+            }
 
             // All of this has the ultimate effect of the current lastVisit time sticking even if the user refreshes the page.
             // If they go more than 2min without refreshing the page it will be updated.
