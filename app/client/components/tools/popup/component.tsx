@@ -41,6 +41,7 @@ export default class Popup extends React.Component<Props, State>
 {
     public state = { open: false };
     private triggerRef : HTMLElement;
+    private downBeforeHoverTrigger = false;
 
     public static defaultProps = {
         modal: false,
@@ -113,22 +114,48 @@ export default class Popup extends React.Component<Props, State>
         {
             if (clickClose)
             {
-                return React.cloneElement( this.props.trigger, {  onMouseEnter: () => this.handleMouseEnter(), onMouseLeave: () => this.handleMouseLeave(), ref: ( ref : HTMLElement ) => this.setTriggerRef(ref) } );
+                return React.cloneElement( 
+                    this.props.trigger, 
+                    { 
+                            onMouseEnter: () => this.handleMouseEnter(),
+                            onMouseLeave: () => this.handleMouseLeave(), 
+                            ref: ( ref : HTMLElement ) => this.setTriggerRef(ref),
+                            onMouseDown: () => this.handleMouseDown(),
+                            onMouseUp: () => this.handleMouseUp()
+                    });
             }
             else
             {
-                return React.cloneElement( this.props.trigger, {  key: "trigger", onMouseLeave: () => this.handleMouseLeave(), ref: ( ref : HTMLElement ) => this.setTriggerRef(ref) } );
+                return React.cloneElement( 
+                    this.props.trigger, 
+                    {  
+                        key: "trigger", 
+                        onMouseLeave: () => this.handleMouseLeave(), 
+                        ref: ( ref : HTMLElement ) => this.setTriggerRef(ref),
+                        onMouseDown: () => this.handleMouseDown(),
+                        onMouseUp: () => this.handleMouseUp()
+                    });
             }
         }
         else
         {
             if (clickClose)
             {
-                return React.cloneElement( this.props.trigger, {  onClick: () => this.setState( { open: true } ), ref: ( ref : HTMLElement ) => this.setTriggerRef(ref) } );
+                return React.cloneElement( 
+                    this.props.trigger, 
+                    {  
+                        onClick: () => this.setState( { open: true } ),
+                        ref: ( ref : HTMLElement ) => this.setTriggerRef(ref),
+                    });
             }
             else
             {
-                return React.cloneElement( this.props.trigger, {  key: "trigger", ref: ( ref : HTMLElement ) => this.setTriggerRef(ref) } );
+                return React.cloneElement( 
+                    this.props.trigger, 
+                    { 
+                         key: "trigger", 
+                         ref: ( ref : HTMLElement ) => this.setTriggerRef(ref),
+                    });
             }
         }
 
@@ -385,6 +412,29 @@ export default class Popup extends React.Component<Props, State>
         else
         {
             return this.getTrigger(true);
+        }
+    }
+
+
+    // If the popup is triggered by hover, and the user fires mousedown before it appears, but mouseup after, 
+    // it will not register as an onClick event. Manually detect this scenario and call click on the trigger.
+    public handleMouseUp()
+    {
+        if ( this.props.hover && this.state.open)
+        {   
+            if ( this.downBeforeHoverTrigger )
+            {
+                this.triggerRef.click();
+                this.downBeforeHoverTrigger = false;
+            }
+        }
+    }
+
+    public handleMouseDown()
+    {
+        if (this.props.hover && !this.state.open ) 
+        {
+            this.downBeforeHoverTrigger = true;
         }
     }
 
