@@ -13,34 +13,36 @@ export function updateTitle( getState : GetState)
     // "for Reddit" added to make more recognizable in search results
     let state : State = getState();
 
+    let title = config.client.siteName + " for Reddit";
+
+    if (state.siteState.mode === models.SiteMode.ABOUT)
+    {
+        title += " - About";
+    }
+    if (state.siteState.mode === models.SiteMode.PRIVACY)
+    {
+        title += " - Privacy";
+    }
     if (state.siteState.mode === models.SiteMode.STATS)
     {
-        document.title = config.client.siteName + " for Reddit - Stats";
+        title += " - Stats";
     }
     else if (state.authorState.author != null)
     {
         if (state.authorState.subreddit != null)
         {
-            document.title = config.client.siteName + " for Reddit - " + state.authorState.author + " in r/" + state.authorState.subreddit;
+            title += " - " + state.authorState.author + " in r/" + state.authorState.subreddit;
         }
         else
         {
-            document.title = config.client.siteName + " for Reddit - " + state.authorState.author;
+            title += " - " + state.authorState.author;
         }
     }
     else if (state.authorState.subreddit != null)
     {
-        document.title = config.client.siteName + " for Reddit - " + state.authorState.subreddit;
+        title += " - " + state.authorState.subreddit;
     }
-    /*
-    else if (state.authorState.filter != null)
-    {
-        document.title = config.client.siteName+" for Reddit - "+getFilterDisplayString(state.authorState.filter);
-    }
-    */
-    else
-    {
-        document.title = config.client.siteName + " for Reddit";
-    }
+    
+    document.title = title;
     
 }
