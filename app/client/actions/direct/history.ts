@@ -26,6 +26,9 @@ export function loadAuthors()
         // Do not restore from history if action is REPLACE.
         // In our setup this occurs when we access the same path as current, or when we reload the tab.
         // The former should act as a refresh, the latter is handled by session.
+        // Note that we instead get POP when we do a refresh.
+        // We cope with this by always clearing history on page unload,
+        // and letting session restore the state instead.
         if (history.action === "REPLACE")
             return;
 
@@ -49,4 +52,15 @@ export function loadAfter()
     }
 
     return null;
+}
+
+export function clearHistoryForCurrentLocation()
+{
+    if (history != null)
+    {
+        if (history.location.state != null)
+        {
+            history.replace( { ... history.location, state: null} );
+        }
+    }
 }
