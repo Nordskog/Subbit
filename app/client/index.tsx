@@ -20,10 +20,6 @@ import * as Log from '~/common/log';
 import * as routeActions from '~/client/actions/routes';
 import * as historyActions from '~/client/actions/direct/history';
 
-// So webpack will bundle it. Loaded with file-loader
-// tslint:disable-next-line:no-var-requires
-require('assets/images/favicon.ico');
-
 // Sets up a toast callback
 setup.setupClientStuff();
 

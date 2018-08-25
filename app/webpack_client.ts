@@ -121,11 +121,6 @@ const config = {
                 loader: 'url-loader?limit=10000&mimetype=application/octet-stream'
             },
             {
-                test: /\.(ico)$/,
-                loader: 'file-loader?name=static/[name].[ext]'
-            },
-            
-            {
 
                 // SVGs loaded inline because compatibility (I'm looking at you, IE)
                 test: /\.svg$/,
@@ -168,6 +163,7 @@ const config = {
             cssProcessorOptions: { discardUnused: false }
         }),
         new HtmlWebpackPlugin( {
+            favicon: '../assets/images/favicon.ico',
             template: "./index.html",
             filename: "index.html",
             inject: "body"

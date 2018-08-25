@@ -34,6 +34,7 @@ const config = {
         }),
 
         new HtmlWebpackPlugin( {
+            favicon: '../assets/images/favicon.ico',
             template: "./index.html",
             filename: "index.html",
             inject: "body"
