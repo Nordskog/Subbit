@@ -114,6 +114,9 @@
     border-right: 2px solid $hidden-text-color;
     border-bottom: 2px solid $hidden-text-color;
 
+    border-bottom-right-radius: var( --tiny-gap );
+    border-bottom-left-radius: var( --tiny-gap );
+
     //border: 2px solid $hidden-text-color;
 }
 
@@ -183,4 +186,15 @@
    // border: 2px solid $subscribed-highlight-color;
 }
 
+
+@media only screen and (max-width: 1100px)
+{
+    .popupContainer
+    {    
+        border-bottom-right-radius: 0px;
+        border-bottom-left-radius: 0px;
+    }
+
+
+}
 
