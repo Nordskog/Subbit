@@ -4,6 +4,7 @@ import * as entityActions from '~/backend/entityActions';
 import * as stats from '~/backend/stats';
 import { StatsCategoryType, StatsTimeRange } from '~/backend/stats';
 import * as cluster from 'cluster';
+import * as serverTools from '~/backend/tools';
 
 import * as os from 'os';
 
@@ -54,15 +55,11 @@ export async function setup()
         stats.add( StatsCategoryType.AUTHORS,       await entityActions.authors        .getCount(manager) );
         stats.add( StatsCategoryType.SUBSCRIPTIONS, await entityActions.subscriptions  .getCount(manager) );
         stats.add( StatsCategoryType.USERS,         await entityActions.user           .getCount(manager) );
-        
-        let totalMem =   os.totalmem() / 1024 / 1024;
-        let freeMem =   os.freemem() / 1024 / 1024;
-        let usedMem =  totalMem - freeMem;
 
         // Currently 1 minute average. Make sure to match to shortest time range.
         // CPU will always be 1 on windows.
-        stats.add( StatsCategoryType.CPU_USAGE,  os.loadavg[0] );
-        stats.add( StatsCategoryType.MEMORY_USAGE, usedMem );
+        stats.add( StatsCategoryType.CPU_USAGE,  os.loadavg()[0] );
+        stats.add( StatsCategoryType.MEMORY_USAGE, await serverTools.system.getMemoryUtlization() );
 
     }, interval);
 }
