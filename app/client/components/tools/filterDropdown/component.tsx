@@ -36,18 +36,23 @@ export default class FilterDropdown extends React.Component<Props, State>
         let filters: components.tools.SearchList.ListItem[]  = 
         [
             FilterDropdown.getFilterItem(  models.AuthorFilter.SUBSCRIPTIONS),
+        ];
+
+        // Best only available on front page
+        if ( nextProps.subreddit == null )
+        {
+            filters.push( FilterDropdown.getFilterItem(  models.AuthorFilter.BEST) );
+        }
+
+        // The rest
+        filters = filters.concat
+        ([
             FilterDropdown.getFilterItem(  models.AuthorFilter.HOT),
             FilterDropdown.getFilterItem(  models.AuthorFilter.NEW),
             FilterDropdown.getFilterItem(  models.AuthorFilter.TOP),
             FilterDropdown.getFilterItem(  models.AuthorFilter.RISING),
             FilterDropdown.getFilterItem(  models.AuthorFilter.CONTROVERSIAL),
-
-        ];
-
-        if ( nextProps.subreddit == null )
-        {
-            filters.unshift( FilterDropdown.getFilterItem(  models.AuthorFilter.BEST) );
-        }
+        ]);
 
         return  { filters: filters };
     }
