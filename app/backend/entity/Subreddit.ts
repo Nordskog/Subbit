@@ -8,7 +8,7 @@ export default class Subreddit extends Wetland.Entity
 {
     public name : string;
     public name_lower : string;
-    public autoscrape : boolean;
+    public exists : boolean;
 
     public authors : Wetland.ArrayCollection<Author>;
 
@@ -35,6 +35,13 @@ export default class Subreddit extends Wetland.Entity
         {
             type: 'string',
             nullable: false,
+        });
+
+        mapping.field('exists',
+        {
+            type: 'boolean',
+            nullable: false,
+            defaultTo: true // Assume true until we actually check
         });
 
         mapping.uniqueConstraint('name_lower');

@@ -176,8 +176,6 @@ export async function getCount(manager : Wetland.Scope)
 // this one does FLUSH!
 export async function confirmSubreddit( name : string )
 {
-
-    
     let casedName = await api.reddit.subreddits.getNameIfExists(name);
 
     if ( casedName === null || casedName !== name)
@@ -194,8 +192,8 @@ export async function confirmSubreddit( name : string )
 
         if (casedName === null)
         {
-            Log.W(`User attempted to subscribe to subreddit that does not exist: ${name}`);
-            manager.remove(subreddit);
+            Log.W(`User subscribed to subreddit that does not exist: ${name}`);
+            subreddit.exists = false;
         }
         else if ( casedName !== name )
         {

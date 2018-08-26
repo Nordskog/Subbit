@@ -31,6 +31,7 @@ class Migration {
       table.string('name', 255).notNullable();
       table.string('name_lower', 255).notNullable().defaultTo('null');
       table.unique(['name_lower'], 'subreddits_name_unique');
+      table.boolean('exists').notNullable().defaultTo(true);
     });
 
     builder.schema.createTable('subscriptions', table => {
