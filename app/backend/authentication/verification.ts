@@ -127,7 +127,7 @@ async function getUserFromToken(manager : Wetland.Scope, decodedToken, options :
 
     if (user == null)
     {
-        throw new AuthorizationException("Could not find user associated with token");
+        throw new AuthorizationInvalidException("Could not find user associated with token");
     }
     
     return user;
