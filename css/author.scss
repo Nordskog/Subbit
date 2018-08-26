@@ -104,8 +104,7 @@
     display: flex;
     justify-content: center;
     flex-direction: column;
-    margin-left: var( --tiny-gap );
-    margin-right: var( --tiny-gap );
+    margin-left: var(--small-gap);
 }
 
 .subreddit
@@ -130,7 +129,8 @@
 .subscriptionButtonContainer
 {
     height: var( --card-line-height );
-    width: var( --card-line-height );
+    width: var( --star-size );
+    margin-left: var(--small-gap);
 
     display: flex;
     justify-content: center;
@@ -149,9 +149,6 @@
 .subscriptionButton {
     height: var( --star-size);
     width: var( --star-size );
-    //margin-top: 0px;    //I don't understand how bit this centers it, like margin:auto should.
-
-    //pointer-events: none;   //Otherwise click does not propagate to parent
     cursor: pointer;
 }
 
@@ -219,8 +216,8 @@
 {
     height:var( --small-icon-size );
     width:var( --small-icon-size );
-    margin-right: var( --tiny-gap );
     fill: $subscribed-highlight-color;
+    padding-left: var(--tiny-gap);
     cursor: pointer;
 }
 
@@ -245,8 +242,8 @@
 
 .subscriptionsContainer
 {
-    //Offset by width normally consumed by the score column
-    margin-left: var( --score-width );
+    //Offset by width normally consumed by the vote indicator
+    margin-left: var( --star-size);
 }
 
     
@@ -256,9 +253,6 @@
 
 @media only screen and (max-width: 1100px)
 {
-    .posts {
-        margin-left: 0;
-    }
 
     .author
     {
@@ -275,14 +269,13 @@
         margin-bottom: var( --insignificant-gap );
         border-radius: 0px;
     }
+}
 
-    .authorHeader {
-        padding-left: var(--tiny-gap);
-    }
-
-    .morePostsContainer
-    {
-        //Match center to subscribe button / score column
-        padding-left: calc( var( --tiny-gap ) +  var(--tiny-icon-size) );
+//Portait only rules
+@media only screen and (max-width: 1100px ) and ( max-aspect-ratio: 4/3 )
+{
+    //Landscape has enough horizontal space for the right margin
+    .posts {
+        margin-left: 0;
     }
 }

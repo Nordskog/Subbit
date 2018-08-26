@@ -144,7 +144,7 @@
 
 .postReadContainer
 {
-    width:var( --small-icon-size );
+    width: var( --star-size );
     flex-shrink: 0;
 }
 
@@ -169,6 +169,9 @@
     fill: transparent;
     stroke: transparent;
     stroke-width:var( --stroke-width );
+
+    margin-left: auto;
+    margin-right: auto;
 
     //Inline svg weirdness
     display: flex;
@@ -243,7 +246,6 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    //margin: 0px;
 }
 
 
@@ -256,12 +258,6 @@
 @media only screen and (max-width: 1100px)
 {
     .scoreContainer {
-        margin-left:0px;
-        margin-right:var(--tiny-gap);
-    }
-
-    .topScoreContainer
-    {
         margin-left:0px;
         margin-right:var(--tiny-gap);
     }
@@ -280,27 +276,7 @@
     .voteIndicator {
         height: var( --tiny-icon-size );
         width: var( --tiny-icon-size );
-
-        
+        margin: auto;
     }
-
-    .postReadContainer
-    {
-        width:var( --tiny-icon-size );
-        margin-left: calc( -(var(--small-gap)));
-    }
-
-    .tinyImageContainer
-    {
-        //If you are on mobile, post titles and post info are 
-        //almost certainly going to end up wrapping to the next line.
-        //Everything is prettieur if the top of the text aligns with
-        //the top of the image
-           // margin-top: 10px;
-    }
-
-    //But the score shoul
-
 }
-
 
