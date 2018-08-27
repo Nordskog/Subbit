@@ -3,6 +3,7 @@ import * as tools from '~/common/tools';
 import fetch from 'isomorphic-fetch';
 
 import * as models from '~/common/models';
+import { NetworkRequestDomain } from '~/common/models';
 
 
 import { NetworkException, Exception } from '~/common/exceptions';
@@ -11,7 +12,7 @@ import { RateLimitCallback } from '~/common/tools/FetchQueue';
 import { exceptions } from '~/common';
 
 const apiQueue = new tools.FetchQueue(11);      // Will receive ratelimit header
-const cdnQueue = new tools.FetchQueue(11);                                              // Will not receive ratelimit header
+const cdnQueue = new tools.FetchQueue(11);      // Will not receive ratelimit header
 
 export function registerRatelimitCallbacks(  rateLimitCallback : RateLimitCallback, rateLimitedCallback : RateLimitCallback )
 {
@@ -24,12 +25,15 @@ export function clearQueue()
     cdnQueue.clearQueue();
 }
 
-export async function getRequest<T>(url : string, parameters? : any, auth?: models.auth.RedditAuth) : Promise<T>
+export async function getRequest<T>(url : string, parameters? : object, auth?: models.auth.RedditAuth, headers? : any ) : Promise<T>
 {
     url = url;
     url = tools.url.appendUrlParameters(url,parameters);
     let options = getRedditFetchOptions('GET', auth);
 
+    // Replace header with input if present
+    if (headers != null)
+        options.headers = headers;
 
     let response : Response;
 
@@ -53,7 +57,7 @@ export async function getRequest<T>(url : string, parameters? : any, auth?: mode
         {
             // Especially when working work cors, the browser does not provide
             // any useful information in this case.
-            let exception = new NetworkException(null, "Could not access Reddit", url);
+            let exception = new NetworkException(null, "Could not access Reddit", url, null, NetworkRequestDomain.REDDIT);
             exceptions.appendStack(exception, stacktrace);
             throw exception;
         }
@@ -66,18 +70,22 @@ export async function getRequest<T>(url : string, parameters? : any, auth?: mode
     }
     else
     {
-        throw await NetworkException.fromResponse(response);
+        throw await NetworkException.fromResponse(response, NetworkRequestDomain.REDDIT);
     }
 }
 
-export async function postRequest<T, A>(url : string, request : models.Action<A>, auth?: models.auth.RedditAuth) : Promise<T>
+export async function postRequest<T, A>(url : string, body : string | object, auth?: models.auth.RedditAuth, headers? : any ) : Promise<T>
 {
     url = url;
     let options = getRedditFetchOptions('POST', auth);
     options = {
         ...options,
-        body: JSON.stringify(request)
+        body: typeof body === "string" ? body : JSON.stringify(body)
     };
+
+    // Replace header with input if present
+    if (headers != null)
+        options.headers = headers;
 
     // Stack trace in catch-block when using await is useless.
     // Grab actual stack trace here and append below.
@@ -100,7 +108,7 @@ export async function postRequest<T, A>(url : string, request : models.Action<A>
         {
             // Especially when working work cors, the browser does not provide
             // any useful information in this case.
-            let exception = new NetworkException(null, "Could not access Reddit", url);
+            let exception = new NetworkException(null, "Could not access Reddit", url, null, NetworkRequestDomain.REDDIT);
             exceptions.appendStack(exception, stacktrace);
             throw exception;
         }
@@ -113,7 +121,7 @@ export async function postRequest<T, A>(url : string, request : models.Action<A>
     }
     else
     {
-        throw await NetworkException.fromResponse(response);
+        throw await NetworkException.fromResponse(response, NetworkRequestDomain.REDDIT);
     }
 }
 

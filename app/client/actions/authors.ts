@@ -1,20 +1,14 @@
 ﻿import { State } from '~/client/store';
 
 import { AuthorFilter, LoadingStatus } from '~/common/models';
-import * as Redux from 'redux';
 import * as api from '~/common/api';
 import * as actions from '~/client/actions';
 import * as models from '~/common/models';
-import * as tools from '~/common/tools';
 
 import * as authority from '~/client/authority';
-import { CancellationError } from 'bluebird';
 import { CancelledException, NetworkException, Exception } from '~/common/exceptions';
 import { Dispatch, GetState } from '~/client/actions/tools/types';
 import { WrapWithHandler, handleError } from '~/client/actions/tools/error';
-import author from '~/client/components/author/container';
-import { Post } from '~/common/models/reddit';
-
 export function changeSubreddit( subreddit : string)
 {
     return async (dispatch : Dispatch, getState : GetState) =>
@@ -28,8 +22,6 @@ export function changeSubreddit( subreddit : string)
         }
         else
         {
-            let state: State = getState();
-
             dispatch(
             { type: actions.types.Route.SUBREDDIT, payload: { subreddit: subreddit, filter: null  } as actions.types.Route.SUBREDDIT } 
             );
@@ -49,8 +41,6 @@ export function changeFilter( filter : AuthorFilter, subreddit? : string)
         }
         else
         {
-            let state: State = getState();
-
             dispatch(
             { type: actions.types.Route.SUBREDDIT, payload: { subreddit: subreddit, filter: filter  } as actions.types.Route.SUBREDDIT } 
             );
@@ -61,9 +51,7 @@ export function changeFilter( filter : AuthorFilter, subreddit? : string)
 export function viewAuthor( author: string, subreddit? : string)
 {
     return async (dispatch : Dispatch, getState : GetState) =>
-    {
-       let state: State = getState();
-    
+    {    
        dispatch
         ({ 
             type: actions.types.Route.AUTHOR, payload: { author: author, subreddit: subreddit  } as actions.types.Route.AUTHOR } 
@@ -178,11 +166,11 @@ export function fetchAuthorsAction( appendResults: boolean = false, loadFromSess
                 if ( error instanceof NetworkException)
                 {
                     // Reddit's servers are melting
-                    if ( error.code === 500 )
+                    if ( error.code === 500 && error.source === models.NetworkRequestDomain.REDDIT )
                     {
                         throw new Exception("Reddit: Internal Server Error");
                     }
-                    else if ( error.code === 503)
+                    else if ( error.code === 503 && error.source === models.NetworkRequestDomain.REDDIT )
                     {
                         throw new Exception("Reddit: Servers overloaded");
                     }

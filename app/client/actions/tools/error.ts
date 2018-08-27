@@ -3,6 +3,7 @@ import { Exception, CancelledException, NetworkException, AuthorizationInvalidEx
 import { toast, ToastType } from "~/client/toast";
 import * as actions from '~/client/actions';
 import * as Log from '~/common/log';
+import { NetworkRequestDomain } from '~/common/models';
 
 export function WrapWithHandler( action : (dispatch : ReduxTypes.Dispatch, getState : ReduxTypes.GetState ) => (any | Promise<any>) )
 {
@@ -44,7 +45,7 @@ export function handleError(dispatch : ReduxTypes.Dispatch, err : Error )
     }
     else if (err instanceof NetworkException)
     {
-        if (err.code === 401)
+        if (err.code === 401 && err.source === NetworkRequestDomain.SUBBIT ) 
         {
             // 401 from the server means access token invalidate, force a logout.
             dispatch(actions.authentication.logoutUserAction());

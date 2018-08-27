@@ -53,3 +53,9 @@ export enum SiteMode
 }
 
 export type WebsocketReconnectCallback = () => void;
+
+export enum NetworkRequestDomain
+{
+    REDDIT = "reddit",
+    SUBBIT = "subbit"
+}

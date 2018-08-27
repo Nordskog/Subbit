@@ -1,5 +1,6 @@
 import { isServer } from '~/common/tools/env';
 import { Severity } from '~/common/log';
+import { NetworkRequestDomain } from '~/common/models';
 
 // The Object.setPrototypeOf stuff is an es5 requirement when extending base classes.
 // https://github.com/Microsoft/TypeScript-wiki/blob/master/Breaking-Changes.md#extending-built-ins-like-error-array-and-map-may-no-longer-work
@@ -150,8 +151,9 @@ export class NetworkException extends Exception
     public url : string;
     public code: number;
     public res: Response;
+    public source?: NetworkRequestDomain;
 
-    constructor( code : number, message : string, url : string, res? : Response)
+    constructor( code : number, message : string, url : string, res? : Response, source?: NetworkRequestDomain)
     {
         super( message );
         Object.setPrototypeOf(this, NetworkException.prototype);
@@ -159,9 +161,10 @@ export class NetworkException extends Exception
         this.url = url;
         this.code = code;
         this.res = res;
+        this.source = source;
     }
 
-    public static async fromResponse( res : Response) : Promise<NetworkException>
+    public static async fromResponse( res : Response, source?: NetworkRequestDomain) : Promise<NetworkException>
     {
         let text : string = null;
         try
@@ -203,7 +206,7 @@ export class NetworkException extends Exception
         if (text == null)
             text = res.statusText;
 
-        return new NetworkException( res.status, text, res.url);
+        return new NetworkException( res.status, text, res.url, null, source);
     }
 
     public toString()

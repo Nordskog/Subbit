@@ -5,6 +5,7 @@ import { NetworkException, Exception } from '~/common/exceptions';
 import { exceptions } from '~/common';
 import config from 'root/config';
 import fetch from 'isomorphic-fetch';
+import { NetworkRequestDomain } from '~/common/models';
 
 export async function getRequest<T>(url : string, parameters? : any, accessToken?: string) : Promise<T>
 {
@@ -29,7 +30,7 @@ export async function getRequest<T>(url : string, parameters? : any, accessToken
         else
         {
             // Browser does not provide any useful information.
-            let exception = new NetworkException(null, "Could not contact " + config.client.siteName + " server", url);
+            let exception = new NetworkException(null, "Could not contact " + config.client.siteName + " server", url, null, NetworkRequestDomain.SUBBIT);
             exceptions.appendStack(exception, stacktrace);
             throw exception;
         }
@@ -41,7 +42,7 @@ export async function getRequest<T>(url : string, parameters? : any, accessToken
     }
     else
     {
-        throw await NetworkException.fromResponse(response);
+        throw await NetworkException.fromResponse(response, NetworkRequestDomain.SUBBIT);
     }
 }
 
@@ -71,7 +72,7 @@ export async function postRequest<T, A>(url : string, request : models.Action<A>
         else
         {
             // Browser does not provide any useful information.
-            let exception = new NetworkException(null, "Could not contact " + config.client.siteName + " server", url);
+            let exception = new NetworkException(null, "Could not contact " + config.client.siteName + " server", url, null, NetworkRequestDomain.SUBBIT);
             exceptions.appendStack(exception, stacktrace);
             throw exception;
         }
@@ -84,7 +85,7 @@ export async function postRequest<T, A>(url : string, request : models.Action<A>
     }
     else
     {
-        throw await NetworkException.fromResponse(response);
+        throw await NetworkException.fromResponse(response, NetworkRequestDomain.SUBBIT);
     }
 }
 
