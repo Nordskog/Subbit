@@ -217,16 +217,14 @@
     height:var( --small-icon-size );
     width:var( --small-icon-size );
     fill: $subscribed-highlight-color;
-    padding-left: var(--tiny-gap);
+    margin-left: var(--tiny-gap);
     cursor: pointer;
 }
 
 .loadingPostsIndicator //Display subreddits button, but rotating
 {
-    height:var( --small-icon-size );
-    width:var( --small-icon-size );
-    margin-right: var( --tiny-gap );
-    fill: $subscribed-highlight-color;
+    @extend .displaySubredditsButton;
+
     z-index: 1; //We cover the entire layout when displaying this, but want this to be fully visible
 
     -webkit-animation:spin 2s linear infinite;

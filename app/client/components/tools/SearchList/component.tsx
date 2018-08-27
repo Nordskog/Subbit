@@ -61,7 +61,7 @@ interface State
     searching : boolean;
 }
 
-export default class RedditsCell extends React.Component<Props, State>
+export default class SearchList extends React.Component<Props, State>
 {
     private lastInput : string = null;
     private lastSearchTrigger : number = null;
@@ -102,6 +102,11 @@ export default class RedditsCell extends React.Component<Props, State>
             searching: false,
             selectedItem: selectedItem
         };
+    }
+
+    public componentWillUnmount()
+    {
+        this.cancelSearchRequest();
     }
 
     public shouldComponentUpdate(nextProps : Props, nextState : State)
@@ -292,6 +297,11 @@ export default class RedditsCell extends React.Component<Props, State>
     private cancelSearchRequest()
     {
         this.awaitingSearch = false;
+        if (this.inputTimeout != null)
+        {
+            clearTimeout( this.inputTimeout );
+            this.inputTimeout = null;
+        }
     }
 
     private async search( item : SearchItem, name : string)
@@ -468,60 +478,60 @@ export default class RedditsCell extends React.Component<Props, State>
         // Update or add to list
         //////////////////////////
 
-        // Get existing item in list if present
-        let existingListItem = this.findInDisplay(listItem.name);
+        // If either of these options are enabled it is assumed that 
+        // the above callback will not result in the component being dismounted
+        if (searchItem.toggleHighlight || searchItem.addToDisplayList)
+        {
+            // Get existing item in list if present
+            let existingListItem = this.findInDisplay(listItem.name);
 
-        if (existingListItem != null)
-        {
-            if (searchItem.toggleHighlight)
+            if (existingListItem != null)
             {
-                existingListItem.highlighted = !existingListItem.highlighted;
-                listItem.highlighted = existingListItem.highlighted;
-            }
-        }
-        else
-        {
-            if (searchItem.toggleHighlight)
-            {
-                // New item means toggle on
-                listItem.highlighted = true;
-            }
-            
-            if (itemIsSearchResult)
-            {
-                if (searchItem.addToDisplayList)
+                if (searchItem.toggleHighlight)
                 {
-                    listItem.highlighted = true;
-                    searchItem.items.unshift(listItem);
+                    existingListItem.highlighted = !existingListItem.highlighted;
+                    listItem.highlighted = existingListItem.highlighted;
                 }
-            }
-        }
-
-
-        ///////////////////////////////
-        // Update highlight map
-        ///////////////////////////////
-
-        if (searchItem.toggleHighlight)
-        {
-
-            if (!listItem.highlighted)
-            {
-                searchItem.highlightMap.delete( listItem.name.toLowerCase());
             }
             else
             {
-                searchItem.highlightMap.add( listItem.name.toLowerCase());
+                if (searchItem.toggleHighlight)
+                {
+                    // New item means toggle on
+                    listItem.highlighted = true;
+                }
+                
+                if (itemIsSearchResult)
+                {
+                    if (searchItem.addToDisplayList)
+                    {
+                        listItem.highlighted = true;
+                        searchItem.items.unshift(listItem);
+                    }
+                }
             }
+
+
+            ///////////////////////////////
+            // Update highlight map
+            ///////////////////////////////
+
+            if (searchItem.toggleHighlight)
+            {
+
+                if (!listItem.highlighted)
+                {
+                    searchItem.highlightMap.delete( listItem.name.toLowerCase());
+                }
+                else
+                {
+                    searchItem.highlightMap.add( listItem.name.toLowerCase());
+                }
+            }
+
+            // This cause a state update, which we do not ignore
+            this.setState( { searching: false } );
         }
-
-        // This cause a state update, which we do not ignore
-        this.setState( { searching: false } );
-    }
-
-    private endSearch()
-    {
-
     }
 
     private findInDisplay( name : string)
