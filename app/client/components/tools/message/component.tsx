@@ -30,6 +30,11 @@ export enum MessageType
   NOT_LOGGED_IN, NO_SUBSCRIPTIONS, ABOUT, PRIVACY, WAITING
 }
 
+enum LinkButtonType
+{
+  ABOUT, PRIVACY, CONTACT, SOURCE_CODE
+}
+
 interface Props
 {
   message: MessageType;
@@ -237,7 +242,11 @@ export default class MessageComponent extends React.Component<Props, State>
 
               <div className={styles.spacer}/>
 
-              {this.getBottomLinks( false, true)}
+              {this.getBottomLinks(
+                LinkButtonType.ABOUT,
+                LinkButtonType.PRIVACY,
+                LinkButtonType.SOURCE_CODE
+               )}
 
 
             </div>;
@@ -278,9 +287,8 @@ export default class MessageComponent extends React.Component<Props, State>
   // About
   /////////////////////////////
 
-  private getBottomLinks( swapPrivacyForAbout: boolean = false, showAbout: boolean = false)
+  private getBottomLink( route : LinkButtonType )
   {
-
     let getLink = ( to, text) => {
 
       return <NavLink key={text} className={ styles.link}
@@ -289,32 +297,41 @@ export default class MessageComponent extends React.Component<Props, State>
       </NavLink>; 
     };
 
+    switch(route)
+    {
+      case LinkButtonType.ABOUT:
+        return getLink( { type: actions.types.Route.ABOUT, payload: { } } as actions.types.Route.ABOUT, "About");
+      case LinkButtonType.PRIVACY:
+        return getLink( { type: actions.types.Route.PRIVACY, payload: { } } as actions.types.Route.PRIVACY, "Privacy");
+      case LinkButtonType.CONTACT:
+      {
+        // Only displayed if configured
+        if (config.client.contactUrl == null || config.client.contactUrl.length < 1)
+          return null;
+        return <a key={'contact'} className={styles.link} href={config.client.contactUrl}>Contact</a>;
+      }
+      case LinkButtonType.SOURCE_CODE:
+      {
+        // Only displayed if configured
+        if (config.client.sourceCodeUrl == null || config.client.sourceCodeUrl.length < 1)
+          return null;
+        return <a key={'source_code'} className={styles.link} href={config.client.sourceCodeUrl}>Source code</a>;
+      }
+
+    }
+  }
+
+  private getBottomLinks( ...routes : LinkButtonType[] )
+  {
     let optionals = [];
 
-    if (showAbout)
+    for ( let route of routes )
     {
-      optionals = [
-        getLink( { type: actions.types.Route.ABOUT, payload: { } } as actions.types.Route.ABOUT, "about"),
-        getLink( { type: actions.types.Route.PRIVACY, payload: { } } as actions.types.Route.PRIVACY, "privacy")
-      ];
-    }
-    else if (swapPrivacyForAbout)
-    {
-      optionals = [
-        getLink( { type: actions.types.Route.ABOUT, payload: { } } as actions.types.Route.ABOUT, "about"),
-      ];
-    }
-    else
-    {
-      optionals = [
-        getLink( { type: actions.types.Route.PRIVACY, payload: { } } as actions.types.Route.PRIVACY, "privacy")
-      ];
+      optionals.push( this.getBottomLink(route) );
     }
 
     return  <div className={styles.linkContainer}>
                 { optionals }
-              <a className={styles.link} href={config.client.contactUrl}>Contact</a>
-              <a className={styles.link} href={config.client.sourceCodeUrl}>Source code</a>
           </div>;
   }
 
@@ -357,7 +374,12 @@ export default class MessageComponent extends React.Component<Props, State>
               
               <div className={styles.spacer}/>
 
-              {this.getBottomLinks()}
+              
+              {this.getBottomLinks(
+                LinkButtonType.PRIVACY,
+                LinkButtonType.CONTACT,
+                LinkButtonType.SOURCE_CODE
+               )}
 
 
             </div>;
@@ -387,8 +409,11 @@ export default class MessageComponent extends React.Component<Props, State>
 
               <div className={styles.spacer}/>
 
-              {this.getBottomLinks(true)}
-
+              {this.getBottomLinks(
+                LinkButtonType.ABOUT,
+                LinkButtonType.CONTACT,
+                LinkButtonType.SOURCE_CODE
+               )}
 
             </div>;
   }
