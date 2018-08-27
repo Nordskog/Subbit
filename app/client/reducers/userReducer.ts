@@ -1,5 +1,7 @@
 ﻿import * as models from '~/common/models';
 import * as actionTypes from '~/client/actions/actionTypes';
+import { Subscription } from '~/common/models/data';
+import * as Log from '~/common/log';
 
 // Reducer for options, currently empty
 export function userReducer(state = getDefaultUserState(), action :  models.Action<any>) : models.state.User
@@ -36,13 +38,44 @@ export function userReducer(state = getDefaultUserState(), action :  models.Acti
         }
 
         case actionTypes.subscription.SUBSCRIPTION_ADDED:
+        case actionTypes.subscription.TEMPORARY_SUBSCRIPTION_ADDED:
         {
             let payload : actionTypes.subscription.SUBSCRIPTION_ADDED = action.payload;
 
+            if ( action.type === actionTypes.subscription.SUBSCRIPTION_ADDED )
+            {
+                let found : boolean = false;
+                let newState = {
+                    ...state,
+                    subscriptions: state.subscriptions.map( (sub) =>
+                    {
+                        if ( sub.author === payload.author )
+                        {
+                            found = true;
+                            return payload as models.data.Subscription;
+                        }
+                        else
+                        {
+                            return sub;
+                        }
+                    })
+                };
+
+                if (found)
+                    return newState;
+
+                Log.E("Could not find temporary subscription to replace, adding new instead");
+            }
+
+
+            {
+            // Temporary subscription, just concat.
+            // Also called on the off chance we messed up and we didn't find the subscription we're replacing.
             return {
                 ...state,
                 subscriptions: [payload as models.data.Subscription].concat( state.subscriptions )
             };
+            }
         }
 
         case actionTypes.subscription.SUBSCRIPTION_REMOVED:

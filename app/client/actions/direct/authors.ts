@@ -103,6 +103,15 @@ export async function getAuthors( dispatch : Dispatch, getState : GetState )
     await actions.directActions.authors.populateAuthorSubscriptions(authorEntries, getState);   // Important to do this before getting posts
     await actions.directActions.authors.poulateInitialPosts(authorEntries, config.client.postDisplayCount, dispatch, getState);
 
+    // If the user is on a high latency connection, they may add a subscription and navigate to subscriptions before we have 
+    // retrieved an id for it, leaving it in a temporary state. If we receive the reply after loading the next page it will be updated,
+    // but not if it occurs while we're still loading.
+    // Compare previous subscriptions array ref with current state. If different repopulate subscriptions again.
+    if (state.userState.subscriptions !== getState().userState.subscriptions)
+    {
+        await actions.directActions.authors.populateAuthorSubscriptions(authorEntries, getState);   // Important to do this before getting posts
+    }
+
     if (state.authorState.filter === models.AuthorFilter.SUBSCRIPTIONS)
     {
         // Sort by last post descending
@@ -148,8 +157,6 @@ export function ensureSubredditCasingMatch( dispatch : Dispatch, authors : Autho
         {
             let postSubreddit = author.author.posts[0].subreddit;
 
-            console.log("Considering name change from",subredditName,"to",postSubreddit);
-
             if (author.author.posts[0].subreddit !== subredditName)
             {
                 // They don' match!
@@ -157,8 +164,6 @@ export function ensureSubredditCasingMatch( dispatch : Dispatch, authors : Autho
                 
                 if ( postSubreddit.toLowerCase() === subredditName.toLowerCase() )
                 {
-                    console.log("Dispatching name change from",subredditName,"to",postSubreddit);
-
                     // They match, dispatch a correction to use casing from post.
                     dispatch({
                         type: actions.types.authors.SUBREDDIT_NAME_CHANGED,
@@ -170,9 +175,6 @@ export function ensureSubredditCasingMatch( dispatch : Dispatch, authors : Autho
             break;
         }
     }
-
-    
-
 }
 
 export function populateAuthorSubscriptions( authors : models.data.AuthorEntry[], getState : GetState )
