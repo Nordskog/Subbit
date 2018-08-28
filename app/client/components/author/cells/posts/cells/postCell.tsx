@@ -204,13 +204,10 @@ export default class PostCell extends React.Component<Props, null>
             url = defaultThumbnails.get(this.props.post.thumbnail) || url;
         }
 
-        let style = [];
-        style.push( this.props.postDisplay === PostDisplay.FULL ? styles.imageContainer : styles.tinyImageContainer );
-        if (this.props.isTopPost)
-            style.push( styles.topImage );
-
         return  <a href={this.props.post.url} className={styles.imageVerticalCenter} >
-                    <img className={ classConcat(...style) } src={url}/>
+                    <div className={ this.props.postDisplay === PostDisplay.FULL ? styles.imageContainer : styles.tinyImageContainer } >
+                        <img className={ this.props.postDisplay === PostDisplay.FULL ? styles.image : styles.tinyImage } src={url}/>
+                    </div>
                 </a>;  
     }
 

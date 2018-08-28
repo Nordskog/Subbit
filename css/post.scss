@@ -71,13 +71,6 @@
 
 }
 
-//Needs to be shifted slightly to align with larger title text
-.topImage
-{
-    //Actually not used at all anymore
-    margin-top: 0px;
-}
-
 .topPostContainer a:link,
 .topPostopPostContainert a:visited,
 .topPostContainer a:hover
@@ -187,20 +180,6 @@
     fill: $upvote-color;
 }
 
-.imageContainer
-{
-    height: (var( --card-image-height ));
-    width:  var( --card-image-width ) ;
-    margin-right: var( --small-gap );
-}
-
-.tinyImageContainer
-{
-    height:( var( --card-small-image-height ) );
-    width:  var( --card-small-image-width ) ;
-    margin-right: var( --small-gap );
-}
-
 .downvote
 {
     @extend .voteIndicator;
@@ -246,6 +225,34 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+}
+
+.imageContainer
+{
+    height: (var( --card-image-height ));
+    width:  var( --card-image-width ) ;
+    margin-right: var( --small-gap );
+    overflow: hidden;
+}
+
+.tinyImageContainer
+{
+    height:( var( --card-small-image-height ) );
+    width:  var( --card-small-image-width ) ;
+    margin-right: var( --small-gap );
+    overflow: hidden;
+}
+
+.image 
+{
+    width:  var( --card-image-width ) ;
+    height: auto;
+}
+
+.tinyImage 
+{
+    width:  var( --card-small-image-width ) ;
+    height: auto;
 }
 
 
