@@ -30,6 +30,8 @@ export function logoutUserAction()
     {
         actions.directActions.authentication.removeAuthentication(dispatch);
         actions.directActions.session.clear();
+        actions.directActions.storage.clear();
+        
         // No sub means home (frontpage)
         dispatch(
             { 
@@ -49,6 +51,7 @@ export function logoutUserOnAllDevices()
 
         actions.directActions.authentication.removeAuthentication(dispatch);
         actions.directActions.session.clear();
+        actions.directActions.storage.clear();
 
         // No sub means home (frontpage)
         dispatch(

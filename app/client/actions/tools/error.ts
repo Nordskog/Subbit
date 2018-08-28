@@ -4,6 +4,7 @@ import { toast, ToastType } from "~/client/toast";
 import * as actions from '~/client/actions';
 import * as Log from '~/common/log';
 import { NetworkRequestDomain } from '~/common/models';
+import config from 'root/config';
 
 export function WrapWithHandler( action : (dispatch : ReduxTypes.Dispatch, getState : ReduxTypes.GetState ) => (any | Promise<any>) )
 {
@@ -51,15 +52,21 @@ export function handleError(dispatch : ReduxTypes.Dispatch, err : Error )
             dispatch(actions.authentication.logoutUserAction());
 
             // Simplify for user consumption
-            toast
-            ( ToastType.ERROR, 10000, err.message);
+            toast( ToastType.ERROR, 10000,  `${config.client.siteName}: ${err.message}`);
 
             Log.I(err.toString());
         }
         else
         {
+            // Useful for the user to know which site caused the problem
+            let sourceName = "";
+            if (err.source === NetworkRequestDomain.REDDIT )
+                sourceName = "Reddit: ";
+            else if (err.source === NetworkRequestDomain.SUBBIT )
+                sourceName = `${config.client.siteName}: `;
+
             // Simplify for user consumption
-            toast( ToastType.ERROR, 10000, err.message);
+            toast( ToastType.ERROR, 10000, sourceName + err.message);
 
             Log.E(err);
         }

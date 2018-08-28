@@ -5,9 +5,10 @@ import * as actions from '~/client/actions';
 import { State } from '~/client/store';
 import { Dispatch, GetState } from '~/client/actions/tools/types';
 import { RedditAuth, LoginType } from '~/common/models/auth';
-import { NetworkException, Exception } from '~/common/exceptions';
+import { NetworkException, Exception, LogOnlyException } from '~/common/exceptions';
 import * as log from '~/common/log';
 import { toast, ToastType } from "~/client/toast";
+import { handleError } from '~/client/actions/tools/error';
 
 // Set to true on failure, false on success, so we only display it once.
 let tokenRefreshFailedErrorDisplayed : boolean = false;
@@ -58,8 +59,9 @@ export async function retrieveAndUpdateRedditAuth(dispatch : Dispatch, state : S
                     if ( !tokenRefreshFailedErrorDisplayed )
                     {
                         tokenRefreshFailedErrorDisplayed = true;
-                        log.E("Could not refresh Reddit access token");
-                        toast( ToastType.ERROR, 10000, "Reddit token refresh failed", "Unable to display upvotes");                        
+
+                        handleError(dispatch, new LogOnlyException( "Could not refresh Reddit access token", err ));
+                        toast( ToastType.WARNING, 10000, "Reddit token refresh failed", "Unable to display upvotes");                        
                     }
 
                     return redditAuth;

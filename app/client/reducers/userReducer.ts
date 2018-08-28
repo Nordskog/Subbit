@@ -2,6 +2,7 @@
 import * as actionTypes from '~/client/actions/actionTypes';
 import { Subscription } from '~/common/models/data';
 import * as Log from '~/common/log';
+import { subreddits } from '~/common/api/reddit';
 
 // Reducer for options, currently empty
 export function userReducer(state = getDefaultUserState(), action :  models.Action<any>) : models.state.User
@@ -17,6 +18,7 @@ export function userReducer(state = getDefaultUserState(), action :  models.Acti
             };
         }    
 
+        // Usually responsible for adding/removing subscriptions to a subreddit, but ...
         case actionTypes.subscription.SUBSCRIPTION_CHANGED:
         {
             let payload : actionTypes.subscription.SUBSCRIPTION_CHANGED = action.payload;
@@ -36,6 +38,67 @@ export function userReducer(state = getDefaultUserState(), action :  models.Acti
                 })
             };
         }
+
+        // We usually replace the entire subscription with a new instance, 
+        // but these wait for the server to respond and may be called out of order
+        case actionTypes.subscription.SUBSCRIPTION_SUBREDDIT_REMOVED:
+        case actionTypes.subscription.SUBSCRIPTION_SUBREDDIT_ADDED:
+        {
+            let payload : actionTypes.subscription.SUBSCRIPTION_SUBREDDIT_REMOVED = action.payload;
+
+            return {
+                ...state,
+                subscriptions: state.subscriptions.map( (sub) =>
+                {
+                    if (sub.id === payload.id)
+                    {
+                        if (action.type === actionTypes.subscription.SUBSCRIPTION_SUBREDDIT_REMOVED )
+                        {
+                            return {
+                                ...sub,
+                                subreddits: sub.subreddits.filter( ( subreddit ) => subreddit.name !== payload.subreddit )
+                            };
+                        }
+
+                        if (action.type === actionTypes.subscription.SUBSCRIPTION_SUBREDDIT_ADDED )
+                        {
+                            return {
+                                ...sub,
+                                subreddits: sub.subreddits.concat( { name: payload.subreddit, subscribed: true } )
+                            };
+                        }
+                    }
+                    else
+                    {
+                        return sub;
+                    }
+                })
+            };
+        }
+
+        case actionTypes.subscription.SUBSCRIPTION_SUBREDDIT_ADDED:
+        {
+            let payload : actionTypes.subscription.SUBSCRIPTION_SUBREDDIT_ADDED = action.payload;
+
+            return {
+                ...state,
+                subscriptions: state.subscriptions.map( (sub) =>
+                {
+                    if (sub.id === payload.id)
+                    {
+                        return {
+                            ...sub,
+                            subreddits: sub.subreddits.concat( { name: payload.subreddit, subscribed: true } )
+                        };
+                    }
+                    else
+                    {
+                        return sub;
+                    }
+                })
+            };
+        }
+
 
         case actionTypes.subscription.SUBSCRIPTION_ADDED:
         case actionTypes.subscription.TEMPORARY_SUBSCRIPTION_ADDED:
@@ -64,6 +127,7 @@ export function userReducer(state = getDefaultUserState(), action :  models.Acti
                 if (found)
                     return newState;
 
+                // This will happen when removing a subscription fails and we add it again
                 Log.E("Could not find temporary subscription to replace, adding new instead");
             }
 

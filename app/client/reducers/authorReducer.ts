@@ -76,26 +76,77 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
         case actions.types.subscription.SUBSCRIPTION_CHANGED:
         case actions.types.subscription.SUBSCRIPTION_ADDED:
         case actions.types.subscription.TEMPORARY_SUBSCRIPTION_ADDED:
-            {
-                action = action as models.Action< actions.types.subscription.SUBSCRIPTION_ADDED >;
+        {
+            action = action as models.Action< actions.types.subscription.SUBSCRIPTION_ADDED >;
 
-                return {
-                    ...state,
-                    authors: state.authors.map( (author) =>
+            return {
+                ...state,
+                authors: state.authors.map( (author) =>
+                {
+                    if (author.author.name === action.payload.author)
                     {
-                        if (author.author.name === action.payload.author)
-                        {
 
+                        return {
+                                    ...author,
+                                    subscription: action.payload
+                        };
+                    }
+                    else
+                        return author;
+                })
+            };
+        }
+
+        // We usually replace the entire subscription with a new instance, 
+        // but these wait for the server to respond and may be called out of order
+        case actions.types.subscription.SUBSCRIPTION_SUBREDDIT_REMOVED:
+        case actions.types.subscription.SUBSCRIPTION_SUBREDDIT_ADDED:
+        {
+            let payload : actions.types.subscription.SUBSCRIPTION_SUBREDDIT_REMOVED = action.payload;
+
+            return {
+                ...state,
+                authors: state.authors.map( ( author ) =>
+                {
+                    if (author.subscription == null)
+                        return author;
+
+                    if (author.subscription.id === payload.id)
+                    {
+                        if (action.type === actions.types.subscription.SUBSCRIPTION_SUBREDDIT_REMOVED )
+                        {
                             return {
-                                        ...author,
-                                        subscription: action.payload
+                                ...author,
+                                subscription: 
+                                {
+                                    ...author.subscription,
+                                    subreddits: author.subscription.subreddits.filter( ( subreddit ) => subreddit.name !== payload.subreddit )
+                                }
+
                             };
                         }
-                        else
-                            return author;
-                    })
-                };
-            }
+
+                        if (action.type === actions.types.subscription.SUBSCRIPTION_SUBREDDIT_ADDED )
+                        {
+                            return {
+                                ...author,
+                                subscription: 
+                                {
+                                    ...author.subscription,
+                                    subreddits: author.subscription.subreddits.concat( { name: payload.subreddit, subscribed: true } )
+                                }
+
+                            };
+                        }
+                    }
+                    else
+                    {
+                        return author;
+                    }
+                })
+            };
+        }
+
         case actions.types.subscription.SUBSCRIPTION_REMOVED:
         {
             let payload : actions.types.subscription.SUBSCRIPTION_REMOVED = action.payload;
@@ -107,7 +158,7 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
                 ...state,
                 authors: state.authors.map( (author) =>
                 {
-                    if (author.subscription && author.subscription.id === action.payload.id)
+                    if (author.subscription && author.subscription.id === payload.id)
                     {
                         return {
                                     ...author,

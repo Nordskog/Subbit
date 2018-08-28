@@ -161,30 +161,7 @@ export function fetchAuthorsAction( appendResults: boolean = false, loadFromSess
                         status: LoadingStatus.ERROR,
     
                     }  as actions.types.page.LOADING_STATE_CHANGED
-                });
-
-                if ( error instanceof NetworkException)
-                {
-                    // Reddit's servers are melting
-                    if ( error.code === 500 && error.source === models.NetworkRequestDomain.REDDIT )
-                    {
-                        throw new Exception("Reddit: Internal Server Error");
-                    }
-                    else if ( error.code === 503 && error.source === models.NetworkRequestDomain.REDDIT )
-                    {
-                        throw new Exception("Reddit: Servers overloaded");
-                    }
-                    else
-                    {
-                        throw(error);
-                    }
-                }
-                else
-                {
-                    throw(error);
-                }
-
-                
+                });                
             }
         }
 

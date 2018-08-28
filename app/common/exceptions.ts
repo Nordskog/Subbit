@@ -88,7 +88,7 @@ export class LogOnlyException extends Exception
         super(message);
         Object.setPrototypeOf(this, LogOnlyException.prototype);
         this.wrappedError = error;
-        this.name = "LogOnlyExceptio";
+        this.name = "LogOnlyException";
     }
 
     public toString()

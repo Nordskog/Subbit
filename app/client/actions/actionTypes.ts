@@ -67,6 +67,9 @@ export namespace subscription
     export const SUBSCRIPTION_CHANGED           : string = 'SUBSCRIPTION_CHANGED';
     export const TEMPORARY_SUBSCRIPTION_ADDED   : string = 'TEMPORARY_SUBSCRIPTION_ADDED';
 
+    export const SUBSCRIPTION_SUBREDDIT_ADDED           : string = 'SUBSCRIPTION_SUBREDDIT_ADDED';
+    export const SUBSCRIPTION_SUBREDDIT_REMOVED           : string = 'SUBSCRIPTION_SUBREDDIT_REMOVED';
+
     export type SUBSCRIPTIONS_FETCHED = models.data.Subscription[];
 
     export interface SUBSCRIPTION_ADDED extends Partial<models.data.Subscription>
@@ -81,6 +84,17 @@ export namespace subscription
     }
 
     export interface TEMPORARY_SUBSCRIPTION_ADDED extends SUBSCRIPTION_ADDED
+    {   
+
+    }
+
+    export interface SUBSCRIPTION_SUBREDDIT_ADDED
+    {   
+        id: number;
+        subreddit: string;
+    }
+
+    export interface SUBSCRIPTION_SUBREDDIT_REMOVED extends SUBSCRIPTION_SUBREDDIT_ADDED
     {   
 
     }
