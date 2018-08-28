@@ -1,6 +1,7 @@
 import * as models from '~/common/models';
 import * as urls from '~/common/urls';
 import * as config from 'root/config';
+import * as log from '~/common/log';
 
 export function getFilterUrl(subreddit : string, filter : models.AuthorFilter, oauth : boolean) : string
 {
@@ -111,6 +112,19 @@ export function getPostSearchUrl( searchTerm : string, subreddit : string, oauth
     }
 
     return { baseUrl: url, params: params };
+}
+
+export function authValid( auth : models.auth.RedditAuth )
+{
+    if (auth == null)
+        return false;
+    if (auth.expiry <= Date.now() / 1000)
+    {
+        log.E("Reddit auth present but expired");
+        return false;
+    }
+
+    return true;
 }
 
 // We will be storing posts in session storage,

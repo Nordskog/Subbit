@@ -5,7 +5,12 @@ import * as actions from '~/client/actions';
 import { State } from '~/client/store';
 import { Dispatch, GetState } from '~/client/actions/tools/types';
 import { RedditAuth, LoginType } from '~/common/models/auth';
+import { NetworkException, Exception } from '~/common/exceptions';
+import * as log from '~/common/log';
+import { toast, ToastType } from "~/client/toast";
 
+// Set to true on failure, false on success, so we only display it once.
+let tokenRefreshFailedErrorDisplayed : boolean = false;
 
 export async function retrieveAndUpdateRedditAuth(dispatch : Dispatch, state : State)
 {
@@ -18,16 +23,53 @@ export async function retrieveAndUpdateRedditAuth(dispatch : Dispatch, state : S
     }
 
     let redditAuth : models.auth.RedditAuth  = tools.store.getRedditAuth(state);
+
     // Refresh if expiry in less than 5min
     if (redditAuth.expiry < ( (Date.now() / 1000) + (5 * 60) ))
     {
-        redditAuth = await api.rfy.authentication.refreshRedditAccessToken(user,token);
-        saveRedditAuth(redditAuth, state.authState.user.id_token.loginType);
+        try
+        {
+            redditAuth = await api.rfy.authentication.refreshRedditAccessToken(user,token);
+            saveRedditAuth(redditAuth, state.authState.user.id_token.loginType);
+    
+            tokenRefreshFailedErrorDisplayed = false;
 
-        dispatch({
-            type: actions.types.authentication.REDDIT_TOKEN_UPDATED,
-            payload: redditAuth
-        });
+            dispatch({
+                type: actions.types.authentication.REDDIT_TOKEN_UPDATED,
+                payload: redditAuth
+            });
+        }
+        catch ( err )
+        {
+            if ( err instanceof NetworkException )
+            {
+                // User will be logged out
+                if ( err.code === 401 )
+                {
+                    throw err;
+                }
+                else
+                {
+                    // Failed for some other network reason.
+                    // Probably means the server is down.
+                    // Return existing, expired auth.
+                    // Api handler is responsible for checking if valid
+                    // and will fall back to unauthenticated access
+                    if ( !tokenRefreshFailedErrorDisplayed )
+                    {
+                        tokenRefreshFailedErrorDisplayed = true;
+                        log.E("Could not refresh Reddit access token");
+                        toast( ToastType.ERROR, 10000, "Reddit token refresh failed", "Unable to display upvotes");                        
+                    }
+
+                    return redditAuth;
+                }
+            }
+            else
+            {
+                throw err;
+            }
+        }
     }
 
     return redditAuth;

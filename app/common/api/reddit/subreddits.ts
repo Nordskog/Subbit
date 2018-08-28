@@ -1,7 +1,7 @@
 import * as models from '~/common/models';
 import * as urls from '~/common/urls';
-import * as tools from '~/common/tools';
 import * as api from '~/common/api';
+import * as apiTools from './apiTools';
 
 import { Thing, AboutSubreddit } from '~/common/models/reddit';
 import { exceptions } from '~/common';
@@ -15,7 +15,7 @@ interface NamesResponse
 
 export async function searchSubreddits(name: string, auth? : models.auth.RedditAuth ) : Promise< string[] >
 {
-    let url = (auth == null ? urls.REDDIT_URL : urls.REDDIT_OAUTH_API_URL) + "/api/search_reddit_names.json";
+    let url = ( apiTools.authValid( auth ) ? urls.REDDIT_OAUTH_API_URL : urls.REDDIT_URL) + "/api/search_reddit_names.json";
 
     let result : NamesResponse = <NamesResponse> await api.reddit.getRequest(
         url,
@@ -33,7 +33,7 @@ export async function searchSubreddits(name: string, auth? : models.auth.RedditA
 // Will return input value if problems are encountered.
 export async function getNameIfExists( name: string, auth? : models.auth.RedditAuth  )
 {
-    let url = (auth == null ? urls.REDDIT_URL : urls.REDDIT_OAUTH_API_URL) + "/r/" + name + "/about.json";
+    let url = ( apiTools.authValid( auth ) ? urls.REDDIT_OAUTH_API_URL : urls.REDDIT_URL) + "/r/" + name + "/about.json";
 
     let returnValue = name;
 

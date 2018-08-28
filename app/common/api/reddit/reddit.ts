@@ -11,6 +11,8 @@ import { NetworkException, Exception } from '~/common/exceptions';
 import { RateLimitCallback } from '~/common/tools/FetchQueue';
 import { exceptions } from '~/common';
 
+import * as apiTools from './apiTools';
+
 const apiQueue = new tools.FetchQueue(11);      // Will receive ratelimit header
 const cdnQueue = new tools.FetchQueue(11);      // Will not receive ratelimit header
 
@@ -44,7 +46,7 @@ export async function getRequest<T>(url : string, parameters? : object, auth?: m
 
     try
     {
-        if (auth != null)
+        if ( apiTools.authValid(auth) )
             response = await apiQueue.enqueue( () => fetch(url, options) );
         else
             response = await cdnQueue.enqueue( () => fetch(url, options) );
@@ -95,7 +97,7 @@ export async function postRequest<T, A>(url : string, body : string | object, au
     let response;
     try
     {
-        if (auth != null)
+        if ( apiTools.authValid(auth) )
             response = await apiQueue.enqueue( () => fetch(url, options) );
         else
             response = await cdnQueue.enqueue( () => fetch(url, options) );
@@ -128,7 +130,7 @@ export async function postRequest<T, A>(url : string, body : string | object, au
 export function getRedditFetchOptions( method : string, auth? : models.auth.RedditAuth )
 {
     let options;
-    if (auth != null)
+    if ( apiTools.authValid(auth) )
     {
         options = {
             method: method,

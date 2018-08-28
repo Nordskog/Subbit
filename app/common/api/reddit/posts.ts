@@ -12,7 +12,7 @@ export const POST_FULLNAME_PREFIX = "t3_";
 export async function getAuthors( seedWithPost : boolean, subreddit? : string, filter? : models.AuthorFilter, time?: models.PostTimeRange, after? : string, count? : number, auth? : models.auth.RedditAuth, ) : Promise< { authors : models.data.Author[], after : string } >
 {
     let result : reddit.ListingResponse = <reddit.ListingResponse> await api.reddit.getRequest(
-        apiTools.getFilterUrl(subreddit, filter, auth != null), 
+        apiTools.getFilterUrl(subreddit, filter, apiTools.authValid( auth )), 
         {
             after: after,
             limit : count,
@@ -69,7 +69,7 @@ export async function getAuthors( seedWithPost : boolean, subreddit? : string, f
 
 export async function getPosts(author: string, after : string, auth : models.auth.RedditAuth, count : number,  ...subreddits : string[] ) : Promise< { posts : models.reddit.Post[], after : string } >
 {
-    let {baseUrl, params} = apiTools.getPostsUrl(author, after, count, auth != null, ...subreddits);
+    let {baseUrl, params} = apiTools.getPostsUrl(author, after, count, apiTools.authValid( auth ), ...subreddits);
 
     let result : reddit.ListingResponse = <reddit.ListingResponse> await api.reddit.getRequest(
         baseUrl,
@@ -96,7 +96,7 @@ export async function getPosts(author: string, after : string, auth : models.aut
 // Go with the latter as it at least produces somewhat useful results.
 export async function searchPosts( subreddit: string, searchTerm : string, limit? : number, auth? : models.auth.RedditAuth ) : Promise<models.reddit.Post[]>
 {
-    let {baseUrl, params} = apiTools.getPostSearchUrl(searchTerm, subreddit, auth != null, limit);
+    let {baseUrl, params} = apiTools.getPostSearchUrl(searchTerm, subreddit, apiTools.authValid( auth ), limit);
 
     let result : reddit.ListingResponse = <reddit.ListingResponse> await api.reddit.getRequest(
         baseUrl,
