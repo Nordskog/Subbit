@@ -92,7 +92,7 @@
 
 
 //Mobile portrait
-@media only screen and (max-width: 1100px ) and ( max-aspect-ratio: 4/3 )
+@media only screen and (max-width: 1100px ) and ( max-aspect-ratio: 6/4 )
 {
    :root
    {
@@ -133,7 +133,7 @@
 }
 
 //Mobile landscape. Basically everything above divided by 2.
-@media only screen and (max-width: 1100px ) and ( min-aspect-ratio: 4/3 )
+@media only screen and (max-width: 1100px ) and ( min-aspect-ratio: 6/4 )
 {
    :root
    {
