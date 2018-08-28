@@ -9,6 +9,7 @@ import { NetworkException, Exception, LogOnlyException } from '~/common/exceptio
 import * as log from '~/common/log';
 import { toast, ToastType } from "~/client/toast";
 import { handleError } from '~/client/actions/tools/error';
+import { session, storage } from '~/client/actions/direct';
 
 // Set to true on failure, false on success, so we only display it once.
 let tokenRefreshFailedErrorDisplayed : boolean = false;
@@ -77,7 +78,7 @@ export async function retrieveAndUpdateRedditAuth(dispatch : Dispatch, state : S
     return redditAuth;
 }
 
-export function removeAuthentication(dispatch : Dispatch)
+export function removeAuthentication(dispatch? : Dispatch)
 {
     localStorage.removeItem('id_token');
     localStorage.removeItem('access_token');
@@ -87,10 +88,15 @@ export function removeAuthentication(dispatch : Dispatch)
     sessionStorage.removeItem('access_token');
     sessionStorage.removeItem('reddit_auth');
 
-    dispatch({
-        type: actions.types.authentication.LOGOUT_SUCCESS,
-        payload: {} as actions.types.authentication.LOGOUT_SUCCESS
-    });
+    if (dispatch != null)
+    {
+        dispatch({
+            type: actions.types.authentication.LOGOUT_SUCCESS,
+            payload: {} as actions.types.authentication.LOGOUT_SUCCESS
+        });
+    }
+
+
 }
 
 export function saveAuthentication( userInfo : models.auth.UserInfo)
@@ -140,11 +146,23 @@ export function loadAuthentication(dispatch : Dispatch, getState : GetState)
         if (idTokenRaw != null && accessToken != null && redditAuthJson != null)
         {
             let userInfo : models.auth.UserInfo = tools.jwt.combineUserInfo(JSON.parse(idTokenRaw), accessToken, JSON.parse(redditAuthJson ) );
-            
-            dispatch({
-                type: actions.types.authentication.LOGIN_SUCCESS,
-                payload: userInfo as actions.types.authentication.LOGIN_SUCCESS
-            });
+        
+            // userInfo expiry matches access token.
+            // discard if expired.
+            if (userInfo.id_token.expiry > ( Date.now() / 1000 ) )
+            {
+                dispatch({
+                    type: actions.types.authentication.LOGIN_SUCCESS,
+                    payload: userInfo as actions.types.authentication.LOGIN_SUCCESS
+                });
+            }
+            else
+            {
+                // Clear any other lingering data
+                removeAuthentication();
+                session.clear();
+                storage.clear();
+            }
         }
     }
 

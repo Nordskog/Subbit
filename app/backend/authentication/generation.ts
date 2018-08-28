@@ -6,6 +6,9 @@ import * as tools from '~/common/tools';
 import * as Entities from '~/backend/entity';
 import { AccessToken } from '~/common/models/auth/';
 
+const PERMANENT_LOGIN_DURATION = 60 * 60 * 24 * 365; // 1 year
+const SESSION_LOGIN_DURATION = 60 * 60 * 12;         // 12 hours
+
 export enum Scope
 {
     REDDIT = 'REDDIT',
@@ -23,10 +26,18 @@ export function createIdToken(user: Entities.User, loginType : models.auth.Login
         username: user.username,
         admin_access: user.admin_access,
         stats_access: user.stats_access,
-        loginType: loginType 
+        loginType: loginType,
+        expiry: ( Date.now() / 1000 ) + ( loginType === models.auth.LoginType.PERMANENT ? PERMANENT_LOGIN_DURATION : SESSION_LOGIN_DURATION )
     };
 
-    let tokenRaw = jwt.sign( token, serverConfig.token.privateKey, { expiresIn: '1 year' });
+
+    let tokenRaw = jwt.sign( 
+        token, 
+        serverConfig.token.privateKey, 
+        { 
+            expiresIn: loginType === models.auth.LoginType.PERMANENT ? PERMANENT_LOGIN_DURATION : SESSION_LOGIN_DURATION,
+            algorithm: 'RS256',
+        });
     token.raw = tokenRaw;
 
     return token;
@@ -56,21 +67,10 @@ export function createAccessToken(user : Entities.User, loginType : models.auth.
         loginType: loginType
     };
 
-
-    let expiry = '12 hours';
-    switch(loginType)
-    {
-        case models.auth.LoginType.PERMANENT:  
-            expiry = '180 days'; 
-            break;
-        case models.auth.LoginType.SESSION:
-            expiry = '12 hours';  
-    }
-
     let options : jwt.SignOptions = {
         issuer: serverConfig.token.issuer,
         audience: serverConfig.token.audience,
-        expiresIn: expiry,
+        expiresIn: loginType === models.auth.LoginType.PERMANENT ? PERMANENT_LOGIN_DURATION : SESSION_LOGIN_DURATION,
         algorithm: 'RS256',
         jwtid: genJti(), // unique identifier for the token
     };

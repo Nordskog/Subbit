@@ -7,4 +7,5 @@ export default interface IdToken
     stats_access? : boolean;
     loginType? : LoginType;
     raw? : string;
+    expiry?: number;
 }
