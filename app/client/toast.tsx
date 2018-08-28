@@ -15,10 +15,19 @@ export namespace ToastType
 
 export function toast( type : Toastify.ToastType, timeout : number | false, ...message : string[] ) 
 {
+    if (message.length < 1)
+        return;
+
+        
+
     let elements = [];
+    
     message.forEach( (message : string, index : number) => 
     {
-        elements.push( <span key={index}  >{message}</span> );
+        if ( index < 1)
+            elements.push( <span key={index}  >{message}</span> );
+        else
+            elements.push( <span className={styles.smallText} key={index}  >{message}</span> );
     } );
 
     let container = <div className={styles.columnContainer}>

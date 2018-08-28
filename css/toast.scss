@@ -24,6 +24,12 @@
     font-weight: bold;
 }
 
+.smallText
+{
+    @extend .text;
+    font-size: var(--font-small);
+}
+
 .columnContainer
 {
     display: flex;

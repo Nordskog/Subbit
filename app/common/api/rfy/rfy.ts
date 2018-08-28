@@ -30,7 +30,7 @@ export async function getRequest<T>(url : string, parameters? : any, accessToken
         else
         {
             // Browser does not provide any useful information.
-            let exception = new NetworkException(null, "Could not contact " + config.client.siteName + " server", url, null, NetworkRequestDomain.SUBBIT);
+            let exception = new NetworkException(null, "Could not connect to " + config.client.siteName, url, null, NetworkRequestDomain.SUBBIT);
             exceptions.appendStack(exception, stacktrace);
             throw exception;
         }
@@ -72,7 +72,7 @@ export async function postRequest<T, A>(url : string, request : models.Action<A>
         else
         {
             // Browser does not provide any useful information.
-            let exception = new NetworkException(null, "Could not contact " + config.client.siteName + " server", url, null, NetworkRequestDomain.SUBBIT);
+            let exception = new NetworkException(null, "Could not connect to " + config.client.siteName, url, null, NetworkRequestDomain.SUBBIT);
             exceptions.appendStack(exception, stacktrace);
             throw exception;
         }

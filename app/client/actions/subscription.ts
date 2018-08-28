@@ -64,7 +64,7 @@ export function fetchSubscriptions( loadFromSession : boolean = false)
             {
                 // Silently log the error and inform user that we're using stored subs.
                 handleError(dispatch, new LogOnlyException( "Using stored subscriptions", err ));
-                toast( ToastType.ERROR, 10000, `Could not contact ${config.client.siteName}.`, "Loaded cached subscriptions from previous session");     
+                toast( ToastType.ERROR, 10000, `Could not connect to ${config.client.siteName}`, "Loaded subscriptions from previous session");     
             }
         }
 

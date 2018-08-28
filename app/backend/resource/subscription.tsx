@@ -26,7 +26,6 @@ const router = Express.Router();
 
 router.get('/api/subscription', async (req: Request, res: Response) =>
 {
-
     let manager = RFY.wetland.getManager();
     let token : string  = req.headers.access_token as string;
 
