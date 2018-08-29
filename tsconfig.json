@@ -9,6 +9,7 @@
     "baseUrl": ".",
     "typeRoots": [ "types" ],
     "jsx": "react",
+    "types": ["node"],
     "paths": {
 
       "~/*": [ "./app/*" ],

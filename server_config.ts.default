@@ -35,12 +35,8 @@ const config =
 
     token:
     {
-        // The public key isn't (currently) exposed anywhere,
-        // so you can replace both of these with a common secret string instead.
-        privateKey: fs.readFileSync("./jwtRS256.key"),
-        publicKey: fs.readFileSync("./jwtRS256.key.pub"),
-        audience: "meandmyself",
-        issuer: "https://example.com",
+        // Can also be replaced with a string secret
+        privateKey: fs.readFileSync("./HS512.key"),
     },
 
     /////////////////////////////

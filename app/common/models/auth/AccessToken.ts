@@ -6,5 +6,4 @@ export default interface AccessToken
     scope : string;
     sub: string;
     generation: string;
-    loginType: LoginType;
 }

@@ -30,13 +30,12 @@ export function createIdToken(user: Entities.User, loginType : models.auth.Login
         expiry: ( Date.now() / 1000 ) + ( loginType === models.auth.LoginType.PERMANENT ? PERMANENT_LOGIN_DURATION : SESSION_LOGIN_DURATION )
     };
 
-
     let tokenRaw = jwt.sign( 
         token, 
         serverConfig.token.privateKey, 
         { 
             expiresIn: loginType === models.auth.LoginType.PERMANENT ? PERMANENT_LOGIN_DURATION : SESSION_LOGIN_DURATION,
-            algorithm: 'RS256',
+            algorithm: 'HS512',
         });
     token.raw = tokenRaw;
 
@@ -64,32 +63,15 @@ export function createAccessToken(user : Entities.User, loginType : models.auth.
         scope: tokenScopes.join(" "),
         sub: user.username,
         generation: user.generation,
-        loginType: loginType
     };
 
     let options : jwt.SignOptions = {
-        issuer: serverConfig.token.issuer,
-        audience: serverConfig.token.audience,
         expiresIn: loginType === models.auth.LoginType.PERMANENT ? PERMANENT_LOGIN_DURATION : SESSION_LOGIN_DURATION,
-        algorithm: 'RS256',
-        jwtid: genJti(), // unique identifier for the token
+        algorithm: 'HS512',
     };
 
 
     return jwt.sign( payload, serverConfig.token.privateKey, options );
-}
-
-// Generate Unique Identifier for the access token
-function genJti()
-{
-    let jti = '';
-    let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    for (let i = 0; i < 16; i++)
-    {
-        jti += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
-
-    return jti;
 }
 
 export function generateUserInfo( user : Entities.User, loginType : models.auth.LoginType)

@@ -18,7 +18,7 @@ export async function getDecodedTokenWithoutVerifying( accessTokenRaw : string )
         throw new AuthorizationInvalidException("No user token provided");
     }
 
-    let decodedToken : AccessToken = await decodeToken(accessTokenRaw);
+    let decodedToken : AccessToken = < AccessToken > await jwt.decode(accessTokenRaw);
 
     return decodedToken;
 }
@@ -93,7 +93,7 @@ async function decodeToken(accessTokenRaw : string) : Promise<AccessToken>
     let decodedToken : AccessToken = null;
     try
     {
-        decodedToken = jwt.verify(accessTokenRaw, serverConfig.token.publicKey) as AccessToken;
+        decodedToken = jwt.verify(accessTokenRaw, serverConfig.token.privateKey) as AccessToken;
     }
     catch(err)
     {

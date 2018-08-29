@@ -7,6 +7,8 @@ import * as authentication from '~/backend/authentication';
 
 import serverConfig from 'root/server_config';
 import * as tools from '~/common/tools';
+import { StatsCategoryType } from "~/backend/stats";
+
 
 async function getMeta( req : Request, accessToken : string)
 {
@@ -14,8 +16,16 @@ async function getMeta( req : Request, accessToken : string)
     let username = null;
     if (accessToken != null)
     {
-        let accessTokenContent = await authentication.verification.getDecodedTokenWithoutVerifying(accessToken);
-        username = accessTokenContent.sub;
+        try
+        {
+            let accessTokenContent = await authentication.verification.getDecodedTokenWithoutVerifying(accessToken);
+            username = accessTokenContent.sub;
+        }
+        catch ( err )
+        {
+            Log.E("Unable to decode token for log meta: " + err.toString());
+            stats.add( StatsCategoryType.ERRORS);
+        }
     }
 
     if (username == null)
