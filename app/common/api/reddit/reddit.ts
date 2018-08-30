@@ -59,7 +59,7 @@ export async function getRequest<T>(url : string, parameters? : object, auth?: m
         {
             // Especially when working with cors, the browser does not provide
             // any useful information in this case.
-            let exception = new NetworkException(null, "Could not access Reddit", url, null, NetworkRequestDomain.REDDIT);
+            let exception = new NetworkException(null, "Could not connect to Reddit", url, null, NetworkRequestDomain.REDDIT);
             exceptions.appendStack(exception, stacktrace);
             throw exception;
         }
@@ -110,7 +110,7 @@ export async function postRequest<T, A>(url : string, body : string | object, au
         {
             // Especially when working work cors, the browser does not provide
             // any useful information in this case.
-            let exception = new NetworkException(null, "Could not access Reddit", url, null, NetworkRequestDomain.REDDIT);
+            let exception = new NetworkException(null, "Could not connect to Reddit", url, null, NetworkRequestDomain.REDDIT);
             exceptions.appendStack(exception, stacktrace);
             throw exception;
         }

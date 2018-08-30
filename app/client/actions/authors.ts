@@ -161,7 +161,9 @@ export function fetchAuthorsAction( appendResults: boolean = false, loadFromSess
                         status: LoadingStatus.ERROR,
     
                     }  as actions.types.page.LOADING_STATE_CHANGED
-                });                
+                });    
+                
+                throw( error );
             }
         }
 
