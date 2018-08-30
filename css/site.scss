@@ -207,12 +207,12 @@ input[type=text]:hover::placeholder
     transform: rotate(45deg);
     position: absolute;
     margin-top:auto;
-    width:  calc( var(--tiny-gap) * 2 );
-    height: calc( var(--tiny-gap) * 2 );
+    width:  calc( var(--star-size) * 0.35 );
+    height: calc( var(--star-size) * 0.35 );
     background: $input-background-color; 
     border-right: 1px solid $normal-text-color;    
     border-bottom: 1px solid $normal-text-color;    
-    margin-left: var(--insignificant-gap);
+    left: calc( var(--star-size) * 0.3 );   // Not cool, but should stay consistent
 }
 
 //Hide all checkboxes
@@ -264,11 +264,6 @@ input[type=checkbox] {
 
 @media only screen and (max-width: 1100px)
 {
-    .infoPopupArrow
-    {
-        //Off by a tiny amount!
-        margin-left: 10px;
-    }
 
     body 
     {
