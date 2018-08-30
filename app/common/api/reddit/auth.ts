@@ -15,8 +15,11 @@ export async function authenticateWithCode(code : string, redirect : string, app
             code: code,
             redirect_uri: redirect }),
         null,
+        {},
         appBasicAuthHeader
     );
+
+
 }
 
 export async function authenticateAsClient(appBasicAuthHeader ) : Promise<models.reddit.Token>
@@ -26,6 +29,7 @@ export async function authenticateAsClient(appBasicAuthHeader ) : Promise<models
         tools.url.formatAsPostForm( {
         grant_type: "client_credentials" }),
         null,
+        {},
         appBasicAuthHeader
     );
 }
@@ -39,6 +43,7 @@ export async function authenticatedWithRefreshToken(token : string, appBasicAuth
             refresh_token: token
          }),
         null,
+        {},
         appBasicAuthHeader
     );
 }

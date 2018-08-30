@@ -27,15 +27,11 @@ export function clearQueue()
     cdnQueue.clearQueue();
 }
 
-export async function getRequest<T>(url : string, parameters? : object, auth?: models.auth.RedditAuth, headers? : any ) : Promise<T>
+export async function getRequest<T>(url : string, parameters? : object, auth?: models.auth.RedditAuth, additionalOptions? : object, additionalHeaders? : object ) : Promise<T>
 {
     url = url;
     url = tools.url.appendUrlParameters(url,parameters);
-    let options = getRedditFetchOptions('GET', auth);
-
-    // Replace header with input if present
-    if (headers != null)
-        options.headers = headers;
+    let options = getRedditFetchOptions('GET', auth, additionalOptions, additionalHeaders);
 
     let response : Response;
 
@@ -76,18 +72,15 @@ export async function getRequest<T>(url : string, parameters? : object, auth?: m
     }
 }
 
-export async function postRequest<T, A>(url : string, body : string | object, auth?: models.auth.RedditAuth, headers? : any ) : Promise<T>
+export async function postRequest<T, A>(url : string, body : string | object, auth?: models.auth.RedditAuth, additionalOptions? : object, additionalHeaders? : object ) : Promise<T>
 {
     url = url;
-    let options = getRedditFetchOptions('POST', auth);
+    let options = getRedditFetchOptions('POST', auth, additionalOptions, additionalHeaders);
     options = {
         ...options,
         body: typeof body === "string" ? body : JSON.stringify(body)
     };
 
-    // Replace header with input if present
-    if (headers != null)
-        options.headers = headers;
 
     // Stack trace in catch-block when using await is useless.
     // Grab actual stack trace here and append below.
@@ -127,15 +120,24 @@ export async function postRequest<T, A>(url : string, body : string | object, au
     }
 }
 
-export function getRedditFetchOptions( method : string, auth? : models.auth.RedditAuth )
+export function getRedditFetchOptions( method : string, auth? : models.auth.RedditAuth, additionalOptions? : object, additionalHeaders? : object )
 {
+    if (additionalHeaders === null)
+        additionalHeaders = {};
+
+    if (additionalOptions === null)
+        additionalOptions = {};
+
     let options;
     if ( apiTools.authValid(auth) )
     {
         options = {
             method: method,
-            headers: { Authorization : 'bearer ' + auth.access_token,
-            }
+            headers: {
+                 Authorization : 'bearer ' + auth.access_token,
+                 ...additionalHeaders
+            },
+            ...additionalOptions
         };
     }
     else
@@ -143,7 +145,9 @@ export function getRedditFetchOptions( method : string, auth? : models.auth.Redd
         options = {
             method: method,
             headers: {
-            }
+                ...additionalHeaders
+            },
+            ...additionalOptions
         };
     }
 
@@ -155,7 +159,9 @@ export function getRedditFetchOptions( method : string, auth? : models.auth.Redd
             headers: {
                 ...options.headers,
                 'User-Agent': tools.env.getUseragent(),
-            }
+                ...additionalHeaders
+            },
+            ...additionalOptions
         };
     }
 

@@ -7,7 +7,6 @@ export
     reddit
 };
 
-
 export function cancelAll()
 {
    reddit.clearQueue();

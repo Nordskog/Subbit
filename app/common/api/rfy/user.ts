@@ -10,7 +10,9 @@ export function getAndUpdateLastVisit(accessToken : string) : Promise<number>
         {
 
         },
-        accessToken );
+        accessToken,
+        { cache: "no-cache" }
+    );
 }
 
 export function getUserSettings(accessToken : string) : Promise<UserSettings>
@@ -21,15 +23,4 @@ export function getUserSettings(accessToken : string) : Promise<UserSettings>
 
         },
         accessToken );
-}
-
-export function setPostDisplayMode( mode : PostDisplay, accessToken: string) : Promise<boolean>
-{
-   return api.rfy.postRequest(
-    '/user', 
-    {
-        type : serverActions.user.SET_SETTING_POST_DISPLAY_MODE,
-        payload : {mode : mode} as serverActions.user.SET_SETTING_POST_DISPLAY_MODE
-    },
-    accessToken    );
 }

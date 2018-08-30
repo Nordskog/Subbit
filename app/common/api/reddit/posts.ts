@@ -74,7 +74,8 @@ export async function getPosts(author: string, after : string, auth : models.aut
     let result : reddit.ListingResponse = <reddit.ListingResponse> await api.reddit.getRequest(
         baseUrl,
         params,
-        auth);
+        auth
+    );
   
     let posts : models.reddit.Post[] = result.data.children.map( ( post : reddit.Thing<reddit.Post> ) => 
     {

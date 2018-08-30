@@ -7,11 +7,12 @@ import config from 'root/config';
 import fetch from 'isomorphic-fetch';
 import { NetworkRequestDomain } from '~/common/models';
 
-export async function getRequest<T>(url : string, parameters? : any, accessToken?: string) : Promise<T>
+export async function getRequest<T>(url : string, parameters? : any, accessToken?: string, additionalOptions? : object, additionalHeaders? : object ) : Promise<T>
 {
+
     url = urls.RFY_API_URL + url;
     url = tools.url.appendUrlParameters(url,parameters);
-    let options = getBackendFetchOptions('GET', accessToken);
+    let options = getBackendFetchOptions('GET', accessToken, additionalOptions, additionalHeaders);
 
     // Stack trace in catch-block when using await is useless.
     // Grab actual stack trace here and append below.
@@ -46,10 +47,12 @@ export async function getRequest<T>(url : string, parameters? : any, accessToken
     }
 }
 
-export async function postRequest<T, A>(url : string, request : models.Action<A>, accessToken?: string) : Promise<T>
+export async function postRequest<T, A>(url : string, request : models.Action<A>, accessToken?: string,  additionalOptions? : object, additionalHeaders? : object) : Promise<T>
 {
+
+
     url = urls.RFY_API_URL + url;
-    let options = getBackendFetchOptions('POST', accessToken);
+    let options = getBackendFetchOptions('POST', accessToken, additionalOptions, additionalHeaders);
     options = {
         ...options,
         body: JSON.stringify(request)
@@ -89,8 +92,14 @@ export async function postRequest<T, A>(url : string, request : models.Action<A>
     }
 }
 
-export function getBackendFetchOptions(method: string, accessToken: string)
+export function getBackendFetchOptions(method: string, accessToken: string, additionalOptions? : object, additionalHeaders? : object)
 {
+    if (additionalHeaders === null)
+        additionalHeaders = {};
+
+    if (additionalOptions === null)
+        additionalOptions = {};
+
     let config;
     if (accessToken)
     {
@@ -99,7 +108,9 @@ export function getBackendFetchOptions(method: string, accessToken: string)
             headers: {  'Content-Type': 'application/json', 
                         'access_token': accessToken ,
                         'User-Agent': tools.env.getUseragent(),
-        }
+                        ...additionalHeaders
+        },
+        ...additionalOptions
 
         };
     }
@@ -107,9 +118,12 @@ export function getBackendFetchOptions(method: string, accessToken: string)
     {
         config = {
             method: method,
-            headers: {  'Content-Type': 'application/json',
+            headers: { 
+                        'Content-Type': 'application/json',
                         'User-Agent': tools.env.getUseragent(),
+                        ...additionalHeaders
                     },
+            ...additionalOptions
         };
     }
 
