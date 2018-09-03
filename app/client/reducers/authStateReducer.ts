@@ -4,7 +4,7 @@ import * as actions from '~/client/actions';
 // The auth reducer. The starting state sets authentication
 // based on a token being in local storage. In a real app,
 // we would also want a util to check if the token is expired.
-export function authStateReducer(state = getDefaultAuthState(), action : models.Action<any>)
+export function authStateReducer(state : models.auth.AuthState = getDefaultAuthState(), action : models.Action<any>)
 {
     switch (action.type)
     {
@@ -18,7 +18,7 @@ export function authStateReducer(state = getDefaultAuthState(), action : models.
                 user: 
                 {
                     ...state.user,
-                    redditAuth: action.payload
+                    reddit_auth: action.payload
                 }
             };
         }
@@ -49,14 +49,13 @@ export function authStateReducer(state = getDefaultAuthState(), action : models.
     }
 }
 
-export function getDefaultAuthState(userInfo?: models.auth.UserInfo)
+export function getDefaultAuthState(userInfo?: models.auth.UserInfo) : models.auth.AuthState
 {
     if (userInfo != null)
     {
         return {
             isAuthenticated: true,
             user: userInfo,
-            errorMessage: ''
         };
     }
     else
@@ -68,7 +67,8 @@ export function getDefaultAuthState(userInfo?: models.auth.UserInfo)
                     username: ''
                 },
                 access_token: undefined,
-                redditAuth: null
+                reddit_auth: null,
+                reddit_auth_additional: null
             },
         };
     }

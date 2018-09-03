@@ -24,6 +24,7 @@ import * as actions from '~/client/actions';
 import { NavLink } from 'redux-first-router-link';
 
 import config from 'root/config';
+import { LoginType } from '~/common/models/auth';
 
 export enum MessageType 
 {
@@ -191,9 +192,17 @@ export default class MessageComponent extends React.Component<Props, State>
                 <div className={styles.spacer}/>
                 <div className={styles.spanRow}>
                   <span>Go</span>
-                  <SVGInline className={authorStyles.unsubscribeButton} svg={subscribeButton}/>
+                  <SVGInline className={ classConcat( authorStyles.unsubscribeButton, styles.starParagraphMargin )  } svg={subscribeButton}/>
                   <span>your favorite authors!</span>
-
+                </div>
+                <div className={styles.spacer}/>
+                <div className={styles.spanRow}>or</div>
+                <div className={styles.spacer}/>
+                <div className={styles.spanRow}>
+                <NavLink className={ siteStyles.cardButton } 
+                  to={ { type: actions.types.Route.IMPORT, payload: { } } as actions.types.Route.IMPORT }>
+                  Import from UpdateMeBot
+                </NavLink> 
                 </div>
               
 
@@ -209,8 +218,8 @@ export default class MessageComponent extends React.Component<Props, State>
                             <div className={styles.loginContainerOuter}>
                             <span>Papers, please.</span>
                             <div className={ config.common.loginEnabled ? styles.loginContainer : styles.hiddenLoginContainer}>
-                              <a href={ config.common.loginEnabled ? urls.getClientLoginUrl(!this.state.rememberMe, matches) : "#"} 
-                              className={ classConcat( siteStyles.button, styles.loginButton)}>Login with Reddit</a>
+                              <a href={ config.common.loginEnabled ? urls.getClientLoginUrl(this.state.rememberMe ? LoginType.PERMANENT : LoginType.SESSION, matches) : "#"} 
+                              className={ siteStyles.cardButton }>Login with Reddit</a>
                             </div> 
                             {this.getRememberMeCheckbox()}
                             </div>

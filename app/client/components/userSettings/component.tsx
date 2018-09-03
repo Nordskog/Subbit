@@ -11,7 +11,10 @@ import { NavLink } from 'redux-first-router-link';
 import * as styles from 'css/userSettings.scss';
 import { PostDisplay } from '~/common/models';
 
+import { classConcat } from '~/common/tools/css';
 import config from 'root/config';
+import { LoginType } from '~/common/models/auth';
+import * as siteStyles from 'css/site.scss';
 
 interface Props
 {
@@ -82,14 +85,27 @@ export default class UserSettingsComponent extends React.Component<Props, State>
                     {this.getPostDisplayToggle()}
                     {this.getStatsButton()}
                     {this.getAboutButton()}
+                    {this.getImportButton()}
                     {this.getLogoutButton()}
                     {this.getlogoutOnAllDevicesButton()}
                 </div>;
     }
 
+    private getImportButton() 
+    {
+        if (this.props.authenticated)
+        {
+            return  <NavLink className={ styles.genericButton } 
+                        onClick={ () => this.props.close() }
+                        to={ { type: actions.types.Route.IMPORT, payload: { } } as actions.types.Route.IMPORT }>
+                        Import
+                    </NavLink>; 
+        }
+    }
+
     private getPostDisplayToggle()
     {
-        return  <components.tools.OptionDropdown message={"Post display format"}> 
+        return  <components.tools.OptionDropdown message={"Display"}> 
                          <components.tools.Toggle
                         items={this.state.postDisplayItems}
                         selected={this.state.postDisplaySelected}
@@ -106,7 +122,7 @@ export default class UserSettingsComponent extends React.Component<Props, State>
                         (matches : boolean) => 
                         {
                             return <div className={ config.common.loginEnabled ? styles.loginContainer : styles.loginContainerDisabled}>
-                                        <a href={ config.common.loginEnabled ? urls.getClientLoginUrl(!this.state.rememberMe, matches) : "#"} 
+                                        <a href={ config.common.loginEnabled ? urls.getClientLoginUrl(this.state.rememberMe ? LoginType.PERMANENT : LoginType.SESSION, matches) : "#"} 
                                         className={ styles.loginButton }>Login</a>
                                             <div className={styles.rememberMeCenterer} onClick={ () => this.setRememberMe( !this.state.rememberMe ) } >
                                             <div className={styles.rememberMeContainer} >

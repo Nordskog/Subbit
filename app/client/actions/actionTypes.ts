@@ -1,7 +1,10 @@
 ﻿// tslint:disable:class-name
+// tslint:disable:interface-name
 
 import * as models from '~/common/models';
 import { LoadingStatus, AuthorFilter } from '~/common/models';
+import { ImportedSubscription } from '~/common/models/data';
+import { ImportStatus } from '~/common/models/reddit';
 
 export namespace authors
 {
@@ -134,10 +137,13 @@ export namespace user
     export const POST_DISPLAY_MODE_CHANGED: string =  'POST_DISPLAY_MODE_CHANGED';
     export const LAST_VISIT_UPDATED: string = "LAST_VISIT_UPDATED";
     export const USER_SETTINGS_FETCHED: string = "USER_SETTINGS_UPDATED";
+    export const SUBSCRIPTIONS_IMPORTED: string = "SUBSCRIPTIONS_IMPORTED";
 
     export type POST_DISPLAY_MODE_CHANGED = models.PostDisplay;
     export type LAST_VISIT_UPDATED = number;
     export type USER_SETTINGS_FETCHED = models.data.UserSettings;
+
+    export type SUBSCRIPTIONS_IMPORTED = ImportedSubscription[];
 }
 
 export namespace Route
@@ -150,6 +156,7 @@ export namespace Route
     export const STATS          : string = "STATS";
     export const ABOUT          : string = "ABOUT";
     export const PRIVACY        : string = "PRIVACY";
+    export const IMPORT         : string = "IMPORT";
 
     export interface ABOUT 
     {
@@ -167,6 +174,11 @@ export namespace Route
     }
 
     export interface PRIVACY 
+    {
+
+    }
+
+    export interface IMPORT 
     {
 
     }

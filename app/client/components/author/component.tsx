@@ -522,7 +522,7 @@ export default class AuthorCell extends React.Component<Props, State>
         {
             // Request updated posts if we are viewing subscriptions and have made changes.
             // Set posts awaiting to prevent return until new posts have been loaded.
-            if (this.state.subscriptionsModified && this.props.filter === models.AuthorFilter.SUBSCRIPTIONS)
+            if (this.state.subscriptionsModified && ( this.props.filter === models.AuthorFilter.SUBSCRIPTIONS || this.props.filter === models.AuthorFilter.IMPORTED ) )
             {
                 this.props.fetchPosts(this.props.author, config.client.postFetchCount);
                 this.setState( { subredditsExpanded: true, subscriptionsModified: false, awaitingPosts: true } );

@@ -19,6 +19,7 @@ export enum AuthorFilter
     SUBSCRIPTIONS =  'subs',
     RISING = "rising",
     CONTROVERSIAL = "controversial",
+    IMPORTED = "imported"
 }
 
 export enum PostTimeRange
@@ -49,7 +50,7 @@ export enum LoadingStatus
 
 export enum SiteMode
 {
-    AUTHORS, STATS, ABOUT, PRIVACY, WAITING
+    AUTHORS, STATS, ABOUT, PRIVACY, WAITING, IMPORT
 }
 
 export type WebsocketReconnectCallback = () => void;
@@ -59,5 +60,4 @@ export enum NetworkRequestDomain
     REDDIT = "reddit",
     SUBBIT = "subbit"
 }
-
 

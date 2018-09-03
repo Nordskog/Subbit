@@ -22,6 +22,21 @@ export interface Listing<T>
     children : Thing<T>[];
 }
 
+export interface Message 
+{
+    first_message: number;
+    first_message_name: string;
+    id: string;
+    subject: string;
+    author: string;
+    body: string;
+    body_html: string;
+    created: number;
+    created_utc: number;
+    name: string;
+    dest: string;
+}
+
 // Commented out bits are removed on fetch so we don't waste storage on them
 export interface Post
 {
@@ -64,3 +79,22 @@ export type ListingResponse = Thing< Listing< Post > >;
 {
     
 }
+
+export enum AuthenticationType
+{
+    BROWSE, MESSAGE_TEMPORARY
+}
+
+export enum ImportStatus 
+{
+    MESSAGE_SENT, MESSAGE_FOUND, MESSAGE_NOT_FOUND, ERROR
+}
+
+export interface PostRequestResponse 
+{
+    json: {
+        errors: PostRequestError[]
+    };
+}
+
+export type PostRequestError = [string, string, string];    // Enum, readable string, relevant param

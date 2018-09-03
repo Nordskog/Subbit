@@ -63,6 +63,7 @@ export function createAccessToken(user : Entities.User, loginType : models.auth.
         scope: tokenScopes.join(" "),
         sub: user.username,
         generation: user.generation,
+        login_type: loginType
     };
 
     let options : jwt.SignOptions = {
@@ -74,7 +75,7 @@ export function createAccessToken(user : Entities.User, loginType : models.auth.
     return jwt.sign( payload, serverConfig.token.privateKey, options );
 }
 
-export function generateUserInfo( user : Entities.User, loginType : models.auth.LoginType)
+export function generateUserInfo( user : Entities.User, loginType : models.auth.LoginType, )
 {
     let idToken : models.auth.IdToken = createIdToken(user, loginType);
     let accessToken : string = createAccessToken(user, loginType);
@@ -82,10 +83,15 @@ export function generateUserInfo( user : Entities.User, loginType : models.auth.
     let userInfo: models.auth.UserInfo = {
         id_token: idToken,
         access_token: accessToken,
-        redditAuth : {
+        reddit_auth : {
             access_token : user.auth.access_token,
             expiry : tools.time.dateToUnix(user.auth.expiry)
+        },
+        reddit_auth_additional: user.additional_auth == null ? null : {
+            access_token : user.additional_auth.access_token,
+            expiry : tools.time.dateToUnix(user.additional_auth.expiry)
         }
+
     };
 
     return userInfo;

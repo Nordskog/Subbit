@@ -6,7 +6,7 @@ export { Toggle as Toggle, ToggleItem as ToggleItem } from './toggle';
 
 export { default as CountdownToast } from './CountdownToast';
 export {default as LoadingIcon } from './LoadingIcon';
-export { LoadingProgress, LoadingProgressTest } from './LoadingProgress';
+export { LoadingProgress, TimeProgress } from './LoadingProgress';
 export {LoadingStatus as LoadingStatus } from './LoadingStatus';
 export {default as InfoPopup } from './InfoPopup';
 export { Message, MessageType} from './message';

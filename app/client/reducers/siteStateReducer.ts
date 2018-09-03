@@ -71,6 +71,14 @@ export function siteStateReducer(state = getDefaultSiteState(), action :  models
             };
         }
 
+        case actions.types.Route.IMPORT:
+        {
+            return {
+                ...state,
+                mode: models.SiteMode.IMPORT
+            };
+        }
+
         case actions.types.Route.AUTHENTICATE:
         {
             return {

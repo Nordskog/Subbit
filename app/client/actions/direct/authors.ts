@@ -9,6 +9,8 @@ import { NetworkException } from '~/common/exceptions';
 import * as Log from '~/common/log';
 import { Author, AuthorEntry } from '~/common/models/data';
 import { authRouter } from '~/backend/resource';
+import { AuthorFilter } from '~/common/models';
+import { getDummySubscription } from '~/client/actions/tools/subscriptions';
 
 
 export async function getAuthors( dispatch : Dispatch, getState : GetState )
@@ -17,20 +19,15 @@ export async function getAuthors( dispatch : Dispatch, getState : GetState )
 
     let redditAuth = await actions.directActions.authentication.retrieveAndUpdateRedditAuth( dispatch, state);
 
-    let authors : models.data.Author[];
+    let authorEntries : models.data.AuthorEntry[];
     let after : string;
 
     if (state.authorState.author != null)
     {
         // Single author
-        authors = [{
-            id : -1,
-            name: state.authorState.author,
-            last_post_date: 0,
-            post_count : 0,
-            posts: [],
-            subscriptions: []
-        }];
+        authorEntries = [
+            AuthorEntry.getNew(state.authorState.author)
+        ];
     }    
     else if (state.authorState.filter === models.AuthorFilter.SUBSCRIPTIONS)
     {
@@ -59,44 +56,55 @@ export async function getAuthors( dispatch : Dispatch, getState : GetState )
         }
 
         // Subscriptions
-        authors = subscriptions.map( ( sub : models.data.Subscription ) => 
+        authorEntries = subscriptions.map( ( sub : models.data.Subscription ) => 
         {
-            return {
-                    id : -1,
-                    name: sub.author,
-                    last_post_date: 0,
-                    post_count : 0,
-                    posts: [],
-                    subscriptions: []
-                };
+            let entry : AuthorEntry = AuthorEntry.getNew(sub.author);
+            entry.subscription = sub;
+
+            return entry;
         });
         after = null;
 
 
+    }
+    else if ( state.authorState.filter === AuthorFilter.IMPORTED )
+    {
+        authorEntries = state.userState.importedSubscriptions.map( ( sub : models.data.ImportedSubscription ) => 
+        {
+            let dummySub = getDummySubscription(sub.author, null, null, ...sub.subreddits);
+            dummySub.subscribed = false;    // False so user can click to restore with subscribed subreddits
+
+            let entry = AuthorEntry.getNew(sub.author);
+            entry.subscription = dummySub;
+
+            return entry;
+        });
+        after = null;
     }
     else
     {
         // Subreddit or frontpage
         let res = await api.reddit.posts.getAuthors( true, state.authorState.subreddit, state.authorState.filter, state.authorState.time, state.authorState.after, config.client.authorDisplayCount, redditAuth );
          
-        authors = res.authors;
+        authorEntries = res.authors.map( ( author : models.data.Author ) => 
+        {
+            
+            return {
+                author: author,
+                subscription: null,
+                after: null,
+                end: true
+            };
+        } ); 
+
         after = res.after;
     }
 
 
     // Remove and any existing authors, then update authority with new
-    authors = authors.filter( (author : models.data.Author) =>  !authority.author.authorityContains(author) );
-    authors.forEach( ( author : models.data.Author ) => authority.author.updateAuthority(author) );
+    authorEntries = authorEntries.filter( (author : models.data.AuthorEntry) =>  !authority.author.authorityContains(author.author) );
+    authorEntries.forEach( ( author : models.data.AuthorEntry ) => authority.author.updateAuthority(author.author) );
 
-    let authorEntries : models.data.AuthorEntry[] = authors.map( ( author : models.data.Author ) => 
-    {
-        return {
-            author: author,
-            subscription: null,
-            after: null,
-            end: true
-        };
-    } ); 
 
     ensureSubredditCasingMatch(dispatch, authorEntries, state.authorState.subreddit);
 
@@ -112,7 +120,7 @@ export async function getAuthors( dispatch : Dispatch, getState : GetState )
         await actions.directActions.authors.populateAuthorSubscriptions(authorEntries, getState);   // Important to do this before getting posts
     }
 
-    if (state.authorState.filter === models.AuthorFilter.SUBSCRIPTIONS)
+    if (state.authorState.filter === models.AuthorFilter.SUBSCRIPTIONS || state.authorState.filter === models.AuthorFilter.IMPORTED)
     {
         // Sort by last post descending
         authorEntries.sort( (a : models.data.AuthorEntry, b: models.data.AuthorEntry) => 
@@ -128,7 +136,7 @@ export async function getAuthors( dispatch : Dispatch, getState : GetState )
         });
     }
 
-    if ( state.authorState.filter === models.AuthorFilter.SUBSCRIPTIONS || state.authorState.author )
+    if ( state.authorState.filter === models.AuthorFilter.SUBSCRIPTIONS || state.authorState.author || state.authorState.filter === models.AuthorFilter.IMPORTED )
     {
         // Name casing may be incorrect. Check post data.
         for (let entry of authorEntries)
@@ -179,15 +187,35 @@ export function ensureSubredditCasingMatch( dispatch : Dispatch, authors : Autho
 
 export function populateAuthorSubscriptions( authors : models.data.AuthorEntry[], getState : GetState )
 {
-    let subscriptions : models.data.Subscription[] = (<State> getState()).userState.subscriptions;
-
-    let subMap : Map<string, models.data.Subscription> = new Map( subscriptions.map( 
-        ( sub: models.data.Subscription ): [string, models.data.Subscription] => [sub.author, sub] ) );
-
-    authors.forEach( ( author : models.data.AuthorEntry ) => 
+    let state : State = getState();
     {
-        author.subscription =  subMap.get( author.author.name );
-    });
+        let subscriptions : models.data.Subscription[] = (<State> getState()).userState.subscriptions;
+
+        let subMap : Map<string, models.data.Subscription> = new Map( subscriptions.map( 
+            ( sub: models.data.Subscription ): [string, models.data.Subscription] => [sub.author, sub] ) );
+    
+        authors.forEach( ( author : models.data.AuthorEntry ) => 
+        {
+            if ( state.authorState.filter === AuthorFilter.IMPORTED )
+            {
+                // When viewing imported, authors will have "fake" subscriptions attached to them.
+                // These fake subscriptions are marked as unsubscribed so the user can click to add them.
+                // We should also add any real subscriptions.
+                let sub = subMap.get( author.author.name );
+                if (sub != null)
+                    author.subscription = sub;
+
+            }
+            else 
+            {
+                // Set to null if none exists
+                author.subscription =  subMap.get( author.author.name );
+            }
+
+        });
+    }
+
+
 }
 
 export function updateLoadingProgress(count : number, progress : number, dispatch)
@@ -218,7 +246,7 @@ export async function poulateInitialPosts(authors : models.data.AuthorEntry[], c
         authors.forEach( ( author : models.data.AuthorEntry ) => 
         {
             let subreddits : string[] = [];
-            if (state.authorState.filter === models.AuthorFilter.SUBSCRIPTIONS)
+            if (state.authorState.filter === models.AuthorFilter.SUBSCRIPTIONS || state.authorState.filter === models.AuthorFilter.IMPORTED )
             {
                 // Well that shouldn't happen
                 if (author.subscription == null)

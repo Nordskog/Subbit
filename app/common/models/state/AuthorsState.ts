@@ -1,4 +1,4 @@
-import AuthorEntry from '~/common/models/data/AuthorEntry';
+import { AuthorEntry } from '~/common/models/data/';
 import * as models from '~/common/models';
 
 export default interface AuthorsState

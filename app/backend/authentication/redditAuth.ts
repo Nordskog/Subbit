@@ -77,7 +77,7 @@ export function getGeneration() : string
 export function getAuthState( loginType : models.auth.LoginType) : string
 {
     // Auth state can use the same id generation I guess
-    let identifier: string = getGeneration();
+    let identifier: string = loginType + "_" + getGeneration();
 
     let state = {
         identifier: identifier,
@@ -160,20 +160,66 @@ export function getHttpBasicAuthHeader()
 
 export function generateRedditLoginUrl( loginType : models.auth.LoginType, compactLogin : boolean )
 {
+    let scope : string = "identity read history";
+    let duration : string = "permanent";
+
+    // Additional permissions that will only be requested temporarily.
+    if (loginType === LoginType.REDDIT_ADDITIONAL_AUTH)
+    {
+        scope = "identity privatemessages";
+        duration = "temporary";
+    }
+
     return tools.url.appendUrlParameters( compactLogin ? urls.REDDIT_AUTH_URL_COMPACT : urls.REDDIT_AUTH_URL,
         {
             client_id: authentication.redditAuth.getAppId(),
             response_type: "code",
             state: authentication.redditAuth.getAuthState(loginType),    // Keeps track of permanent/session login type
             redirect_uri: urls.RFY_AUTHORIZE_REDIRECT,
-            duration: "permanent",
-            scope: "identity read history"
+            duration: duration,
+            scope: scope
         }
     );
 }
 
+// Already logged in, but adding additional auth 
+export async function updateUserAdditionalAuth( manager : Wetland.Scope, result, user : Entities.User )
+{
+    // User must already exist, and have a valid, permanent reddit auth
+
+    let auth : Entities.Auth = new Entities.Auth();
+    auth.auth_type = "reddit_additional";
+    auth.access_token = result.access_token;
+    auth.expiry = new Date( (new Date().getTime()) + ( result.expires_in * 1000 ) );
+    auth.token_type = "bearer";
+    auth.scope = result.scope;
+
+    // As a sanity check, make sure the existing user's username matches that of the user we are getting the new token for.
+    {
+        let redditAuth : models.auth.RedditAuth = {
+            access_token: auth.access_token,
+            expiry: tools.time.dateToUnix(auth.expiry)
+        };
+        let newUsername = await api.reddit.auth.getUsername(redditAuth);
+
+        if (newUsername.toLowerCase() !== user.username.toLowerCase())
+        {
+            throw new AuthorizationException(`Username of logged in user ${user.username} does not match of retrieved token ${newUsername}`);
+        }
+    }
+
+    let populator = RFY.wetland.getPopulator( manager );
+
+    // Note spread operator. Behavior with actual entity instances is unpredictable
+    user = populator.assign(Entities.User, { additional_auth: {...auth} }, user, true);
+
+    await manager.flush();
+}
+
+// Login with permanent auth ( read only access )
 export async function createOrUpdateUserFromRedditToken( manager : Wetland.Scope, result, user? : Entities.User)
 {
+    
     let auth : Entities.Auth = new Entities.Auth();
 
     auth.auth_type = "reddit";
@@ -201,7 +247,9 @@ export async function createOrUpdateUserFromRedditToken( manager : Wetland.Scope
 
 
         // Fetch existing user if present
-        user = await manager.getRepository(Entities.User).findOne({ username: username }, { populate: "auth"});
+        user = await manager.getRepository(Entities.User).findOne({ username: username }, { populate: ["auth", "additional_auth"]});
+
+        console.log(user);
     }
     else
     {
@@ -223,12 +271,14 @@ export async function createOrUpdateUserFromRedditToken( manager : Wetland.Scope
         let userSettings = new Entities.UserSettings();
         let generation = getGeneration();
 
-        user = populator.assign(Entities.User, { username: username, auth: auth, settings: userSettings, generation }, user, true);
+        // Note spread operator. Behavior with actual entity instances is unpredictable
+        user = populator.assign(Entities.User, { username: username, auth: {...auth}, settings: userSettings, generation }, user, true);
     }
     else
     {
         // Exists, just update auth and stuff
-        user = populator.assign(Entities.User, { username: username, auth: auth}, user, true);
+        // Note spread operator. Behavior with actual entity instances is unpredictable
+        user = populator.assign(Entities.User, { username: username, auth: {...auth} }, user, true);
     }
 
     await manager.flush();

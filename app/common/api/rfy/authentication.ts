@@ -4,7 +4,7 @@ import * as api from '~/common/api';
 import * as models from '~/common/models';
 import * as serverActions from '~/backend/actions';
 
-export function authenticate(code : string, state : string) : Promise< models.auth.UserInfo>
+export function authenticate(code : string, state : string, accessToken? : string ) : Promise< models.auth.UserInfo>
 {
         return api.rfy.postRequest(
             '/authorize_local', 
@@ -16,7 +16,7 @@ export function authenticate(code : string, state : string) : Promise< models.au
                     state: state
                 }
             },
-            null );
+            accessToken );
 }
 
 export function refreshRedditAccessToken(user: string, accessToken : string) : Promise<models.auth.RedditAuth>

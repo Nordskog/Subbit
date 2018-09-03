@@ -8,5 +8,4 @@ export default interface Author
     last_post_date: number;
     post_count: number;
     posts: Post[];
-    subscriptions: Subscription[];
 }

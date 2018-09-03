@@ -96,6 +96,12 @@
     box-sizing: border-box;
 }
 
+.wideLoginContainer
+{
+    @extend .loginContainer;
+    min-width:var( --small-card-max-width );
+}
+
 .hiddenLoginContainer
 {
     @extend .loginContainer;
@@ -107,22 +113,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;  
-}
-
-.loginButton
-{
-    background: $card-button-color;
-    border-radius: var(--insignificant-gap);
-}
-
-.loginButton:hover 
-{
-    background: $card-button-highlight-color;
-}
-
-a.loginButton
-{
-    text-decoration: none;
 }
 
 .rememberMeContainer
@@ -138,6 +128,8 @@ a.loginButton
 .paragraphContainer
 {
     background: $card-background;
+
+    max-width:var( --small-card-max-width);
 
     border-radius: var( --small-gap );
 
@@ -175,6 +167,12 @@ a.loginButton
     text-align: left;
 }
 
+.starParagraphMargin
+{
+    margin-left: var(--tiny-gap);
+    margin-right: var(--tiny-gap);
+}
+
 ///////////////////////
 // Mobile
 ////////////////////////
@@ -183,5 +181,9 @@ a.loginButton
 {
     .loginContainer {
         border-radius: 0px;
+    }
+
+    .paragraphContainer {
+        width: 100%;
     }
 }

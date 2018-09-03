@@ -13,6 +13,7 @@ export default class Auth extends Wetland.Entity
     public token_type : string;
     public auth_type : string;
     public user : User;
+    public user_additional : User;
 
     public id : number;
     public createdAt : Date;
@@ -65,6 +66,7 @@ export default class Auth extends Wetland.Entity
             });
 
         mapping.oneToOne('user', { targetEntity: 'User', inversedBy: 'auth' }).joinColumn( 'user', {onDelete: 'cascade'} );
+        mapping.oneToOne('user_additional', { targetEntity: 'User', inversedBy: 'auth_additional' }).joinColumn( 'user_additional', {onDelete: 'cascade'} );
     }
 
     protected beforeUpdate(updatedValues, EntityManager : Wetland.EntityManager)

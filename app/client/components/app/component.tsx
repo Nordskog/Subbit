@@ -52,6 +52,9 @@ export default class App extends React.Component<Props,any>
 
             case models.SiteMode.WAITING:
                 return <components.tools.Message message={MessageType.WAITING} />;
+
+            case models.SiteMode.IMPORT:
+                return <components.ImportComponent/>;
         }
 
         if (this.props.filter === models.AuthorFilter.SUBSCRIPTIONS  )

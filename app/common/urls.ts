@@ -1,6 +1,7 @@
 ﻿
 import config from 'root/config';
 import * as tools from '~/common/tools';
+import { LoginType } from '~/common/models/auth';
 
 /////////////
 // Client
@@ -17,9 +18,9 @@ export const RFY_AUTHORIZE_LOCAL =  RFY_API_URL + '/authorize_local';           
 export const RFY_AUTHORIZE_REMOTE =  RFY_API_URL + '/authorize_remote';                    // Forwards to reddit
 export const RFY_AUTHORIZE_REFRESH =  RFY_API_URL + '/authorize_refresh';                  // Get new access token from backend
 
-export function getClientLoginUrl( session : boolean = false, compact : boolean = false )
+export function getClientLoginUrl( loginType : LoginType, compact : boolean = false )
 {
-    return tools.url.appendUrlParameters(RFY_AUTHORIZE_REMOTE, { session : session, compact : compact });
+    return tools.url.appendUrlParameters(RFY_AUTHORIZE_REMOTE, { type : loginType, compact : compact });
 }
 
 /////////////

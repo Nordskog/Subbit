@@ -20,12 +20,13 @@ userinfo.id_token.raw = id_token;
 */
 
 
-export function combineUserInfo(idToken : models.auth.IdToken, accessToken : string, redditAuth : models.auth.RedditAuth) : models.auth.UserInfo
+export function combineUserInfo(idToken : models.auth.IdToken, accessToken : string, redditAuth : models.auth.RedditAuth, redditAuthAdditional? : models.auth.RedditAuth) : models.auth.UserInfo
 {
    let userinfo : models.auth.UserInfo = {
     id_token: idToken,
     access_token: accessToken,
-    redditAuth: redditAuth,
+    reddit_auth: redditAuth,
+    reddit_auth_additional: redditAuthAdditional
    };
 
     return userinfo;

@@ -15,6 +15,10 @@ export function updateTitle( getState : GetState)
 
     let title = config.client.siteName + " for Reddit";
 
+    if (state.siteState.mode === models.SiteMode.IMPORT)
+    {
+        title += " - Import";
+    }
     if (state.siteState.mode === models.SiteMode.ABOUT)
     {
         title += " - About";

@@ -23,15 +23,3 @@ export function getUsername(state: store.State)
         return null;
     }
 }
-
-export function getRedditAuth(state: store.State)
-{
-    if (state.authState.isAuthenticated)
-    {
-        return state.authState.user.redditAuth;
-    }
-    else
-    {
-        return null;
-    }
-}

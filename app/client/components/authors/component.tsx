@@ -41,12 +41,26 @@ export default class AuthorsComponent extends React.Component<Props, State >
         return shouldRender;
     }
 
+    private getHeader()
+    {
+        // Do not display until loaded
+        if (this.props.filter === AuthorFilter.IMPORTED && this.props.authors.length > 0)
+        {
+            return <div key={"header_updatemebot"} className={styles.header}>
+                        <span>Listing UpdateMeBot subscriptions</span>
+                        <div className={styles.headerContent} >Add a subscription by clicking the star</div>
+                    </div>;
+        }
+    }
+
     private renderAuthors()
     {
-        let renders = new Array(this.props.authors.length);
+        let renders = new Array(this.props.authors.length + 1);
 
         // list visited only works when sorting by new, so NEW or SUBSCRIPTIONS
         let lastVisitAdded : boolean = !this.shouldRenderLastVisitBar();
+
+        renders.push(this.getHeader());
 
         this.props.authors.forEach( (author, index) =>
         {

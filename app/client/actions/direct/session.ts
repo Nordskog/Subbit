@@ -3,7 +3,7 @@ import { arch } from 'os';
 import { GetState } from '~/client/actions/tools/types';
 import { State } from '~/client/store';
 import Subscription from '~/common/models/data/Subscription';
-import AuthorEntry from '~/common/models/data/AuthorEntry';
+import { AuthorEntry } from '~/common/models/data/';
 
 export function loadAuthors() : models.data.AuthorEntry[]
 {

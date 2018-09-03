@@ -7,5 +7,6 @@ export {default as AccessToken} from './AccessToken';
 export enum LoginType
 {
     PERMANENT = "permanent",
-    SESSION = "session"
+    SESSION = "session",
+    REDDIT_ADDITIONAL_AUTH = "reddit_aditional_auth"
 }

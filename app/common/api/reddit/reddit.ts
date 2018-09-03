@@ -68,7 +68,8 @@ export async function getRequest<T>(url : string, parameters? : object, auth?: m
     }
     else
     {
-        throw await NetworkException.fromResponse(response, NetworkRequestDomain.REDDIT);
+        let exception = await NetworkException.fromResponse(response, NetworkRequestDomain.REDDIT);
+        exceptions.appendStack(exception, stacktrace);
     }
 }
 
@@ -112,11 +113,31 @@ export async function postRequest<T, A>(url : string, body : string | object, au
         
     if (response.ok)
     {
-        return await response.json();
+
+        // Most valid Reddit post requests always return a 200, with a json object containing any errors
+        // Check for that, and return as any so whoever called can decide what it should be.
+        let responseBody : models.reddit.PostRequestResponse = await response.json();
+        if (responseBody.json != null)
+        {
+            if ( responseBody.json.errors != null )
+            {
+                if (responseBody.json.errors.length > 0)
+                {
+                    // There may be multiple errors, but just deal with the first one for now.
+                    // Each error consists of 3 strings, enum, human readable, relevant param.
+                    let exception = new NetworkException(null, responseBody.json.errors[0][1], url, null, NetworkRequestDomain.REDDIT);
+                    exceptions.appendStack(exception, stacktrace);
+                    throw exception;
+                }
+            }
+        }
+        return responseBody as any;
     }
     else
     {
-        throw await NetworkException.fromResponse(response, NetworkRequestDomain.REDDIT);
+        let exception = await NetworkException.fromResponse(response, NetworkRequestDomain.REDDIT);
+        exceptions.appendStack(exception, stacktrace);
+        throw exception;
     }
 }
 

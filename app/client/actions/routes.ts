@@ -5,11 +5,12 @@ import * as tools from '~/common/tools';
 import * as models from '~/common/models';
 
 import { State } from '~/client/store';
-import { WrapWithHandler } from '~/client/actions/tools/error';
+import { WrapWithHandler, handleError } from '~/client/actions/tools/error';
 import { AuthorizationException } from '~/common/exceptions';
 import { AuthorFilter, LoadingStatus } from '~/common/models';
 import { Dispatch, GetState } from '~/client/actions/tools/types';
 import { History } from 'history';
+import { LoginType } from '~/common/models/auth';
 
 let firstLoad : boolean = true;
 
@@ -71,6 +72,20 @@ export function aboutRoute()
     });
 }
 
+export function importRoute()
+{
+    return WrapWithHandler( async (dispatch : Dispatch, getState : GetState ) =>
+    {
+        if (awaited)
+        {
+            actionTools.title.updateTitle(getState);
+            actions.directActions.page.clearPage(true, dispatch);
+            actions.directActions.authentication.loadAuthentication(dispatch, getState);
+            await firstLoadDuties(dispatch, getState);
+        }
+    });
+}
+
 export function authorizeRoute()
 {
     return WrapWithHandler( async (dispatch : Dispatch, getState : GetState ) =>
@@ -96,17 +111,32 @@ export function authorizeRoute()
             else
             {
                 // Page will display loading indicator while waiting for reply
-                actions.authentication.authenticatedWithRedditCode(code,state)(dispatch, getState).then( async () => 
+                actions.authentication.authenticatedWithRedditCode(code,state, actions.directActions.authentication.getAccessTokenFromStorage() )(dispatch, getState).then( async () => 
                 {
                     // Perform first load duties here, as otherwise the user will have no subscriptions
                     // after being forwarded, resulting in the no-subscriptions-page appearing until fetched.
                     await firstLoadDuties(dispatch, getState);
 
-                    dispatch(
-                    { 
-                        type: actions.types.Route.FILTER, payload: { filter: AuthorFilter.SUBSCRIPTIONS } as actions.types.Route.FILTER } 
-                    );
-                });
+                    if ( (<string> state).startsWith( LoginType.REDDIT_ADDITIONAL_AUTH ) )
+                    {
+                        // Additional auth login, forward to import.
+                        dispatch(
+                            { 
+                                type: actions.types.Route.IMPORT, payload: { } as actions.types.Route.IMPORT } 
+                            );
+                    }
+                    else
+                    {
+                        // Normal login, forward to subscriptions
+                        dispatch(
+                            { 
+                                type: actions.types.Route.FILTER, payload: { filter: AuthorFilter.SUBSCRIPTIONS } as actions.types.Route.FILTER } 
+                            );
+                    }
+
+
+
+                }).catch( (err) => handleError(dispatch, err) );
             }
         }
     });

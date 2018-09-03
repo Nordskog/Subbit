@@ -8,11 +8,11 @@ import { State } from '~/client/store';
 import { WrapWithHandler } from '~/client/actions/tools/error';
 import { Dispatch, GetState } from '~/client/actions/tools/types';
 
-export function authenticatedWithRedditCode(code : string, state : string)
+export function authenticatedWithRedditCode(code : string, state : string, accessToken? : string)
 {
     return WrapWithHandler( async (dispatch : Dispatch, getState : GetState) =>
     {
-        let userInfo : models.auth.UserInfo = await api.rfy.authentication.authenticate(code,state);
+        let userInfo : models.auth.UserInfo = await api.rfy.authentication.authenticate(code, state, accessToken);
 
         actions.directActions.authentication.saveAuthentication(userInfo);
 

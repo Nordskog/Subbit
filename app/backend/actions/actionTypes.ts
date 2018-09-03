@@ -44,6 +44,7 @@ export namespace auth
         
     }
 
+    // Login user reddit code
     export interface AUTHENTICATE_WITH_REDDIT_CODE
     {
         code: string;

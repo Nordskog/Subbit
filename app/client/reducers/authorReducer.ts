@@ -244,6 +244,18 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
             };
         }
 
+        case actions.types.Route.IMPORT:
+        {
+            return {
+                ...state,
+                filter: AuthorFilter.IMPORTED,
+                subreddit: null,
+                author: null,
+                after: null,
+                time: null
+            };
+        }
+
         case actions.types.Route.FILTER:
         {
             let payload : actions.types.Route.FILTER = action.payload;

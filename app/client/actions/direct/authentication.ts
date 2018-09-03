@@ -19,12 +19,12 @@ export async function retrieveAndUpdateRedditAuth(dispatch : Dispatch, state : S
     let user: string = tools.store.getUsername(state);
     let token: string = tools.store.getAccessToken(state);
 
-    if (token == null || user == null)
+    if (token == null || user == null || !state.authState.isAuthenticated)
     {
         return null;
     }
 
-    let redditAuth : models.auth.RedditAuth  = tools.store.getRedditAuth(state);
+    let redditAuth : models.auth.RedditAuth  = state.authState.user.reddit_auth;
 
     // Refresh if expiry in less than 5min
     if (redditAuth.expiry < ( (Date.now() / 1000) + (5 * 60) ))
@@ -32,7 +32,7 @@ export async function retrieveAndUpdateRedditAuth(dispatch : Dispatch, state : S
         try
         {
             redditAuth = await api.rfy.authentication.refreshRedditAccessToken(user,token);
-            saveRedditAuth(redditAuth, state.authState.user.id_token.loginType);
+            saveRedditAuth(redditAuth, state.authState.user.reddit_auth_additional, state.authState.user.id_token.loginType);
     
             tokenRefreshFailedErrorDisplayed = false;
 
@@ -83,10 +83,12 @@ export function removeAuthentication(dispatch? : Dispatch)
     localStorage.removeItem('id_token');
     localStorage.removeItem('access_token');
     localStorage.removeItem('reddit_auth');
+    localStorage.removeItem('reddit_auth_additional');
 
     sessionStorage.removeItem('id_token');
     sessionStorage.removeItem('access_token');
     sessionStorage.removeItem('reddit_auth');
+    sessionStorage.removeItem('reddit_auth_additional');
 
     if (dispatch != null)
     {
@@ -107,16 +109,17 @@ export function saveAuthentication( userInfo : models.auth.UserInfo)
 
     storage.setItem('id_token', JSON.stringify(userInfo.id_token) );
     storage.setItem('access_token', userInfo.access_token);
-    storage.setItem('reddit_auth', JSON.stringify(userInfo.redditAuth ) );
+    saveRedditAuth( userInfo.reddit_auth, userInfo.reddit_auth_additional, userInfo.id_token.loginType);
 }
 
-export function saveRedditAuth( auth : RedditAuth, loginType : models.auth.LoginType)
+export function saveRedditAuth( auth : RedditAuth, additionalAuth : RedditAuth, loginType : models.auth.LoginType)
 {
     let storage = localStorage;
     if (loginType === LoginType.SESSION)
         storage = sessionStorage;
 
     storage.setItem('reddit_auth', JSON.stringify( auth ) );
+    storage.setItem('reddit_auth_additional', JSON.stringify( additionalAuth ) );
 
 }
 
@@ -125,9 +128,20 @@ function loadAuthenticationFromStorage( storage : Storage)
     let idTokenRaw = storage.getItem('id_token');
     let accessToken = storage.getItem('access_token');
     let redditAuthJson = storage.getItem('reddit_auth');
+    let additionalRedditAuthJson = storage.getItem('reddit_auth_additional');
 
-    return { idTokenRaw, accessToken, redditAuthJson  };
+    return { idTokenRaw, accessToken, redditAuthJson, additionalRedditAuthJson  };
 
+}
+
+export function getAccessTokenFromStorage() : string
+{
+    let { idTokenRaw, accessToken, redditAuthJson, additionalRedditAuthJson  } = loadAuthenticationFromStorage(localStorage);
+    if (accessToken != null)
+        return accessToken;
+
+    ({ idTokenRaw, accessToken, redditAuthJson, additionalRedditAuthJson  } = loadAuthenticationFromStorage(sessionStorage) );
+        return accessToken;
 }
 
 export function loadAuthentication(dispatch : Dispatch, getState : GetState)
@@ -136,16 +150,20 @@ export function loadAuthentication(dispatch : Dispatch, getState : GetState)
     if (!state.authState.isAuthenticated)
     {
         // Check local storage
-        let { idTokenRaw, accessToken, redditAuthJson  } = loadAuthenticationFromStorage(localStorage);
+        let { idTokenRaw, accessToken, redditAuthJson, additionalRedditAuthJson  } = loadAuthenticationFromStorage(localStorage);
 
         // If nulls present, check session storage
         if (idTokenRaw == null || accessToken == null || redditAuthJson == null)
-            ({ idTokenRaw, accessToken, redditAuthJson  } = loadAuthenticationFromStorage(localStorage) );
+            ({ idTokenRaw, accessToken, redditAuthJson, additionalRedditAuthJson  } = loadAuthenticationFromStorage(sessionStorage) );
 
         // If still null then we don't have any stored credentials
         if (idTokenRaw != null && accessToken != null && redditAuthJson != null)
         {
-            let userInfo : models.auth.UserInfo = tools.jwt.combineUserInfo(JSON.parse(idTokenRaw), accessToken, JSON.parse(redditAuthJson ) );
+            let userInfo : models.auth.UserInfo = tools.jwt.combineUserInfo(
+                JSON.parse(idTokenRaw), 
+                accessToken, 
+                JSON.parse(redditAuthJson ), 
+                additionalRedditAuthJson == null ? null : JSON.parse(additionalRedditAuthJson ) );
         
             // userInfo expiry matches access token.
             // discard if expired.

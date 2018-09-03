@@ -167,6 +167,10 @@ input[type=text]:hover::placeholder
 
 }
 
+////////////////////////// 
+// Progress bars 
+//////////////////////////
+
 .loadingProgressContainer
 {
     margin: var( --small-gap );
@@ -175,11 +179,29 @@ input[type=text]:hover::placeholder
     display:flex;
 }
 
+// Loading progress
+
 .loadingProgressBar
 {
     float: left;
     height: var( --small-gap );
     background: $upvote-color;
+    transition: flex 0.2s linear;
+}
+
+// Time progress
+
+.timeProgressBar
+{
+    float: left;
+    width: 0px;
+    height: var( --small-gap );
+    background: $upvote-color;
+}
+
+.timeProgressBarFull
+{
+    width: var( --loading-bar-width );
 }
 
 .InfoPopup
@@ -259,6 +281,23 @@ input[type=checkbox] {
 {
     @extend .checkBox;
     fill: $upvote-color;
+}
+
+.cardButton
+{
+    @extend .button;
+    background: $card-button-color;
+    border-radius: var(--insignificant-gap);
+}
+
+.cardButton:hover 
+{
+    background: $card-button-highlight-color;
+}
+
+a.cardButton
+{
+    text-decoration: none;
 }
 
 

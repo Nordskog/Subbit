@@ -195,7 +195,7 @@ function fetchPosts( author : models.data.AuthorEntry, count : number, replaceEx
         let redditAuth = await actions.directActions.authentication.retrieveAndUpdateRedditAuth( dispatch, state);
 
         let subreddits : string[] = [];
-        if (state.authorState.filter === models.AuthorFilter.SUBSCRIPTIONS)
+        if (state.authorState.filter === models.AuthorFilter.SUBSCRIPTIONS  || state.authorState.filter === models.AuthorFilter.IMPORTED)  
         {
             // Well that shouldn't happen
             if (author.subscription == null)

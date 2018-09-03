@@ -123,7 +123,7 @@ async function getUserFromToken(manager : Wetland.Scope, decodedToken, options :
     options = options != null ? options : {};
 
     
-    user = await manager.getRepository(Entities.User).findOne({ username: username }, { populate: "auth", ...options});
+    user = await manager.getRepository(Entities.User).findOne({ username: username }, { populate: ["auth", "additional_auth"], ...options});
 
     if (user == null)
     {

@@ -42,7 +42,9 @@
         "array-type": false,
         "no-console": false,
         "align": false,
-        "one-variable-per-declaration": false
+        "one-variable-per-declaration": false,
+        "indent": [true, "spaces", 4],
+        "indent": false
     },
 
     "jsRules": {

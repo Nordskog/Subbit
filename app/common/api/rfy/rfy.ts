@@ -43,7 +43,9 @@ export async function getRequest<T>(url : string, parameters? : any, accessToken
     }
     else
     {
-        throw await NetworkException.fromResponse(response, NetworkRequestDomain.SUBBIT);
+        let exception = await NetworkException.fromResponse(response, NetworkRequestDomain.SUBBIT);
+        exceptions.appendStack(exception, stacktrace);
+        throw exception;
     }
 }
 
@@ -88,7 +90,9 @@ export async function postRequest<T, A>(url : string, request : models.Action<A>
     }
     else
     {
-        throw await NetworkException.fromResponse(response, NetworkRequestDomain.SUBBIT);
+        let exception = await NetworkException.fromResponse(response, NetworkRequestDomain.SUBBIT);
+        exceptions.appendStack(exception, stacktrace);
+        throw exception;
     }
 }
 

@@ -3,6 +3,7 @@ import * as actionTypes from '~/client/actions/actionTypes';
 import { Subscription } from '~/common/models/data';
 import * as Log from '~/common/log';
 import { subreddits } from '~/common/api/reddit';
+import { ImportStatus } from '~/common/models/reddit';
 
 // Reducer for options, currently empty
 export function userReducer(state = getDefaultUserState(), action :  models.Action<any>) : models.state.User
@@ -197,6 +198,16 @@ export function userReducer(state = getDefaultUserState(), action :  models.Acti
                 subscriptions: []
             };
         }
+
+        case actionTypes.user.SUBSCRIPTIONS_IMPORTED:
+        {
+            let payload : actionTypes.user.SUBSCRIPTIONS_IMPORTED = action.payload;
+
+            return {
+                ...state,
+                importedSubscriptions: payload
+            };
+        }
     }
 
     return state;
@@ -210,6 +221,7 @@ export function getDefaultUserState() : models.state.User
         settings: 
         {
             post_display_mode: models.PostDisplay.COMPACT,
-        }
+        },
+        importedSubscriptions: [],
     } as models.state.User;
 }

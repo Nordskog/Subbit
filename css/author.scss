@@ -5,6 +5,8 @@
 //List indicators
 //////////////////
 
+
+
 .lastVisit {
     text-align: center;
     color: $primary-text-color;
@@ -15,6 +17,19 @@
     padding: var( --small-gap );
     background: $card-highlighted-background;
     border-radius: var( --tiny-gap );
+}
+
+.header 
+{
+    @extend .lastVisit;
+}
+
+.headerContent
+{
+    font-size: var(--font-medium);
+    margin-top: var( --tiny-gap );
+    color: $highlighted-text-color;
+
 }
 
 //////////////

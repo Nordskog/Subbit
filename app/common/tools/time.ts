@@ -105,3 +105,17 @@ export function sleep(ms)
 {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+export function getTimeAfterDuration(ms)
+{
+    return Date.now() + ms;
+}
+
+export function sleepUntil( timeMs )
+{
+    let sleepTime = timeMs - Date.now();
+    if (sleepTime < 0)
+        return;
+
+    return new Promise((resolve) => setTimeout(resolve, sleepTime));
+}
