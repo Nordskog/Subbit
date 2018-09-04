@@ -9,6 +9,7 @@ import * as components from '~/client/components';
 
 import SVGInline from "react-svg-inline";
 import * as subscribeButton from 'assets/images/subscribe_button.svg';
+import * as loading_caret from 'assets/images/loading_caret.svg';
 
 import * as transitions from 'react-transition-group';
 
@@ -59,6 +60,7 @@ interface State
     selectedItem : number;
     searchedItems :  ListItem[];
     searching : boolean;
+    awaitingSearch : boolean;
 }
 
 export default class SearchList extends React.Component<Props, State>
@@ -100,7 +102,8 @@ export default class SearchList extends React.Component<Props, State>
             items: items,
             searchedItems: [],
             searching: false,
-            selectedItem: selectedItem
+            selectedItem: selectedItem,
+            awaitingSearch: false
         };
     }
 
@@ -172,17 +175,35 @@ export default class SearchList extends React.Component<Props, State>
         return this.state.items[itemIndex];
     }
 
+    private getLoadingIndicator() 
+    {
+        if (this.state.awaitingSearch)
+        {
+            return  <div className={styles.searchIndicatorContainer}>
+                        <SVGInline key={"awaiting_posts"} className={styles.searchingIndicator} svg={loading_caret}/>
+                    </div>;
+        }
+        else 
+        {
+            return null;
+        }
+    }
+
     private getSearchBox( item : SearchItem, index : number )
     {
        return   <components.transitions.FadeVerticalResize key={"Search_" + index}>
-                    <input 
-                        onFocus={() => this.selectMode(index)} 
-                        onChange={ (evt) => this.handleInput( item, evt.target.value ) } 
-                        onKeyPress={ (e :  React.KeyboardEvent<HTMLInputElement>) => {  this.handleEnter(e.which);  } }
-                        type="text" 
-                        placeholder={item.searchPlaceholder}
-                        className={ siteStyles.inputContainer }/>
+                    <div className={styles.searchBox}>
+                        {this.getLoadingIndicator()}
+                        <input 
+                            onFocus={() => this.selectMode(index)} 
+                            onChange={ (evt) => this.handleInput( item, evt.target.value ) } 
+                            onKeyPress={ (e :  React.KeyboardEvent<HTMLInputElement>) => {  this.handleEnter(e.which);  } }
+                            type="text" 
+                            placeholder={item.searchPlaceholder}
+                            className={ siteStyles.inputContainer }/>
+                    </div>
                 </components.transitions.FadeVerticalResize>;
+
                                  
     }
 
@@ -248,6 +269,7 @@ export default class SearchList extends React.Component<Props, State>
         if (item.delaySearch)
         {
             this.awaitingSearch = true;
+            this.setState(  { awaitingSearch: true } );
 
             this.inputTimeout = setTimeout(() => {
 
@@ -258,9 +280,10 @@ export default class SearchList extends React.Component<Props, State>
                     this.awaitingSearch = false;
                     this.setState(
                         {
-                        ...this.state,
-                        searchedItems: [],
-                        searching: false,
+                            ...this.state,
+                            searchedItems: [],
+                            searching: false,
+                            awaitingSearch: false
                         }
                     );
                 }
@@ -283,6 +306,7 @@ export default class SearchList extends React.Component<Props, State>
                     ...this.state,
                     searchedItems: [],
                     searching: false,
+                    awaitingSearch: false
                     }
                 );
             }
@@ -307,6 +331,7 @@ export default class SearchList extends React.Component<Props, State>
     private async search( item : SearchItem, name : string)
     {
         this.awaitingSearch = true;
+        this.setState(  { awaitingSearch: true } );
         
         // Keep track of time request was sent so we only
         // act on requests that were fired last.
@@ -324,6 +349,7 @@ export default class SearchList extends React.Component<Props, State>
         this.setState( {
             ...this.state,
             searching: true,
+            awaitingSearch: false,
              searchedItems: searchResult.map( ( res : SearchResult ) => 
             {
                 return {

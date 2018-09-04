@@ -34,8 +34,8 @@
 
 .itemContainer
 {
-    padding-top: var( --small-gap);
-    padding-bottom: var( --small-gap);
+    margin-top: var( --small-gap);
+    margin-bottom: var( --small-gap);
 }
 
 .subscriptionSubredditInnerContainer
@@ -49,6 +49,42 @@
 {
     width: auto;
 }
+
+.searchBox 
+{
+    position: relative;
+}
+
+.searchIndicatorContainer 
+{
+    position: absolute;
+    width: var(--star-size);
+    // background: red;
+    right: var(--small-gap);
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+}
+
+
+
+.searchingIndicator 
+{
+    height: var(--star-size);
+    width: var(--star-size);
+    fill: $bright-primary-text-color;   // Match input active color
+
+    -webkit-animation:spin 2s linear infinite;
+    -moz-animation:spin 2s linear infinite;
+    animation:spin 2s linear infinite;
+}
+
+@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
 
 .altBox
 {
