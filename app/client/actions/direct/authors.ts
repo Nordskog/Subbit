@@ -7,11 +7,9 @@ import config from 'root/config';
 import { Dispatch, GetState } from '~/client/actions/tools/types';
 import { NetworkException } from '~/common/exceptions';
 import * as Log from '~/common/log';
-import { Author, AuthorEntry } from '~/common/models/data';
+import { Author, AuthorEntry, Subscription } from '~/common/models/data';
 import { authRouter } from '~/backend/resource';
 import { AuthorFilter } from '~/common/models';
-import { getDummySubscription } from '~/client/actions/tools/subscriptions';
-
 
 export async function getAuthors( dispatch : Dispatch, getState : GetState )
 {
@@ -71,7 +69,7 @@ export async function getAuthors( dispatch : Dispatch, getState : GetState )
     {
         authorEntries = state.userState.importedSubscriptions.map( ( sub : models.data.ImportedSubscription ) => 
         {
-            let dummySub = getDummySubscription(sub.author, null, null, ...sub.subreddits);
+            let dummySub = Subscription.getNew(sub.author, null, null, ...sub.subreddits);
             dummySub.subscribed = false;    // False so user can click to restore with subscribed subreddits
 
             let entry = AuthorEntry.getNew(sub.author);

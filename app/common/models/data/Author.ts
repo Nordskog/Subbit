@@ -1,4 +1,4 @@
-import Subscription from './Subscription';
+import { Subscription } from './Subscription';
 import { Post } from '~/common/models/reddit';
 
 export default interface Author

@@ -39,6 +39,8 @@ export async function checkForUpdateMeBotReply( dispatch : Dispatch ) : Promise<
         
                 if (messages.length > 0)
                 {
+                    // Matches author name (sans /u/ ) and subreddit in: 
+                    // SubscribeMe each time /u/Roughy posts in /r/hfy
                     let exp = new RegExp( /SubscribeMe each time \/u\/([^\s]+) posts in \/r\/([^\s.\\]+)/g );
         
                     // Subscriptions in separate subreddits are completely separate.

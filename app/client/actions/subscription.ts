@@ -11,7 +11,6 @@ import { Dispatch, GetState } from '~/client/actions/tools/types';
 import { Subscription } from '~/common/models/data';
 import { NetworkException, LogOnlyException } from '~/common/exceptions';
 import { toast, ToastType } from "~/client/toast";
-import { getDummySubscription } from '~/client/actions/tools/subscriptions';
 
 export function fetchSubscriptions( loadFromSession : boolean = false)
 {
@@ -99,7 +98,7 @@ export function subscribeToAuthorAction(author : string, subreddits : string[])
         // When we receive a reply with a sub id from the server we dispatch another update
         // and the ui will display the manage subscribed subreddits button.
         
-        let dummySubscription : Subscription = getDummySubscription(author, null, null, ...subreddits);
+        let dummySubscription : Subscription = Subscription.getNew(author, null, null, ...subreddits);
         dispatch({
             type: actions.types.subscription.TEMPORARY_SUBSCRIPTION_ADDED,  // Temporary, has no id
             payload: dummySubscription as actions.types.subscription.TEMPORARY_SUBSCRIPTION_ADDED
@@ -180,7 +179,7 @@ export function addSubredditToSubscriptionAction(existingSubscription : Subscrip
         // Dispatch dummy subscription to immediately update ui
         // This will not be updated later
         {
-            let dummySubscription : Subscription = getDummySubscription(null, existingSubscription, null, subredditName);
+            let dummySubscription : Subscription = Subscription.getNew(null, existingSubscription, null, subredditName);
             dispatch({
                 type: actions.types.subscription.SUBSCRIPTION_CHANGED,
                 payload: dummySubscription as actions.types.subscription.SUBSCRIPTION_CHANGED
@@ -219,7 +218,7 @@ export function removeSubredditFromSubscriptionAction(existingSubscription : Sub
         // Dispatch dummy subscription to immediately update ui
         // This will not be updated later
         {
-            let dummySubscription : Subscription = getDummySubscription(null, existingSubscription, subredditName );
+            let dummySubscription : Subscription = Subscription.getNew(null, existingSubscription, subredditName );
             dispatch({
                 type: actions.types.subscription.SUBSCRIPTION_CHANGED,
                 payload: dummySubscription as actions.types.subscription.SUBSCRIPTION_CHANGED
