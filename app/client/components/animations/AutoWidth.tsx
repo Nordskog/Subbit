@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import TimelineLite from 'gsap/umd/TimelineLite'; import 'gsap/umd/CSSPlugin';
+import { Power1 } from 'gsap/umd/EasePack'; 
 import { tools } from '~/common';
 
 interface Props
@@ -42,6 +43,8 @@ interface State
             let {verticalPadding, horizontalPadding} = tools.component.getPadding(this.container);
             width -= horizontalPadding;
 
+            this.prevWidth -= horizontalPadding;
+
             if ( this.prevWidth != null)
             {
                     if (this.timeline != null)
@@ -60,7 +63,8 @@ interface State
                             }, 
                             {
                                  width: width,
-                                 clearProps:  'width'
+                                 clearProps:  'width',
+                                 ease: Power1.easeInOut
                             });
                 
                             this.timeline.eventCallback( 'onComplete', () => { this.timeline = null; }) ;

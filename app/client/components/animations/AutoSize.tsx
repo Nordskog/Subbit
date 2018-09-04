@@ -1,5 +1,8 @@
 import * as React from 'react';
-import TimelineLite from 'gsap/umd/TimelineLite'; import 'gsap/umd/CSSPlugin';
+import TimelineLite from 'gsap/umd/TimelineLite'; 
+import { Power1 } from 'gsap/umd/EasePack'; 
+import 'gsap/umd/CSSPlugin';
+
 import { tools } from '~/common';
 
 interface Props
@@ -25,7 +28,7 @@ interface State
     constructor( props : Props)
     {
         super(props);
-        this.state = { delay: props.delay || 0, duration: props.duration || 0.3 };
+        this.state = { delay: props.delay || 0, duration: props.duration || 0.4 };
     }
 
     public componentDidMount()
@@ -46,6 +49,9 @@ interface State
             let {verticalPadding, horizontalPadding} = tools.component.getPadding(this.container);
             height -= verticalPadding;
             width -= horizontalPadding;
+
+            this.prevHeight -= verticalPadding;
+            this.prevWidth -= horizontalPadding;
         
             if ( this.prevHeight != null && this.prevWidth != null)
             {
@@ -62,12 +68,12 @@ interface State
                             { 
                                 height: this.prevHeight,
                                 width: this.prevWidth
-            
                             }, 
                             {
                                  height: height,
                                  width: width,
-                                 clearProps:  'height, width'
+                                 clearProps:  'height, width',
+                                 ease: Power1.easeInOut
                             });
                 
                             this.timeline.eventCallback( 'onComplete', () => { this.timeline = null; }) ;

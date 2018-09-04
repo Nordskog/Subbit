@@ -1,5 +1,6 @@
 import * as React from 'react';
 import TimelineLite from 'gsap/umd/TimelineLite'; import 'gsap/umd/CSSPlugin';
+import { Power1 } from 'gsap/umd/EasePack'; 
 import { tools } from '~/common';
 
 
@@ -24,7 +25,7 @@ interface State
     constructor( props : Props)
     {
         super(props);
-        this.state = { delay: props.delay || 0, duration: props.duration || 0.3 };
+        this.state = { delay: props.delay || 0, duration: props.duration || 0.4 };
     }
 
     public componentDidMount()
@@ -41,6 +42,8 @@ interface State
             // Client size includes padding, but it is added to the height we set. Remove from animated value to compensate.
             let {verticalPadding, horizontalPadding} = tools.component.getPadding(this.container);
             height -= verticalPadding;
+
+            this.prevHeight -= verticalPadding;
 
             if ( this.prevHeight != null)
             {
@@ -60,7 +63,8 @@ interface State
                             }, 
                             {
                                  height: height,
-                                 clearProps:  'height'
+                                 clearProps:  'height',
+                                 ease: Power1.easeInOut
                             });
                 
                             this.timeline.eventCallback( 'onComplete', () => { this.timeline = null; }) ;
