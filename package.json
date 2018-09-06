@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "run": "ts-node ./app/server.ts",
-    "run-dev": "cross-env NODE_ENV=development ts-node ./app/server.ts",
+    "run-dev": "cross-env NODE_ENV=development ts-node --type-check ./app/server.ts",
     "build": "rimraf buildClient && cross-env NODE_ENV=production webpack --progress --config ./app/webpack_client.ts",
     "cli": "cross-env NODE_ENV=production ts-node ./app/cli",
     "clean": "rimraf buildClient",
