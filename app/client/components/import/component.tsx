@@ -121,7 +121,6 @@ export default class ImportComponent extends React.Component<Props, State>
 
 	if (alreadySent)
 	{	
-		console.log("Already sent");
 		this.updateWorkingMessage("Found existing request in outbox");
 		await tools.time.sleep(2000);
   }

@@ -16,8 +16,6 @@ function additionalAuthIsValid(state: State)
     if ( state.authState.user.reddit_auth_additional == null )
         return false;
 
-        console.log("Expiry: ",state.authState.user.reddit_auth_additional.expiry);
-
     // If within 5min of expiring
     if ( state.authState.user.reddit_auth_additional.expiry < ( Date.now() / 1000 ) + ( 60 * 5) )
         return false;
