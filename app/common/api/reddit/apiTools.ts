@@ -62,10 +62,15 @@ export function getPostsUrl(author : string, after : string, limit : number, oau
     let params;
     if (subreddits == null || subreddits.length < 1)
     {
-        url = url + `/user/${author}/submitted${ oauth ? '' : '.json' }`;
+
+        // Accessing /user/submissions requires history permission, even if accessing the page of another user.
+        // Circumvent by using search instead.
+        url = url + `/search/${ oauth ? '' : '.json' }`;
 
         params =
             {
+                include_over_18: 'on',
+                q: 'author:' + author,
                 sort: 'new',
                 after: after,
                 limit: limit,

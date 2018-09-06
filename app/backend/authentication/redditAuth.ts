@@ -160,8 +160,12 @@ export function getHttpBasicAuthHeader()
 
 export function generateRedditLoginUrl( loginType : models.auth.LoginType, compactLogin : boolean )
 {
-    let scope : string = "identity read history";
-    let duration : string = "permanent";
+    // Accessing anything under /user/ also requires history. Probably because the url doesn't make
+    // any distinction between viewing your own user page and other user's pages.
+    // Rather than including a permission we don't really need, we will list a single author's post using search.
+    let scope : string = "identity read";   
+    let duration : string = "permanent";    
+
 
     // Additional permissions that will only be requested temporarily.
     if (loginType === LoginType.REDDIT_ADDITIONAL_AUTH)
