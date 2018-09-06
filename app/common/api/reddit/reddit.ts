@@ -21,6 +21,11 @@ export function registerRatelimitCallbacks(  rateLimitCallback : RateLimitCallba
     apiQueue.registerRatelimitCallbacks( rateLimitCallback, rateLimitedCallback  );
 }
 
+export function setApiRejectOnRateLimit( enabled : boolean )
+{
+    apiQueue.setRejectOnRateLimit(enabled);
+}
+
 export function clearQueue()
 {
     apiQueue.clearQueue();

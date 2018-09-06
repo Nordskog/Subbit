@@ -1,7 +1,7 @@
 import * as models from '~/common/models';
 import * as urls from '~/common/urls';
 import * as tools from '~/common/tools';
-import { NetworkException, Exception } from '~/common/exceptions';
+import { NetworkException, Exception, RatelimitException } from '~/common/exceptions';
 import { exceptions } from '~/common';
 import config from 'root/config';
 import fetch from 'isomorphic-fetch';
@@ -26,7 +26,13 @@ export async function getRequest<T>(url : string, parameters? : any, accessToken
     }
     catch( err)
     {
-        if (err instanceof Exception)  
+        if (err instanceof RatelimitException)
+        {
+            // Make sure we know it's from reddit
+            err.message = "Reddit: " + err.message;
+            throw err;
+        }
+        else if (err instanceof Exception)  
             throw err;
         else
         {
@@ -72,7 +78,13 @@ export async function postRequest<T, A>(url : string, request : models.Action<A>
     }
     catch( err)
     {
-        if (err instanceof Exception)  
+        if (err instanceof RatelimitException)
+        {
+            // Make sure we know it's from reddit
+            err.message = "Reddit: " + err.message;
+            throw err;
+        }
+        else if (err instanceof Exception)  
             throw err;
         else
         {

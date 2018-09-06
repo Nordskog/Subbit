@@ -1,5 +1,5 @@
 import { Response, Request } from "express";
-import { EndpointException, AuthorizationException, NetworkException, AuthorizationInvalidException, Exception } from "~/common/exceptions";
+import { EndpointException, AuthorizationException, NetworkException, AuthorizationInvalidException, Exception, RatelimitException } from "~/common/exceptions";
 import * as stats from '~/backend/stats';
 import * as Log from '~/common/log';
 
@@ -48,6 +48,14 @@ export async function handleException( exception : Error, req : Request, res : R
         // Respond to user with error and only log the message
         Log.L(exception.severity, exception.toString(), await getMeta(req, token));
         res.status(exception.code).json( exception.message );
+    }
+    else if ( exception instanceof RatelimitException )
+    {
+        // This will hopefully not happen. We probably shouldn't expose it to the user in raw form.
+        // Will only happen during login, when we look up the user's username.
+        // TODO: Get some kind of identifier without resorting to a oauth api request.
+        Log.E(exception.toString(), await getMeta(req, token));
+        res.status(429).json( "Too many consecutive logins, please try again in a couple of minutes" );  // too many requests code, directed at us rather than the client though.
     }
     else if ( exception instanceof AuthorizationInvalidException )
     {

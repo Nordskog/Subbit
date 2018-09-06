@@ -36,6 +36,22 @@ export class Exception extends Error
 }
 
 // Usually expected behavior, doesn't need to be logged
+export class RatelimitException extends Exception
+{
+    constructor( message : string)
+    {
+        super(message);
+        Object.setPrototypeOf(this, RatelimitException.prototype);
+        this.name = "RatelimitException";
+    }
+
+    public toString()
+    {
+         return `${this.name}: ${this.message}`;
+    }
+}
+
+// Usually expected behavior, doesn't need to be logged
 export class EndpointException extends Exception
 {
     // Optional http code, if error is likely to make it to an endpoint

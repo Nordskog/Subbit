@@ -1,5 +1,5 @@
 import * as tools from '~/common/tools';
-import { CancelledException } from '~/common/exceptions';
+import { CancelledException, NetworkException, RatelimitException, Exception } from '~/common/exceptions';
 
 import * as Log from '~/common/log';
 
@@ -31,11 +31,11 @@ class RateMonitor
             this.rateLimit.remaining = this.activeMax;
     }
 
-    public clearQueue()
+    public clearQueue( reason : Exception )
     {
         for (let item of this.queue)
         {
-            item.reject( new CancelledException("Clearing queue") );
+            item.reject( reason );
         }
 
         this.queue.length = 0;
@@ -108,6 +108,7 @@ export default class RequestQueue
 {
     private monitor : RateMonitor;
     private inProgress: Set<QueueItem> = new Set<QueueItem>();
+    private rejectOnRatelimit : boolean = false;    // Reject any new requests when ratelimit hit
 
     private rateLimitCallback: ( info : RateLimitInfo) => void;
     private rateLimitedCallback: ( info : RateLimitInfo) => void;
@@ -123,8 +124,18 @@ export default class RequestQueue
         this.rateLimitedCallback = rateLimitedCallback;
     }
 
+    public setRejectOnRateLimit( enabled : boolean  )
+    {
+        this.rejectOnRatelimit = enabled;
+    }
+
     public enqueue( execute : () => Promise<Response>  )
     {
+        if ( this.rejectOnRatelimit && this.monitor.queued)
+        {
+            throw new RatelimitException( "Ratelimit exceeded" );
+        }
+
         let promise = new Promise<Response>( (resolve, reject) =>
          {
             this.monitor.queue.push( new QueueItem( execute, resolve, reject  ) );
@@ -185,7 +196,11 @@ export default class RequestQueue
         {   
             this.monitor.queued = true;
             Log.W(`Fetch queue exceeded ratelimit, will resume in: ${delaySeconds} seconds`);
+            if (this.rejectOnRatelimit)
+                this.monitor.clearQueue( new RatelimitException( "Ratelimit exceeded" ) );  // Only clearing queue, not ongoing
+
             await tools.time.sleep( delaySeconds * 1000);
+
             this.monitor.queued = false;
             this.processQueue();
         }
@@ -233,14 +248,17 @@ export default class RequestQueue
         item.resolve(response);
     }
     
-    public clearQueue()
+    // Clears queue AND ongoing
+    public clearQueue( reason? : Exception )
     {
-        this.monitor.clearQueue();
+        if (reason == null)
+            reason = new CancelledException("Fetch queue was cleared");
+        this.monitor.clearQueue(reason);
 
         this.inProgress.forEach( ( item : QueueItem) => 
         {
             item.rejected = true;
-            item.reject( new CancelledException("Clearing queue") );
+            item.reject( reason );
         });
         
         this.inProgress.clear();

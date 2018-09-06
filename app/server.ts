@@ -24,6 +24,8 @@ import * as Net from 'net';
 import * as socket from '~/backend/sockets';
 import * as WebSocket from 'ws';
 
+import * as api from '~/common/api';
+
 import * as Log from '~/common/log';
 
 import bodyParser from 'body-parser';
@@ -115,6 +117,14 @@ async function setupSlave()
 
     await setup.database.setup();
     await setup.auth.setup();
+
+    /////////////////
+    // Api 
+    /////////////////
+
+    // Unlike on the client, we reject any new connections if reddit's ratelimit has been hit.
+    // The user can wait around if they hit their own rate limit, but won't wait for us.
+    api.reddit.setApiRejectOnRateLimit(true);
 
     /////////////////////
     // Express backend
