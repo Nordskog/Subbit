@@ -1,16 +1,16 @@
 {
-  "name": "reddit-fuck-yeah",
+  "name": "subbit-for-reddit",
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "run": "ts-node ./app/server.ts",
-    "run-dev": "cross-env NODE_ENV=development ts-node --type-check ./app/server.ts",
+    "start": "ts-node ./app/server.ts",
+    "start-dev": "cross-env NODE_ENV=development ts-node --type-check ./app/server.ts",
     "build": "rimraf buildClient && cross-env NODE_ENV=production webpack --progress --config ./app/webpack_client.ts",
     "cli": "cross-env NODE_ENV=production ts-node ./app/cli",
     "clean": "rimraf buildClient",
     "lint": "tslint ./app/**/*.ts{,x} -t verbose"
   },
-  "description": "RedditFuckYeah",
+  "description": "Subbit for Reddit",
   "author": {
     "name": "Roughy"
   },
