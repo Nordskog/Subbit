@@ -5,14 +5,14 @@
     padding-left:var( --small-gap );
     padding-right:var( --small-gap );
     height: var( --header-height ); //Buttons normally only go in the header
-    color: $highlighted-text-color;
+    color: var(--highlighted-text-color);
 
     display:Flex;
     flex-direction: column;
 
     font-weight: bold;
 
-    background: $card-background;
+    background: var(--card-background);
     
     cursor: pointer;
 
@@ -25,7 +25,7 @@
 %outlinedButton
 {
     @extend %button;
-    background: $hidden-text-color;
+    background: var(--hidden-text-color);
     margin: var( --tiny-gap );
     border-radius: var( --tiny-gap );
 }
@@ -33,7 +33,7 @@
 %popup
 {
     padding:var( --small-gap );
-    border: var( --insignificant-gap ) solid $highlighted-text-color;
-    background: $card-background;
+    border: var( --insignificant-gap ) solid var(--highlighted-text-color);
+    background: var(--card-background);
     width:100%;
 }

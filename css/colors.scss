@@ -1,51 +1,67 @@
-$body-background: #1b1b1b;
+:root
+{
+    --body-background: #171717;
 
-$card-background: #080808;
-$card-highlighted-background: #080808;
+    --card-background: #080808;
+    --card-highlighted-background: #080808;
 
-$card-shadow-color: #020202;
+    --card-shadow-color: #020202;
 
-$card-button-color: #131d27;
-$card-button-highlight-color: #1b2a38;
-
-
-$button-indicator-color: #294d70;
-$button-highlight-color: #4784c2;
-$menu-highlight-color: #162029;
-$nested-highlight-color: #192e42;
-
-$bright-primary-text-color: #6db6ff;
-$primary-text-color: #4a95df;
-
-$interactive-text-color:#4c6c8a;
-
-$bright-text-color: #ffffff;
-$highlighted-text-color: #dadada;
-$normal-text-color: #898989;
-$background-text-color: #636363;
-$hidden-text-color: #353535;
-
-$subscribed-highlight-color: #ffd900;
-
-$upvote-color-toned-down: #ff9100;
-
-$upvote-color: #ff9100;
-$downvote-color: #006eff;
-
-$hidden-element-color: #1a1a1a;
-$raised-element-color: #1d1d1d;
-
-$input-background-color: #141c26;
-$input-text-color: #4784c2;
-$input-placeholder-color: #4784c2;
-
-$safe: #264564;
-$danger: #a12626;
-$sketchy: #e7a008;
-
-$toast-text-color: #353535;
+    --card-button-color: #131d27;
+    --card-button-highlight-color: #1b2a38;
 
 
-///////////////////
+    --button-indicator-color: #294d70;
+    --button-highlight-color: #4784c2;
+    --menu-highlight-color: #162029;
+    --nested-highlight-color: #192e42;
 
-$chart-tooltip-background-color: rgba(#1d1d1d, 0.6);
+    --bright-primary-text-color: #6db6ff;
+    --primary-text-color: #4a95df;
+
+    --interactive-text-color:#4c6c8a;
+
+    --bright-text-color: #ffffff;
+    --highlighted-text-color: #dadada;
+    --normal-text-color: #757575;
+    --background-text-color: #636363;
+    --hidden-text-color: #353535;
+
+    --subscribed-highlight-color: #ffd900;
+
+    --upvote-color-toned-down: #ff9100;
+
+    --upvote-color: #ff9100;
+    --downvote-color: #006eff;
+
+    --hidden-element-color: #1a1a1a;
+    --raised-element-color: #1d1d1d;
+
+    --input-background-color: #141c26;
+    --input-text-color: #4784c2;
+    --input-placeholder-color: #4784c2;
+
+    --safe: #264564;
+    --danger: #a12626;
+    --sketchy: #e7a008;
+
+    --toast-text-color: #353535;
+
+
+    ///////////////////
+
+    --chart-tooltip-background-color: rgba(#1d1d1d, 0.6);
+}
+
+
+// The background will not be visible in mobile devices, causing the dark cards to look very .. dark.
+// The background probably causes the backlight to bleed into them on desktop, making them appear brighter there.
+// solution: Make cards a bit brighter on mobile.
+@media only screen and (max-width: 1100px ) and ( max-aspect-ratio: 6/4 )
+{
+   :root
+   {
+    --card-background: #0e0e0e;
+    --card-highlighted-background: #0e0e0e;
+   }
+}

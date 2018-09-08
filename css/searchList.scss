@@ -19,7 +19,7 @@
     justify-content: space-between;
     cursor: pointer;
 
-    color: $highlighted-text-color;
+    color: var(--highlighted-text-color);
 
     margin-left: var( --small-gap );
     margin-right: var( --small-gap );
@@ -28,8 +28,8 @@
 
 .itemContainer:hover
 {
-    background: $menu-highlight-color;
-    color: $bright-text-color;
+    background: var(--menu-highlight-color);
+    color: var(--bright-text-color);
 }
 
 .listContainer
@@ -76,7 +76,7 @@
 {
     height: var(--star-size);
     width: var(--star-size);
-    fill: $bright-primary-text-color;   // Match input active color
+    fill: var(--bright-primary-text-color);   // Match input active color
 
     -webkit-animation:spin 2s linear infinite;
     -moz-animation:spin 2s linear infinite;
@@ -90,14 +90,14 @@
 .altBox
 {
     width:auto;
-    //color: $background-text-color;
+    //color: var(--background-text-color);
     display: flex;
     flex-direction: column;
     justify-content: center;
     padding-right: var( --small-gap );
     padding-left:var( --small-gap );
     font-weight: bold;
-    color: $interactive-text-color;
+    color: var(--interactive-text-color);
     cursor: pointer;
     white-space: nowrap;
 
@@ -110,7 +110,7 @@
 
 .altBox:hover
 {
-    background: $nested-highlight-color;
+    background: var(--nested-highlight-color);
 }
 
 a.altBox:link,
@@ -118,7 +118,7 @@ a.altBox:visited,
 a.altBox:hover,
 a.altBox:active 
 {
-    color: $interactive-text-color;
+    color: var(--interactive-text-color);
     text-decoration: none;
 }
 
@@ -153,24 +153,24 @@ a.item:visited,
 a.item:hover,
 a.item:active 
 {
-    color: $highlighted-text-color;
+    color: var(--highlighted-text-color);
     text-decoration: none;
 }
 
 
 .popupContainer
 {
-    background: $card-background;
+    background: var(--card-background);
     min-width: var( --dropdown-menu-min-width );
 
-    border-left: 2px solid $hidden-text-color;
-    border-right: 2px solid $hidden-text-color;
-    border-bottom: 2px solid $hidden-text-color;
+    border-left: 2px solid var(--hidden-text-color);
+    border-right: 2px solid var(--hidden-text-color);
+    border-bottom: 2px solid var(--hidden-text-color);
 
     border-bottom-right-radius: var( --tiny-gap );
     border-bottom-left-radius: var( --tiny-gap );
 
-    //border: 2px solid $hidden-text-color;
+    //border: 2px solid var(--hidden-text-color;)
 }
 
 .modalPopupContainer
@@ -211,7 +211,7 @@ a.item:active
 .subscribeIndicator
 {
     @extend .subscriptionIndicator;
-    stroke: $background-text-color;
+    stroke: var(--background-text-color);
     fill: transparent;
     stroke-width: 11;
 
@@ -227,7 +227,7 @@ a.item:active
 .unsubscribeIndicator
 {
     @extend .subscriptionIndicator;
-    fill: $subscribed-highlight-color;
+    fill: var(--subscribed-highlight-color);
 }
 
 @media only screen and (max-width: 1100px)

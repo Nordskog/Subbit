@@ -12,7 +12,7 @@ html {
 
 body {
     color: #eeeeee;
-    background: $body-background;
+    background: var(--body-background);
 
     font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
     font-size: 14px;
@@ -61,7 +61,7 @@ a:hover
 }
 
 .headerButton {
-    background: $card-background;
+    background: var(--card-background);
 }
 
 .contentOuterContainer {
@@ -99,12 +99,12 @@ a:hover
 .outlinedButton
 {
     @extend %button;
-    background: $hidden-text-color;
+    background: var(--hidden-text-color);
 }
 
 .activeButton
 {
-    background: $body-background;
+    background: var(--body-background);
 }
 
 .loadingStatus
@@ -126,19 +126,19 @@ input[type=text] {
     border-radius: var( --tiny-gap );
     font-size: var(--font-large);
     padding: var( --medium-gap ) var( --medium-gap ) var( --medium-gap ) var( --medium-gap );
-    color: $input-text-color;
-    background: $input-background-color;
+    color: var(--input-text-color);
+    background: var(--input-background-color);
 }
 
 input[type=text]:hover::placeholder
 {
 
-    color: $bright-primary-text-color;
+    color: var(--bright-primary-text-color);
 }
 
 ::placeholder 
 {
-    color: $input-placeholder-color;
+    color: var(--input-placeholder-color);
     opacity:1;
 }
 
@@ -185,7 +185,7 @@ input[type=text]:hover::placeholder
 {
     float: left;
     height: var( --small-gap );
-    background: $upvote-color;
+    background: var(--upvote-color);
     transition: flex 0.2s linear;
 }
 
@@ -196,7 +196,7 @@ input[type=text]:hover::placeholder
     float: left;
     width: 0px;
     height: var( --small-gap );
-    background: $upvote-color;
+    background: var(--upvote-color);
 }
 
 .timeProgressBarFull
@@ -212,16 +212,16 @@ input[type=text]:hover::placeholder
     font-size: var(--font-small);
     float: left;
     width: auto;
-    background: $input-background-color;
+    background: var(--input-background-color);
     padding: var( --tiny-gap );
     padding-left:var( --small-gap );
     padding-right:var( --small-gap );
     font-weight: 600;
 
-    color: $highlighted-text-color;
+    color: var(--highlighted-text-color);
 
     border-radius: var( --tiny-gap );
-    border: 1px solid $normal-text-color;
+    border: 1px solid var(--normal-text-color);
 }
 
 .infoPopupArrow
@@ -231,9 +231,9 @@ input[type=text]:hover::placeholder
     margin-top:auto;
     width:  calc( var(--star-size) * 0.35 );
     height: calc( var(--star-size) * 0.35 );
-    background: $input-background-color; 
-    border-right: 1px solid $normal-text-color;    
-    border-bottom: 1px solid $normal-text-color;    
+    background: var(--input-background-color); 
+    border-right: 1px solid var(--normal-text-color); 
+    border-bottom: 1px solid var(--normal-text-color); 
     left: calc( var(--star-size) * 0.3 );   // Not cool, but should stay consistent
 }
 
@@ -253,15 +253,15 @@ input[type=checkbox] {
     position: relative;
     width: var(--small-icon-size);
     height: var(--small-icon-size);
-    background: $raised-element-color;
+    background: var(--raised-element-color);
     border-radius: var(--insignificant-gap);
-    border: 1px solid $normal-text-color;
+    border: 1px solid var(--normal-text-color);
     cursor: pointer;
 }
 
 .checkboxContainer:hover
 {
-    background: $card-button-highlight-color;
+    background: var(--card-button-highlight-color);
 
 
 }
@@ -280,19 +280,19 @@ input[type=checkbox] {
 .checkBoxChecked
 {
     @extend .checkBox;
-    fill: $upvote-color;
+    fill: var(--upvote-color);
 }
 
 .cardButton
 {
     @extend .button;
-    background: $card-button-color;
+    background: var(--card-button-color);
     border-radius: var(--insignificant-gap);
 }
 
 .cardButton:hover 
 {
-    background: $card-button-highlight-color;
+    background: var(--card-button-highlight-color);
 }
 
 a.cardButton

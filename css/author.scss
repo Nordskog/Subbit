@@ -9,13 +9,13 @@
 
 .lastVisit {
     text-align: center;
-    color: $primary-text-color;
+    color: var(--primary-text-color);
     font-size: var(--font-large);
     font-weight:bold;
     margin-top: var( --tiny-gap );
     margin-bottom: var( --tiny-gap );
     padding: var( --small-gap );
-    background: $card-highlighted-background;
+    background: var(--card-highlighted-background);
     border-radius: var( --tiny-gap );
 }
 
@@ -28,7 +28,7 @@
 {
     font-size: var(--font-medium);
     margin-top: var( --tiny-gap );
-    color: $highlighted-text-color;
+    color: var(--highlighted-text-color);
 
 }
 
@@ -61,7 +61,7 @@
     margin-top: var( --tiny-gap );
     margin-bottom: var( --tiny-gap );
     padding: var( --small-gap );
-    background: $card-background;
+    background: var(--card-background);
     border-radius: var( --insignificant-gap );
     border-top-left-radius: var( --small-gap );
     position: relative; //So we can absolute-position a ivew inside
@@ -74,7 +74,7 @@
     left: 0px;
     height: 100%;
     width: 100%;
-    background: $card-background;
+    background: var(--card-background);
     opacity: 0.5;
 }
 
@@ -96,7 +96,7 @@
 .subscribedAuthor
 {
     @extend .author;
-    background: $card-highlighted-background;
+    background: var(--card-highlighted-background);
 }
 
 
@@ -111,7 +111,7 @@
 .authorHeader a:visited,
 .authorHeader a:hover
 {
-    color:$primary-text-color;
+    color: var(--primary-text-color);
 }
 
 .nameContainer {
@@ -124,7 +124,7 @@
 
 .subreddit
 {
-    color: $hidden-text-color;
+    color: var(--hidden-text-color);
     font-weight: normal;
     display:flex;
     align-items:center;
@@ -170,7 +170,7 @@
 .subscribeButton
 {
     @extend .subscriptionButton;
-    stroke: $background-text-color;
+    stroke: var(--background-text-color);
     fill: transparent;
     stroke-width: var( --stroke-width );
     
@@ -179,7 +179,7 @@
 .unsubscribeButton
 {
     @extend .subscriptionButton;
-    fill: $subscribed-highlight-color;
+    fill: var(--subscribed-highlight-color);
 }
 
 /////////////////////////
@@ -191,7 +191,7 @@
     font-weight: bold;
     padding-left: var( --small-gap );
     margin-top: var( --small-gap );
-    color:$interactive-text-color;
+    color: var(--interactive-text-color);
     cursor: pointer;
 
     display: flex;
@@ -211,7 +211,7 @@
     height: var( --small-icon-size );
     width: var( --small-icon-size );
     margin-right: var( --small-gap );
-    fill: $interactive-text-color;
+    fill: var(--interactive-text-color);
 }
 
 ///////////////////////////
@@ -231,7 +231,7 @@
 {
     height:var( --small-icon-size );
     width:var( --small-icon-size );
-    fill: $subscribed-highlight-color;
+    fill: var(--subscribed-highlight-color);
     margin-left: var(--tiny-gap);
     cursor: pointer;
 }

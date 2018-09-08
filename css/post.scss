@@ -11,13 +11,13 @@
     display: flex;
     flex-direction: row;
     margin-bottom: var(--post-spacing);
-    color: $normal-text-color;
+    color: var(--normal-text-color);
 }
 
 .topPostContainer 
 {
     font-size: var(--font-medium);
-    color: $highlighted-text-color;
+    color: var(--highlighted-text-color);
 }
 
 
@@ -58,10 +58,10 @@
 }
 
 .post a:link  {
-    color: $normal-text-color;
+    color: var(--normal-text-color);
 }
 .post a:visited  {
-    color: $background-text-color;
+    color: var(--background-text-color);
 }
 
 .post
@@ -75,14 +75,14 @@
 .topPostopPostContainert a:visited,
 .topPostContainer a:hover
 {
-    color: $highlighted-text-color;
+    color: var(--highlighted-text-color);
 
 }
 
 .postedDate 
 {
     display: inline-block;
-    color: $hidden-text-color;
+    color: var(--hidden-text-color);
     font-weight: normal;
     text-align: center;
     margin-right: var( --insignificant-gap );
@@ -91,7 +91,7 @@
 .subreddit
 {
     display: inline-block;
-    color: $hidden-text-color;
+    color: var(--hidden-text-color);
     font-weight: normal;
     text-align: center;
     margin-right: var( --insignificant-gap );
@@ -100,7 +100,7 @@
 .comments
 {
     display: inline-block;
-    color: $hidden-text-color;
+    color: var(--hidden-text-color);
     font-weight: normal;
     text-align: center;
 }
@@ -109,19 +109,19 @@
 .comments a:visited,
 .comments a:hover
 {
-    color: $hidden-text-color;
+    color: var(--hidden-text-color);
 }
 
 .subreddit a:link,
 .subreddit a:visited,
 .subreddit a:hover
 {
-    color: $hidden-text-color;
+    color: var(--hidden-text-color);
 }
 
 .scoreContainer {
     text-align: center;
-    //color: $background-text-color;
+    //color: var(--background-text-color);
     font-weight: normal;
     width:var( --score-width );
     flex-shrink: 0;
@@ -177,14 +177,14 @@
 {
     @extend .voteIndicator;
     stroke:transparent;
-    fill: $upvote-color;
+    fill: var(--upvote-color);
 }
 
 .downvote
 {
     @extend .voteIndicator;
     stroke:transparent;
-    fill: $downvote-color;
+    fill: var(--downvote-color);
 }
 
 .flair
@@ -196,20 +196,20 @@
     padding-bottom: 0px;
     margin-left: 0px;
     margin-right: var( --tiny-gap );
-    color: $background-text-color;
-    background: $raised-element-color;
+    color: var(--background-text-color);
+    background: var(--raised-element-color);
 }
 
 .nsfw_flair
 {
     @extend .flair;
-    color: $danger;
+    color: var(--danger);
 }
 
 .spoiler
 {
     @extend .flair;
-    color: $sketchy;
+    color: var(--sketchy);
 }
 
 .postTitlecenterer

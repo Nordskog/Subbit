@@ -19,19 +19,19 @@
     flex-direction: row;
     justify-content: center;
     height:100%;
-    //background: $card-background;
+    //background: var(--card-background);
     cursor: pointer;
 
     padding-left: 0px;
     padding-right:var( --large-gap );
 
-    fill: $interactive-text-color;
+    fill: var(--interactive-text-color);
 }
 
 .selectedContainer:hover 
 {
-    fill: $button-highlight-color;
-    color: $bright-text-color;
+    fill: var(--button-highlight-color);
+    color: var(--bright-text-color);
 }
 
 .selected
@@ -60,7 +60,7 @@
     width: var( --small-icon-size );
     
     //Controlled by parent element so we can change with hover
-    //fill: $interactive-text-color;
+    //fill: var(--interactive-text-color);
 }
 
 

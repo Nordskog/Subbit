@@ -9,7 +9,7 @@
     align-items: center;
 
     font-size: var(--font-large);
-    color: $highlighted-text-color;
+    color: var(--highlighted-text-color);
 }
 
 
@@ -39,7 +39,7 @@
     width: var( --message-card-corner-width ) ;
     height:var( --message-card-corner-height );
     border-top-left-radius: var( --small-gap );
-    background: $card-background;
+    background: var(--card-background);
 }
 
 .caret
@@ -90,7 +90,7 @@
     flex-direction: column;
     align-items: center;
     font-weight: bold;
-    background: $card-background;
+    background: var(--card-background);
 
     border-radius: var( --small-gap );
     box-sizing: border-box;
@@ -127,7 +127,7 @@
 
 .paragraphContainer
 {
-    background: $card-background;
+    background: var(--card-background);
 
     max-width:var( --small-card-max-width);
 
@@ -150,7 +150,7 @@
 
 .link
 {
-    background: $card-background;
+    background: var(--card-background);
     padding: var(--small-gap);
     margin: var(--small-gap);
     border-radius: var( --insignificant-gap );

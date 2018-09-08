@@ -38,8 +38,8 @@ a.genericButton:hover
 
 .genericButton:hover
 {
-    color: $bright-text-color;
-    background: $menu-highlight-color;
+    color: var(--bright-text-color);
+    background: var(--menu-highlight-color);
 }
 
 .button
@@ -67,17 +67,17 @@ a.genericButton:hover
 
 .button:hover 
 {
-    stroke:  $bright-text-color;
-    fill: $bright-text-color;
+    stroke:  var(--bright-text-color);
+    fill: var(--bright-text-color);
 }
 
 .popupContainer
 {
-    background: $card-background;
+    background: var(--card-background);
     min-width: var( --dropdown-menu-min-width );
-    border-left: 2px solid $hidden-text-color;
-    border-right: 2px solid $hidden-text-color;
-    border-bottom: 2px solid $hidden-text-color;
+    border-left: 2px solid var(--hidden-text-color);
+    border-right: 2px solid var(--hidden-text-color);
+    border-bottom: 2px solid var(--hidden-text-color);
     border-bottom-right-radius: var( --tiny-gap );
     border-bottom-left-radius: var( --tiny-gap );
 }
@@ -154,11 +154,11 @@ a.genericButton:hover
 
     .popupContainer
     {
-        background: $card-background;
+        background: var(--card-background);
         min-width: var( --dropdown-menu-min-width );
         border-left: 2px solid transparent;
         border-right: 2px solid transparent;
-        border-bottom: 2px solid $hidden-text-color;
+        border-bottom: 2px solid var(--hidden-text-color);
         border-radius: 0px;
     }
 

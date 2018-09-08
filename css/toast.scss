@@ -3,23 +3,23 @@
 
 .notification_background
 {
-    background: $card-background;
+    background: var(--card-background);
 }
 
 .warning_background
 {
-    background: $sketchy;
+    background: var(--sketchy);
 }
 
 .error_background
 {
-    background: $danger;
+    background: var(--danger);
 
 }
 
 .text
 {
-    color: $toast_text_color;
+    color: var(--toast-text-color);
     font-size: var(--font-medium);
     font-weight: bold;
 }

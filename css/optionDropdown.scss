@@ -35,7 +35,7 @@
 
 .genericButton:hover
 {
-    background: $menu-highlight-color;
+    background: var(--menu-highlight-color);
 }
 
 
@@ -46,14 +46,14 @@
     border-radius: var( --insignificant-gap );
     border-top-left-radius: var( --small-gap );
     border-top-right-radius: var( --small-gap );
-    background: $danger;
+    background: var(--danger);
     margin-bottom: 0px;
 }
 
 .dropdownContainer
 {
-    //background: $card-shadow-color; 
-    box-shadow: inset 0 5px 20px 0 $card-shadow-color;
+    //background: var(--card-shadow-color); 
+    box-shadow: inset 0 5px 20px 0 var(--card-shadow-color);
 }
 
 .subButton 
@@ -73,7 +73,7 @@
     @extend .subButton;
     //border-bottom-left-radius: var( --small-gap );
     width: 50%;
-    background: $danger;
+    background: var(--danger);
     margin-right: var( --tiny-gap );
 
     //margin-left: var( --small-gap );
@@ -86,7 +86,7 @@
     @extend .subButton;
     //border-bottom-right-radius: var( --small-gap );
     width: 50%;
-    background: $safe;
+    background: var(--safe);
 
     margin-left: var( --tiny-gap );
 
