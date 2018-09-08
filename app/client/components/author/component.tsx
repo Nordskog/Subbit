@@ -272,7 +272,7 @@ export default class AuthorCell extends React.Component<Props, State>
                 displayHighlight: true,
                 toggleHighlight: true,
                 addToDisplayList: true,
-                onClick:  (item : components.tools.SearchList.ListItem) => 
+                onSelect:  (item : components.tools.SearchList.ListItem) => 
                     { 
                         if (item.highlighted)
                         {

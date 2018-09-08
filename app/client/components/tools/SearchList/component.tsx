@@ -1,10 +1,7 @@
 import * as React from 'react';
 
-
-
-
 import * as siteStyles from 'css/site.scss';
-import * as styles from 'css/subredditList.scss';
+import * as styles from 'css/searchList.scss';
 import * as components from '~/client/components';
 
 import SVGInline from "react-svg-inline";
@@ -29,14 +26,19 @@ interface SearchResult
     object?: any;
 }
 
+export enum EventSource
+{
+    ENTER, CLICK
+}
+
 export interface SearchItem 
 {
     items: ListItem[];
     search?( name : string) : SearchResult[] | Promise<SearchResult[]>;
     enterBeforeSearchResult?( name : string) : SearchResult ;
     searchPlaceholder? : string;
-    onClick( item : ListItem ) : boolean | undefined;
-    onAltClick?( item : ListItem ) : void;
+    onSelect?( item : ListItem, source : EventSource ) : boolean | undefined;
+    onAltSelect?( item : ListItem ) : void;
     prefix: string;
     highlightMap?: Set<string>;
     delaySearch?: boolean;
@@ -44,13 +46,15 @@ export interface SearchItem
     displayHighlight: boolean;
     toggleHighlight: boolean;
     addToDisplayList: boolean;
+    itemComponent? : (item : ListItem, containerStyle : string) => JSX.Element;
+    altComponent? : (item : ListItem, containerStyle : string) => JSX.Element;
 }
 
 interface Props
 {
     items: SearchItem[] | SearchItem;
 
-    onClick?( item : ListItem ) : boolean | undefined;
+    onClick?( item : ListItem, source : EventSource  ) : boolean | undefined;
     onAltClick?( item : ListItem ) : void;
 }
 
@@ -126,13 +130,13 @@ export default class SearchList extends React.Component<Props, State>
 
     public render()
     {
-        return <div className={styles.subredditsContainer} >
+        return <div className={styles.container} >
                     <div className={styles.searchContainer}>
                         <transitions.TransitionGroup >
                             {this.getSearchBoxes()}
                         </transitions.TransitionGroup>
                     </div>
-                    <components.animations.AutoSize className={styles.itemContainer}>
+                    <components.animations.AutoSize className={styles.listContainer}>
                             {this.getListItems()}
                             {this.getEmptyListIndicator()}
                     </components.animations.AutoSize>
@@ -216,10 +220,11 @@ export default class SearchList extends React.Component<Props, State>
     {
         if (keyCode === 13)
         {
+            let item : SearchItem = this.getSelectedItem();
+
             if ( this.awaitingSearch && this.lastInput != null )
             {
                 // Search in progress, enter selects inptut text
-                let item : SearchItem = this.getSelectedItem();
 
                 if (item.enterBeforeSearchResult != null)
                 {
@@ -234,7 +239,7 @@ export default class SearchList extends React.Component<Props, State>
                         };
 
                         this.cancelSearchRequest();
-                        this.handleClick(item, listItem, true);
+                        this.handleSelect(item, listItem, true, EventSource.ENTER);
                        
                     }
                     
@@ -244,10 +249,9 @@ export default class SearchList extends React.Component<Props, State>
             else if ( this.state.searching && this.state.searchedItems.length > 0 )
             {
                 // Search finished, enter selects top item
-                let item : SearchItem = this.getSelectedItem();
                 let listItem = this.state.searchedItems[0];
 
-                this.handleClick(item, listItem, true);
+                this.handleSelect(item, listItem, true, EventSource.ENTER);
             }
         }
     }
@@ -326,6 +330,8 @@ export default class SearchList extends React.Component<Props, State>
             clearTimeout( this.inputTimeout );
             this.inputTimeout = null;
         }
+
+        this.setState( {awaitingSearch: false } );
     }
 
     private async search( item : SearchItem, name : string)
@@ -367,9 +373,9 @@ export default class SearchList extends React.Component<Props, State>
 
         if (this.state.searching)
         {
-            return this.state.searchedItems.map( (subreddit) => 
+            return this.state.searchedItems.map( (item) => 
                 {
-                    return this.getListItem( subreddit, selecteItem);
+                    return this.getListItem( item, selecteItem);
                 } );
         }
         else
@@ -385,15 +391,27 @@ export default class SearchList extends React.Component<Props, State>
  
     private getListItem(listItem : ListItem, searchItem : SearchItem)
     {
-        return <div className={ styles.subscriptionSubredditContainer } key={listItem.name}  onClick={ () => this.handleClick(searchItem, listItem, this.state.searching)}  >
-                    <div className={ styles.subscriptionSubredditInnerContainer } >
+        let itemComponent = null;
+        if (searchItem.itemComponent != null)
+        {
+            itemComponent = searchItem.itemComponent(listItem, styles.item);
+        }
+        else 
+        {
+            itemComponent =  <div className={ styles.item }>
+                                {this.getPrefix(listItem,searchItem)}
+                                <b>{listItem.name}</b>
+                            </div>;
+        }
+
+        return <div className={ styles.itemContainer } key={listItem.name}  onClick={ () => this.handleSelect(searchItem, listItem, this.state.searching, EventSource.CLICK)}  >
+                    <div className={ styles.itemInnerContainer } >
                         {this.getIndicator(listItem)}
-                        <div className={ styles.subscriptionSubreddit }>
-                            {this.getPrefix(listItem,searchItem)}<b>{listItem.name}</b>
-                        </div>
+                        {itemComponent}
                     </div>
                     {this.getAltBox(listItem, searchItem)}
                 </div>;
+        
     } 
 
     private getPrefix(listItem : ListItem, searchItem : SearchItem)
@@ -405,9 +423,15 @@ export default class SearchList extends React.Component<Props, State>
 
     private getAltBox(listItem : ListItem, searchItem : SearchItem)
     {
-        if (listItem.alt != null)
+        if (searchItem.altComponent != null && listItem.alt != null)
         {
-            return <div className={styles.altBox} onClick={ (event : React.MouseEvent<HTMLDivElement>) => this.handleAltClick(event, searchItem, listItem,) }>
+            return searchItem.altComponent(listItem, styles.altBox);
+        }
+
+        else if (listItem.alt != null)
+        {
+            
+            return <div className={styles.altBox} onClick={ (event : React.MouseEvent<HTMLDivElement>) => this.handleAltSelect(event, searchItem, listItem,) }>
                         {listItem.alt}
                     </div>;
         }
@@ -429,18 +453,18 @@ export default class SearchList extends React.Component<Props, State>
 
         if (message != null)
         {
-                return <div className={ styles.subscriptionSubredditContainer } >
+                return <div className={ styles.itemContainer } >
                             <div 
-                                className={ styles.subscriptionSubreddit }>
+                                className={ styles.item }>
                                 <b>{message}</b>
                             </div>
                         </div>;
         }
     }
 
-    private getIndicator(subreddit : ListItem)
+    private getIndicator(item : ListItem)
     {
-        let style = subreddit.highlighted ? styles.unsubscribeIndicator : styles.subscribeIndicator;
+        let style = item.highlighted ? styles.unsubscribeIndicator : styles.subscribeIndicator;
         if ( !this.getSelectedItem().displayHighlight  )
         {
             return null;
@@ -451,9 +475,9 @@ export default class SearchList extends React.Component<Props, State>
                 </div>;
     }
 
-    private handleAltClick( event : React.MouseEvent<HTMLDivElement>, searchItem: SearchItem, listItem : ListItem)
+    private handleAltSelect( event : React.MouseEvent<HTMLDivElement>, searchItem: SearchItem, listItem : ListItem)
     {
-        if (this.props.onAltClick != null || searchItem.onAltClick != null)
+        if ( this.props.onAltClick != null || searchItem.onAltSelect != null )
         {
             event.stopPropagation();
 
@@ -462,15 +486,15 @@ export default class SearchList extends React.Component<Props, State>
                 this.props.onAltClick(listItem);
             }
     
-            if(searchItem.onAltClick != null)
+            if(searchItem.onAltSelect != null)
             {
-                searchItem.onAltClick(listItem);
+                searchItem.onAltSelect(listItem);
             }
         }
 
     }
 
-    private handleClick( searchItem: SearchItem, listItem : ListItem, itemIsSearchResult : boolean )
+    private handleSelect( searchItem: SearchItem, listItem : ListItem, itemIsSearchResult : boolean, source : EventSource )
     {
         this.cancelSearchRequest();
 
@@ -480,7 +504,7 @@ export default class SearchList extends React.Component<Props, State>
 
         if (this.props.onClick != null)
         {
-            let callbackReturn : boolean = this.props.onClick( listItem );
+            let callbackReturn : boolean = this.props.onClick( listItem, source );
 
             if (callbackReturn != null && !callbackReturn )
             {
@@ -490,9 +514,10 @@ export default class SearchList extends React.Component<Props, State>
         }
 
         // This causes a prop update, which we ignore
-        if (searchItem.onClick != null)
+        // Not called if onEnter called.
+        if (searchItem.onSelect != null)
         {
-            let callbackReturn : boolean = searchItem.onClick(  listItem );
+            let callbackReturn : boolean = searchItem.onSelect(  listItem, source );
             if (callbackReturn != null && !callbackReturn )
             {
                 // Callback returned false, do nothing
@@ -562,6 +587,6 @@ export default class SearchList extends React.Component<Props, State>
 
     private findInDisplay( name : string)
     {
-        return this.getSelectedItem().items.find( ( subreddit : ListItem ) =>  subreddit.name.toLowerCase() === name.toLowerCase() );
+        return this.getSelectedItem().items.find( ( item : ListItem ) =>  item.name.toLowerCase() === name.toLowerCase() );
     }
 }

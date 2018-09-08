@@ -2,7 +2,7 @@
 @import 'colors';
 @import 'dimens';
 
-.subredditsContainer
+.container
 {
     width: auto;
     display: flex;
@@ -11,7 +11,7 @@
     margin-left:0px;
 }
 
-.subscriptionSubredditContainer
+.itemContainer
 {
     width: auto;
     display: flex;
@@ -26,23 +26,24 @@
     border-radius: var( --insignificant-gap );
 }
 
-.subscriptionSubredditContainer:hover
+.itemContainer:hover
 {
     background: $menu-highlight-color;
     color: $bright-text-color;
 }
 
-.itemContainer
+.listContainer
 {
     margin-top: var( --small-gap);
     margin-bottom: var( --small-gap);
 }
 
-.subscriptionSubredditInnerContainer
+.itemInnerContainer
 {
     width: auto;
     display: flex;
     flex-direction: row;
+    flex-grow: 1;
 }
 
 .searchContainer
@@ -112,6 +113,15 @@
     background: $nested-highlight-color;
 }
 
+a.altBox:link,
+a.altBox:visited,
+a.altBox:hover,
+a.altBox:active 
+{
+    color: $interactive-text-color;
+    text-decoration: none;
+}
+
 
 .searchBarSpacer
 {
@@ -119,12 +129,8 @@
     height:var( --tiny-gap );
 }
 
-.subscriptionSubreddit
+.item
 {
-
-    
-   // width: 200px;
-
     display: flex;
     flex-direction: row;
     text-align: left;
@@ -137,9 +143,20 @@
 
     font-size: var(--font-large);
 
-    //border: 2px solid $hidden-text-color;
-
+    flex-grow: 1;
 }
+
+
+
+a.item:link,
+a.item:visited,
+a.item:hover,
+a.item:active 
+{
+    color: $highlighted-text-color;
+    text-decoration: none;
+}
+
 
 .popupContainer
 {
@@ -183,8 +200,6 @@
     
 }
 
-
-
 .subscriptionIndicator {
     //List lines should basically match cards
     height: var( --star-size );
@@ -214,14 +229,6 @@
     @extend .subscriptionIndicator;
     fill: $subscribed-highlight-color;
 }
-
-.subscribedSubreddit
-{
-    @extend .subscriptionSubreddit;
-    color: $subscribed-highlight-color;
-   // border: 2px solid $subscribed-highlight-color;
-}
-
 
 @media only screen and (max-width: 1100px)
 {

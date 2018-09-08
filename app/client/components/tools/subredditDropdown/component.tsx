@@ -6,13 +6,18 @@ import SVGInline from "react-svg-inline";
 
 import * as expand_caret from 'assets/images/expand_caret.svg';
 
-import * as components from '~/client/components';
+ import { Popup } from '~/client/components/tools';
+
+import * as SearchList from '~/client/components/tools/SearchList';
 
 import * as styles from "css/redditlist.scss";
 import { Post } from '~/common/models/reddit';
 
+import * as actions from '~/client/actions';
+
 import MediaQuery from 'react-responsive';
 import { tools } from '~/common';
+import { NavLink } from 'redux-first-router-link';
 
 interface Props
 {
@@ -27,7 +32,7 @@ interface Props
 
 interface State
 {
-    subreddits : components.tools.SearchList.ListItem[];
+    subreddits : SearchList.ListItem[];
 }
 
 
@@ -37,7 +42,7 @@ export default class SubredditDropdown extends React.Component<Props, State>
     
     public static getDerivedStateFromProps( nextProps : Props, prevState : State) : State
     {
-        let subreddits: components.tools.SearchList.ListItem[]  = [];
+        let subreddits: SearchList.ListItem[]  = [];
 
         // Also add all subreddits from subscriptions
         {
@@ -100,13 +105,13 @@ export default class SubredditDropdown extends React.Component<Props, State>
 
     private getSubredditsPopup( trigger : JSX.Element ) : JSX.Element
     {
-        let searches : components.tools.SearchList.SearchItem[] = [];
+        let searches : SearchList.SearchItem[] = [];
 
         /////////////////////////
         // Subreddits
         /////////////////////////
 
-        let subSearch : components.tools.SearchList.SearchItem = {
+        let subSearch : SearchList.SearchItem = {
             toggleHighlight: false,
             displayHighlight : false,
             addToDisplayList : false,
@@ -123,7 +128,27 @@ export default class SubredditDropdown extends React.Component<Props, State>
             },
             prefix: "r/",
             searchPlaceholder: "Subreddit",
-            onClick: ( item : components.tools.SearchList.ListItem) => { this.props.changeSubreddit(item.object); return true; }
+            onSelect: ( item : SearchList.ListItem, source : SearchList.EventSource) => 
+            {
+                // Replacing items with link components, only handle select if enter
+                if ( source === SearchList.EventSource.ENTER )
+                {
+                    this.props.changeSubreddit(item.object); 
+                    return true; 
+                }
+
+                return true; 
+            },
+            itemComponent: ( item : SearchList.ListItem, containerStyle : string  ) =>
+            {                
+               return   <NavLink className={ containerStyle }                      // Frontpage item will have null object instead of name
+                            to={    item.object == null ? 
+                                { type: actions.types.Route.HOME, payload: { } as actions.types.Route.HOME } 
+                                : 
+                                { type: actions.types.Route.SUBREDDIT, payload: { subreddit: item.object } as actions.types.Route.SUBREDDIT } }>
+                            r/<b>{item.name}</b>
+                        </NavLink>; 
+            }
         };
 
         searches.push(subSearch);
@@ -132,7 +157,7 @@ export default class SubredditDropdown extends React.Component<Props, State>
         // Authors
         ////////////////////////////
 
-        let authorSearch : components.tools.SearchList.SearchItem = {
+        let authorSearch : SearchList.SearchItem = {
 
             items: this.props.subscriptions.map(
                 ( sub : models.data.Subscription) => 
@@ -140,7 +165,7 @@ export default class SubredditDropdown extends React.Component<Props, State>
                     return {
                         name: sub.author,
                         highlighted: true,
-                        alt: this.props.subreddit != null ? `in r/${this.props.subreddit}` : null
+                        alt: this.props.subreddit != null ? this.props.subreddit : null
                     };
                 }
             ),
@@ -148,7 +173,7 @@ export default class SubredditDropdown extends React.Component<Props, State>
             search: ( name : string ) => 
             { 
                 name = tools.string.sanitizeAlphaNumericDashUnderscore(name);
-                return [{name: name, alt: this.props.subreddit != null ? `in r/${this.props.subreddit}` : null}]; 
+                return [{name: name, alt: this.props.subreddit != null ? this.props.subreddit : null}]; 
             },   // Can't search for users :(
             prefix: "",
             searchPlaceholder: "Author",
@@ -156,8 +181,29 @@ export default class SubredditDropdown extends React.Component<Props, State>
             toggleHighlight : false,
             addToDisplayList : false,
             delaySearch : false,
-            onClick: ( item : components.tools.SearchList.ListItem) => { this.props.viewAuthor(item.name); return true; },
-            onAltClick: ( item : components.tools.SearchList.ListItem) => { this.props.viewAuthor(item.name, this.props.subreddit); }
+            onSelect: ( item : SearchList.ListItem, source : SearchList.EventSource) => 
+            {
+                // Replacing items with link components, only handle select if enter
+                if ( source === SearchList.EventSource.ENTER )
+                {
+                    this.props.viewAuthor(item.name); 
+                }
+                return true; 
+            },
+            itemComponent: ( item : SearchList.ListItem, containerStyle : string  ) =>
+            {                
+               return   <NavLink className={ containerStyle }
+                            to={ { type: actions.types.Route.AUTHOR, payload: { author: item.name } as actions.types.Route.AUTHOR } }>
+                            <b>{item.name}</b>
+                        </NavLink>; 
+            },
+            altComponent: ( item : SearchList.ListItem, containerStyle : string  ) =>
+            {                
+               return   <NavLink className={ containerStyle }
+                            to={ { type: actions.types.Route.AUTHOR, payload: { author: item.name, subreddit: item.alt } as actions.types.Route.AUTHOR } }>
+                            in r/{item.alt}
+                        </NavLink>; 
+            }
         };
 
         searches.push(authorSearch);
@@ -168,7 +214,7 @@ export default class SubredditDropdown extends React.Component<Props, State>
 
         if (this.props.subreddit != null && this.props.subreddit !== "All")  // No point in searching all
         {
-            let postSearch : components.tools.SearchList.SearchItem = {
+            let postSearch : SearchList.SearchItem = {
 
                 items: [],
                 search: async ( query : string ) => 
@@ -184,8 +230,30 @@ export default class SubredditDropdown extends React.Component<Props, State>
                 toggleHighlight : false,
                 addToDisplayList : false,
                 delaySearch : true,
-                onClick: ( item : components.tools.SearchList.ListItem) => { this.props.viewAuthor(item.object, this.props.subreddit); return true; },
-                onAltClick: ( item : components.tools.SearchList.ListItem) => { this.props.viewAuthor(item.object, this.props.subreddit); }
+                onSelect: ( item : SearchList.ListItem, source : SearchList.EventSource) => 
+                {
+                    // Replacing items with link components, only handle select if enter
+                    if ( source === SearchList.EventSource.ENTER )
+                    {
+                        this.props.viewAuthor(item.object, this.props.subreddit);
+                    }
+
+                    return true; 
+                },
+                itemComponent: ( item : SearchList.ListItem, containerStyle : string  ) =>
+                {                
+                   return   <NavLink className={ containerStyle }
+                                to={ { type: actions.types.Route.AUTHOR, payload: { author: item.alt, subreddit: this.props.subreddit } as actions.types.Route.AUTHOR } }>
+                                <b>{item.name}</b>
+                            </NavLink>; 
+                },
+                altComponent: ( item : SearchList.ListItem, containerStyle : string  ) =>
+                {                
+                    return   <NavLink className={ containerStyle }
+                                to={ { type: actions.types.Route.AUTHOR, payload: { author: item.alt, subreddit: this.props.subreddit } as actions.types.Route.AUTHOR } }>
+                                <b>{item.alt}</b>
+                            </NavLink>; 
+                }
             };
 
             searches.push(postSearch);
@@ -198,22 +266,22 @@ export default class SubredditDropdown extends React.Component<Props, State>
             {
                 if (matches)
                 {
-                    return <components.tools.SearchList.popup
+                    return <SearchList.popup
                     modal={true}
                     trigger={ trigger }
                     items={searches}
-                    position={components.tools.Popup.Position.BOTTOM}
-                    alignment={components.tools.Popup.Alignment.BEGINNING}
+                    position={Popup.Position.BOTTOM}
+                    alignment={Popup.Alignment.BEGINNING}
                     />;
                 }
                 else
                 {
-                    return <components.tools.SearchList.popup
+                    return <SearchList.popup
                     modal={false}
                     trigger={ trigger }
                     items={searches}
-                    position={components.tools.Popup.Position.BOTTOM}
-                    alignment={components.tools.Popup.Alignment.BEGINNING}
+                    position={Popup.Position.BOTTOM}
+                    alignment={Popup.Alignment.BEGINNING}
                     />;
                 }
             } 

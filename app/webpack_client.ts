@@ -39,7 +39,7 @@ const config = {
             '../css/site.scss',
             '../css/author.scss',
             '../css/redditlist.scss',
-            '../css/subredditList.scss',
+            '../css/searchList.scss',
             '../css/confirmationPopup.scss',
             'react-toastify/dist/ReactToastify.css'
         ],

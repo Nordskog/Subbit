@@ -1,16 +1,9 @@
 import * as React from 'react';
 
-
-import * as styles from 'css/subredditList.scss';
-import * as animationStyles from 'css/animations.scss';
+import * as styles from 'css/searchList.scss';
 
 import * as components from '~/client/components/';
-import * as models from '~/common/models';
 
-import expand_caret from 'assets/images/expand_caret.svg';
-import collapse_caret from 'assets/images/collapse_caret.svg';
-
-import * as transitions from 'react-transition-group';
 
 interface Props 
 {
