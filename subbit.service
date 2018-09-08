@@ -1,0 +1,22 @@
+# Copy into /lib/systemd/system 
+# chown root:root subbit.service
+# systemctl daemon-reload
+#
+# Use with systemctl start/stop/restart/enable/disable subbit
+# Assumes user subbit, and repo cloned into subredictory
+# /subbit in user's home.
+
+[Unit]
+Description=Subbit for Reddit
+Documentation=https://github.com/Nordskog/Subbit
+After=network.target
+
+[Service]
+Type=simple
+User=subbit
+WorkingDirectory=/home/subbit/subbit
+ExecStart=/usr/bin/npm start
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
