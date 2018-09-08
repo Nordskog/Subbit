@@ -252,8 +252,6 @@ export async function createOrUpdateUserFromRedditToken( manager : Wetland.Scope
 
         // Fetch existing user if present
         user = await manager.getRepository(Entities.User).findOne({ username: username }, { populate: ["auth", "additional_auth"]});
-
-        console.log(user);
     }
     else
     {
