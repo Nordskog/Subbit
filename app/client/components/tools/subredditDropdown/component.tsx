@@ -46,15 +46,15 @@ export default class SubredditDropdown extends React.Component<Props, State>
 
         // Also add all subreddits from subscriptions
         {
-            let subSet : Set<string> = new Set<string>();
+            let subMap : Map<string, string> = new Map<string, string>();
             nextProps.subscriptions.forEach( (sub : models.data.Subscription) => 
             {
                 sub.subreddits.forEach( ( subred : models.data.SubscriptionSubreddit ) => 
                 {
-                    subSet.add(subred.name);
+                    subMap.set(subred.name.toLowerCase(), subred.name);
                 });
             });
-            subSet.forEach( (name : string) => subreddits.push( { name: name, highlighted: false, object: name } ) );
+            subMap.forEach( (name : string) => subreddits.push( { name: name, highlighted: false, object: name } ) );
         }
 
             subreddits.unshift( { name: "All", highlighted: false, object: "All"});
