@@ -17,11 +17,23 @@ export default class LoadingStatusComponent extends React.Component<Props,null>
     return  <div className={siteStyles.loadingStatus}>
               < LoadingIcon status={this.props.status} />
               {this.getMessage()}<br/>
-              <LoadingProgress 
-              loadingCount={this.props.loadingCount}
-              loadingProgress={this.props.loadingProgress}
-              />
+              {this.getProgress()}
             </div>;
+  }
+
+  private getProgress()
+  {
+    if (this.props.status === LoadingStatus.LOADING)
+    {
+      return  <LoadingProgress 
+                loadingCount={this.props.loadingCount}
+                loadingProgress={this.props.loadingProgress}
+                />;
+    }
+    else 
+    {
+      return null;
+    }
   }
 
   private getMessage()

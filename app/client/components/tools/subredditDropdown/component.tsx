@@ -141,13 +141,21 @@ export default class SubredditDropdown extends React.Component<Props, State>
             },
             itemComponent: ( item : SearchList.ListItem, containerStyle : string  ) =>
             {                
-               return   <NavLink className={ containerStyle }                      // Frontpage item will have null object instead of name
-                            to={    item.object == null ? 
-                                { type: actions.types.Route.HOME, payload: { } as actions.types.Route.HOME } 
-                                : 
-                                { type: actions.types.Route.SUBREDDIT, payload: { subreddit: item.object } as actions.types.Route.SUBREDDIT } }>
-                            r/<b>{item.name}</b>
-                        </NavLink>; 
+                 // Frontpage item will have null object instead of name
+                if (item.object == null)
+                {
+                    return   <NavLink className={ containerStyle }                     
+                                to={ { type: actions.types.Route.HOME, payload: { } as actions.types.Route.HOME } } >
+                                <b>{item.name}</b>
+                            </NavLink>; 
+                }
+                else 
+                {
+                    return   <NavLink className={ containerStyle }
+                                to={  { type: actions.types.Route.SUBREDDIT, payload: { subreddit: item.object } as actions.types.Route.SUBREDDIT } }>
+                                r/<b>{item.name}</b>
+                            </NavLink>; 
+                }
             }
         };
 
