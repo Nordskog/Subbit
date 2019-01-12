@@ -158,6 +158,16 @@
     
 }
 
+.inlineLink
+{
+    background: var(--card-background);
+    padding-left: var(--small-gap);
+    padding-right: var(--small-gap);
+    //margin: var(--small-gap);
+    border-radius: var( --insignificant-gap );
+    font-weight: bold;
+}
+
 .paragraphTitle
 {
     font-weight: bold;

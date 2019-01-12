@@ -191,9 +191,11 @@ export default class MessageComponent extends React.Component<Props, State>
                 <span>You haven't subscribed to anyone yet!</span>
                 <div className={styles.spacer}/>
                 <div className={styles.spanRow}>
-                  <span>Go</span>
-                  <SVGInline className={ classConcat( authorStyles.unsubscribeButton, styles.starParagraphMargin )  } svg={subscribeButton}/>
-                  <span>your favorite authors!</span>
+                  <NavLink className={ styles.inlineLink } 
+                    to={ { type: actions.types.Route.SUBREDDIT, payload: { subreddit: "HFY" } as actions.types.Route.SUBREDDIT }  }>
+                    r/HFY
+                  </NavLink> 
+                  is a good place to start
                 </div>
                 <div className={styles.spacer}/>
                 <div className={styles.spanRow}>or</div>

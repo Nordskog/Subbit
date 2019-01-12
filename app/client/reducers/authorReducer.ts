@@ -236,7 +236,7 @@ export function authorReducer(state: models.state.AuthorsState = getDefaultAutho
         {
             return {
                 ...state,
-                filter: AuthorFilter.BEST,
+                filter: AuthorFilter.SUBSCRIPTIONS,
                 subreddit: null,
                 author: null,
                 after: null,
