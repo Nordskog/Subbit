@@ -206,12 +206,13 @@ const config = {
             fileName: 'sitemap.xml'
         }),
 
+        // Prevent robots from running the js bundle, since they don't let it contact reddit and it errors out.
         new RobotstxtPlugin(
         {
             policy: [
                 {
                   userAgent: "*",
-                  disallow: ["/api/", "/stats"],
+                  disallow: ["/api/", "/stats", "/static/main.js"],
                   crawlDelay: 2,
                 }
               ],
