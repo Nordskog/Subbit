@@ -81,7 +81,7 @@ export function getAuthState( loginType : models.auth.LoginType) : string
 
     let state = {
         identifier: identifier,
-        expiresAt: Date.now() + ( 1000 * 60 * 1), // Valid for 1min
+        expiresAt: Date.now() + ( 1000 * 60 * 15), // Valid for 5min
         loginType: loginType
     };
 
