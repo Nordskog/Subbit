@@ -5,10 +5,10 @@ class Migration {
     builder.schema.createTable('auths', table => {
       table.increments('id').notNullable().primary();
       table.string('auth_type', 255).notNullable();
-      table.string('access_token', 255).notNullable();
+      table.string('access_token', 2048).notNullable();
       table.timestamp('expiry').notNullable();
       table.string('token_type', 255).notNullable();
-      table.string('refresh_token', 255).nullable();
+      table.string('refresh_token', 2048).nullable();
       table.string('scope', 255).notNullable();
       table.integer('user_id').unsigned().nullable();
       table.integer('user_additional_id').unsigned().nullable();

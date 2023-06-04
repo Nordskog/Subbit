@@ -38,6 +38,7 @@ export default class Auth extends Wetland.Entity
         mapping.field('access_token',
             {
                 type: 'string',
+                length: 2048,
                 nullable: false
             });
 
@@ -56,6 +57,7 @@ export default class Auth extends Wetland.Entity
         mapping.field('refresh_token',
             {
                 type: 'string',
+                length: 2048,
                 nullable: true
             });
 
